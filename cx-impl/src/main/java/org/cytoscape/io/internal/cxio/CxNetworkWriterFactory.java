@@ -13,6 +13,10 @@ public class CxNetworkWriterFactory implements CyWriterFactory  {
 		this.filter = filter;
 	}
 	
+	public CxNetworkWriterFactory() {
+		this.filter = null;
+	}
+	
 	public CyWriter createWriter(OutputStream outputStream, CyNetwork network) {
 		return new CxNetworkWriter(outputStream, network);
 	}
