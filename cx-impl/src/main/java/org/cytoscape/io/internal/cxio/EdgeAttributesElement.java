@@ -7,8 +7,8 @@ import java.util.TreeMap;
 
 public final class EdgeAttributesElement implements AspectElement {
 
-    private final String                          id;
-    private final List<String>                    edges;
+    private final String id;
+    private final List<String> edges;
     private final SortedMap<String, List<String>> attributes;
 
     public EdgeAttributesElement(final String id, final List<String> edges,
@@ -56,7 +56,8 @@ public final class EdgeAttributesElement implements AspectElement {
         if (this == o) {
             return true;
         }
-        return ((o instanceof EdgeAttributesElement) && id.equals(((EdgeAttributesElement) o).getId()));
+        return (o instanceof EdgeAttributesElement)
+                && id.equals(((EdgeAttributesElement) o).getId());
 
     }
 

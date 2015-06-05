@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import org.cytoscape.io.internal.cxio.NodesElement;
 import org.junit.Test;
 
-
 public class NodeElementTest {
 
     @Test

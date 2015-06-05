@@ -8,12 +8,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.SortedMap;
 
-import org.junit.Test;
 import org.cytoscape.io.internal.cxio.AspectElement;
 import org.cytoscape.io.internal.cxio.AspectFragmentReaderManager;
 import org.cytoscape.io.internal.cxio.CartesianLayoutElement;
 import org.cytoscape.io.internal.cxio.CxConstants;
 import org.cytoscape.io.internal.cxio.CxReader;
+import org.junit.Test;
 
 public class CartesianLayoutFragmentReaderTest {
 
@@ -47,15 +47,16 @@ public class CartesianLayoutFragmentReaderTest {
         assertTrue("failed to parse " + CxConstants.CARTESIAN_LAYOUT + " aspect",
                 r0.containsKey(CxConstants.CARTESIAN_LAYOUT));
 
-        assertFalse("failed to parse " + CxConstants.CARTESIAN_LAYOUT + " aspect", r0.get(CxConstants.CARTESIAN_LAYOUT)
-                .isEmpty());
+        assertFalse("failed to parse " + CxConstants.CARTESIAN_LAYOUT + " aspect",
+                r0.get(CxConstants.CARTESIAN_LAYOUT).isEmpty());
 
-        assertTrue("failed to parse expected number of " + CxConstants.CARTESIAN_LAYOUT + " aspects",
-                r0.get(CxConstants.CARTESIAN_LAYOUT).size() == 3);
+        assertTrue("failed to parse expected number of " + CxConstants.CARTESIAN_LAYOUT
+                + " aspects", r0.get(CxConstants.CARTESIAN_LAYOUT).size() == 3);
 
         final List<AspectElement> aspects = r0.get(CxConstants.CARTESIAN_LAYOUT);
 
-        assertTrue("failed to get expected instance", aspects.get(0) instanceof CartesianLayoutElement);
+        assertTrue("failed to get expected instance",
+                aspects.get(0) instanceof CartesianLayoutElement);
 
         final CartesianLayoutElement a0 = (CartesianLayoutElement) aspects.get(0);
 

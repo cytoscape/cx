@@ -3,8 +3,8 @@ package org.cytoscape.io.internal.cxio;
 public final class CartesianLayoutElement implements AspectElement {
 
     private final String node;
-    private final int    x;
-    private final int    y;
+    private final int x;
+    private final int y;
 
     public CartesianLayoutElement(final String node, final int x, final int y) {
         this.node = node;

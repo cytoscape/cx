@@ -12,7 +12,8 @@ public class EdgeAttributesFragmentWriter implements AspectFragmentWriter {
     private EdgeAttributesFragmentWriter() {
     }
 
-    private final void addEdgeAttributesAspect(final EdgeAttributesElement ea, final JsonWriter w) throws IOException {
+    private final void addEdgeAttributesAspect(final EdgeAttributesElement ea, final JsonWriter w)
+            throws IOException {
         w.writeStartObject();
         w.writeStringField(CxConstants.ID, ea.getId());
         w.writeList(CxConstants.EDGES, ea.getEdges());
@@ -27,7 +28,8 @@ public class EdgeAttributesFragmentWriter implements AspectFragmentWriter {
     }
 
     @Override
-    public void write(final List<AspectElement> edge_attributes_aspects, final JsonWriter w) throws IOException {
+    public void write(final List<AspectElement> edge_attributes_aspects, final JsonWriter w)
+            throws IOException {
         if (edge_attributes_aspects == null) {
             return;
         }

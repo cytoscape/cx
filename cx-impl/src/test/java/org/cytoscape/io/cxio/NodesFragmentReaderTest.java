@@ -14,8 +14,6 @@ import org.cytoscape.io.internal.cxio.CxReader;
 import org.cytoscape.io.internal.cxio.NodesElement;
 import org.junit.Test;
 
-
-
 public class NodesFragmentReaderTest {
 
     @Test
@@ -30,7 +28,8 @@ public class NodesFragmentReaderTest {
                 + "{\"functionTerms\":[{\"@id\":\"ft0\",\"function\":\"functions zero\",\"parameters\":[\"HGNC:FAS\",\"HGNC:MAPK1\"]},{\"@id\":\"ft1\",\"function\":\"functions one\",\"parameters\":[\"HGNC:FAS\",\"HGNC:MAPK1\"]}]},"
                 + "{\"weHaveNodesAndEdges\":[{\"nodes\":[{\"@id\":\"_0\"},{\"@id\":\"_1\"}]}]},"
                 + "{\"weHaveNodesAndEdges\":[{\"edges\":[{\"@id\":\"e0\",\"source\":\"_0\",\"target\":\"_1\"}]}]},"
-                + "{\"weHaveNodesToo\":[{\"nodes\":\"nodes\"}]}," + "{\"weHaveEdgesToo\":[{\"edges\":\"edges\"}]},"
+                + "{\"weHaveNodesToo\":[{\"nodes\":\"nodes\"}]},"
+                + "{\"weHaveEdgesToo\":[{\"edges\":\"edges\"}]},"
                 + "{\"nodes\":[{\"@id\":\"_5\"}]},"
                 + "{\"edges\":[{\"@id\":\"e2\",\"source\":\"_4\",\"target\":\"_5\"}]},"
                 + "{\"edges\":[{\"@id\":\"e3\",\"source\":\"_6\",\"target\":\"_7\"}]},"
@@ -41,16 +40,19 @@ public class NodesFragmentReaderTest {
                 .getAvailableAspectFragmentReaders());
         final SortedMap<String, List<AspectElement>> r0 = CxReader.parseAsMap(p);
 
-        assertTrue("failed to parse " + CxConstants.NODES + " aspect", r0.containsKey(CxConstants.NODES));
+        assertTrue("failed to parse " + CxConstants.NODES + " aspect",
+                r0.containsKey(CxConstants.NODES));
 
-        assertFalse("failed to parse " + CxConstants.NODES + " aspect", r0.get(CxConstants.NODES).isEmpty());
+        assertFalse("failed to parse " + CxConstants.NODES + " aspect", r0.get(CxConstants.NODES)
+                .isEmpty());
 
-        assertTrue("failed to parse expected number of " + CxConstants.NODES + " aspects", r0.get(CxConstants.NODES)
-                .size() == 8);
+        assertTrue("failed to parse expected number of " + CxConstants.NODES + " aspects",
+                r0.get(CxConstants.NODES).size() == 8);
 
         final List<AspectElement> node_aspects = r0.get(CxConstants.NODES);
 
-        assertTrue("failed to get expected NodeAspect instance", node_aspects.get(0) instanceof NodesElement);
+        assertTrue("failed to get expected NodeAspect instance",
+                node_aspects.get(0) instanceof NodesElement);
 
         assertTrue("failed to get expected " + CxConstants.NODES + " aspect",
                 node_aspects.contains(new NodesElement("_0")));
@@ -100,7 +102,8 @@ public class NodesFragmentReaderTest {
                 + "{\"functionTerms\":[{\"@id\":\"ft0\",\"function\":\"functions zero\",\"parameters\":[\"HGNC:FAS\",\"HGNC:MAPK1\"]},{\"@id\":\"ft1\",\"function\":\"functions one\",\"parameters\":[\"HGNC:FAS\",\"HGNC:MAPK1\"]}]},"
                 + "{\"weHaveNodesAndEdges\":[{\"nodes\":[{\"@id\":\"_0\"},{\"@id\":\"_1\"}]}]},"
                 + "{\"weHaveNodesAndEdges\":[{\"edges\":[{\"@id\":\"e0\",\"source\":\"_0\",\"target\":\"_1\"}]}]},"
-                + "{\"weHaveNodesToo\":[{\"nodes\":\"nodes\"}]}," + "{\"weHaveEdgesToo\":[{\"edges\":\"edges\"}]},"
+                + "{\"weHaveNodesToo\":[{\"nodes\":\"nodes\"}]},"
+                + "{\"weHaveEdgesToo\":[{\"edges\":\"edges\"}]},"
                 + "{\"edges\":[{\"@id\":\"e2\",\"source\":\"_4\",\"target\":\"_5\"}]},"
                 + "{\"edges\":[{\"@id\":\"e3\",\"source\":\"_6\",\"target\":\"_7\"}]}" + "]";
 

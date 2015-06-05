@@ -19,7 +19,8 @@ public class NodesFragmentWriter implements AspectFragmentWriter {
     }
 
     @Override
-    public final void write(final List<AspectElement> node_aspects, final JsonWriter w) throws IOException {
+    public final void write(final List<AspectElement> node_aspects, final JsonWriter w)
+            throws IOException {
         if (node_aspects == null) {
             return;
         }

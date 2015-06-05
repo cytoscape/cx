@@ -7,8 +7,8 @@ import java.util.TreeMap;
 
 public final class NodeAttributesElement implements AspectElement {
 
-    private final String                          id;
-    private final List<String>                    nodes;
+    private final String id;
+    private final List<String> nodes;
     private final SortedMap<String, List<String>> attributes;
 
     public NodeAttributesElement(final String id, final List<String> nodes,
@@ -56,7 +56,8 @@ public final class NodeAttributesElement implements AspectElement {
         if (this == o) {
             return true;
         }
-        return ((o instanceof NodeAttributesElement) && id.equals(((NodeAttributesElement) o).getId()));
+        return (o instanceof NodeAttributesElement)
+                && id.equals(((NodeAttributesElement) o).getId());
 
     }
 

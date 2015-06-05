@@ -17,7 +17,7 @@ public final class EdgesElement implements AspectElement {
         if (this == o) {
             return true;
         }
-        return ((o instanceof EdgesElement) && id.equals(((EdgesElement) o).getId()));
+        return (o instanceof EdgesElement) && id.equals(((EdgesElement) o).getId());
 
     }
 

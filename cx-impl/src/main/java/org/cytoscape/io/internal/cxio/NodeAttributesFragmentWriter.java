@@ -12,7 +12,8 @@ public class NodeAttributesFragmentWriter implements AspectFragmentWriter {
     private NodeAttributesFragmentWriter() {
     }
 
-    private final void addNodeAttributesAspect(final NodeAttributesElement na, final JsonWriter w) throws IOException {
+    private final void addNodeAttributesAspect(final NodeAttributesElement na, final JsonWriter w)
+            throws IOException {
         w.writeStartObject();
         w.writeStringField(CxConstants.ID, na.getId());
         w.writeList(CxConstants.NODES, na.getNodes());
@@ -27,7 +28,8 @@ public class NodeAttributesFragmentWriter implements AspectFragmentWriter {
     }
 
     @Override
-    public void write(final List<AspectElement> node_attributes_aspects, final JsonWriter w) throws IOException {
+    public void write(final List<AspectElement> node_attributes_aspects, final JsonWriter w)
+            throws IOException {
         if (node_attributes_aspects == null) {
             return;
         }

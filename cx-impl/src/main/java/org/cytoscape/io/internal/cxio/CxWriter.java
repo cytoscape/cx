@@ -9,9 +9,9 @@ import java.util.Map;
 public class CxWriter {
 
     private final Map<String, AspectFragmentWriter> writers;
-    private final JsonWriter                        jw;
-    private boolean                                 started;
-    private boolean                                 ended;
+    private final JsonWriter jw;
+    private boolean started;
+    private boolean ended;
 
     private CxWriter(final OutputStream out) throws IOException {
         if (out == null) {

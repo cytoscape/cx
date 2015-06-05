@@ -11,6 +11,13 @@ public class NodesFragmentReader implements AspectFragmentReader {
 
     private static final boolean STRICT = true;
 
+    public static NodesFragmentReader createInstance() {
+        return new NodesFragmentReader();
+    }
+
+    private NodesFragmentReader() {
+    }
+    
     @Override
     public String getAspectName() {
         return CxConstants.NODES;
@@ -34,7 +41,8 @@ public class NodesFragmentReader implements AspectFragmentReader {
                         id = jp.getText().trim();
                     }
                     else if (STRICT) {
-                        throw new IOException("malformed cx json: unrecognized field '" + namefield + "'");
+                        throw new IOException("malformed cx json: unrecognized field '" + namefield
+                                + "'");
                     }
                 }
                 if (Util.isEmpty(id)) {

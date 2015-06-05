@@ -11,6 +11,13 @@ public class EdgesFragmentReader implements AspectFragmentReader {
 
     private static final boolean STRICT = true;
 
+    public static EdgesFragmentReader createInstance() {
+        return new EdgesFragmentReader();
+    }
+
+    private EdgesFragmentReader() {
+    }
+    
     @Override
     public String getAspectName() {
         return CxConstants.EDGES;
@@ -41,7 +48,8 @@ public class EdgesFragmentReader implements AspectFragmentReader {
                         target = jp.getText().trim();
                     }
                     else if (STRICT) {
-                        throw new IOException("malformed cx json: unrecognized field '" + namefield + "'");
+                        throw new IOException("malformed cx json: unrecognized field '" + namefield
+                                + "'");
                     }
                 }
                 if (Util.isEmpty(source)) {

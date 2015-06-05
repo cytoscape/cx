@@ -14,8 +14,6 @@ import org.cytoscape.io.internal.cxio.CxReader;
 import org.cytoscape.io.internal.cxio.EdgeAttributesElement;
 import org.junit.Test;
 
-
-
 public class EdgeAttributesFragmentReaderTest {
 
     @Test
@@ -41,7 +39,8 @@ public class EdgeAttributesFragmentReaderTest {
                 + "{\"cartesianLayout\":[{\"node\":\"_1\",\"x\":\"3\",\"y\":\"4\"},{\"node\":\"_2\",\"x\":\"5\",\"y\":\"6\"}]},"
                 + "{\"nodes\":[{\"@id\":\"_7\"}]},"
                 + "{\"edgeAttributes\":[{\"@id\":\"_ea0\",\"edges\":[\"_e38\", \"_e39\"], \"attributes\":{\"interaction\":[\"479019\", \"one more\"],\"name\":[\"768303 (479019) 791595\"],\"PSIMI_25_detection_method\":[\"genetic interference\"]}}]},"
-                + "{\"edgeAttributes\":[{\"@id\":\"_ea1\",\"edges\":[\"_e22\", \"_e33\", \"_e44\"]}]}" + "]";
+                + "{\"edgeAttributes\":[{\"@id\":\"_ea1\",\"edges\":[\"_e22\", \"_e33\", \"_e44\"]}]}"
+                + "]";
 
         final CxReader p = CxReader.createInstance(t0, AspectFragmentReaderManager.createInstance()
                 .getAvailableAspectFragmentReaders());
@@ -49,8 +48,8 @@ public class EdgeAttributesFragmentReaderTest {
 
         assertTrue("failed to parse " + CxConstants.EDGE_ATTRIBUTES + " aspect",
                 r0.containsKey(CxConstants.EDGE_ATTRIBUTES));
-        assertFalse("failed to parse " + CxConstants.EDGE_ATTRIBUTES + " aspect", r0.get(CxConstants.EDGE_ATTRIBUTES)
-                .isEmpty());
+        assertFalse("failed to parse " + CxConstants.EDGE_ATTRIBUTES + " aspect",
+                r0.get(CxConstants.EDGE_ATTRIBUTES).isEmpty());
         assertTrue("failed to get expected number of " + CxConstants.EDGE_ATTRIBUTES + " aspects",
                 r0.get(CxConstants.EDGE_ATTRIBUTES).size() == 2);
 
@@ -67,7 +66,8 @@ public class EdgeAttributesFragmentReaderTest {
         assertTrue(ea1.getAttributes().get("name").size() == 1);
         assertTrue(ea1.getAttributes().get("interaction").contains("479019"));
         assertTrue(ea1.getAttributes().get("interaction").contains("one more"));
-        assertTrue(ea1.getAttributes().get("PSIMI_25_detection_method").contains("genetic interference"));
+        assertTrue(ea1.getAttributes().get("PSIMI_25_detection_method")
+                .contains("genetic interference"));
         assertTrue(ea1.getAttributes().get("name").contains("768303 (479019) 791595"));
 
         final EdgeAttributesElement ea2 = (EdgeAttributesElement) aspects.get(1);

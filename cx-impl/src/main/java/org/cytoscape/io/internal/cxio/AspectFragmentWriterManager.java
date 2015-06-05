@@ -22,9 +22,12 @@ public final class AspectFragmentWriterManager {
     public final static Set<AspectFragmentWriter> createDefaultWriters() {
         final AspectFragmentWriter nodes_writer = NodesFragmentWriter.createInstance();
         final AspectFragmentWriter edges_writer = EdgesFragmentWriter.createInstance();
-        final AspectFragmentWriter ege_aspects_writer = EdgeAttributesFragmentWriter.createInstance();
-        final AspectFragmentWriter node_aspects_writer = NodeAttributesFragmentWriter.createInstance();
-        final AspectFragmentWriter cartesian_layout_writer = CartesianLayoutFragmentWriter.createInstance();
+        final AspectFragmentWriter ege_aspects_writer = EdgeAttributesFragmentWriter
+                .createInstance();
+        final AspectFragmentWriter node_aspects_writer = NodeAttributesFragmentWriter
+                .createInstance();
+        final AspectFragmentWriter cartesian_layout_writer = CartesianLayoutFragmentWriter
+                .createInstance();
         final Set<AspectFragmentWriter> writers = new HashSet<AspectFragmentWriter>();
         writers.add(nodes_writer);
         writers.add(edges_writer);

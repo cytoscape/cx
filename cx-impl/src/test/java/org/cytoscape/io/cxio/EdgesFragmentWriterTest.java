@@ -13,8 +13,6 @@ import org.cytoscape.io.internal.cxio.EdgesFragmentWriter;
 import org.cytoscape.io.internal.cxio.JsonWriter;
 import org.junit.Test;
 
-
-
 public class EdgesFragmentWriterTest {
 
     @Test

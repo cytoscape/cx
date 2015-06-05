@@ -9,12 +9,11 @@ import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 
-
-
 public class CyToCxImpl implements CyToCx {
 
     @Override
-    public void serializeCyNetwork(final CyNetwork network, final OutputStream out) throws IOException {
+    public void serializeCyNetwork(final CyNetwork network, final OutputStream out)
+            throws IOException {
 
         final CxWriter w = CxWriter.createInstance(out);
         w.addAspectFragmentWriter(EdgesFragmentWriter.createInstance());
@@ -29,8 +28,8 @@ public class CyToCxImpl implements CyToCx {
 
         elements = new ArrayList<AspectElement>();
         for (final CyEdge cyEdge : network.getEdgeList()) {
-            elements.add(new EdgesElement(String.valueOf(cyEdge.getSUID()), String
-                    .valueOf(cyEdge.getSource().getSUID()), String.valueOf(cyEdge.getTarget().getSUID())));
+            elements.add(new EdgesElement(String.valueOf(cyEdge.getSUID()), String.valueOf(cyEdge
+                    .getSource().getSUID()), String.valueOf(cyEdge.getTarget().getSUID())));
         }
         w.write(elements);
         w.end();

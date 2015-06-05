@@ -12,6 +12,13 @@ import com.fasterxml.jackson.core.JsonToken;
 public class EdgeAttributesFragmentReader implements AspectFragmentReader {
     private static final boolean STRICT = true;
 
+    public static EdgeAttributesFragmentReader createInstance() {
+        return new EdgeAttributesFragmentReader();
+    }
+
+    private EdgeAttributesFragmentReader() {
+    }
+    
     @Override
     public String getAspectName() {
         return CxConstants.EDGE_ATTRIBUTES;
@@ -45,14 +52,17 @@ public class EdgeAttributesFragmentReader implements AspectFragmentReader {
                         }
                     }
                     else if (STRICT) {
-                        throw new IOException("malformed cx json: unrecognized field '" + namefield + "'");
+                        throw new IOException("malformed cx json: unrecognized field '" + namefield
+                                + "'");
                     }
                 }
                 if (Util.isEmpty(id)) {
-                    throw new IOException("malformed cx json: attribute id in edge attributes is missing");
+                    throw new IOException(
+                            "malformed cx json: attribute id in edge attributes is missing");
                 }
                 if ((edges == null) || edges.isEmpty()) {
-                    throw new IOException("malformed cx json: edge ids in edge attributes are missing");
+                    throw new IOException(
+                            "malformed cx json: edge ids in edge attributes are missing");
                 }
                 ea_aspects.add(new EdgeAttributesElement(id, edges, attributes));
             }

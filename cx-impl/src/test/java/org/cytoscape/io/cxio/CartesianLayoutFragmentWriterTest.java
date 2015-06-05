@@ -15,8 +15,6 @@ import org.cytoscape.io.internal.cxio.CxConstants;
 import org.cytoscape.io.internal.cxio.JsonWriter;
 import org.junit.Test;
 
-
-
 public class CartesianLayoutFragmentWriterTest {
 
     @Test

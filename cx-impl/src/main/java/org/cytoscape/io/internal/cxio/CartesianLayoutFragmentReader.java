@@ -10,6 +10,13 @@ import com.fasterxml.jackson.core.JsonToken;
 public class CartesianLayoutFragmentReader implements AspectFragmentReader {
 
     private static final boolean STRICT = true;
+    
+    public static CartesianLayoutFragmentReader createInstance() {
+        return new CartesianLayoutFragmentReader();
+    }
+
+    private CartesianLayoutFragmentReader() {
+    }
 
     @Override
     public String getAspectName() {
@@ -42,17 +49,21 @@ public class CartesianLayoutFragmentReader implements AspectFragmentReader {
                         y = jp.getValueAsInt();
                     }
                     else if (STRICT) {
-                        throw new IOException("malformed cx json: unrecognized field '" + namefield + "'");
+                        throw new IOException("malformed cx json: unrecognized field '" + namefield
+                                + "'");
                     }
                 }
                 if (Util.isEmpty(node_id)) {
-                    throw new IOException("malformed cx json: node id in cartesian layout is missing");
+                    throw new IOException(
+                            "malformed cx json: node id in cartesian layout is missing");
                 }
                 if (x == -Integer.MAX_VALUE) {
-                    throw new IOException("malformed cx json: x coordinate in cartesian layout is missing");
+                    throw new IOException(
+                            "malformed cx json: x coordinate in cartesian layout is missing");
                 }
                 if (y == -Integer.MAX_VALUE) {
-                    throw new IOException("malformed cx json: y coordinate in cartesian layout is missing");
+                    throw new IOException(
+                            "malformed cx json: y coordinate in cartesian layout is missing");
                 }
                 layout_aspects.add(new CartesianLayoutElement(node_id, x, y));
             }

@@ -14,8 +14,6 @@ import org.cytoscape.io.internal.cxio.CxReader;
 import org.cytoscape.io.internal.cxio.NodeAttributesElement;
 import org.junit.Test;
 
-
-
 public class NodeAttributesFragmentReaderTest {
 
     @Test
@@ -52,8 +50,8 @@ public class NodeAttributesFragmentReaderTest {
 
         assertTrue("failed to parse " + CxConstants.NODE_ATTRIBUTES + " aspect",
                 r0.containsKey(CxConstants.NODE_ATTRIBUTES));
-        assertFalse("failed to parse " + CxConstants.NODE_ATTRIBUTES + " aspect", r0.get(CxConstants.NODE_ATTRIBUTES)
-                .isEmpty());
+        assertFalse("failed to parse " + CxConstants.NODE_ATTRIBUTES + " aspect",
+                r0.get(CxConstants.NODE_ATTRIBUTES).isEmpty());
         assertTrue("failed to get expected number of " + CxConstants.NODE_ATTRIBUTES + " aspects",
                 r0.get(CxConstants.NODE_ATTRIBUTES).size() == 4);
 

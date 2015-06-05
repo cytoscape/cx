@@ -7,7 +7,8 @@ public final class VisualProperty {
     private final String default_value;
     private final String value;
 
-    public VisualProperty(final String name, final String applies_to, final String default_value, final String value) {
+    public VisualProperty(final String name, final String applies_to, final String default_value,
+            final String value) {
         this.name = name;
         this.applies_to = applies_to;
         this.default_value = default_value;

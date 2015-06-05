@@ -13,7 +13,7 @@ public final class NodesElement implements AspectElement {
         if (this == o) {
             return true;
         }
-        return ((o instanceof NodesElement) && id.equals(((NodesElement) o).getId()));
+        return (o instanceof NodesElement) && id.equals(((NodesElement) o).getId());
 
     }
 

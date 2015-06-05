@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import org.cytoscape.io.internal.cxio.EdgesElement;
 import org.junit.Test;
 
-
 public class EdgeElementTest {
 
     @Test

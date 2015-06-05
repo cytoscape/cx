@@ -11,10 +11,11 @@ import com.fasterxml.jackson.core.JsonToken;
 public final class Util {
 
     final public static boolean isEmpty(final String s) {
-        return ((s == null) || (s.length() < 1));
+        return (s == null) || (s.length() < 1);
     }
 
-    final static List<String> parseSimpleList(final JsonParser jp, JsonToken t) throws IOException, JsonParseException {
+    final static List<String> parseSimpleList(final JsonParser jp, JsonToken t) throws IOException,
+            JsonParseException {
         final List<String> elements = new ArrayList<String>();
         while (t != JsonToken.END_ARRAY) {
             if (t == JsonToken.VALUE_STRING) {
