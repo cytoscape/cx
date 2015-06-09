@@ -3,6 +3,7 @@ package org.cytoscape.io.internal.cxio;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 
@@ -11,25 +12,29 @@ import org.cytoscape.io.read.AbstractCyNetworkReader;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
+import org.cytoscape.model.CyNode;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CyRootNetworkManager;
 import org.cytoscape.model.subnetwork.CySubNetwork;
 import org.cytoscape.view.model.CyNetworkView;
+import org.cytoscape.view.presentation.property.BasicVisualLexicon;
 import org.cytoscape.work.TaskMonitor;
 import org.cytoscape.work.util.ListSingleSelection;
 
 public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
-    
+
     private CyNetwork network = null; // Supports only one CyNetwork per file.
     private final String networkCollectionName;
     private final CxReader cxr;
+    private CxToCy mapper;
 
-    public CytoscapeCxNetworkReader(final String networkCollectionName, final InputStream input_stream,
-            final CyApplicationManager cyApplicationManager,
+    public CytoscapeCxNetworkReader(final String networkCollectionName,
+            final InputStream input_stream, final CyApplicationManager cyApplicationManager,
             final CyNetworkFactory cyNetworkFactory, final CyNetworkManager cyNetworkManager,
-            final CyRootNetworkManager cyRootNetworkManager,
-            final Set<String> aspects) throws IOException {
-        super(input_stream, cyApplicationManager, cyNetworkFactory, cyNetworkManager, cyRootNetworkManager);
+            final CyRootNetworkManager cyRootNetworkManager, final Set<String> aspects)
+                    throws IOException {
+        super(input_stream, cyApplicationManager, cyNetworkFactory, cyNetworkManager,
+                cyRootNetworkManager);
 
         this.networkCollectionName = networkCollectionName;
 
@@ -38,21 +43,21 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         }
 
         cxr = CxReader.createInstance(input_stream);
-        
-        if ( aspects.contains( CxConstants.NODES ) ) {
+
+        if (aspects.contains(CxConstants.NODES)) {
             cxr.addAspectFragmentReader(NodesFragmentReader.createInstance());
         }
-        if ( aspects.contains( CxConstants.EDGES ) ) {
+        if (aspects.contains(CxConstants.EDGES)) {
             cxr.addAspectFragmentReader(EdgesFragmentReader.createInstance());
         }
-        if ( aspects.contains( CxConstants.NODE_ATTRIBUTES ) ) {
+        if (aspects.contains(CxConstants.NODE_ATTRIBUTES)) {
             cxr.addAspectFragmentReader(NodeAttributesFragmentReader.createInstance());
         }
-        if ( aspects.contains( CxConstants.EDGE_ATTRIBUTES ) ) {
+        if (aspects.contains(CxConstants.EDGE_ATTRIBUTES)) {
             cxr.addAspectFragmentReader(EdgeAttributesFragmentReader.createInstance());
         }
-        if ( aspects.contains( CxConstants.CARTESIAN_LAYOUT ) ) {
-            cxr.addAspectFragmentReader( CartesianLayoutFragmentReader.createInstance() );
+        if (aspects.contains(CxConstants.CARTESIAN_LAYOUT)) {
+            cxr.addAspectFragmentReader(CartesianLayoutFragmentReader.createInstance());
         }
 
     }
@@ -68,14 +73,14 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     public CyNetworkView buildCyNetworkView(final CyNetwork network) {
         final CyNetworkView view = getNetworkViewFactory().createNetworkView(network);
 
-        // final Map<CyNode, Double[]> positionMap = mapper.getNodePosition();
-        // for (final CyNode node : positionMap.keySet()) {
-        // final Double[] position = positionMap.get(node);
-        // view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_X_LOCATION,
-        // position[0]);
-        // view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION,
-        // position[1]);
-        // }
+        final Map<CyNode, Double[]> positionMap = mapper.getNodePosition();
+        for (final CyNode node : positionMap.keySet()) {
+            final Double[] position = positionMap.get(node);
+            view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_X_LOCATION,
+                    position[0]);
+            view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION,
+                    position[1]);
+        }
 
         return view;
     }
@@ -84,10 +89,8 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     public void run(final TaskMonitor taskMonitor) throws Exception {
         cxr.reset();
         final SortedMap<String, List<AspectElement>> res = CxReader.parseAsMap(cxr);
-      
-        final CytoscapeCxMapper mapper = new CytoscapeCxMapper();
-        // final ObjectMapper objMapper = new ObjectMapper();
-        // final JsonNode rootNode = objMapper.readValue(is, JsonNode.class);
+
+        mapper = new CxToCy();
 
         // Select the root collection name from the list.
         if (networkCollectionName != null) {
