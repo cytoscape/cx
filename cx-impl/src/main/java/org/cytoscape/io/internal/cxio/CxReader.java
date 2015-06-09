@@ -95,17 +95,17 @@ public final class CxReader {
 
     /*
      * Convenience method. Returns a sorted map of lists of aspects, where the
-     * keys are the names of the aspect. Takes a CxParser as argument.
+     * keys are the names of the aspect. Takes a CxReader as argument.
      */
-    public static SortedMap<String, List<AspectElement>> parseAsMap(final CxReader p)
+    public static SortedMap<String, List<AspectElement>> parseAsMap(final CxReader cxr)
             throws IOException {
-        if (p == null) {
-            throw new IllegalArgumentException("parser is null");
+        if (cxr == null) {
+            throw new IllegalArgumentException("reader is null");
         }
         final SortedMap<String, List<AspectElement>> all_aspects = new TreeMap<String, List<AspectElement>>();
-        p.reset();
-        while (p.hasNext()) {
-            final List<AspectElement> aspects = p.getNext();
+        //cxr.reset();
+        while (cxr.hasNext()) {
+            final List<AspectElement> aspects = cxr.getNext();
             if ((aspects != null) && !aspects.isEmpty()) {
                 final String name = aspects.get(0).getAspectName();
                 if (!all_aspects.containsKey(name)) {
@@ -116,7 +116,7 @@ public final class CxReader {
                 }
             }
         }
-        p.reset();
+        //cxr.reset();
         return all_aspects;
     }
 
@@ -225,7 +225,7 @@ public final class CxReader {
         checkInputType(input);
         this.input = input;
         this.aspect_readers = setupAspectHandlers();
-        reset();
+        
     }
 
     private final static void checkInputType(final Object input) {
@@ -236,8 +236,9 @@ public final class CxReader {
         }
     }
 
-    public final void addAspectFragmentReader(final AspectFragmentReader fragment_reader) {
+    public final void addAspectFragmentReader(final AspectFragmentReader fragment_reader) throws IOException {
         aspect_readers.put(fragment_reader.getAspectName(), fragment_reader);
+        
 
     }
 
