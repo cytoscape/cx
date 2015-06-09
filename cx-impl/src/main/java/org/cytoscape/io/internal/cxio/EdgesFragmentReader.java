@@ -17,7 +17,7 @@ public class EdgesFragmentReader implements AspectFragmentReader {
 
     private EdgesFragmentReader() {
     }
-    
+
     @Override
     public String getAspectName() {
         return CxConstants.EDGES;

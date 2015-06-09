@@ -11,7 +11,6 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
@@ -49,7 +48,7 @@ public final class CxReader {
                     && (jp.getCurrentToken() != JsonToken.END_OBJECT)) {
                 throw new IllegalStateException(
                         "this should never have happened (likely cause: problem with '" + name
-                                + "' aspect handler)");
+                        + "' aspect handler)");
             }
             if ((token == JsonToken.START_ARRAY) || (token == JsonToken.START_OBJECT)) {
                 level++;
@@ -145,7 +144,7 @@ public final class CxReader {
             final Set<AspectFragmentReader> aspect_handlers) throws IOException {
         return new CxReader(url, aspect_handlers);
     }
-    
+
     public final static CxReader createInstance(final File file) throws IOException {
         return new CxReader(file);
     }
@@ -202,7 +201,7 @@ public final class CxReader {
         }
         return ahs;
     }
-    
+
     private final static HashMap<String, AspectFragmentReader> setupAspectHandlers() {
         final HashMap<String, AspectFragmentReader> ahs = new HashMap<String, AspectFragmentReader>();
         return ahs;
@@ -213,37 +212,33 @@ public final class CxReader {
         if (input == null) {
             throw new IllegalArgumentException("cx input is null");
         }
-        checkInputType( input );
+        checkInputType(input);
         this.input = input;
         this.aspect_readers = setupAspectReaders(aspect_readers);
         reset();
     }
-    
-    private CxReader(final Object input)
-            throws IOException {
+
+    private CxReader(final Object input) throws IOException {
         if (input == null) {
             throw new IllegalArgumentException("cx input is null");
         }
-        checkInputType( input );
+        checkInputType(input);
         this.input = input;
         this.aspect_readers = setupAspectHandlers();
         reset();
     }
-    
-    private final static void checkInputType( final Object input ) {
-        if ( !(input instanceof File) 
-            && !(input instanceof InputStream ) 
-            && !(input instanceof Reader ) 
-            && !(input instanceof String ) 
-            && !(input instanceof URL ) ) {
-            throw new IllegalArgumentException( "don't know how to process" + input.getClass() );
+
+    private final static void checkInputType(final Object input) {
+        if (!(input instanceof File) && !(input instanceof InputStream)
+                && !(input instanceof Reader) && !(input instanceof String)
+                && !(input instanceof URL)) {
+            throw new IllegalArgumentException("don't know how to process" + input.getClass());
         }
     }
 
     public final void addAspectFragmentReader(final AspectFragmentReader fragment_reader) {
         aspect_readers.put(fragment_reader.getAspectName(), fragment_reader);
-        
+
     }
-    
 
 }

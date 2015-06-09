@@ -10,7 +10,7 @@ import com.fasterxml.jackson.core.JsonToken;
 public class CartesianLayoutFragmentReader implements AspectFragmentReader {
 
     private static final boolean STRICT = true;
-    
+
     public static CartesianLayoutFragmentReader createInstance() {
         return new CartesianLayoutFragmentReader();
     }

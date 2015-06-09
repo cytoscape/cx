@@ -18,7 +18,7 @@ public class NodeAttributesFragmentReader implements AspectFragmentReader {
 
     private NodeAttributesFragmentReader() {
     }
-    
+
     @Override
     public String getAspectName() {
         return CxConstants.NODE_ATTRIBUTES;

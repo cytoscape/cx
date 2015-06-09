@@ -7,6 +7,6 @@ import org.cytoscape.model.CyNetwork;
 
 public interface CxToCy {
 
-    void deserializeCyNetwork(final CyNetwork network, final InputStream in)  throws IOException;
+    void deserializeCyNetwork(final CyNetwork network, final InputStream in) throws IOException;
 
 }

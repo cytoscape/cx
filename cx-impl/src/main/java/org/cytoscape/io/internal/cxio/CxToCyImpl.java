@@ -33,14 +33,14 @@ public class CxToCyImpl implements CxToCy {
 
     private final static void addEdges(final CyNetwork network, final List<AspectElement> aspects) {
         for (final AspectElement edge : aspects) {
-            System.out.println(edge.toString() );
+            System.out.println(edge.toString());
             // network.addEdge(source, target, true);
         }
     }
 
     private final static void addNodes(final CyNetwork network, final List<AspectElement> aspects) {
         for (final AspectElement node : aspects) {
-            System.out.println(node.toString() );
+            System.out.println(node.toString());
             // network.
             // CyNode node = new CyNodeTest()
         }

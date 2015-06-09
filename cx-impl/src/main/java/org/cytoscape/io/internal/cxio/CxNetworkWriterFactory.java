@@ -15,6 +15,7 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
         this.filter = filter;
     }
 
+    @Override
     public CyWriter createWriter(final OutputStream outputStream, final CyNetwork network) {
         return new CxNetworkWriter(outputStream, network);
     }
@@ -25,7 +26,7 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
     }
 
     @Override
-    public CyWriter createWriter(OutputStream os, CyNetworkView view) {
+    public CyWriter createWriter(final OutputStream os, final CyNetworkView view) {
         return new CxNetworkWriter(os, view.getModel());
 
     }

@@ -15,7 +15,7 @@ public final class Util {
     }
 
     final static List<String> parseSimpleList(final JsonParser jp, JsonToken t) throws IOException,
-            JsonParseException {
+    JsonParseException {
         final List<String> elements = new ArrayList<String>();
         while (t != JsonToken.END_ARRAY) {
             if (t == JsonToken.VALUE_STRING) {

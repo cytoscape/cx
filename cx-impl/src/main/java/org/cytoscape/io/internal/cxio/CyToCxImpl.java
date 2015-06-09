@@ -11,11 +11,13 @@ import org.cytoscape.model.CyNode;
 
 public class CyToCxImpl implements CyToCx {
 
+    private final static boolean USE_DEFAULT_PRETTY_PRINTER = true;
+
     @Override
     public void serializeCyNetwork(final CyNetwork network, final OutputStream out)
             throws IOException {
 
-        final CxWriter w = CxWriter.createInstance(out);
+        final CxWriter w = CxWriter.createInstance(out, USE_DEFAULT_PRETTY_PRINTER);
         w.addAspectFragmentWriter(EdgesFragmentWriter.createInstance());
         w.addAspectFragmentWriter(NodesFragmentWriter.createInstance());
         w.start();

@@ -14,8 +14,16 @@ public class JsonWriter {
     private static JsonGenerator g;
 
     public final static JsonWriter createInstance(final OutputStream out) throws IOException {
+        return createInstance(out, false);
+    }
+
+    public final static JsonWriter createInstance(final OutputStream out,
+            final boolean use_default_pretty_printer) throws IOException {
         final JsonFactory f = new JsonFactory();
         g = f.createGenerator(out);
+        if (use_default_pretty_printer) {
+            g.useDefaultPrettyPrinter();
+        }
         return new JsonWriter();
     }
 

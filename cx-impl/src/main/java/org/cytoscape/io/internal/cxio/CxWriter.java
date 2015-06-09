@@ -13,12 +13,13 @@ public class CxWriter {
     private boolean started;
     private boolean ended;
 
-    private CxWriter(final OutputStream out) throws IOException {
+    private CxWriter(final OutputStream out, final boolean use_default_pretty_printer)
+            throws IOException {
         if (out == null) {
             throw new IllegalArgumentException("output stream is null");
         }
         this.writers = new HashMap<String, AspectFragmentWriter>();
-        this.jw = JsonWriter.createInstance(out);
+        this.jw = JsonWriter.createInstance(out, use_default_pretty_printer);
         started = false;
         ended = false;
     }
@@ -63,7 +64,12 @@ public class CxWriter {
     }
 
     public final static CxWriter createInstance(final OutputStream out) throws IOException {
-        return new CxWriter(out);
+        return new CxWriter(out, false);
+    }
+
+    public final static CxWriter createInstance(final OutputStream out,
+            final boolean use_default_pretty_printer) throws IOException {
+        return new CxWriter(out, use_default_pretty_printer);
     }
 
     public void addAspectFragmentWriter(final AspectFragmentWriter writer) {

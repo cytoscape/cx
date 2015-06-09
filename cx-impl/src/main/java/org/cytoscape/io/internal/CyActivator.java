@@ -24,18 +24,21 @@ public class CyActivator extends AbstractCyActivator {
     public void start(final BundleContext bc) {
 
         final StreamUtil streamUtil = getService(bc, StreamUtil.class);
+
         final BasicCyFileFilter cxFilter = new BasicCyFileFilter(new String[] { "cx" },
-                new String[] { "text/cx" }, "CX", DataCategory.NETWORK, streamUtil);
+                new String[] { "application/json" }, "CX JSON", DataCategory.NETWORK, streamUtil);
+
         final CxNetworkWriterFactory cxNetworkViewWriterFactory = new CxNetworkWriterFactory(
                 cxFilter);
-        
+
         final Properties cxWriterFactoryProperties = new Properties();
+
         cxWriterFactoryProperties.put(ID, "cxNetworkWriterFactory");
+
         registerAllServices(bc, cxNetworkViewWriterFactory, cxWriterFactoryProperties);
-        
-        
-        //registerService(bc, cxNetworkViewWriterFactory, CyWriterFactory.class, new Properties());
-        
+
+        // registerService(bc, cxNetworkViewWriterFactory,
+        // CyWriterFactory.class, new Properties());
 
     }
 }

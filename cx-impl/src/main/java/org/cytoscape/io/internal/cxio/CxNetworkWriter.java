@@ -5,7 +5,6 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 
-
 import org.cytoscape.io.write.CyWriter;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.work.TaskMonitor;
@@ -65,6 +64,5 @@ public class CxNetworkWriter implements CyWriter {
             logger.error("Could not close Outputstream for CxNetworkWriter.", e);
         }
     }
-    
- 
+
 }
