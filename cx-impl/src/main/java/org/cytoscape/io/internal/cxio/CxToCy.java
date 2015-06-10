@@ -6,6 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 
+import org.cytoscape.io.internal.cxio.kit.AspectElement;
+import org.cytoscape.io.internal.cxio.kit.CartesianLayoutElement;
+import org.cytoscape.io.internal.cxio.kit.CxConstants;
+import org.cytoscape.io.internal.cxio.kit.EdgesElement;
+import org.cytoscape.io.internal.cxio.kit.NodesElement;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;

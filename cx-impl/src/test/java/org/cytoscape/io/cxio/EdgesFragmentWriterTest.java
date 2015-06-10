@@ -7,10 +7,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cytoscape.io.internal.cxio.AspectElement;
-import org.cytoscape.io.internal.cxio.EdgesElement;
-import org.cytoscape.io.internal.cxio.EdgesFragmentWriter;
-import org.cytoscape.io.internal.cxio.JsonWriter;
+import org.cytoscape.io.internal.cxio.kit.AspectElement;
+import org.cytoscape.io.internal.cxio.kit.EdgesElement;
+import org.cytoscape.io.internal.cxio.kit.EdgesFragmentWriter;
+import org.cytoscape.io.internal.cxio.kit.JsonWriter;
 import org.junit.Test;
 
 public class EdgesFragmentWriterTest {

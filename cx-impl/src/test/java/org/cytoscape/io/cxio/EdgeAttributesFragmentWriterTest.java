@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.cytoscape.io.internal.cxio.AspectElement;
-import org.cytoscape.io.internal.cxio.CxConstants;
-import org.cytoscape.io.internal.cxio.EdgeAttributesElement;
-import org.cytoscape.io.internal.cxio.EdgeAttributesFragmentWriter;
-import org.cytoscape.io.internal.cxio.JsonWriter;
+import org.cytoscape.io.internal.cxio.kit.AspectElement;
+import org.cytoscape.io.internal.cxio.kit.CxConstants;
+import org.cytoscape.io.internal.cxio.kit.EdgeAttributesElement;
+import org.cytoscape.io.internal.cxio.kit.EdgeAttributesFragmentWriter;
+import org.cytoscape.io.internal.cxio.kit.JsonWriter;
 import org.junit.Test;
 
 public class EdgeAttributesFragmentWriterTest {

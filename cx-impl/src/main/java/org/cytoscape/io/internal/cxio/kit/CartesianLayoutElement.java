@@ -1,4 +1,5 @@
-package org.cytoscape.io.internal.cxio;
+package org.cytoscape.io.internal.cxio.kit;
+
 
 public final class CartesianLayoutElement implements AspectElement {
 

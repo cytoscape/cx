@@ -7,11 +7,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.SortedMap;
 
-import org.cytoscape.io.internal.cxio.AspectElement;
-import org.cytoscape.io.internal.cxio.AspectFragmentReaderManager;
-import org.cytoscape.io.internal.cxio.CxConstants;
-import org.cytoscape.io.internal.cxio.CxReader;
-import org.cytoscape.io.internal.cxio.NodesElement;
+import org.cytoscape.io.internal.cxio.kit.AspectElement;
+import org.cytoscape.io.internal.cxio.kit.AspectFragmentReaderManager;
+import org.cytoscape.io.internal.cxio.kit.CxConstants;
+import org.cytoscape.io.internal.cxio.kit.CxReader;
+import org.cytoscape.io.internal.cxio.kit.NodesElement;
 import org.junit.Test;
 
 public class NodesFragmentReaderTest {

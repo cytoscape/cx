@@ -5,6 +5,14 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cytoscape.io.internal.cxio.kit.AspectElement;
+import org.cytoscape.io.internal.cxio.kit.CartesianLayoutElement;
+import org.cytoscape.io.internal.cxio.kit.CartesianLayoutFragmentWriter;
+import org.cytoscape.io.internal.cxio.kit.CxWriter;
+import org.cytoscape.io.internal.cxio.kit.EdgesElement;
+import org.cytoscape.io.internal.cxio.kit.EdgesFragmentWriter;
+import org.cytoscape.io.internal.cxio.kit.NodesElement;
+import org.cytoscape.io.internal.cxio.kit.NodesFragmentWriter;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;

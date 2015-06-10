@@ -3,7 +3,7 @@ package org.cytoscape.io.cxio;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.cytoscape.io.internal.cxio.NodesElement;
+import org.cytoscape.io.internal.cxio.kit.NodesElement;
 import org.junit.Test;
 
 public class NodeElementTest {

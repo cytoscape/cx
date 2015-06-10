@@ -7,15 +7,15 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.List;
 
-import org.cytoscape.io.internal.cxio.AspectElement;
-import org.cytoscape.io.internal.cxio.AspectFragmentReaderManager;
-import org.cytoscape.io.internal.cxio.CartesianLayoutElement;
-import org.cytoscape.io.internal.cxio.CxConstants;
-import org.cytoscape.io.internal.cxio.CxReader;
-import org.cytoscape.io.internal.cxio.EdgesElement;
-import org.cytoscape.io.internal.cxio.EdgesFragmentReader;
-import org.cytoscape.io.internal.cxio.NodesElement;
-import org.cytoscape.io.internal.cxio.NodesFragmentReader;
+import org.cytoscape.io.internal.cxio.kit.AspectElement;
+import org.cytoscape.io.internal.cxio.kit.AspectFragmentReaderManager;
+import org.cytoscape.io.internal.cxio.kit.CartesianLayoutElement;
+import org.cytoscape.io.internal.cxio.kit.CxConstants;
+import org.cytoscape.io.internal.cxio.kit.CxReader;
+import org.cytoscape.io.internal.cxio.kit.EdgesElement;
+import org.cytoscape.io.internal.cxio.kit.EdgesFragmentReader;
+import org.cytoscape.io.internal.cxio.kit.NodesElement;
+import org.cytoscape.io.internal.cxio.kit.NodesFragmentReader;
 import org.junit.Test;
 
 public class CxParserTest {

@@ -8,11 +8,11 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cytoscape.io.internal.cxio.AspectElement;
-import org.cytoscape.io.internal.cxio.CartesianLayoutElement;
-import org.cytoscape.io.internal.cxio.CartesianLayoutFragmentWriter;
-import org.cytoscape.io.internal.cxio.CxConstants;
-import org.cytoscape.io.internal.cxio.JsonWriter;
+import org.cytoscape.io.internal.cxio.kit.AspectElement;
+import org.cytoscape.io.internal.cxio.kit.CartesianLayoutElement;
+import org.cytoscape.io.internal.cxio.kit.CartesianLayoutFragmentWriter;
+import org.cytoscape.io.internal.cxio.kit.CxConstants;
+import org.cytoscape.io.internal.cxio.kit.JsonWriter;
 import org.junit.Test;
 
 public class CartesianLayoutFragmentWriterTest {

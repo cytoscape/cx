@@ -1,4 +1,4 @@
-package org.cytoscape.io.internal.cxio;
+package org.cytoscape.io.internal.cxio.kit;
 
 public interface AspectElement {
 

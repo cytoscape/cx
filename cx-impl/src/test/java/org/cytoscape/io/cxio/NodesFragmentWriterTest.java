@@ -8,10 +8,10 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cytoscape.io.internal.cxio.AspectElement;
-import org.cytoscape.io.internal.cxio.JsonWriter;
-import org.cytoscape.io.internal.cxio.NodesElement;
-import org.cytoscape.io.internal.cxio.NodesFragmentWriter;
+import org.cytoscape.io.internal.cxio.kit.AspectElement;
+import org.cytoscape.io.internal.cxio.kit.JsonWriter;
+import org.cytoscape.io.internal.cxio.kit.NodesElement;
+import org.cytoscape.io.internal.cxio.kit.NodesFragmentWriter;
 import org.junit.Test;
 
 public class NodesFragmentWriterTest {

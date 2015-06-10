@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.io.CyFileFilter;
+import org.cytoscape.io.internal.cxio.kit.CxConstants;
 import org.cytoscape.io.read.AbstractInputStreamTaskFactory;
 import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;

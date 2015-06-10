@@ -1,4 +1,4 @@
-package org.cytoscape.io.internal.cxio;
+package org.cytoscape.io.internal.cxio.kit;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,19 +9,19 @@ import java.util.TreeMap;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 
-public class EdgeAttributesFragmentReader implements AspectFragmentReader {
+public class NodeAttributesFragmentReader implements AspectFragmentReader {
     private static final boolean STRICT = true;
 
-    public static EdgeAttributesFragmentReader createInstance() {
-        return new EdgeAttributesFragmentReader();
+    public static NodeAttributesFragmentReader createInstance() {
+        return new NodeAttributesFragmentReader();
     }
 
-    private EdgeAttributesFragmentReader() {
+    private NodeAttributesFragmentReader() {
     }
 
     @Override
     public String getAspectName() {
-        return CxConstants.EDGE_ATTRIBUTES;
+        return CxConstants.NODE_ATTRIBUTES;
     }
 
     @Override
@@ -30,11 +30,11 @@ public class EdgeAttributesFragmentReader implements AspectFragmentReader {
         if (t != JsonToken.START_ARRAY) {
             throw new IOException("malformed cx json in '" + CxConstants.EDGES + "'");
         }
-        final List<AspectElement> ea_aspects = new ArrayList<AspectElement>();
+        final List<AspectElement> na_aspects = new ArrayList<AspectElement>();
         while (t != JsonToken.END_ARRAY) {
             if (t == JsonToken.START_OBJECT) {
                 String id = null;
-                List<String> edges = null;
+                List<String> nodes = null;
                 final SortedMap<String, List<String>> attributes = new TreeMap<String, List<String>>();
                 while (jp.nextToken() != JsonToken.END_OBJECT) {
                     final String namefield = jp.getCurrentName();
@@ -42,8 +42,8 @@ public class EdgeAttributesFragmentReader implements AspectFragmentReader {
                     if (CxConstants.ID.equals(namefield)) {
                         id = jp.getText().trim();
                     }
-                    else if (CxConstants.EDGES.equals(namefield)) {
-                        edges = Util.parseSimpleList(jp, t);
+                    else if (CxConstants.NODES.equals(namefield)) {
+                        nodes = Util.parseSimpleList(jp, t);
                     }
                     else if (CxConstants.ATTRIBUTES.equals(namefield)) {
                         while (jp.nextToken() != JsonToken.END_OBJECT) {
@@ -58,17 +58,16 @@ public class EdgeAttributesFragmentReader implements AspectFragmentReader {
                 }
                 if (Util.isEmpty(id)) {
                     throw new IOException(
-                            "malformed cx json: attribute id in edge attributes is missing");
+                            "malformed cx json: attribute id in node attributes is missing");
                 }
-                if ((edges == null) || edges.isEmpty()) {
+                if ((nodes == null) || nodes.isEmpty()) {
                     throw new IOException(
-                            "malformed cx json: edge ids in edge attributes are missing");
+                            "malformed cx json: node ids in node attributes are missing");
                 }
-                ea_aspects.add(new EdgeAttributesElement(id, edges, attributes));
+                na_aspects.add(new NodeAttributesElement(id, nodes, attributes));
             }
             t = jp.nextToken();
         }
-
-        return ea_aspects;
+        return na_aspects;
     }
 }

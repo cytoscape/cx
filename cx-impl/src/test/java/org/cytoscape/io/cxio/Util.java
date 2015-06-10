@@ -6,16 +6,16 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.SortedMap;
 
-import org.cytoscape.io.internal.cxio.AspectElement;
-import org.cytoscape.io.internal.cxio.AspectFragmentReaderManager;
-import org.cytoscape.io.internal.cxio.CartesianLayoutFragmentWriter;
-import org.cytoscape.io.internal.cxio.CxConstants;
-import org.cytoscape.io.internal.cxio.CxReader;
-import org.cytoscape.io.internal.cxio.CxWriter;
-import org.cytoscape.io.internal.cxio.EdgeAttributesFragmentWriter;
-import org.cytoscape.io.internal.cxio.EdgesFragmentWriter;
-import org.cytoscape.io.internal.cxio.NodeAttributesFragmentWriter;
-import org.cytoscape.io.internal.cxio.NodesFragmentWriter;
+import org.cytoscape.io.internal.cxio.kit.AspectElement;
+import org.cytoscape.io.internal.cxio.kit.AspectFragmentReaderManager;
+import org.cytoscape.io.internal.cxio.kit.CartesianLayoutFragmentWriter;
+import org.cytoscape.io.internal.cxio.kit.CxConstants;
+import org.cytoscape.io.internal.cxio.kit.CxReader;
+import org.cytoscape.io.internal.cxio.kit.CxWriter;
+import org.cytoscape.io.internal.cxio.kit.EdgeAttributesFragmentWriter;
+import org.cytoscape.io.internal.cxio.kit.EdgesFragmentWriter;
+import org.cytoscape.io.internal.cxio.kit.NodeAttributesFragmentWriter;
+import org.cytoscape.io.internal.cxio.kit.NodesFragmentWriter;
 
 final class TestUtil {
 

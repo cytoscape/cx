@@ -8,6 +8,14 @@ import java.util.Set;
 import java.util.SortedMap;
 
 import org.cytoscape.application.CyApplicationManager;
+import org.cytoscape.io.internal.cxio.kit.AspectElement;
+import org.cytoscape.io.internal.cxio.kit.CartesianLayoutFragmentReader;
+import org.cytoscape.io.internal.cxio.kit.CxConstants;
+import org.cytoscape.io.internal.cxio.kit.CxReader;
+import org.cytoscape.io.internal.cxio.kit.EdgeAttributesFragmentReader;
+import org.cytoscape.io.internal.cxio.kit.EdgesFragmentReader;
+import org.cytoscape.io.internal.cxio.kit.NodeAttributesFragmentReader;
+import org.cytoscape.io.internal.cxio.kit.NodesFragmentReader;
 import org.cytoscape.io.read.AbstractCyNetworkReader;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkFactory;

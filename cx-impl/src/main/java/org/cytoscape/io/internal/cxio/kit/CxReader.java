@@ -1,4 +1,4 @@
-package org.cytoscape.io.internal.cxio;
+package org.cytoscape.io.internal.cxio.kit;
 
 import java.io.File;
 import java.io.IOException;
