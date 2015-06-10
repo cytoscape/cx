@@ -11,12 +11,12 @@ public class CartesianLayoutFragmentWriter implements AspectFragmentWriter {
     private CartesianLayoutFragmentWriter() {
     }
 
-    private final void addCartesianLayoutElement(final String node_id, final int x, final int y,
-            final JsonWriter w) throws IOException {
+    private final void addCartesianLayoutElement(final String node_id, final String x,
+            final String y, final JsonWriter w) throws IOException {
         w.writeStartObject();
         w.writeStringField(CxConstants.NODE, node_id);
-        w.writeStringField(CxConstants.X, Integer.toString(x));
-        w.writeStringField(CxConstants.Y, Integer.toString(y));
+        w.writeStringField(CxConstants.X, x);
+        w.writeStringField(CxConstants.Y, y);
         w.writeEndObject();
     }
 

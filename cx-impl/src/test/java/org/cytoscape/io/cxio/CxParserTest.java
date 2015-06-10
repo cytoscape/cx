@@ -4,17 +4,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
-import java.util.SortedMap;
 
 import org.cytoscape.io.internal.cxio.AspectElement;
 import org.cytoscape.io.internal.cxio.AspectFragmentReaderManager;
 import org.cytoscape.io.internal.cxio.CartesianLayoutElement;
-import org.cytoscape.io.internal.cxio.CartesianLayoutFragmentReader;
 import org.cytoscape.io.internal.cxio.CxConstants;
 import org.cytoscape.io.internal.cxio.CxReader;
 import org.cytoscape.io.internal.cxio.EdgesElement;
@@ -567,7 +562,7 @@ public class CxParserTest {
         assertTrue("failed to get expected Aspect instance", x.get(0) instanceof NodesElement);
 
     }
-    
+
     @Test
     public void test10() throws IOException {
         final String j = "[{\"nodes\":[{\"@id\":\"_0\"},{\"@id\":\"_1\"},{\"@id\":\"_2\"},{\"@id\":\"_3\"}]}]";
@@ -612,47 +607,49 @@ public class CxParserTest {
                 y.contains(new NodesElement("_3")));
 
     }
-    
-//    @Test
-//    public void test11() throws IOException {
-//        File f = new File("/Users/cmzmasek/Desktop/dan.cx");
-//        InputStream in = new FileInputStream(f);
-//        final CxReader p = CxReader.createInstance(in);
-//        p.addAspectFragmentReader(EdgesFragmentReader.createInstance());
-//        p.addAspectFragmentReader(NodesFragmentReader.createInstance());
-//        p.reset();
-//        assertTrue(p.hasNext());
-//        while( p.hasNext() ) {
-//            System.out.println( p.getNext());
-//        }
-//
-//    }
-//    
-//    @Test
-//    public void test12() throws IOException {
-//        File f = new File("/Users/cmzmasek/Desktop/dan.cx");
-//        InputStream in = new FileInputStream(f);
-//        final CxReader p = CxReader.createInstance(in);
-//        p.addAspectFragmentReader(EdgesFragmentReader.createInstance());
-//        p.addAspectFragmentReader(NodesFragmentReader.createInstance());
-//        p.reset();
-//        final SortedMap<String, List<AspectElement>> res = CxReader.parseAsMap(p);
-//        System.out.println( res );
-//
-//    }
-//    
-//    @Test
-//    public void test13() throws IOException {
-//        File f = new File("/Users/cmzmasek/Desktop/simple.cx");
-//        InputStream in = new FileInputStream(f);
-//        final CxReader p = CxReader.createInstance(in);
-//        p.addAspectFragmentReader(EdgesFragmentReader.createInstance());
-//        p.addAspectFragmentReader(NodesFragmentReader.createInstance());
-//        p.addAspectFragmentReader(CartesianLayoutFragmentReader.createInstance());
-//        p.reset();
-//        final SortedMap<String, List<AspectElement>> res = CxReader.parseAsMap(p);
-//        System.out.println( res );
-//
-//    }
+
+    // @Test
+    // public void test11() throws IOException {
+    // File f = new File("/Users/cmzmasek/Desktop/dan.cx");
+    // InputStream in = new FileInputStream(f);
+    // final CxReader p = CxReader.createInstance(in);
+    // p.addAspectFragmentReader(EdgesFragmentReader.createInstance());
+    // p.addAspectFragmentReader(NodesFragmentReader.createInstance());
+    // p.reset();
+    // assertTrue(p.hasNext());
+    // while( p.hasNext() ) {
+    // System.out.println( p.getNext());
+    // }
+    //
+    // }
+    //
+    // @Test
+    // public void test12() throws IOException {
+    // File f = new File("/Users/cmzmasek/Desktop/dan.cx");
+    // InputStream in = new FileInputStream(f);
+    // final CxReader p = CxReader.createInstance(in);
+    // p.addAspectFragmentReader(EdgesFragmentReader.createInstance());
+    // p.addAspectFragmentReader(NodesFragmentReader.createInstance());
+    // p.reset();
+    // final SortedMap<String, List<AspectElement>> res =
+    // CxReader.parseAsMap(p);
+    // System.out.println( res );
+    //
+    // }
+    //
+    // @Test
+    // public void test13() throws IOException {
+    // File f = new File("/Users/cmzmasek/Desktop/simple.cx");
+    // InputStream in = new FileInputStream(f);
+    // final CxReader p = CxReader.createInstance(in);
+    // p.addAspectFragmentReader(EdgesFragmentReader.createInstance());
+    // p.addAspectFragmentReader(NodesFragmentReader.createInstance());
+    // p.addAspectFragmentReader(CartesianLayoutFragmentReader.createInstance());
+    // p.reset();
+    // final SortedMap<String, List<AspectElement>> res =
+    // CxReader.parseAsMap(p);
+    // System.out.println( res );
+    //
+    // }
 
 }

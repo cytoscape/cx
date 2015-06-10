@@ -61,14 +61,14 @@ public class CartesianLayoutFragmentReaderTest {
         final CartesianLayoutElement a0 = (CartesianLayoutElement) aspects.get(0);
 
         assertEquals(a0.getNode(), "_0");
-        assertTrue(a0.getX() == 123);
-        assertTrue(a0.getY() == 456);
+        assertTrue(a0.getX().equals("123"));
+        assertTrue(a0.getY().equals("456"));
 
         final CartesianLayoutElement a2 = (CartesianLayoutElement) aspects.get(2);
 
         assertEquals(a2.getNode(), "_2");
-        assertTrue(a2.getX() == 5);
-        assertTrue(a2.getY() == 6);
+        assertTrue(a2.getX().equals("5"));
+        assertTrue(a2.getY().equals("6"));
 
     }
 

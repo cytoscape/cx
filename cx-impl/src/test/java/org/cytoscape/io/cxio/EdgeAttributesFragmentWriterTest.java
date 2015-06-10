@@ -70,7 +70,7 @@ public class EdgeAttributesFragmentWriterTest {
                 "[{\""
                         + CxConstants.EDGE_ATTRIBUTES
                         + "\":[{\"@id\":\"00\",\"edges\":[\"000\",\"001\"],\"attributes\":{\"A\":[\"a1\",\"a2\",\"a3\"],\"B\":[\"b1\",\"b2\",\"b3\"]}}]}]",
-                out1.toString());
+                        out1.toString());
     }
 
 }

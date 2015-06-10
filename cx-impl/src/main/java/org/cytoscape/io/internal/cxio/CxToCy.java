@@ -13,7 +13,6 @@ import org.cytoscape.model.CyTable;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CySubNetwork;
 
-
 public class CxToCy {
 
     private Map<CyNode, Double[]> position_map;
@@ -25,10 +24,10 @@ public class CxToCy {
         final List<AspectElement> edges = res.get(CxConstants.EDGES);
         final List<AspectElement> layout = res.get(CxConstants.CARTESIAN_LAYOUT);
 
-        if ( nodes == null || nodes.isEmpty() ) {
+        if ((nodes == null) || nodes.isEmpty()) {
             throw new IOException("no nodes in input");
         }
-        
+
         System.out.println("nodes: " + nodes);
         System.out.println("edges: " + edges);
         System.out.println("layout: " + layout);
@@ -52,8 +51,8 @@ public class CxToCy {
             final Map<String, CyNode> node_map) {
         for (final AspectElement ae : layout) {
             final CartesianLayoutElement cle = (CartesianLayoutElement) ae;
-            position_map.put(node_map.get(cle.getNode()), new Double[] { (double) cle.getX(),
-                (double) cle.getY() });
+            position_map.put(node_map.get(cle.getNode()), new Double[] {
+                Double.valueOf(cle.getX()), Double.valueOf(cle.getY()) });
         }
     }
 

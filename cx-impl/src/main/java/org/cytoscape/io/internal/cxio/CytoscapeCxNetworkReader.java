@@ -72,7 +72,6 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     @Override
     public CyNetworkView buildCyNetworkView(final CyNetwork network) {
         final CyNetworkView view = getNetworkViewFactory().createNetworkView(network);
-
         final Map<CyNode, Double[]> positionMap = mapper.getNodePosition();
         for (final CyNode node : positionMap.keySet()) {
             final Double[] position = positionMap.get(node);
@@ -81,7 +80,6 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
             view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION,
                     position[1]);
         }
-
         return view;
     }
 

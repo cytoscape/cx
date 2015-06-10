@@ -3,13 +3,19 @@ package org.cytoscape.io.internal.cxio;
 public final class CartesianLayoutElement implements AspectElement {
 
     private final String node;
-    private final int x;
-    private final int y;
+    private final String x;
+    private final String y;
 
-    public CartesianLayoutElement(final String node, final int x, final int y) {
+    public CartesianLayoutElement(final String node, final String x, final String y) {
         this.node = node;
         this.x = x;
         this.y = y;
+    }
+
+    public CartesianLayoutElement(final String node, final double x, final double y) {
+        this.node = node;
+        this.x = String.valueOf(x);
+        this.y = String.valueOf(y);
     }
 
     @Override
@@ -21,11 +27,11 @@ public final class CartesianLayoutElement implements AspectElement {
         return node;
     }
 
-    public int getX() {
+    public String getX() {
         return x;
     }
 
-    public int getY() {
+    public String getY() {
         return y;
     }
 

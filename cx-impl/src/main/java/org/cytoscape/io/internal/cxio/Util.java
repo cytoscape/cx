@@ -22,7 +22,8 @@ public final class Util {
                 elements.add(jp.getText());
             }
             else if (t != JsonToken.START_OBJECT) {
-                throw new IOException("malformed cx json" + t);
+                throw new IOException("malformed cx json, expected " + JsonToken.START_OBJECT
+                        + ", got " + t);
             }
             t = jp.nextToken();
         }

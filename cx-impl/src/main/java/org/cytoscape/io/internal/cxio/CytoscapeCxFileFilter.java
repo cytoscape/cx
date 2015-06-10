@@ -13,31 +13,31 @@ import org.slf4j.LoggerFactory;
 
 public class CytoscapeCxFileFilter extends BasicCyFileFilter {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(CytoscapeCxFileFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(CytoscapeCxFileFilter.class);
 
-	public CytoscapeCxFileFilter(Set<String> extensions, Set<String> contentTypes,
-			String description, DataCategory category, StreamUtil streamUtil) {
-		super(extensions, contentTypes, description, category, streamUtil);
-	}
+    public CytoscapeCxFileFilter(final Set<String> extensions, final Set<String> contentTypes,
+            final String description, final DataCategory category, final StreamUtil streamUtil) {
+        super(extensions, contentTypes, description, category, streamUtil);
+    }
 
-	public CytoscapeCxFileFilter(String[] extensions, String[] contentTypes,
-			String description, DataCategory category, StreamUtil streamUtil) {
-		super(extensions, contentTypes, description, category, streamUtil);
-	}
+    public CytoscapeCxFileFilter(final String[] extensions, final String[] contentTypes,
+            final String description, final DataCategory category, final StreamUtil streamUtil) {
+        super(extensions, contentTypes, description, category, streamUtil);
+    }
 
-	@Override
-	public boolean accepts(final InputStream stream, final DataCategory category) {
-		return super.accepts(stream, category);
-	}
+    @Override
+    public boolean accepts(final InputStream stream, final DataCategory category) {
+        return super.accepts(stream, category);
+    }
 
-	@Override
-	public boolean accepts(final URI uri, final DataCategory category) {
-		try {
-			return accepts(uri.toURL().openStream(), category);
-		} catch (IOException e) {
-			logger.error("Error while opening stream: " + uri, e);
-			return false;
-		}
-	}
+    @Override
+    public boolean accepts(final URI uri, final DataCategory category) {
+        try {
+            return accepts(uri.toURL().openStream(), category);
+        }
+        catch (final IOException e) {
+            logger.error("Error while opening stream: " + uri, e);
+            return false;
+        }
+    }
 }

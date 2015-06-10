@@ -33,8 +33,8 @@ public class CartesianLayoutFragmentReader implements AspectFragmentReader {
         while (t != JsonToken.END_ARRAY) {
             if (t == JsonToken.START_OBJECT) {
                 String node_id = null;
-                int x = -Integer.MAX_VALUE;
-                int y = -Integer.MAX_VALUE;
+                String x = null;
+                String y = null;
                 while (jp.nextToken() != JsonToken.END_OBJECT) {
                     final String namefield = jp.getCurrentName();
                     jp.nextToken(); // move to value
@@ -43,10 +43,10 @@ public class CartesianLayoutFragmentReader implements AspectFragmentReader {
                     }
                     else if (CxConstants.X.equals(namefield)) {
 
-                        x = jp.getValueAsInt();
+                        x = jp.getValueAsString();
                     }
                     else if (CxConstants.Y.equals(namefield)) {
-                        y = jp.getValueAsInt();
+                        y = jp.getValueAsString();
                     }
                     else if (STRICT) {
                         throw new IOException("malformed cx json: unrecognized field '" + namefield
@@ -57,11 +57,11 @@ public class CartesianLayoutFragmentReader implements AspectFragmentReader {
                     throw new IOException(
                             "malformed cx json: node id in cartesian layout is missing");
                 }
-                if (x == -Integer.MAX_VALUE) {
+                if (x == null) {
                     throw new IOException(
                             "malformed cx json: x coordinate in cartesian layout is missing");
                 }
-                if (y == -Integer.MAX_VALUE) {
+                if (y == null) {
                     throw new IOException(
                             "malformed cx json: y coordinate in cartesian layout is missing");
                 }

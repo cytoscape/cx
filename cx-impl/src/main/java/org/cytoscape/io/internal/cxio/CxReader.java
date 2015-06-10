@@ -103,7 +103,7 @@ public final class CxReader {
             throw new IllegalArgumentException("reader is null");
         }
         final SortedMap<String, List<AspectElement>> all_aspects = new TreeMap<String, List<AspectElement>>();
-        //cxr.reset();
+        // cxr.reset();
         while (cxr.hasNext()) {
             final List<AspectElement> aspects = cxr.getNext();
             if ((aspects != null) && !aspects.isEmpty()) {
@@ -116,7 +116,7 @@ public final class CxReader {
                 }
             }
         }
-        //cxr.reset();
+        // cxr.reset();
         return all_aspects;
     }
 
@@ -225,7 +225,7 @@ public final class CxReader {
         checkInputType(input);
         this.input = input;
         this.aspect_readers = setupAspectHandlers();
-        
+
     }
 
     private final static void checkInputType(final Object input) {
@@ -236,9 +236,9 @@ public final class CxReader {
         }
     }
 
-    public final void addAspectFragmentReader(final AspectFragmentReader fragment_reader) throws IOException {
+    public final void addAspectFragmentReader(final AspectFragmentReader fragment_reader)
+            throws IOException {
         aspect_readers.put(fragment_reader.getAspectName(), fragment_reader);
-        
 
     }
 

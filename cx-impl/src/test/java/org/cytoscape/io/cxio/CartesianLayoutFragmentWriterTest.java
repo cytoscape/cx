@@ -32,9 +32,9 @@ public class CartesianLayoutFragmentWriterTest {
 
         assertEquals("[{\"" + CxConstants.CARTESIAN_LAYOUT + "\":[]}]", out0.toString());
 
-        final CartesianLayoutElement c0 = new CartesianLayoutElement("00", 0, 0);
-        final CartesianLayoutElement c1 = new CartesianLayoutElement("01", 1, 2);
-        final CartesianLayoutElement c2 = new CartesianLayoutElement("02", 3, 4);
+        final CartesianLayoutElement c0 = new CartesianLayoutElement("00", "0", "0");
+        final CartesianLayoutElement c1 = new CartesianLayoutElement("01", "1", "2");
+        final CartesianLayoutElement c2 = new CartesianLayoutElement("02", "3", "4");
 
         final List<AspectElement> l1 = new ArrayList<AspectElement>();
         l1.add(c0);
