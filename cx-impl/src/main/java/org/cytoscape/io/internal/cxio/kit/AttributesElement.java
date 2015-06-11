@@ -6,7 +6,7 @@ import java.util.SortedMap;
 
 import org.cytoscape.io.internal.cxio.kit.CxConstants.ATTRIBUTE_TYPE;
 
-public abstract class AttributeElement implements AspectElement {
+public abstract class AttributesElement implements AspectElement {
 
     SortedMap<String, List<String>> attributes;
     String                          id;

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-public final class NodeAttributesElement extends AttributeElement {
+public final class NodeAttributesElement extends AttributesElement {
 
     private final List<String> nodes;
 

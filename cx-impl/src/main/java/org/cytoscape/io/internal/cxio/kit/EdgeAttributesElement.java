@@ -5,13 +5,9 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-public final class EdgeAttributesElement extends AttributeElement {
+public final class EdgeAttributesElement extends AttributesElement {
 
-    // private final SortedMap<String, List<String>> attributes;
     private final List<String> edges;
-
-    // private final String id;
-    // private final CxConstants.ATTRIBUTE_TYPE type;
 
     public EdgeAttributesElement(final String id, final CxConstants.ATTRIBUTE_TYPE type) {
         this.id = id;
