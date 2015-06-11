@@ -33,17 +33,13 @@ public class CxToCy {
             throw new IOException("no nodes in input");
         }
 
-        System.out.println("nodes: " + nodes);
-        System.out.println("edges: " + edges);
-        System.out.println("layout: " + layout);
-
         position_map = new HashMap<CyNode, Double[]>();
         final Map<String, CyNode> nodeMap = addNodes(network, nodes);
         addEdges(network, edges, nodeMap);
         if ((layout != null) && !layout.isEmpty()) {
             addPositions(layout, nodeMap);
         }
-        System.out.println("position_map: " + position_map);
+ 
         if (collectionName != null) {
             final CyRootNetwork rootNetwork = ((CySubNetwork) network).getRootNetwork();
             rootNetwork.getRow(rootNetwork).set(CyNetwork.NAME, collectionName);

@@ -12,6 +12,18 @@ public final class EdgesElement implements AspectElement {
         this.source = source;
         this.target = target;
     }
+    
+    public EdgesElement(final long id, final String source, final String target) {
+        this.id = String.valueOf(id);
+        this.source = source;
+        this.target = target;
+    }
+    
+    public EdgesElement(final long id, final long source, final long target) {
+        this.id = String.valueOf(id);
+        this.source = String.valueOf(source);
+        this.target = String.valueOf(target);
+    }
 
     @Override
     public boolean equals(final Object o) {

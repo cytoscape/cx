@@ -23,7 +23,7 @@ public final class EdgeAttributesElement implements AspectElement {
         this.edges = new ArrayList<String>();
         this.attributes = new TreeMap<String, List<String>>();
     }
-
+    
     public EdgeAttributesElement(final String id, final String edge_id) {
         this.id = id;
         this.edges = new ArrayList<String>();
@@ -36,6 +36,10 @@ public final class EdgeAttributesElement implements AspectElement {
             throw new IllegalArgumentException("attempt to add null or empty edge id");
         }
         edges.add(edge_id);
+    }
+    
+    public final void addEdge(final long edge_id) {
+        addEdge(String.valueOf(edge_id));
     }
 
     public final void addAttribute(final String key, final String value) {

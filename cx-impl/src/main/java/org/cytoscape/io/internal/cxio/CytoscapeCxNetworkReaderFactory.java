@@ -7,7 +7,12 @@ import java.util.Set;
 
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.io.CyFileFilter;
-import org.cytoscape.io.internal.cxio.kit.CxConstants;
+import org.cytoscape.io.internal.cxio.kit.AspectFragmentReader;
+import org.cytoscape.io.internal.cxio.kit.CartesianLayoutFragmentReader;
+import org.cytoscape.io.internal.cxio.kit.EdgeAttributesFragmentReader;
+import org.cytoscape.io.internal.cxio.kit.EdgesFragmentReader;
+import org.cytoscape.io.internal.cxio.kit.NodeAttributesFragmentReader;
+import org.cytoscape.io.internal.cxio.kit.NodesFragmentReader;
 import org.cytoscape.io.read.AbstractInputStreamTaskFactory;
 import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
@@ -35,16 +40,17 @@ public class CytoscapeCxNetworkReaderFactory extends AbstractInputStreamTaskFact
     @Override
     public TaskIterator createTaskIterator(final InputStream is, final String collectionName) {
         try {
-            final Set<String> aspects = new HashSet<String>();
-            aspects.add(CxConstants.NODES);
-            aspects.add(CxConstants.EDGES);
-            aspects.add(CxConstants.NODE_ATTRIBUTES);
-            aspects.add(CxConstants.EDGE_ATTRIBUTES);
-            aspects.add(CxConstants.CARTESIAN_LAYOUT);
+            final Set<AspectFragmentReader> aspect_fragment_readers = new HashSet<AspectFragmentReader>();
+
+            aspect_fragment_readers.add(NodesFragmentReader.createInstance());
+            aspect_fragment_readers.add(EdgesFragmentReader.createInstance());
+            aspect_fragment_readers.add(NodeAttributesFragmentReader.createInstance());
+            aspect_fragment_readers.add(EdgeAttributesFragmentReader.createInstance());
+            aspect_fragment_readers.add(CartesianLayoutFragmentReader.createInstance());
 
             return new TaskIterator(new CytoscapeCxNetworkReader(collectionName, is,
                     cyApplicationManager, cyNetworkFactory, cyNetworkManager, cyRootNetworkManager,
-                    aspects));
+                    aspect_fragment_readers));
         }
         catch (final IOException e) {
 

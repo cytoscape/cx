@@ -7,12 +7,13 @@ import java.util.TreeMap;
 
 public final class NodeAttributesElement implements AspectElement {
 
-    private final String id;
-    private final List<String> nodes;
+    private final String                          id;
+    private final List<String>                    nodes;
     private final SortedMap<String, List<String>> attributes;
 
-    public NodeAttributesElement(final String id, final List<String> nodes,
-            final SortedMap<String, List<String>> attributes) {
+    public NodeAttributesElement(final String id,
+                                 final List<String> nodes,
+                                 final SortedMap<String, List<String>> attributes) {
         this.id = id;
         this.nodes = nodes;
         this.attributes = attributes;
@@ -36,6 +37,10 @@ public final class NodeAttributesElement implements AspectElement {
             throw new IllegalArgumentException("attempt to add null or empty node id");
         }
         nodes.add(node_id);
+    }
+    
+    public final void addNode(final long node_id) {
+        addNode(String.valueOf(node_id));
     }
 
     public final void addAttribute(final String key, final String value) {

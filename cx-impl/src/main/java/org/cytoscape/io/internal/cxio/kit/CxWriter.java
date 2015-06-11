@@ -9,9 +9,9 @@ import java.util.Map;
 public class CxWriter {
 
     private final Map<String, AspectFragmentWriter> writers;
-    private final JsonWriter jw;
-    private boolean started;
-    private boolean ended;
+    private final JsonWriter                        jw;
+    private boolean                                 started;
+    private boolean                                 ended;
 
     private CxWriter(final OutputStream out, final boolean use_default_pretty_printer)
             throws IOException {
@@ -68,7 +68,8 @@ public class CxWriter {
     }
 
     public final static CxWriter createInstance(final OutputStream out,
-            final boolean use_default_pretty_printer) throws IOException {
+                                                final boolean use_default_pretty_printer)
+            throws IOException {
         return new CxWriter(out, use_default_pretty_printer);
     }
 

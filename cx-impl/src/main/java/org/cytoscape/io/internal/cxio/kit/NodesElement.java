@@ -1,12 +1,15 @@
 package org.cytoscape.io.internal.cxio.kit;
 
-
 public final class NodesElement implements AspectElement {
 
     private final String id;
 
     public NodesElement(final String id) {
         this.id = id;
+    }
+
+    public NodesElement(final long id) {
+        this.id = String.valueOf(id);
     }
 
     @Override
