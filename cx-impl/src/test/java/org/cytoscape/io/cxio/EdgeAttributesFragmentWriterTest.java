@@ -12,6 +12,7 @@ import java.util.TreeMap;
 
 import org.cytoscape.io.internal.cxio.kit.AspectElement;
 import org.cytoscape.io.internal.cxio.kit.CxConstants;
+import org.cytoscape.io.internal.cxio.kit.CxConstants.ATTRIBUTE_TYPE;
 import org.cytoscape.io.internal.cxio.kit.EdgeAttributesElement;
 import org.cytoscape.io.internal.cxio.kit.EdgeAttributesFragmentWriter;
 import org.cytoscape.io.internal.cxio.kit.JsonWriter;
@@ -52,7 +53,7 @@ public class EdgeAttributesFragmentWriterTest {
         attributes.put("A", v1);
         attributes.put("B", v2);
 
-        final EdgeAttributesElement ea0 = new EdgeAttributesElement("00", edges, attributes);
+        final EdgeAttributesElement ea0 = new EdgeAttributesElement("00", edges, ATTRIBUTE_TYPE.INTEGER,  attributes);
 
         final List<AspectElement> l1 = new ArrayList<AspectElement>();
         l1.add(ea0);
@@ -65,11 +66,12 @@ public class EdgeAttributesFragmentWriterTest {
         t1.start();
         w1.write(l1, t1);
         t1.end();
-
+        
+     
         assertEquals(
                 "[{\""
                         + CxConstants.EDGE_ATTRIBUTES
-                        + "\":[{\"@id\":\"00\",\"edges\":[\"000\",\"001\"],\"attributes\":{\"A\":[\"a1\",\"a2\",\"a3\"],\"B\":[\"b1\",\"b2\",\"b3\"]}}]}]",
+                        + "\":[{\"@id\":\"00\",\"type\":\"integer\",\"edges\":[\"000\",\"001\"],\"attributes\":{\"A\":[\"a1\",\"a2\",\"a3\"],\"B\":[\"b1\",\"b2\",\"b3\"]}}]}]",
                         out1.toString());
     }
 

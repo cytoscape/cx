@@ -18,7 +18,8 @@ public class JsonWriter {
     }
 
     public final static JsonWriter createInstance(final OutputStream out,
-            final boolean use_default_pretty_printer) throws IOException {
+                                                  final boolean use_default_pretty_printer)
+            throws IOException {
         final JsonFactory f = new JsonFactory();
         g = f.createGenerator(out);
         if (use_default_pretty_printer) {
@@ -46,6 +47,11 @@ public class JsonWriter {
         g.writeArrayFieldStart(label);
     }
 
+    public final void writeBooleanField(final String field_name, final boolean value)
+            throws IOException {
+        g.writeBooleanField(field_name, value);
+    }
+
     public final void writeEndObject() throws IOException {
         g.writeEndObject();
     }
@@ -68,6 +74,11 @@ public class JsonWriter {
             }
             g.writeEndArray();
         }
+    }
+
+    public final void writeNumberField(final String field_name, final double value)
+            throws IOException {
+        g.writeNumberField(field_name, value);
     }
 
     public final void writeObjectFieldStart(final String label) throws IOException {

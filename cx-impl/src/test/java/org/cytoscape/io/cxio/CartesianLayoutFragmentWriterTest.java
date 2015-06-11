@@ -50,9 +50,8 @@ public class CartesianLayoutFragmentWriterTest {
         w1.write(l1, t1);
         t1.end();
 
-        assertEquals(
-                "[{\"cartesianLayout\":[{\"node\":\"00\",\"x\":\"0\",\"y\":\"0\"},{\"node\":\"01\",\"x\":\"1\",\"y\":\"2\"},{\"node\":\"02\",\"x\":\"3\",\"y\":\"4\"}]}]",
-                out1.toString());
+        assertEquals("[{\"cartesianLayout\":[{\"node\":\"00\",\"x\":0.0,\"y\":0.0},{\"node\":\"01\",\"x\":1.0,\"y\":2.0},{\"node\":\"02\",\"x\":3.0,\"y\":4.0}]}]",
+                     out1.toString());
 
     }
 

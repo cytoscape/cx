@@ -34,6 +34,7 @@ public class EdgeAttributesFragmentReader implements AspectFragmentReader {
         while (t != JsonToken.END_ARRAY) {
             if (t == JsonToken.START_OBJECT) {
                 String id = null;
+                CxConstants.ATTRIBUTE_TYPE type = null;
                 List<String> edges = null;
                 final SortedMap<String, List<String>> attributes = new TreeMap<String, List<String>>();
                 while (jp.nextToken() != JsonToken.END_OBJECT) {
@@ -44,6 +45,9 @@ public class EdgeAttributesFragmentReader implements AspectFragmentReader {
                     }
                     else if (CxConstants.EDGES.equals(namefield)) {
                         edges = Util.parseSimpleList(jp, t);
+                    }
+                    else if (CxConstants.TYPE.equals(namefield)) {
+                        type = Util.determineAttributeType(jp.getText().trim());
                     }
                     else if (CxConstants.ATTRIBUTES.equals(namefield)) {
                         while (jp.nextToken() != JsonToken.END_OBJECT) {
@@ -60,11 +64,15 @@ public class EdgeAttributesFragmentReader implements AspectFragmentReader {
                     throw new IOException(
                             "malformed cx json: attribute id in edge attributes is missing");
                 }
+                if (type == null) {
+                    throw new IOException(
+                            "malformed cx json: type in edge attributes is missing");
+                }
                 if ((edges == null) || edges.isEmpty()) {
                     throw new IOException(
                             "malformed cx json: edge ids in edge attributes are missing");
                 }
-                ea_aspects.add(new EdgeAttributesElement(id, edges, attributes));
+                ea_aspects.add(new EdgeAttributesElement(id, edges, type, attributes));
             }
             t = jp.nextToken();
         }

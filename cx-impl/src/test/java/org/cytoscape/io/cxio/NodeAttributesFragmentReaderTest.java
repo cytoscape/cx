@@ -38,11 +38,11 @@ public class NodeAttributesFragmentReaderTest {
                 + "{\"nodes\":[{\"@id\":\"_6\"}]},"
                 + "{\"cartesianLayout\":[{\"node\":\"_1\",\"x\":\"3\",\"y\":\"4\"},{\"node\":\"_2\",\"x\":\"5\",\"y\":\"6\"}]},"
                 + "{\"nodes\":[{\"@id\":\"_7\"}]},"
-                + "{\"nodeAttributes\":[{\"@id\":\"_na0\",\"nodes\":[\"_0\", \"_1\"], \"attributes\":{\"entrez_gene_locuslink\":[\"322397\", \"one more\"],\"name\":[\"_322397\"],\"PSIMI_25_aliases\":[\"322397\",\"80961\"]}},"
-                + "{\"@id\":\"_na1\",\"nodes\":[\"_2\"], \"attributes\":{\"key\":[\"value\"]}},"
-                + "{\"@id\":\"_na2\",\"nodes\":[\"_3\"]}]},"
-                + "{\"edgeAttributes\":[{\"@id\":\"_ea0\",\"edges\":[\"_e0\", \"_e22\"], \"attributes\":{\"interaction\":[\"479019\", \"one more\"],\"name\":[\"768303 (479019) 791595\"],\"PSIMI_25_detection_method\":[\"genetic interference\"]}}]},"
-                + "{\"nodeAttributes\":[{\"@id\":\"_na3\",\"nodes\":[\"_33\"]}]}" + "]";
+                + "{\"nodeAttributes\":[{\"@id\":\"_na0\",\"type\":\"string\",\"nodes\":[\"_0\", \"_1\"], \"attributes\":{\"entrez_gene_locuslink\":[\"322397\", \"one more\"],\"name\":[\"_322397\"],\"PSIMI_25_aliases\":[\"322397\",\"80961\"]}},"
+                + "{\"@id\":\"_na1\",\"type\":\"string\",\"nodes\":[\"_2\"], \"attributes\":{\"key\":[\"value\"]}},"
+                + "{\"@id\":\"_na2\",\"type\":\"string\",\"nodes\":[\"_3\"]}]},"
+                + "{\"edgeAttributes\":[{\"@id\":\"_ea0\",\"type\":\"string\",\"edges\":[\"_e0\", \"_e22\"], \"attributes\":{\"interaction\":[\"479019\", \"one more\"],\"name\":[\"768303 (479019) 791595\"],\"PSIMI_25_detection_method\":[\"genetic interference\"]}}]},"
+                + "{\"nodeAttributes\":[{\"@id\":\"_na3\",\"type\":\"string\",\"nodes\":[\"_33\"]}]}" + "]";
 
         final CxReader p = CxReader.createInstance(t0, AspectFragmentReaderManager.createInstance()
                 .getAvailableAspectFragmentReaders());

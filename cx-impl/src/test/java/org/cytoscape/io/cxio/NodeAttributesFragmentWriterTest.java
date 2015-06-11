@@ -52,7 +52,7 @@ public class NodeAttributesFragmentWriterTest {
         attributes.put("X", v1);
         attributes.put("Y", v2);
 
-        final NodeAttributesElement ea0 = new NodeAttributesElement("00", nodes, attributes);
+        final NodeAttributesElement ea0 = new NodeAttributesElement("00", nodes, CxConstants.ATTRIBUTE_TYPE.STRING, attributes);
 
         final List<AspectElement> l1 = new ArrayList<AspectElement>();
         l1.add(ea0);
@@ -65,11 +65,11 @@ public class NodeAttributesFragmentWriterTest {
         t1.start();
         w1.write(l1, t1);
         t1.end();
-
+ 
         assertEquals(
                 "[{\""
                         + CxConstants.NODE_ATTRIBUTES
-                        + "\":[{\"@id\":\"00\",\"nodes\":[\"000\",\"001\"],\"attributes\":{\"X\":[\"x1\",\"x2\",\"x3\"],\"Y\":[\"y1\",\"y2\",\"y3\"]}}]}]",
+                        + "\":[{\"@id\":\"00\",\"type\":\"string\",\"nodes\":[\"000\",\"001\"],\"attributes\":{\"X\":[\"x1\",\"x2\",\"x3\"],\"Y\":[\"y1\",\"y2\",\"y3\"]}}]}]",
                         out1.toString());
 
     }

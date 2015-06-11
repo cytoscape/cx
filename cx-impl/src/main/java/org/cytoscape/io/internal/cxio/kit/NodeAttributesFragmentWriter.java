@@ -16,6 +16,7 @@ public class NodeAttributesFragmentWriter implements AspectFragmentWriter {
             throws IOException {
         w.writeStartObject();
         w.writeStringField(CxConstants.ID, na.getId());
+        w.writeStringField(CxConstants.TYPE, na.getType().toString());
         w.writeList(CxConstants.NODES, na.getNodes());
         if ((na.getAttributes() != null) && !na.getAttributes().isEmpty()) {
             w.writeObjectFieldStart(CxConstants.ATTRIBUTES);

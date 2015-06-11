@@ -16,6 +16,7 @@ public class EdgeAttributesFragmentWriter implements AspectFragmentWriter {
             throws IOException {
         w.writeStartObject();
         w.writeStringField(CxConstants.ID, ea.getId());
+        w.writeStringField(CxConstants.TYPE, ea.getType().toString());
         w.writeList(CxConstants.EDGES, ea.getEdges());
         if ((ea.getAttributes() != null) && !ea.getAttributes().isEmpty()) {
             w.writeObjectFieldStart(CxConstants.ATTRIBUTES);

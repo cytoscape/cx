@@ -5,31 +5,39 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-public final class NodeAttributesElement implements AspectElement {
+public final class NodeAttributesElement extends AttributeElement {
 
-    private final String                          id;
-    private final List<String>                    nodes;
-    private final SortedMap<String, List<String>> attributes;
+    private final List<String> nodes;
+
+    public NodeAttributesElement(final String id, final CxConstants.ATTRIBUTE_TYPE type) {
+        this.id = id;
+        this.type = type;
+        this.nodes = new ArrayList<String>();
+        this.attributes = new TreeMap<String, List<String>>();
+    }
 
     public NodeAttributesElement(final String id,
                                  final List<String> nodes,
+                                 final CxConstants.ATTRIBUTE_TYPE type,
                                  final SortedMap<String, List<String>> attributes) {
         this.id = id;
+        this.type = type;
         this.nodes = nodes;
         this.attributes = attributes;
     }
 
-    public NodeAttributesElement(final String id) {
+    public NodeAttributesElement(final String id,
+                                 final String node_id,
+                                 final CxConstants.ATTRIBUTE_TYPE type) {
         this.id = id;
-        this.nodes = new ArrayList<String>();
-        this.attributes = new TreeMap<String, List<String>>();
-    }
-
-    public NodeAttributesElement(final String id, final String node_id) {
-        this.id = id;
+        this.type = type;
         this.nodes = new ArrayList<String>();
         this.attributes = new TreeMap<String, List<String>>();
         addNode(node_id);
+    }
+
+    public final void addNode(final long node_id) {
+        addNode(String.valueOf(node_id));
     }
 
     public final void addNode(final String node_id) {
@@ -37,23 +45,6 @@ public final class NodeAttributesElement implements AspectElement {
             throw new IllegalArgumentException("attempt to add null or empty node id");
         }
         nodes.add(node_id);
-    }
-    
-    public final void addNode(final long node_id) {
-        addNode(String.valueOf(node_id));
-    }
-
-    public final void addAttribute(final String key, final String value) {
-        if (Util.isEmpty(key)) {
-            throw new IllegalArgumentException("attempt to use null or empty attribute key");
-        }
-        if (value == null) {
-            throw new IllegalArgumentException("attempt to use null value");
-        }
-        if (!attributes.containsKey(key)) {
-            attributes.put(key, new ArrayList<String>());
-        }
-        attributes.get(key).add(value);
     }
 
     @Override
@@ -71,21 +62,8 @@ public final class NodeAttributesElement implements AspectElement {
         return CxConstants.NODE_ATTRIBUTES;
     }
 
-    public final SortedMap<String, List<String>> getAttributes() {
-        return attributes;
-    }
-
-    public final String getId() {
-        return id;
-    }
-
     public final List<String> getNodes() {
         return nodes;
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode();
     }
 
     @Override
@@ -94,6 +72,9 @@ public final class NodeAttributesElement implements AspectElement {
         sb.append("id: ");
         sb.append(id);
         sb.append("\n");
+        sb.append("type: ");
+        sb.append(type);
+        sb.append("\n");
         sb.append("nodes:");
         sb.append("\n");
         sb.append(nodes);
@@ -101,6 +82,7 @@ public final class NodeAttributesElement implements AspectElement {
         sb.append("attributes:");
         sb.append("\n");
         sb.append(attributes);
+
         return sb.toString();
     }
 

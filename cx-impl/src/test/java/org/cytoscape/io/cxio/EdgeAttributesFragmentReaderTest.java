@@ -10,6 +10,7 @@ import java.util.SortedMap;
 import org.cytoscape.io.internal.cxio.kit.AspectElement;
 import org.cytoscape.io.internal.cxio.kit.AspectFragmentReaderManager;
 import org.cytoscape.io.internal.cxio.kit.CxConstants;
+import org.cytoscape.io.internal.cxio.kit.CxConstants.ATTRIBUTE_TYPE;
 import org.cytoscape.io.internal.cxio.kit.CxReader;
 import org.cytoscape.io.internal.cxio.kit.EdgeAttributesElement;
 import org.junit.Test;
@@ -38,8 +39,8 @@ public class EdgeAttributesFragmentReaderTest {
                 + "{\"nodes\":[{\"@id\":\"_6\"}]},"
                 + "{\"cartesianLayout\":[{\"node\":\"_1\",\"x\":\"3\",\"y\":\"4\"},{\"node\":\"_2\",\"x\":\"5\",\"y\":\"6\"}]},"
                 + "{\"nodes\":[{\"@id\":\"_7\"}]},"
-                + "{\"edgeAttributes\":[{\"@id\":\"_ea0\",\"edges\":[\"_e38\", \"_e39\"], \"attributes\":{\"interaction\":[\"479019\", \"one more\"],\"name\":[\"768303 (479019) 791595\"],\"PSIMI_25_detection_method\":[\"genetic interference\"]}}]},"
-                + "{\"edgeAttributes\":[{\"@id\":\"_ea1\",\"edges\":[\"_e22\", \"_e33\", \"_e44\"]}]}"
+                + "{\"edgeAttributes\":[{\"@id\":\"_ea0\",\"type\":\"string\",\"edges\":[\"_e38\", \"_e39\"], \"attributes\":{\"interaction\":[\"479019\", \"one more\"],\"name\":[\"768303 (479019) 791595\"],\"PSIMI_25_detection_method\":[\"genetic interference\"]}}]},"
+                + "{\"edgeAttributes\":[{\"@id\":\"_ea1\",\"type\":\"string\",\"edges\":[\"_e22\", \"_e33\", \"_e44\"]}]}"
                 + "]";
 
         final CxReader p = CxReader.createInstance(t0, AspectFragmentReaderManager.createInstance()
@@ -59,6 +60,7 @@ public class EdgeAttributesFragmentReaderTest {
         assertTrue(ea1.getId().equals("_ea0"));
         assertTrue(ea1.getEdges().size() == 2);
         assertTrue(ea1.getAttributes().size() == 3);
+        assertTrue(ea1.getType()==ATTRIBUTE_TYPE.STRING);
         assertTrue(ea1.getEdges().contains("_e38"));
         assertTrue(ea1.getEdges().contains("_e39"));
         assertTrue(ea1.getAttributes().get("interaction").size() == 2);
