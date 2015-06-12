@@ -23,7 +23,8 @@ public class CxToCy {
     private Map<CyNode, Double[]> position_map;
 
     public CyNetwork createNetwork(final SortedMap<String, List<AspectElement>> res,
-            final CyNetwork network, final String collectionName) throws IOException {
+                                   final CyNetwork network,
+                                   final String collectionName) throws IOException {
 
         final List<AspectElement> nodes = res.get(CxConstants.NODES);
         final List<AspectElement> edges = res.get(CxConstants.EDGES);
@@ -39,7 +40,7 @@ public class CxToCy {
         if ((layout != null) && !layout.isEmpty()) {
             addPositions(layout, nodeMap);
         }
- 
+
         if (collectionName != null) {
             final CyRootNetwork rootNetwork = ((CySubNetwork) network).getRootNetwork();
             rootNetwork.getRow(rootNetwork).set(CyNetwork.NAME, collectionName);
@@ -49,16 +50,16 @@ public class CxToCy {
     }
 
     private final void addPositions(final List<AspectElement> layout,
-            final Map<String, CyNode> node_map) {
+                                    final Map<String, CyNode> node_map) {
         for (final AspectElement ae : layout) {
             final CartesianLayoutElement cle = (CartesianLayoutElement) ae;
             position_map.put(node_map.get(cle.getNode()), new Double[] {
-                Double.valueOf(cle.getX()), Double.valueOf(cle.getY()) });
+                    Double.valueOf(cle.getX()), Double.valueOf(cle.getY()) });
         }
     }
 
     private final Map<String, CyNode> addNodes(final CyNetwork network,
-            final List<AspectElement> nodes) {
+                                               final List<AspectElement> nodes) {
 
         final Map<String, CyNode> nodeMap = new HashMap<String, CyNode>();
 
@@ -78,8 +79,9 @@ public class CxToCy {
         return nodeMap;
     }
 
-    private final void addEdges(final CyNetwork network, final List<AspectElement> edges,
-            final Map<String, CyNode> nodeMap) {
+    private final void addEdges(final CyNetwork network,
+                                final List<AspectElement> edges,
+                                final Map<String, CyNode> nodeMap) {
 
         final CyTable edgeTable = network.getDefaultEdgeTable();
 

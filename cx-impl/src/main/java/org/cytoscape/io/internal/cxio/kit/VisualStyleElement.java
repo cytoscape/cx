@@ -5,7 +5,7 @@ import java.util.List;
 
 public final class VisualStyleElement implements AspectElement {
 
-    private final String name;
+    private final String               name;
     private final List<VisualProperty> visual_properties;
 
     public VisualStyleElement(final String name) {

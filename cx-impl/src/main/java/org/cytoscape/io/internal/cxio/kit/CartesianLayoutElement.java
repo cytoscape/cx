@@ -1,6 +1,5 @@
 package org.cytoscape.io.internal.cxio.kit;
 
-
 public final class CartesianLayoutElement implements AspectElement {
 
     private final String node;
@@ -18,7 +17,7 @@ public final class CartesianLayoutElement implements AspectElement {
         this.x = x;
         this.y = y;
     }
-    
+
     public CartesianLayoutElement(final long node, final double x, final double y) {
         this.node = String.valueOf(node);
         this.x = x;

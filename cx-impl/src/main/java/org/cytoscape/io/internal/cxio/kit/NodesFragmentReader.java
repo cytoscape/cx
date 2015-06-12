@@ -42,7 +42,7 @@ public class NodesFragmentReader implements AspectFragmentReader {
                     }
                     else if (STRICT) {
                         throw new IOException("malformed cx json: unrecognized field '" + namefield
-                                + "'");
+                                              + "'");
                     }
                 }
                 if (Util.isEmpty(id)) {

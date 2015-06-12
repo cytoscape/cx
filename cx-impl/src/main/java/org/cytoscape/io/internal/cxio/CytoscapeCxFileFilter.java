@@ -15,13 +15,19 @@ public class CytoscapeCxFileFilter extends BasicCyFileFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(CytoscapeCxFileFilter.class);
 
-    public CytoscapeCxFileFilter(final Set<String> extensions, final Set<String> contentTypes,
-            final String description, final DataCategory category, final StreamUtil streamUtil) {
+    public CytoscapeCxFileFilter(final Set<String> extensions,
+                                 final Set<String> contentTypes,
+                                 final String description,
+                                 final DataCategory category,
+                                 final StreamUtil streamUtil) {
         super(extensions, contentTypes, description, category, streamUtil);
     }
 
-    public CytoscapeCxFileFilter(final String[] extensions, final String[] contentTypes,
-            final String description, final DataCategory category, final StreamUtil streamUtil) {
+    public CytoscapeCxFileFilter(final String[] extensions,
+                                 final String[] contentTypes,
+                                 final String description,
+                                 final DataCategory category,
+                                 final StreamUtil streamUtil) {
         super(extensions, contentTypes, description, category, streamUtil);
     }
 

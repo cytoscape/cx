@@ -41,7 +41,7 @@ public class EdgeAttributesFragmentReaderTest {
                 + "{\"nodes\":[{\"@id\":\"_7\"}]},"
                 + "{\"edgeAttributes\":[{\"@id\":\"_ea0\",\"edges\":[\"_e38\", \"_e39\"], \"attributes\":{\"interaction\":[\"479019\", \"one more\"],\"name\":[\"768303 (479019) 791595\"],\"PSIMI_25_detection_method\":[\"genetic interference\"]}}]},"
                 + "{\"edgeAttributes\":[{\"@id\":\"_ea1\",\"edges\":[\"_e22\", \"_e33\", \"_e44\"]}]},"
-                + "{\"edgeAttributes\":[{\"@id\":\"_ea2\",\"edges\":[\"_e38\"], \"attributes\":{\"deleted\":[\"true\"]}, \"attributeTypes\":{\"deleted\":\"boolean\"}}]}"
+                + "{\"edgeAttributes\":[{\"@id\":\"_ea2\",\"edges\":[\"_e38\"], \"attributes\":{\"deleted\":[\"true\"]}, \"types\":{\"deleted\":\"boolean\"}}]}"
                 + "]";
 
         final CxReader p = CxReader.createInstance(t0, AspectFragmentReaderManager.createInstance()
@@ -49,11 +49,11 @@ public class EdgeAttributesFragmentReaderTest {
         final SortedMap<String, List<AspectElement>> r0 = CxReader.parseAsMap(p);
 
         assertTrue("failed to parse " + CxConstants.EDGE_ATTRIBUTES + " aspect",
-                r0.containsKey(CxConstants.EDGE_ATTRIBUTES));
+                   r0.containsKey(CxConstants.EDGE_ATTRIBUTES));
         assertFalse("failed to parse " + CxConstants.EDGE_ATTRIBUTES + " aspect",
-                r0.get(CxConstants.EDGE_ATTRIBUTES).isEmpty());
+                    r0.get(CxConstants.EDGE_ATTRIBUTES).isEmpty());
         assertTrue("failed to get expected number of " + CxConstants.EDGE_ATTRIBUTES + " aspects",
-                r0.get(CxConstants.EDGE_ATTRIBUTES).size() == 3);
+                   r0.get(CxConstants.EDGE_ATTRIBUTES).size() == 3);
 
         final List<AspectElement> aspects = r0.get(CxConstants.EDGE_ATTRIBUTES);
 
@@ -61,17 +61,16 @@ public class EdgeAttributesFragmentReaderTest {
         assertTrue(ea1.getId().equals("_ea0"));
         assertTrue(ea1.getEdges().size() == 2);
         assertTrue(ea1.getAttributes().size() == 3);
-        
+
         assertTrue(ea1.getEdges().contains("_e38"));
         assertTrue(ea1.getEdges().contains("_e39"));
-        assertTrue(ea1.get("interaction").size() == 2);
-        assertTrue(ea1.get("PSIMI_25_detection_method").size() == 1);
-        assertTrue(ea1.get("name").size() == 1);
-        assertTrue(ea1.get("interaction").contains("479019"));
-        assertTrue(ea1.get("interaction").contains("one more"));
-        assertTrue(ea1.get("PSIMI_25_detection_method")
-                .contains("genetic interference"));
-        assertTrue(ea1.get("name").contains("768303 (479019) 791595"));
+        assertTrue(ea1.getValues("interaction").size() == 2);
+        assertTrue(ea1.getValues("PSIMI_25_detection_method").size() == 1);
+        assertTrue(ea1.getValues("name").size() == 1);
+        assertTrue(ea1.getValues("interaction").contains("479019"));
+        assertTrue(ea1.getValues("interaction").contains("one more"));
+        assertTrue(ea1.getValues("PSIMI_25_detection_method").contains("genetic interference"));
+        assertTrue(ea1.getValues("name").contains("768303 (479019) 791595"));
 
         final EdgeAttributesElement ea2 = (EdgeAttributesElement) aspects.get(1);
         assertTrue(ea2.getId().equals("_ea1"));
@@ -80,11 +79,9 @@ public class EdgeAttributesFragmentReaderTest {
         assertTrue(ea2.getEdges().contains("_e22"));
         assertTrue(ea2.getEdges().contains("_e33"));
         assertTrue(ea2.getEdges().contains("_e44"));
-        
+
         final EdgeAttributesElement ea3 = (EdgeAttributesElement) aspects.get(2);
-        System.out.println( ea3.toString());
-        System.out.println( ea2.toString());
-        System.out.println( ea1.toString());
+        assertTrue(ea3.getType("deleted") == ATTRIBUTE_TYPE.BOOLEAN);
 
     }
 

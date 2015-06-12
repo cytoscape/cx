@@ -11,7 +11,6 @@ import java.util.Set;
 import org.cytoscape.io.internal.cxio.kit.AspectElement;
 import org.cytoscape.io.internal.cxio.kit.AspectFragmentWriter;
 import org.cytoscape.io.internal.cxio.kit.CartesianLayoutElement;
-import org.cytoscape.io.internal.cxio.kit.CxConstants.ATTRIBUTE_TYPE;
 import org.cytoscape.io.internal.cxio.kit.CxWriter;
 import org.cytoscape.io.internal.cxio.kit.EdgesElement;
 import org.cytoscape.io.internal.cxio.kit.NodeAttributesElement;
@@ -57,18 +56,16 @@ public class CyToCxImpl implements CyToCx {
                 // final CyTable table = row.getTable();
                 final Map<String, Object> values = row.getAllValues();
                 if ((values != null) && !values.isEmpty()) {
-                    
+
                     final NodeAttributesElement nae = new NodeAttributesElement("na"
-                            + cy_node.getSUID(),  null);
+                            + cy_node.getSUID(), null);
                     nae.addNode(cy_node.getSUID());
                     for (final String columnName : values.keySet()) {
-
                         final Object value = values.get(columnName);
                         if (value == null) {
                             continue;
                         }
-                        nae.addAttribute(columnName, value.toString());
-
+                        nae.putValue(columnName, value);
                     }
                     naes.add(nae);
                 }
@@ -80,7 +77,7 @@ public class CyToCxImpl implements CyToCx {
         elements = new ArrayList<AspectElement>();
         for (final CyEdge cyEdge : network.getEdgeList()) {
             elements.add(new EdgesElement(cyEdge.getSUID(), cyEdge.getSource().getSUID(), cyEdge
-                                          .getTarget().getSUID()));
+                    .getTarget().getSUID()));
         }
         w.write(elements);
         w.write(naes);
@@ -110,8 +107,8 @@ public class CyToCxImpl implements CyToCx {
             node_elements.add(new NodesElement(String.valueOf(cy_node.getSUID())));
             final View<CyNode> node_view = view.getNodeView(cy_node);
             cartesian_layout_elements.add(new CartesianLayoutElement(cy_node.getSUID(), node_view
-                    .getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
-                    .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION)));
+                                                                     .getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
+                                                                     .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION)));
 
         }
         w.write(node_elements);
@@ -119,8 +116,8 @@ public class CyToCxImpl implements CyToCx {
         final List<AspectElement> edge_elements = new ArrayList<AspectElement>();
         for (final CyEdge cyEdge : network.getEdgeList()) {
             edge_elements.add(new EdgesElement(String.valueOf(cyEdge.getSUID()), String
-                    .valueOf(cyEdge.getSource().getSUID()), String.valueOf(cyEdge.getTarget()
-                    .getSUID())));
+                                               .valueOf(cyEdge.getSource().getSUID()), String.valueOf(cyEdge.getTarget()
+                                                                                                      .getSUID())));
         }
         w.write(edge_elements);
 

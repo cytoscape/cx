@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.cytoscape.io.internal.cxio.kit.CxConstants.ATTRIBUTE_TYPE;
+
 public class NodeAttributesFragmentWriter implements AspectFragmentWriter {
     public static NodeAttributesFragmentWriter createInstance() {
         return new NodeAttributesFragmentWriter();
@@ -17,10 +19,18 @@ public class NodeAttributesFragmentWriter implements AspectFragmentWriter {
         w.writeStartObject();
         w.writeStringField(CxConstants.ID, na.getId());
         w.writeList(CxConstants.NODES, na.getNodes());
+        if ((na.getAttributesTypes() != null) && !na.getAttributesTypes().isEmpty()) {
+            w.writeObjectFieldStart(CxConstants.ATTRIBUTE_TYPES);
+            for (final Entry<String, ATTRIBUTE_TYPE> a : na.getAttributesTypes().entrySet()) {
+                w.writeStringField(a.getKey(), a.getValue().toString());
+            }
+            w.writeEndObject();
+        }
+
         if ((na.getAttributes() != null) && !na.getAttributes().isEmpty()) {
             w.writeObjectFieldStart(CxConstants.ATTRIBUTES);
-            for (final Entry<String, AttributeValues> a : na.getAttributes().entrySet()) {
-                w.writeList(a.getKey(), a.getValue().getValues());
+            for (final Entry<String, List<String>> a : na.getAttributes().entrySet()) {
+                w.writeList(a.getKey(), a.getValue());
             }
             w.writeEndObject();
         }

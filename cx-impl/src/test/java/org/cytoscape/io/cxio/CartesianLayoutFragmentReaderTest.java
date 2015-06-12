@@ -45,10 +45,10 @@ public class CartesianLayoutFragmentReaderTest {
         final SortedMap<String, List<AspectElement>> r0 = CxReader.parseAsMap(p);
 
         assertTrue("failed to parse " + CxConstants.CARTESIAN_LAYOUT + " aspect",
-                r0.containsKey(CxConstants.CARTESIAN_LAYOUT));
+                   r0.containsKey(CxConstants.CARTESIAN_LAYOUT));
 
         assertFalse("failed to parse " + CxConstants.CARTESIAN_LAYOUT + " aspect",
-                r0.get(CxConstants.CARTESIAN_LAYOUT).isEmpty());
+                    r0.get(CxConstants.CARTESIAN_LAYOUT).isEmpty());
 
         assertTrue("failed to parse expected number of " + CxConstants.CARTESIAN_LAYOUT
                 + " aspects", r0.get(CxConstants.CARTESIAN_LAYOUT).size() == 3);
@@ -56,19 +56,19 @@ public class CartesianLayoutFragmentReaderTest {
         final List<AspectElement> aspects = r0.get(CxConstants.CARTESIAN_LAYOUT);
 
         assertTrue("failed to get expected instance",
-                aspects.get(0) instanceof CartesianLayoutElement);
+                   aspects.get(0) instanceof CartesianLayoutElement);
 
         final CartesianLayoutElement a0 = (CartesianLayoutElement) aspects.get(0);
 
         assertEquals(a0.getNode(), "_0");
-        assertTrue(a0.getX()==123);
-        assertTrue(a0.getY()==456);
+        assertTrue(a0.getX() == 123);
+        assertTrue(a0.getY() == 456);
 
         final CartesianLayoutElement a2 = (CartesianLayoutElement) aspects.get(2);
 
         assertEquals(a2.getNode(), "_2");
-        assertTrue(a2.getX()==5);
-        assertTrue(a2.getY()==6);
+        assertTrue(a2.getX() == 5);
+        assertTrue(a2.getY() == 6);
 
     }
 

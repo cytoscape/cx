@@ -41,27 +41,27 @@ public class EdgesFragmentReaderTest {
         final SortedMap<String, List<AspectElement>> r0 = CxReader.parseAsMap(p);
 
         assertTrue("failed to parse " + CxConstants.EDGES + " aspect",
-                r0.containsKey(CxConstants.EDGES));
+                   r0.containsKey(CxConstants.EDGES));
 
         assertFalse("failed to parse " + CxConstants.EDGES + " aspect", r0.get(CxConstants.EDGES)
                 .isEmpty());
 
         assertTrue("failed to parse expected number of " + CxConstants.EDGES + " aspects",
-                r0.get(CxConstants.EDGES).size() == 4);
+                   r0.get(CxConstants.EDGES).size() == 4);
 
         final List<AspectElement> edge_aspects = r0.get(CxConstants.EDGES);
 
         assertTrue("failed to get expected NodeAspect instance",
-                edge_aspects.get(0) instanceof EdgesElement);
+                   edge_aspects.get(0) instanceof EdgesElement);
 
         assertTrue("failed to get expected " + CxConstants.EDGES + " aspect",
-                edge_aspects.contains(new EdgesElement("e0", "0", "0")));
+                   edge_aspects.contains(new EdgesElement("e0", "0", "0")));
         assertTrue("failed to get expected " + CxConstants.EDGES + " aspect",
-                edge_aspects.contains(new EdgesElement("e1", "0", "0")));
+                   edge_aspects.contains(new EdgesElement("e1", "0", "0")));
         assertTrue("failed to get expected " + CxConstants.EDGES + " aspect",
-                edge_aspects.contains(new EdgesElement("e2", "0", "0")));
+                   edge_aspects.contains(new EdgesElement("e2", "0", "0")));
         assertTrue("failed to get expected " + CxConstants.EDGES + " aspect",
-                edge_aspects.contains(new EdgesElement("e3", "0", "0")));
+                   edge_aspects.contains(new EdgesElement("e3", "0", "0")));
 
     }
 
@@ -142,7 +142,7 @@ public class EdgesFragmentReaderTest {
         final SortedMap<String, List<AspectElement>> r0 = CxReader.parseAsMap(p);
 
         assertFalse("expected to parse no " + CxConstants.EDGES + " aspects, got some",
-                r0.containsKey(CxConstants.EDGES));
+                    r0.containsKey(CxConstants.EDGES));
 
     }
 

@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 public class CxNetworkViewWriter implements CyWriter {
 
     private final static Logger             logger   = LoggerFactory
-                                                             .getLogger(CxNetworkViewWriter.class);
+            .getLogger(CxNetworkViewWriter.class);
     private final static String             ENCODING = "UTF-8";
 
     private final OutputStream              os;
@@ -32,7 +32,8 @@ public class CxNetworkViewWriter implements CyWriter {
     private final CharsetEncoder            encoder;
     private final Set<AspectFragmentWriter> aspect_fragment_writers;
 
-    public CxNetworkViewWriter(final OutputStream os, final CyNetworkView network_view,
+    public CxNetworkViewWriter(final OutputStream os,
+                               final CyNetworkView network_view,
                                final Set<AspectFragmentWriter> aspect_fragment_writers) {
         this.os = os;
         this.network_view = network_view;

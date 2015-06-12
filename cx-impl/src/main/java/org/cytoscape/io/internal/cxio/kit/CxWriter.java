@@ -69,7 +69,7 @@ public class CxWriter {
 
     public final static CxWriter createInstance(final OutputStream out,
                                                 final boolean use_default_pretty_printer)
-            throws IOException {
+                                                        throws IOException {
         return new CxWriter(out, use_default_pretty_printer);
     }
 

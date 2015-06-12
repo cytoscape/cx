@@ -47,7 +47,7 @@ public class CxNetworkWriterTest {
         w.run(null);
 
         final String out_str = out.toString();
-        
+
         assertTrue(out_str.indexOf("nodes") > 0);
         assertFalse(out_str.indexOf("edges") > 0);
         assertTrue(out_str.indexOf(String.valueOf(a.getSUID())) > 0);

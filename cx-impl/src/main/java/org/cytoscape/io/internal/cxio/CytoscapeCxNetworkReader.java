@@ -27,7 +27,7 @@ import org.cytoscape.work.util.ListSingleSelection;
 public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
     private CyNetwork      network = null;       // Supports only one CyNetwork
-                                                  // per file.
+    // per file.
     private final String   networkCollectionName;
     private final CxReader cx_reader;
     private CxToCy         cx_to_cy;
@@ -39,9 +39,9 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                                     final CyNetworkManager cyNetworkManager,
                                     final CyRootNetworkManager cyRootNetworkManager,
                                     final Set<AspectFragmentReader> aspect_fragment_readers)
-            throws IOException {
+                                            throws IOException {
         super(input_stream, cyApplicationManager, cyNetworkFactory, cyNetworkManager,
-              cyRootNetworkManager);
+                cyRootNetworkManager);
 
         this.networkCollectionName = networkCollectionName;
 

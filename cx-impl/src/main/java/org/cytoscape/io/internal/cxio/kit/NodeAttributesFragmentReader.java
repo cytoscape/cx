@@ -2,13 +2,7 @@ package org.cytoscape.io.internal.cxio.kit;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
-import org.cytoscape.io.internal.cxio.kit.CxConstants.ATTRIBUTE_TYPE;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
@@ -37,56 +31,45 @@ public class NodeAttributesFragmentReader implements AspectFragmentReader {
         final List<AspectElement> na_aspects = new ArrayList<AspectElement>();
         while (t != JsonToken.END_ARRAY) {
             if (t == JsonToken.START_OBJECT) {
-                String id = null;
-                List<String> nodes = null;
-                final SortedMap<String, AttributeValues> attributes = new TreeMap<String, AttributeValues>();
-                final Map<String, String> attribute_types = new HashMap<String, String>();
+                final NodeAttributesElement nae = new NodeAttributesElement();
                 while (jp.nextToken() != JsonToken.END_OBJECT) {
                     final String namefield = jp.getCurrentName();
                     jp.nextToken(); // move to value
                     if (CxConstants.ID.equals(namefield)) {
-                        id = jp.getText().trim();
+                        nae.setId(jp.getText());
                     }
                     else if (CxConstants.NODES.equals(namefield)) {
-                        nodes = Util.parseSimpleList(jp, t);
+                        for (final String node : Util.parseSimpleList(jp, t)) {
+                            nae.addNode(node);
+                        }
                     }
                     else if (CxConstants.ATTRIBUTES.equals(namefield)) {
                         while (jp.nextToken() != JsonToken.END_OBJECT) {
                             jp.nextToken(); // move to value
-                            attributes.put(jp.getCurrentName(),
-                                           new AttributeValues(null, Util.parseSimpleList(jp, t)));
+                            nae.putValues(jp.getCurrentName(), Util.parseSimpleList(jp, t));
                         }
                     }
                     else if (CxConstants.ATTRIBUTE_TYPES.equals(namefield)) {
                         while (jp.nextToken() != JsonToken.END_OBJECT) {
                             jp.nextToken(); // move to value
-                            attribute_types.put(jp.getCurrentName(), jp.getText().trim());
+                            nae.putType(jp.getCurrentName(), jp.getText());
                         }
                     }
                     else if (STRICT) {
                         throw new IOException("malformed cx json: unrecognized field '" + namefield
-                                              + "'");
+                                + "'");
                     }
                 }
-                if (Util.isEmpty(id)) {
+                if (Util.isEmpty(nae.getId())) {
                     throw new IOException(
                             "malformed cx json: attribute id in node attributes is missing");
                 }
-                if ((nodes == null) || nodes.isEmpty()) {
+                if ((nae.getNodes() == null) || nae.getNodes().isEmpty()) {
                     throw new IOException(
                             "malformed cx json: node ids in node attributes are missing");
                 }
-                
-                for (final Map.Entry<String, AttributeValues> entry : attributes.entrySet()) {
-                    if ( attribute_types.containsKey(entry.getKey()) ) {
-                        entry.getValue().setType(attribute_types.get(entry.getKey()));
-                    }
-                    else {
-                        entry.getValue().setType(ATTRIBUTE_TYPE.STRING);
-                    }
-                }
-                
-                na_aspects.add(new NodeAttributesElement(id, nodes,  attributes));
+
+                na_aspects.add(nae);
             }
             t = jp.nextToken();
         }

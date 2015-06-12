@@ -32,11 +32,11 @@ public class CyActivator extends AbstractCyActivator {
         final StreamUtil streamUtil = getService(bc, StreamUtil.class);
 
         final BasicCyFileFilter cxFilter = new BasicCyFileFilter(new String[] { "cx" },
-                new String[] { "application/json" }, "CX JSON", DataCategory.NETWORK, streamUtil);
+                                                                 new String[] { "application/json" }, "CX JSON", DataCategory.NETWORK, streamUtil);
 
         // Writer:
         final CxNetworkWriterFactory cxNetworkViewWriterFactory = new CxNetworkWriterFactory(
-                cxFilter);
+                                                                                             cxFilter);
 
         final Properties cxWriterFactoryProperties = new Properties();
 
@@ -56,15 +56,15 @@ public class CyActivator extends AbstractCyActivator {
                 "cx", "json" }, new String[] { "application/json" }, "CX JSON",
                 DataCategory.NETWORK, streamUtil);
         final CytoscapeCxNetworkReaderFactory cxReaderFactory = new CytoscapeCxNetworkReaderFactory(
-                cytoscapejsReaderFilter, applicationManager, cyNetworkFactory, cyNetworkManager,
-                cyRootNetworkManager);
+                                                                                                    cytoscapejsReaderFilter, applicationManager, cyNetworkFactory, cyNetworkManager,
+                                                                                                    cyRootNetworkManager);
         final Properties cytoscapeJsNetworkReaderFactoryProps = new Properties();
 
         // This is the unique identifier for this reader. 3rd party developer
         // can use this service by using this ID.
         cytoscapeJsNetworkReaderFactoryProps.put(ID, "cytoscapejsNetworkReaderFactory");
         registerService(bc, cxReaderFactory, InputStreamTaskFactory.class,
-                cytoscapeJsNetworkReaderFactoryProps);
+                        cytoscapeJsNetworkReaderFactoryProps);
 
     }
 }

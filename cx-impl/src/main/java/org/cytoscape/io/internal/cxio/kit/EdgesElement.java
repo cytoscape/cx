@@ -1,6 +1,5 @@
 package org.cytoscape.io.internal.cxio.kit;
 
-
 public final class EdgesElement implements AspectElement {
 
     final private String id;
@@ -12,13 +11,13 @@ public final class EdgesElement implements AspectElement {
         this.source = source;
         this.target = target;
     }
-    
+
     public EdgesElement(final long id, final String source, final String target) {
         this.id = String.valueOf(id);
         this.source = source;
         this.target = target;
     }
-    
+
     public EdgesElement(final long id, final long source, final long target) {
         this.id = String.valueOf(id);
         this.source = String.valueOf(source);

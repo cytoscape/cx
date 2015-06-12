@@ -22,14 +22,15 @@ import org.cytoscape.work.TaskIterator;
 public class CytoscapeCxNetworkReaderFactory extends AbstractInputStreamTaskFactory {
 
     private final CyApplicationManager cyApplicationManager;
-    protected final CyNetworkFactory cyNetworkFactory;
-    private final CyNetworkManager cyNetworkManager;
+    protected final CyNetworkFactory   cyNetworkFactory;
+    private final CyNetworkManager     cyNetworkManager;
     private final CyRootNetworkManager cyRootNetworkManager;
 
     public CytoscapeCxNetworkReaderFactory(final CyFileFilter filter,
-            final CyApplicationManager cyApplicationManager,
-            final CyNetworkFactory cyNetworkFactory, final CyNetworkManager cyNetworkManager,
-            final CyRootNetworkManager cyRootNetworkManager) {
+                                           final CyApplicationManager cyApplicationManager,
+                                           final CyNetworkFactory cyNetworkFactory,
+                                           final CyNetworkManager cyNetworkManager,
+                                           final CyRootNetworkManager cyRootNetworkManager) {
         super(filter);
         this.cyApplicationManager = cyApplicationManager;
         this.cyNetworkFactory = cyNetworkFactory;
@@ -49,8 +50,8 @@ public class CytoscapeCxNetworkReaderFactory extends AbstractInputStreamTaskFact
             aspect_fragment_readers.add(CartesianLayoutFragmentReader.createInstance());
 
             return new TaskIterator(new CytoscapeCxNetworkReader(collectionName, is,
-                    cyApplicationManager, cyNetworkFactory, cyNetworkManager, cyRootNetworkManager,
-                    aspect_fragment_readers));
+                                                                 cyApplicationManager, cyNetworkFactory, cyNetworkManager, cyRootNetworkManager,
+                                                                 aspect_fragment_readers));
         }
         catch (final IOException e) {
 

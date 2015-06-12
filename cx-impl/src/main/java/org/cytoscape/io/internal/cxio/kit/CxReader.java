@@ -17,12 +17,12 @@ import com.fasterxml.jackson.core.JsonToken;
 
 public final class CxReader {
 
-    private JsonParser jp;
-    private JsonToken token;
-    private boolean was_in_recognized_aspect;
-    private int level;
-    private List<AspectElement> current;
-    private final Object input;
+    private JsonParser                                  jp;
+    private JsonToken                                   token;
+    private boolean                                     was_in_recognized_aspect;
+    private int                                         level;
+    private List<AspectElement>                         current;
+    private final Object                                input;
     private final HashMap<String, AspectFragmentReader> aspect_readers;
 
     public final List<AspectElement> getNext() throws IOException {
@@ -47,8 +47,8 @@ public final class CxReader {
             if (was_in_recognized_aspect && (jp.getCurrentToken() != JsonToken.END_ARRAY)
                     && (jp.getCurrentToken() != JsonToken.END_OBJECT)) {
                 throw new IllegalStateException(
-                        "this should never have happened (likely cause: problem with '" + name
-                        + "' aspect handler)");
+                                                "this should never have happened (likely cause: problem with '" + name
+                                + "' aspect handler)");
             }
             if ((token == JsonToken.START_ARRAY) || (token == JsonToken.START_OBJECT)) {
                 level++;
@@ -121,27 +121,32 @@ public final class CxReader {
     }
 
     public final static CxReader createInstance(final File file,
-            final Set<AspectFragmentReader> aspect_handlers) throws IOException {
+                                                final Set<AspectFragmentReader> aspect_handlers)
+            throws IOException {
         return new CxReader(file, aspect_handlers);
     }
 
     public final static CxReader createInstance(final InputStream input_stream,
-            final Set<AspectFragmentReader> aspect_handlers) throws IOException {
+                                                final Set<AspectFragmentReader> aspect_handlers)
+            throws IOException {
         return new CxReader(input_stream, aspect_handlers);
     }
 
     public final static CxReader createInstance(final Reader reader,
-            final Set<AspectFragmentReader> aspect_handlers) throws IOException {
+                                                final Set<AspectFragmentReader> aspect_handlers)
+            throws IOException {
         return new CxReader(reader, aspect_handlers);
     }
 
     public final static CxReader createInstance(final String string,
-            final Set<AspectFragmentReader> aspect_handlers) throws IOException {
+                                                final Set<AspectFragmentReader> aspect_handlers)
+            throws IOException {
         return new CxReader(string, aspect_handlers);
     }
 
     public final static CxReader createInstance(final URL url,
-            final Set<AspectFragmentReader> aspect_handlers) throws IOException {
+                                                final Set<AspectFragmentReader> aspect_handlers)
+            throws IOException {
         return new CxReader(url, aspect_handlers);
     }
 
@@ -190,8 +195,8 @@ public final class CxReader {
         return jp;
     }
 
-    private final static HashMap<String, AspectFragmentReader> setupAspectReaders(
-            final Set<AspectFragmentReader> aspect_readers) {
+    private final static HashMap<String, AspectFragmentReader>
+            setupAspectReaders(final Set<AspectFragmentReader> aspect_readers) {
         if ((aspect_readers == null) || aspect_readers.isEmpty()) {
             throw new IllegalArgumentException("aspect handlers are null or empty");
         }

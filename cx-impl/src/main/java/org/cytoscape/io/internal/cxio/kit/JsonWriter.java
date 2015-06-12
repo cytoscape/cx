@@ -19,7 +19,7 @@ public class JsonWriter {
 
     public final static JsonWriter createInstance(final OutputStream out,
                                                   final boolean use_default_pretty_printer)
-            throws IOException {
+                                                          throws IOException {
         final JsonFactory f = new JsonFactory();
         g = f.createGenerator(out);
         if (use_default_pretty_printer) {
