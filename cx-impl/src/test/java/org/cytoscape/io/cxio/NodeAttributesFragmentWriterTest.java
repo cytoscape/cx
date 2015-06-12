@@ -11,6 +11,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.cytoscape.io.internal.cxio.kit.AspectElement;
+import org.cytoscape.io.internal.cxio.kit.AttributeValues;
 import org.cytoscape.io.internal.cxio.kit.CxConstants;
 import org.cytoscape.io.internal.cxio.kit.JsonWriter;
 import org.cytoscape.io.internal.cxio.kit.NodeAttributesElement;
@@ -37,7 +38,7 @@ public class NodeAttributesFragmentWriterTest {
         final List<String> nodes = new ArrayList<String>();
         nodes.add("000");
         nodes.add("001");
-        final SortedMap<String, List<String>> attributes = new TreeMap<String, List<String>>();
+        final SortedMap<String, AttributeValues> attributes = new TreeMap<String, AttributeValues>();
 
         final List<String> v1 = new ArrayList<String>();
         v1.add("x1");
@@ -52,7 +53,7 @@ public class NodeAttributesFragmentWriterTest {
         attributes.put("X", v1);
         attributes.put("Y", v2);
 
-        final NodeAttributesElement ea0 = new NodeAttributesElement("00", nodes, CxConstants.ATTRIBUTE_TYPE.STRING, attributes);
+        final NodeAttributesElement ea0 = new NodeAttributesElement("00", nodes, attributes);
 
         final List<AspectElement> l1 = new ArrayList<AspectElement>();
         l1.add(ea0);

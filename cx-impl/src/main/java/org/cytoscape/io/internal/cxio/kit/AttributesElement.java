@@ -1,6 +1,5 @@
 package org.cytoscape.io.internal.cxio.kit;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
 
@@ -8,11 +7,10 @@ import org.cytoscape.io.internal.cxio.kit.CxConstants.ATTRIBUTE_TYPE;
 
 public abstract class AttributesElement implements AspectElement {
 
-    SortedMap<String, List<String>> attributes;
-    String                          id;
-    CxConstants.ATTRIBUTE_TYPE      type;
+    SortedMap<String, AttributeValues> attributes;
+    String                             id;
 
-    public final void addAttribute(final String key, final String value) {
+    public final void addAttribute(final String key, final String value, final ATTRIBUTE_TYPE type) {
         if (Util.isEmpty(key)) {
             throw new IllegalArgumentException("attempt to use null or empty attribute key");
         }
@@ -20,26 +18,26 @@ public abstract class AttributesElement implements AspectElement {
             throw new IllegalArgumentException("attempt to use null value");
         }
         if (!attributes.containsKey(key)) {
-            attributes.put(key, new ArrayList<String>());
+            attributes.put(key, new AttributeValues(type));
         }
-        attributes.get(key).add(value);
+        attributes.get(key).addValue(value);
+    }
+    
+    public final List<String> get( final String key ) {
+        return attributes.get(key).getValues();
+    }
+
+    public final SortedMap<String, AttributeValues> getAttributes() {
+        return attributes;
     }
 
     public final String getId() {
         return id;
     }
 
-    public final ATTRIBUTE_TYPE getType() {
-        return type;
-    }
-
     @Override
     public int hashCode() {
         return id.hashCode();
-    }
-
-    public final SortedMap<String, List<String>> getAttributes() {
-        return attributes;
     }
 
 }

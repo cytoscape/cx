@@ -2,37 +2,34 @@ package org.cytoscape.io.internal.cxio.kit;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
+import org.cytoscape.io.internal.cxio.kit.CxConstants.ATTRIBUTE_TYPE;
 
 public final class EdgeAttributesElement extends AttributesElement {
 
     private final List<String> edges;
 
-    public EdgeAttributesElement(final String id, final CxConstants.ATTRIBUTE_TYPE type) {
+    public EdgeAttributesElement(final String id) {
         this.id = id;
-        this.type = type;
         this.edges = new ArrayList<String>();
-        this.attributes = new TreeMap<String, List<String>>();
+        this.attributes = new TreeMap<String, AttributeValues>();
     }
 
     public EdgeAttributesElement(final String id,
                                  final List<String> edges,
-                                 final CxConstants.ATTRIBUTE_TYPE type,
-                                 final SortedMap<String, List<String>> attributes) {
+                                 final SortedMap<String,  AttributeValues> attributes) {
         this.id = id;
-        this.type = type;
         this.edges = edges;
         this.attributes = attributes;
     }
 
-    public EdgeAttributesElement(final String id,
-                                 final String edge_id,
-                                 final CxConstants.ATTRIBUTE_TYPE type) {
+    public EdgeAttributesElement(final String id, final String edge_id) {
         this.id = id;
-        this.type = type;
         this.edges = new ArrayList<String>();
-        this.attributes = new TreeMap<String, List<String>>();
+        this.attributes = new TreeMap<String, AttributeValues>();
         addEdge(edge_id);
     }
 
@@ -72,16 +69,19 @@ public final class EdgeAttributesElement extends AttributesElement {
         sb.append("id: ");
         sb.append(id);
         sb.append("\n");
-        sb.append("type: ");
-        sb.append(type);
-        sb.append("\n");
-        sb.append("edges:");
-        sb.append("\n");
+        sb.append("edges: ");
         sb.append(edges);
         sb.append("\n");
         sb.append("attributes:");
-        sb.append("\n");
-        sb.append(attributes);
+        for (final Map.Entry<String, AttributeValues> entry : attributes.entrySet()) {
+            sb.append("\n");
+            sb.append(entry.getKey());
+            sb.append("=");
+            sb.append(entry.getValue().getValues());
+            sb.append(" (");
+            sb.append(entry.getValue().getType());
+            sb.append(")");
+        }
         return sb.toString();
     }
 

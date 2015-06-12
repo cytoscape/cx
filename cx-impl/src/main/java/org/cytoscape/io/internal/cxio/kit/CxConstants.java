@@ -33,9 +33,10 @@ public final class CxConstants {
     public final static String NODES = "nodes";
     public final static String SOURCE_NODE_ID = "source";
     public final static String TARGET_NODE_ID = "target";
-    public final static String TYPE = "type";
+   // public final static String TYPE = "type";
     public final static String VISUAL_STYLE = "visualStyle";
     public final static String X = "x";
     public final static String Y = "y";
+    public static final String ATTRIBUTE_TYPES = "attributeTypes";
 
 }

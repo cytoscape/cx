@@ -11,6 +11,7 @@ import java.util.Set;
 import org.cytoscape.io.internal.cxio.kit.AspectElement;
 import org.cytoscape.io.internal.cxio.kit.AspectFragmentWriter;
 import org.cytoscape.io.internal.cxio.kit.CartesianLayoutElement;
+import org.cytoscape.io.internal.cxio.kit.CxConstants.ATTRIBUTE_TYPE;
 import org.cytoscape.io.internal.cxio.kit.CxWriter;
 import org.cytoscape.io.internal.cxio.kit.EdgesElement;
 import org.cytoscape.io.internal.cxio.kit.NodeAttributesElement;
@@ -56,9 +57,9 @@ public class CyToCxImpl implements CyToCx {
                 // final CyTable table = row.getTable();
                 final Map<String, Object> values = row.getAllValues();
                 if ((values != null) && !values.isEmpty()) {
-
+                    
                     final NodeAttributesElement nae = new NodeAttributesElement("na"
-                            + cy_node.getSUID());
+                            + cy_node.getSUID(),  null);
                     nae.addNode(cy_node.getSUID());
                     for (final String columnName : values.keySet()) {
 

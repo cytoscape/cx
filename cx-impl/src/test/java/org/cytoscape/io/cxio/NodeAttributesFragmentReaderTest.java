@@ -38,11 +38,14 @@ public class NodeAttributesFragmentReaderTest {
                 + "{\"nodes\":[{\"@id\":\"_6\"}]},"
                 + "{\"cartesianLayout\":[{\"node\":\"_1\",\"x\":\"3\",\"y\":\"4\"},{\"node\":\"_2\",\"x\":\"5\",\"y\":\"6\"}]},"
                 + "{\"nodes\":[{\"@id\":\"_7\"}]},"
-                + "{\"nodeAttributes\":[{\"@id\":\"_na0\",\"type\":\"string\",\"nodes\":[\"_0\", \"_1\"], \"attributes\":{\"entrez_gene_locuslink\":[\"322397\", \"one more\"],\"name\":[\"_322397\"],\"PSIMI_25_aliases\":[\"322397\",\"80961\"]}},"
-                + "{\"@id\":\"_na1\",\"type\":\"string\",\"nodes\":[\"_2\"], \"attributes\":{\"key\":[\"value\"]}},"
-                + "{\"@id\":\"_na2\",\"type\":\"string\",\"nodes\":[\"_3\"]}]},"
-                + "{\"edgeAttributes\":[{\"@id\":\"_ea0\",\"type\":\"string\",\"edges\":[\"_e0\", \"_e22\"], \"attributes\":{\"interaction\":[\"479019\", \"one more\"],\"name\":[\"768303 (479019) 791595\"],\"PSIMI_25_detection_method\":[\"genetic interference\"]}}]},"
-                + "{\"nodeAttributes\":[{\"@id\":\"_na3\",\"type\":\"string\",\"nodes\":[\"_33\"]}]}" + "]";
+                + "{\"nodeAttributes\":[{\"@id\":\"_na0\",\"nodes\":[\"_0\", \"_1\"], \"attributes\":{\"entrez_gene_locuslink\":[\"322397\", \"one more\"],\"name\":[\"_322397\"],\"PSIMI_25_aliases\":[\"322397\",\"80961\"]}},"
+                + "{\"@id\":\"_na1\",\"nodes\":[\"_2\"], \"attributes\":{\"key\":[\"value\"]}},"
+                + "{\"@id\":\"_na2\",\"nodes\":[\"_3\"]}]},"
+                + "{\"edgeAttributes\":[{\"@id\":\"_ea0\",\"edges\":[\"_e0\", \"_e22\"], \"attributes\":{\"interaction\":[\"479019\", \"one more\"],\"name\":[\"768303 (479019) 791595\"],\"PSIMI_25_detection_method\":[\"genetic interference\"]}}]},"
+                + "{\"nodeAttributes\":[{\"@id\":\"_na3\",\"nodes\":[\"_33\"]}]}," 
+                
+                + "{\"nodeAttributes\":[{\"@id\":\"_na4\",\"nodes\":[\"_33\"],\"attributes\":{\"target\":[\"true\"]},  \"attributeTypes\":{\"target\":\"boolean\"} }]}" 
+                + "]";
 
         final CxReader p = CxReader.createInstance(t0, AspectFragmentReaderManager.createInstance()
                 .getAvailableAspectFragmentReaders());
@@ -53,7 +56,7 @@ public class NodeAttributesFragmentReaderTest {
         assertFalse("failed to parse " + CxConstants.NODE_ATTRIBUTES + " aspect",
                 r0.get(CxConstants.NODE_ATTRIBUTES).isEmpty());
         assertTrue("failed to get expected number of " + CxConstants.NODE_ATTRIBUTES + " aspects",
-                r0.get(CxConstants.NODE_ATTRIBUTES).size() == 4);
+                r0.get(CxConstants.NODE_ATTRIBUTES).size() == 5);
 
         final List<AspectElement> aspects = r0.get(CxConstants.NODE_ATTRIBUTES);
 
@@ -63,22 +66,22 @@ public class NodeAttributesFragmentReaderTest {
         assertTrue(na1.getAttributes().size() == 3);
         assertTrue(na1.getNodes().contains("_0"));
         assertTrue(na1.getNodes().contains("_1"));
-        assertTrue(na1.getAttributes().get("PSIMI_25_aliases").size() == 2);
-        assertTrue(na1.getAttributes().get("entrez_gene_locuslink").size() == 2);
-        assertTrue(na1.getAttributes().get("name").size() == 1);
-        assertTrue(na1.getAttributes().get("PSIMI_25_aliases").contains("322397"));
-        assertTrue(na1.getAttributes().get("PSIMI_25_aliases").contains("80961"));
-        assertTrue(na1.getAttributes().get("entrez_gene_locuslink").contains("322397"));
-        assertTrue(na1.getAttributes().get("entrez_gene_locuslink").contains("one more"));
-        assertTrue(na1.getAttributes().get("name").contains("_322397"));
+        assertTrue(na1.get("PSIMI_25_aliases").size() == 2);
+        assertTrue(na1.get("entrez_gene_locuslink").size() == 2);
+        assertTrue(na1.get("name").size() == 1);
+        assertTrue(na1.get("PSIMI_25_aliases").contains("322397"));
+        assertTrue(na1.get("PSIMI_25_aliases").contains("80961"));
+        assertTrue(na1.get("entrez_gene_locuslink").contains("322397"));
+        assertTrue(na1.get("entrez_gene_locuslink").contains("one more"));
+        assertTrue(na1.get("name").contains("_322397"));
 
         final NodeAttributesElement na2 = (NodeAttributesElement) aspects.get(1);
         assertTrue(na2.getId().equals("_na1"));
         assertTrue(na2.getNodes().size() == 1);
         assertTrue(na2.getAttributes().size() == 1);
         assertTrue(na2.getNodes().contains("_2"));
-        assertTrue(na2.getAttributes().get("key").size() == 1);
-        assertTrue(na2.getAttributes().get("key").contains("value"));
+        assertTrue(na2.get("key").size() == 1);
+        assertTrue(na2.get("key").contains("value"));
 
         final NodeAttributesElement na3 = (NodeAttributesElement) aspects.get(2);
         assertTrue(na3.getId().equals("_na2"));
@@ -91,6 +94,14 @@ public class NodeAttributesFragmentReaderTest {
         assertTrue(na4.getNodes().size() == 1);
         assertTrue(na4.getAttributes().size() == 0);
         assertTrue(na4.getNodes().contains("_33"));
+        
+        final NodeAttributesElement na5 = (NodeAttributesElement) aspects.get(4);
+        System.out.println(na1.toString() );
+        System.out.println(na2.toString() );
+        System.out.println(na3.toString() );
+        System.out.println(na4.toString() );
+        System.out.println(na5.toString() );
+        
 
     }
 }

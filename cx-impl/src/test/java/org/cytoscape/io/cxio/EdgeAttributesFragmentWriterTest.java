@@ -53,7 +53,7 @@ public class EdgeAttributesFragmentWriterTest {
         attributes.put("A", v1);
         attributes.put("B", v2);
 
-        final EdgeAttributesElement ea0 = new EdgeAttributesElement("00", edges, ATTRIBUTE_TYPE.INTEGER,  attributes);
+        final EdgeAttributesElement ea0 = new EdgeAttributesElement("00", edges,  attributes);
 
         final List<AspectElement> l1 = new ArrayList<AspectElement>();
         l1.add(ea0);
