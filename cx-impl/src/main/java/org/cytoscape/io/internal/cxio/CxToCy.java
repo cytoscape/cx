@@ -6,11 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 
-import org.cytoscape.io.internal.cxio.kit.AspectElement;
-import org.cytoscape.io.internal.cxio.kit.CartesianLayoutElement;
-import org.cytoscape.io.internal.cxio.kit.CxConstants;
-import org.cytoscape.io.internal.cxio.kit.EdgesElement;
-import org.cytoscape.io.internal.cxio.kit.NodesElement;
+import org.cxio.aspects.datamodels.CartesianLayoutElement;
+import org.cxio.aspects.datamodels.EdgesElement;
+import org.cxio.aspects.datamodels.NodesElement;
+import org.cxio.core.interfaces.AspectElement;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
@@ -26,9 +25,9 @@ public class CxToCy {
                                    final CyNetwork network,
                                    final String collectionName) throws IOException {
 
-        final List<AspectElement> nodes = res.get(CxConstants.NODES);
-        final List<AspectElement> edges = res.get(CxConstants.EDGES);
-        final List<AspectElement> layout = res.get(CxConstants.CARTESIAN_LAYOUT);
+        final List<AspectElement> nodes = res.get(NodesElement.NAME);
+        final List<AspectElement> edges = res.get(EdgesElement.NAME);
+        final List<AspectElement> layout = res.get(CartesianLayoutElement.NAME);
 
         if ((nodes == null) || nodes.isEmpty()) {
             throw new IOException("no nodes in input");

@@ -8,11 +8,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.SortedMap;
 
-import org.cytoscape.io.internal.cxio.kit.AspectElement;
-import org.cytoscape.io.internal.cxio.kit.AspectFragmentReaderManager;
-import org.cytoscape.io.internal.cxio.kit.CartesianLayoutElement;
-import org.cytoscape.io.internal.cxio.kit.CxConstants;
-import org.cytoscape.io.internal.cxio.kit.CxReader;
+import org.cxio.aspects.datamodels.CartesianLayoutElement;
+import org.cxio.core.CxReader;
+import org.cxio.core.interfaces.AspectElement;
+import org.cxio.tools.AspectFragmentReaderManager;
 import org.junit.Test;
 
 public class CartesianLayoutFragmentReaderTest {
@@ -41,19 +40,19 @@ public class CartesianLayoutFragmentReaderTest {
                 + "{\"nodes\":[{\"@id\":\"_7\"}]}" + "]";
 
         final CxReader p = CxReader.createInstance(t0, AspectFragmentReaderManager.createInstance()
-                .getAvailableAspectFragmentReaders());
+                                                   .getAvailableAspectFragmentReaders());
         final SortedMap<String, List<AspectElement>> r0 = CxReader.parseAsMap(p);
 
-        assertTrue("failed to parse " + CxConstants.CARTESIAN_LAYOUT + " aspect",
-                   r0.containsKey(CxConstants.CARTESIAN_LAYOUT));
+        assertTrue("failed to parse " + CartesianLayoutElement.NAME + " aspect",
+                   r0.containsKey(CartesianLayoutElement.NAME));
 
-        assertFalse("failed to parse " + CxConstants.CARTESIAN_LAYOUT + " aspect",
-                    r0.get(CxConstants.CARTESIAN_LAYOUT).isEmpty());
+        assertFalse("failed to parse " + CartesianLayoutElement.NAME + " aspect",
+                    r0.get(CartesianLayoutElement.NAME).isEmpty());
 
-        assertTrue("failed to parse expected number of " + CxConstants.CARTESIAN_LAYOUT
-                + " aspects", r0.get(CxConstants.CARTESIAN_LAYOUT).size() == 3);
+        assertTrue("failed to parse expected number of " + CartesianLayoutElement.NAME + " aspects",
+                   r0.get(CartesianLayoutElement.NAME).size() == 3);
 
-        final List<AspectElement> aspects = r0.get(CxConstants.CARTESIAN_LAYOUT);
+        final List<AspectElement> aspects = r0.get(CartesianLayoutElement.NAME);
 
         assertTrue("failed to get expected instance",
                    aspects.get(0) instanceof CartesianLayoutElement);

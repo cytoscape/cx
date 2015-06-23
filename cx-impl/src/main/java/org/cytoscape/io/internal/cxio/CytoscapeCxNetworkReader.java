@@ -7,10 +7,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 
+import org.cxio.core.CxReader;
+import org.cxio.core.interfaces.AspectElement;
+import org.cxio.core.interfaces.AspectFragmentReader;
 import org.cytoscape.application.CyApplicationManager;
-import org.cytoscape.io.internal.cxio.kit.AspectElement;
-import org.cytoscape.io.internal.cxio.kit.AspectFragmentReader;
-import org.cytoscape.io.internal.cxio.kit.CxReader;
 import org.cytoscape.io.read.AbstractCyNetworkReader;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkFactory;
@@ -39,9 +39,9 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                                     final CyNetworkManager cyNetworkManager,
                                     final CyRootNetworkManager cyRootNetworkManager,
                                     final Set<AspectFragmentReader> aspect_fragment_readers)
-                                            throws IOException {
+            throws IOException {
         super(input_stream, cyApplicationManager, cyNetworkFactory, cyNetworkManager,
-                cyRootNetworkManager);
+              cyRootNetworkManager);
 
         this.networkCollectionName = networkCollectionName;
 

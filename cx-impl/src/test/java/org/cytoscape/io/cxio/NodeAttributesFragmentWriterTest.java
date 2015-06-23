@@ -8,12 +8,11 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cytoscape.io.internal.cxio.kit.AspectElement;
-import org.cytoscape.io.internal.cxio.kit.CxConstants;
-import org.cytoscape.io.internal.cxio.kit.CxConstants.ATTRIBUTE_TYPE;
-import org.cytoscape.io.internal.cxio.kit.JsonWriter;
-import org.cytoscape.io.internal.cxio.kit.NodeAttributesElement;
-import org.cytoscape.io.internal.cxio.kit.NodeAttributesFragmentWriter;
+import org.cxio.aspects.datamodels.AbstractAttributesElement.ATTRIBUTE_TYPE;
+import org.cxio.aspects.datamodels.NodeAttributesElement;
+import org.cxio.aspects.writers.NodeAttributesFragmentWriter;
+import org.cxio.core.CxWriter;
+import org.cxio.core.interfaces.AspectElement;
 import org.junit.Test;
 
 public class NodeAttributesFragmentWriterTest {
@@ -23,15 +22,15 @@ public class NodeAttributesFragmentWriterTest {
 
         final List<AspectElement> l0 = new ArrayList<AspectElement>();
         final OutputStream out0 = new ByteArrayOutputStream();
-        final JsonWriter t0 = JsonWriter.createInstance(out0);
+        final CxWriter w0 = CxWriter.createInstance(out0, false);
 
-        final NodeAttributesFragmentWriter w0 = NodeAttributesFragmentWriter.createInstance();
+        w0.addAspectFragmentWriter(NodeAttributesFragmentWriter.createInstance());
 
-        t0.start();
-        w0.write(l0, t0);
-        t0.end();
+        w0.start();
+        w0.writeAspectElements(l0);
+        w0.end();
 
-        assertEquals("[{\"" + CxConstants.NODE_ATTRIBUTES + "\":[]}]", out0.toString());
+        assertEquals("[]", out0.toString());
 
         final NodeAttributesElement na0 = new NodeAttributesElement("00");
         na0.addNode("000");
@@ -52,13 +51,13 @@ public class NodeAttributesFragmentWriterTest {
         l1.add(na0);
 
         final OutputStream out1 = new ByteArrayOutputStream();
-        final JsonWriter t1 = JsonWriter.createInstance(out1);
+        final CxWriter w1 = CxWriter.createInstance(out1, false);
 
-        final NodeAttributesFragmentWriter w1 = NodeAttributesFragmentWriter.createInstance();
+        w1.addAspectFragmentWriter(NodeAttributesFragmentWriter.createInstance());
 
-        t1.start();
-        w1.write(l1, t1);
-        t1.end();
+        w1.start();
+        w1.writeAspectElements(l1);
+        w1.end();
 
         assertEquals("[{\"nodeAttributes\":[{\"@id\":\"00\",\"nodes\":[\"000\",\"001\"],\"types\":{\"B\":\"boolean\",\"D\":\"double\",\"F\":\"float\",\"I\":\"integer\",\"L\":\"long\"},\"attributes\":{\"B\":[\"true\"],\"D\":[\"-1.111\"],\"F\":[\"2.01\"],\"I\":[\"1\"],\"L\":[\"1111\"],\"X\":[\"x1\",\"x2\",\"x3\"],\"Y\":[\"y1\",\"y2\",\"y3\"]}}]}]",
                      out1.toString());

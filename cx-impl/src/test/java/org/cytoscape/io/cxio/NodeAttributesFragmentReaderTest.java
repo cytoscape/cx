@@ -7,11 +7,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.SortedMap;
 
-import org.cytoscape.io.internal.cxio.kit.AspectElement;
-import org.cytoscape.io.internal.cxio.kit.AspectFragmentReaderManager;
-import org.cytoscape.io.internal.cxio.kit.CxConstants;
-import org.cytoscape.io.internal.cxio.kit.CxReader;
-import org.cytoscape.io.internal.cxio.kit.NodeAttributesElement;
+import org.cxio.aspects.datamodels.NodeAttributesElement;
+import org.cxio.core.CxReader;
+import org.cxio.core.interfaces.AspectElement;
+import org.cxio.tools.AspectFragmentReaderManager;
 import org.junit.Test;
 
 public class NodeAttributesFragmentReaderTest {
@@ -48,17 +47,17 @@ public class NodeAttributesFragmentReaderTest {
                 + "]";
 
         final CxReader p = CxReader.createInstance(t0, AspectFragmentReaderManager.createInstance()
-                .getAvailableAspectFragmentReaders());
+                                                   .getAvailableAspectFragmentReaders());
         final SortedMap<String, List<AspectElement>> r0 = CxReader.parseAsMap(p);
 
-        assertTrue("failed to parse " + CxConstants.NODE_ATTRIBUTES + " aspect",
-                   r0.containsKey(CxConstants.NODE_ATTRIBUTES));
-        assertFalse("failed to parse " + CxConstants.NODE_ATTRIBUTES + " aspect",
-                    r0.get(CxConstants.NODE_ATTRIBUTES).isEmpty());
-        assertTrue("failed to get expected number of " + CxConstants.NODE_ATTRIBUTES + " aspects",
-                   r0.get(CxConstants.NODE_ATTRIBUTES).size() == 5);
+        assertTrue("failed to parse " + NodeAttributesElement.NAME + " aspect",
+                   r0.containsKey(NodeAttributesElement.NAME));
+        assertFalse("failed to parse " + NodeAttributesElement.NAME + " aspect",
+                    r0.get(NodeAttributesElement.NAME).isEmpty());
+        assertTrue("failed to get expected number of " + NodeAttributesElement.NAME + " aspects",
+                   r0.get(NodeAttributesElement.NAME).size() == 5);
 
-        final List<AspectElement> aspects = r0.get(CxConstants.NODE_ATTRIBUTES);
+        final List<AspectElement> aspects = r0.get(NodeAttributesElement.NAME);
 
         final NodeAttributesElement na1 = (NodeAttributesElement) aspects.get(0);
         assertTrue(na1.getId().equals("_na0"));

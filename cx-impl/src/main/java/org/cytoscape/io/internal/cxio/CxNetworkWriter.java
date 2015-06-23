@@ -7,11 +7,11 @@ import java.nio.charset.CharsetEncoder;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.cytoscape.io.internal.cxio.kit.AspectFragmentWriter;
-import org.cytoscape.io.internal.cxio.kit.EdgeAttributesFragmentWriter;
-import org.cytoscape.io.internal.cxio.kit.EdgesFragmentWriter;
-import org.cytoscape.io.internal.cxio.kit.NodeAttributesFragmentWriter;
-import org.cytoscape.io.internal.cxio.kit.NodesFragmentWriter;
+import org.cxio.aspects.writers.EdgeAttributesFragmentWriter;
+import org.cxio.aspects.writers.EdgesFragmentWriter;
+import org.cxio.aspects.writers.NodeAttributesFragmentWriter;
+import org.cxio.aspects.writers.NodesFragmentWriter;
+import org.cxio.core.interfaces.AspectFragmentWriter;
 import org.cytoscape.io.write.CyWriter;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.work.TaskMonitor;
@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 public class CxNetworkWriter implements CyWriter {
 
     private final static Logger             logger   = LoggerFactory
-            .getLogger(CxNetworkWriter.class);
+                                                             .getLogger(CxNetworkWriter.class);
     private final static String             ENCODING = "UTF-8";
 
     private final OutputStream              outputStream;

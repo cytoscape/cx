@@ -3,7 +3,7 @@ package org.cytoscape.io.cxio;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.cytoscape.io.internal.cxio.kit.EdgesElement;
+import org.cxio.aspects.datamodels.EdgesElement;
 import org.junit.Test;
 
 public class EdgeElementTest {

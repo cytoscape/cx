@@ -8,11 +8,10 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cytoscape.io.internal.cxio.kit.AspectElement;
-import org.cytoscape.io.internal.cxio.kit.CartesianLayoutElement;
-import org.cytoscape.io.internal.cxio.kit.CartesianLayoutFragmentWriter;
-import org.cytoscape.io.internal.cxio.kit.CxConstants;
-import org.cytoscape.io.internal.cxio.kit.JsonWriter;
+import org.cxio.aspects.datamodels.CartesianLayoutElement;
+import org.cxio.aspects.writers.CartesianLayoutFragmentWriter;
+import org.cxio.core.CxWriter;
+import org.cxio.core.interfaces.AspectElement;
 import org.junit.Test;
 
 public class CartesianLayoutFragmentWriterTest {
@@ -22,15 +21,15 @@ public class CartesianLayoutFragmentWriterTest {
 
         final List<AspectElement> l0 = new ArrayList<AspectElement>();
         final OutputStream out0 = new ByteArrayOutputStream();
-        final JsonWriter t0 = JsonWriter.createInstance(out0);
+        final CxWriter w = CxWriter.createInstance(out0, false);
 
-        final CartesianLayoutFragmentWriter w0 = CartesianLayoutFragmentWriter.createInstance();
+        w.addAspectFragmentWriter(CartesianLayoutFragmentWriter.createInstance());
 
-        t0.start();
-        w0.write(l0, t0);
-        t0.end();
+        w.start();
+        w.writeAspectElements(l0);
+        w.end();
 
-        assertEquals("[{\"" + CxConstants.CARTESIAN_LAYOUT + "\":[]}]", out0.toString());
+        assertEquals("[]", out0.toString());
 
         final CartesianLayoutElement c0 = new CartesianLayoutElement("00", "0", "0");
         final CartesianLayoutElement c1 = new CartesianLayoutElement("01", "1", "2");
@@ -42,13 +41,13 @@ public class CartesianLayoutFragmentWriterTest {
         l1.add(c2);
 
         final OutputStream out1 = new ByteArrayOutputStream();
-        final JsonWriter t1 = JsonWriter.createInstance(out1);
+        final CxWriter w1 = CxWriter.createInstance(out1, false);
 
-        final CartesianLayoutFragmentWriter w1 = CartesianLayoutFragmentWriter.createInstance();
+        w1.addAspectFragmentWriter(CartesianLayoutFragmentWriter.createInstance());
 
-        t1.start();
-        w1.write(l1, t1);
-        t1.end();
+        w1.start();
+        w1.writeAspectElements(l1);
+        w1.end();
 
         assertEquals("[{\"cartesianLayout\":[{\"node\":\"00\",\"x\":0.0,\"y\":0.0},{\"node\":\"01\",\"x\":1.0,\"y\":2.0},{\"node\":\"02\",\"x\":3.0,\"y\":4.0}]}]",
                      out1.toString());

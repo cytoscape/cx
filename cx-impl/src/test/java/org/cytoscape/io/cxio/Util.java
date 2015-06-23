@@ -6,16 +6,20 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.SortedMap;
 
-import org.cytoscape.io.internal.cxio.kit.AspectElement;
-import org.cytoscape.io.internal.cxio.kit.AspectFragmentReaderManager;
-import org.cytoscape.io.internal.cxio.kit.CartesianLayoutFragmentWriter;
-import org.cytoscape.io.internal.cxio.kit.CxConstants;
-import org.cytoscape.io.internal.cxio.kit.CxReader;
-import org.cytoscape.io.internal.cxio.kit.CxWriter;
-import org.cytoscape.io.internal.cxio.kit.EdgeAttributesFragmentWriter;
-import org.cytoscape.io.internal.cxio.kit.EdgesFragmentWriter;
-import org.cytoscape.io.internal.cxio.kit.NodeAttributesFragmentWriter;
-import org.cytoscape.io.internal.cxio.kit.NodesFragmentWriter;
+import org.cxio.aspects.datamodels.CartesianLayoutElement;
+import org.cxio.aspects.datamodels.EdgeAttributesElement;
+import org.cxio.aspects.datamodels.EdgesElement;
+import org.cxio.aspects.datamodels.NodeAttributesElement;
+import org.cxio.aspects.datamodels.NodesElement;
+import org.cxio.aspects.writers.CartesianLayoutFragmentWriter;
+import org.cxio.aspects.writers.EdgeAttributesFragmentWriter;
+import org.cxio.aspects.writers.EdgesFragmentWriter;
+import org.cxio.aspects.writers.NodeAttributesFragmentWriter;
+import org.cxio.aspects.writers.NodesFragmentWriter;
+import org.cxio.core.CxReader;
+import org.cxio.core.CxWriter;
+import org.cxio.core.interfaces.AspectElement;
+import org.cxio.tools.AspectFragmentReaderManager;
 
 final class TestUtil {
 
@@ -34,11 +38,11 @@ final class TestUtil {
         w.addAspectFragmentWriter(EdgeAttributesFragmentWriter.createInstance());
 
         w.start();
-        w.write(res.get(CxConstants.NODES));
-        w.write(res.get(CxConstants.EDGES));
-        w.write(res.get(CxConstants.CARTESIAN_LAYOUT));
-        w.write(res.get(CxConstants.NODE_ATTRIBUTES));
-        w.write(res.get(CxConstants.EDGE_ATTRIBUTES));
+        w.writeAspectElements(res.get(NodesElement.NAME));
+        w.writeAspectElements(res.get(EdgesElement.NAME));
+        w.writeAspectElements(res.get(CartesianLayoutElement.NAME));
+        w.writeAspectElements(res.get(NodeAttributesElement.NAME));
+        w.writeAspectElements(res.get(EdgeAttributesElement.NAME));
         w.end();
 
         return out.toString();

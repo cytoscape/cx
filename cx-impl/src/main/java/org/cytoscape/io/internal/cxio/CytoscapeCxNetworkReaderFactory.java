@@ -5,14 +5,14 @@ import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.cxio.aspects.readers.CartesianLayoutFragmentReader;
+import org.cxio.aspects.readers.EdgeAttributesFragmentReader;
+import org.cxio.aspects.readers.EdgesFragmentReader;
+import org.cxio.aspects.readers.NodeAttributesFragmentReader;
+import org.cxio.aspects.readers.NodesFragmentReader;
+import org.cxio.core.interfaces.AspectFragmentReader;
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.io.CyFileFilter;
-import org.cytoscape.io.internal.cxio.kit.AspectFragmentReader;
-import org.cytoscape.io.internal.cxio.kit.CartesianLayoutFragmentReader;
-import org.cytoscape.io.internal.cxio.kit.EdgeAttributesFragmentReader;
-import org.cytoscape.io.internal.cxio.kit.EdgesFragmentReader;
-import org.cytoscape.io.internal.cxio.kit.NodeAttributesFragmentReader;
-import org.cytoscape.io.internal.cxio.kit.NodesFragmentReader;
 import org.cytoscape.io.read.AbstractInputStreamTaskFactory;
 import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
@@ -50,8 +50,8 @@ public class CytoscapeCxNetworkReaderFactory extends AbstractInputStreamTaskFact
             aspect_fragment_readers.add(CartesianLayoutFragmentReader.createInstance());
 
             return new TaskIterator(new CytoscapeCxNetworkReader(collectionName, is,
-                                                                 cyApplicationManager, cyNetworkFactory, cyNetworkManager, cyRootNetworkManager,
-                                                                 aspect_fragment_readers));
+                    cyApplicationManager, cyNetworkFactory, cyNetworkManager, cyRootNetworkManager,
+                    aspect_fragment_readers));
         }
         catch (final IOException e) {
 

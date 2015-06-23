@@ -8,12 +8,11 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cytoscape.io.internal.cxio.kit.AspectElement;
-import org.cytoscape.io.internal.cxio.kit.CxConstants;
-import org.cytoscape.io.internal.cxio.kit.CxConstants.ATTRIBUTE_TYPE;
-import org.cytoscape.io.internal.cxio.kit.EdgeAttributesElement;
-import org.cytoscape.io.internal.cxio.kit.EdgeAttributesFragmentWriter;
-import org.cytoscape.io.internal.cxio.kit.JsonWriter;
+import org.cxio.aspects.datamodels.AbstractAttributesElement.ATTRIBUTE_TYPE;
+import org.cxio.aspects.datamodels.EdgeAttributesElement;
+import org.cxio.aspects.writers.EdgeAttributesFragmentWriter;
+import org.cxio.core.CxWriter;
+import org.cxio.core.interfaces.AspectElement;
 import org.junit.Test;
 
 public class EdgeAttributesFragmentWriterTest {
@@ -23,15 +22,14 @@ public class EdgeAttributesFragmentWriterTest {
 
         final List<AspectElement> l0 = new ArrayList<AspectElement>();
         final OutputStream out0 = new ByteArrayOutputStream();
-        final JsonWriter t0 = JsonWriter.createInstance(out0);
+        final CxWriter w = CxWriter.createInstance(out0, false);
+        w.addAspectFragmentWriter(EdgeAttributesFragmentWriter.createInstance());
 
-        final EdgeAttributesFragmentWriter w0 = EdgeAttributesFragmentWriter.createInstance();
+        w.start();
+        w.writeAspectElements(l0);
+        w.end();
 
-        t0.start();
-        w0.write(l0, t0);
-        t0.end();
-
-        assertEquals("[{\"" + CxConstants.EDGE_ATTRIBUTES + "\":[]}]", out0.toString());
+        assertEquals("[]", out0.toString());
 
         final EdgeAttributesElement ea0 = new EdgeAttributesElement("00");
         ea0.addEdge("000");
@@ -62,13 +60,12 @@ public class EdgeAttributesFragmentWriterTest {
         l1.add(ea0);
 
         final OutputStream out1 = new ByteArrayOutputStream();
-        final JsonWriter t1 = JsonWriter.createInstance(out1);
+        final CxWriter w1 = CxWriter.createInstance(out1, false);
+        w1.addAspectFragmentWriter(EdgeAttributesFragmentWriter.createInstance());
 
-        final EdgeAttributesFragmentWriter w1 = EdgeAttributesFragmentWriter.createInstance();
-
-        t1.start();
-        w1.write(l1, t1);
-        t1.end();
+        w1.start();
+        w1.writeAspectElements(l1);
+        w1.end();
 
         assertEquals("[{\"edgeAttributes\":[{\"@id\":\"00\",\"edges\":[\"000\",\"001\"],\"types\":{\"D\":\"double\",\"F\":\"float\",\"I\":\"integer\",\"L\":\"long\",\"X\":\"boolean\",\"Y\":\"boolean\",\"Z\":\"boolean\"},\"attributes\":{\"A\":[\"a1\",\"a2\",\"a3\"],\"B\":[\"b1\",\"b2\",\"b3\"],\"D\":[\"2.0\"],\"F\":[\"3.0\"],\"I\":[\"4\",\"5\",\"6\"],\"L\":[\"1\"],\"X\":[\"false\"],\"Y\":[\"true\"],\"Z\":[\"true\"]}}]}]",
                      out1.toString());

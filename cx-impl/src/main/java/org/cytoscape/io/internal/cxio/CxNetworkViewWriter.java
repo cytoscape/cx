@@ -7,12 +7,12 @@ import java.nio.charset.CharsetEncoder;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.cytoscape.io.internal.cxio.kit.AspectFragmentWriter;
-import org.cytoscape.io.internal.cxio.kit.CartesianLayoutFragmentWriter;
-import org.cytoscape.io.internal.cxio.kit.EdgeAttributesFragmentWriter;
-import org.cytoscape.io.internal.cxio.kit.EdgesFragmentWriter;
-import org.cytoscape.io.internal.cxio.kit.NodeAttributesFragmentWriter;
-import org.cytoscape.io.internal.cxio.kit.NodesFragmentWriter;
+import org.cxio.aspects.writers.CartesianLayoutFragmentWriter;
+import org.cxio.aspects.writers.EdgeAttributesFragmentWriter;
+import org.cxio.aspects.writers.EdgesFragmentWriter;
+import org.cxio.aspects.writers.NodeAttributesFragmentWriter;
+import org.cxio.aspects.writers.NodesFragmentWriter;
+import org.cxio.core.interfaces.AspectFragmentWriter;
 import org.cytoscape.io.write.CyWriter;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.view.model.CyNetworkView;
@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 public class CxNetworkViewWriter implements CyWriter {
 
     private final static Logger             logger   = LoggerFactory
-            .getLogger(CxNetworkViewWriter.class);
+                                                             .getLogger(CxNetworkViewWriter.class);
     private final static String             ENCODING = "UTF-8";
 
     private final OutputStream              os;

@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.cytoscape.io.internal.cxio.kit.AspectElement;
-import org.cytoscape.io.internal.cxio.kit.AspectFragmentWriter;
-import org.cytoscape.io.internal.cxio.kit.CartesianLayoutElement;
-import org.cytoscape.io.internal.cxio.kit.CxWriter;
-import org.cytoscape.io.internal.cxio.kit.EdgesElement;
-import org.cytoscape.io.internal.cxio.kit.NodeAttributesElement;
-import org.cytoscape.io.internal.cxio.kit.NodesElement;
+import org.cxio.aspects.datamodels.CartesianLayoutElement;
+import org.cxio.aspects.datamodels.EdgesElement;
+import org.cxio.aspects.datamodels.NodeAttributesElement;
+import org.cxio.aspects.datamodels.NodesElement;
+import org.cxio.core.CxWriter;
+import org.cxio.core.interfaces.AspectElement;
+import org.cxio.core.interfaces.AspectFragmentWriter;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
@@ -36,6 +36,62 @@ public class CyToCxImpl implements CyToCx {
     public final void addAspectFragmentWriter(final AspectFragmentWriter aspect_fragment_writer) {
         aspect_fragment_writers.add(aspect_fragment_writer);
     }
+    
+    public void writeCX(final CyNetwork network, final AspectSet aspects, final OutputStream out) throws IOException {
+        final CxWriter w = CxWriter.createInstance(out, USE_DEFAULT_PRETTY_PRINTER);
+        addAspectFragmentWriters(w, aspects.getAspectAspectFragmentWriters());
+        
+        w.start();
+        
+        final List<AspectElement> naes = new ArrayList<AspectElement>();
+        List<AspectElement> elements = new ArrayList<AspectElement>();
+        for (final CyNode cy_node : network.getNodeList()) {
+            elements.add(new NodesElement(cy_node.getSUID()));
+            //
+            final CyRow row = network.getRow(cy_node);
+            if (row != null) {
+                // final CyTable table = row.getTable();
+                final Map<String, Object> values = row.getAllValues();
+                if ((values != null) && !values.isEmpty()) {
+
+                    final NodeAttributesElement nae = new NodeAttributesElement("na"
+                            + cy_node.getSUID());
+                    nae.addNode(cy_node.getSUID());
+                    for (final String columnName : values.keySet()) {
+                        final Object value = values.get(columnName);
+                        if (value == null) {
+                            continue;
+                        }
+                        nae.putValue(columnName, value);
+                    }
+                    naes.add(nae);
+                }
+            }
+
+        }
+        w.writeAspectElements(elements);
+
+        elements = new ArrayList<AspectElement>();
+        for (final CyEdge cyEdge : network.getEdgeList()) {
+            elements.add(new EdgesElement(cyEdge.getSUID(), cyEdge.getSource().getSUID(), cyEdge
+                                          .getTarget().getSUID()));
+        }
+        w.writeAspectElements(elements);
+        w.writeAspectElements(naes);
+
+        w.end();
+        
+        
+        
+    }
+
+    private void addAspectFragmentWriters(final CxWriter w, final Set<AspectFragmentWriter> writers) {
+        for (AspectFragmentWriter writer : writers) {
+            w.addAspectFragmentWriter(writer);
+        }
+    }
+
+   
 
     @Override
     public void serializeCyNetwork(final CyNetwork network, final OutputStream out)
@@ -58,7 +114,7 @@ public class CyToCxImpl implements CyToCx {
                 if ((values != null) && !values.isEmpty()) {
 
                     final NodeAttributesElement nae = new NodeAttributesElement("na"
-                            + cy_node.getSUID(), null);
+                            + cy_node.getSUID());
                     nae.addNode(cy_node.getSUID());
                     for (final String columnName : values.keySet()) {
                         final Object value = values.get(columnName);
@@ -72,15 +128,15 @@ public class CyToCxImpl implements CyToCx {
             }
 
         }
-        w.write(elements);
+        w.writeAspectElements(elements);
 
         elements = new ArrayList<AspectElement>();
         for (final CyEdge cyEdge : network.getEdgeList()) {
             elements.add(new EdgesElement(cyEdge.getSUID(), cyEdge.getSource().getSUID(), cyEdge
-                    .getTarget().getSUID()));
+                                          .getTarget().getSUID()));
         }
-        w.write(elements);
-        w.write(naes);
+        w.writeAspectElements(elements);
+        w.writeAspectElements(naes);
 
         w.end();
     }
@@ -107,21 +163,21 @@ public class CyToCxImpl implements CyToCx {
             node_elements.add(new NodesElement(String.valueOf(cy_node.getSUID())));
             final View<CyNode> node_view = view.getNodeView(cy_node);
             cartesian_layout_elements.add(new CartesianLayoutElement(cy_node.getSUID(), node_view
-                                                                     .getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
-                                                                     .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION)));
+                    .getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
+                    .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION)));
 
         }
-        w.write(node_elements);
+        w.writeAspectElements(node_elements);
 
         final List<AspectElement> edge_elements = new ArrayList<AspectElement>();
         for (final CyEdge cyEdge : network.getEdgeList()) {
             edge_elements.add(new EdgesElement(String.valueOf(cyEdge.getSUID()), String
-                                               .valueOf(cyEdge.getSource().getSUID()), String.valueOf(cyEdge.getTarget()
-                                                                                                      .getSUID())));
+                    .valueOf(cyEdge.getSource().getSUID()), String.valueOf(cyEdge.getTarget()
+                    .getSUID())));
         }
-        w.write(edge_elements);
+        w.writeAspectElements(edge_elements);
 
-        w.write(cartesian_layout_elements);
+        w.writeAspectElements(cartesian_layout_elements);
 
         w.end();
     }

@@ -8,10 +8,10 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cytoscape.io.internal.cxio.kit.AspectElement;
-import org.cytoscape.io.internal.cxio.kit.JsonWriter;
-import org.cytoscape.io.internal.cxio.kit.NodesElement;
-import org.cytoscape.io.internal.cxio.kit.NodesFragmentWriter;
+import org.cxio.aspects.datamodels.NodesElement;
+import org.cxio.aspects.writers.NodesFragmentWriter;
+import org.cxio.core.CxWriter;
+import org.cxio.core.interfaces.AspectElement;
 import org.junit.Test;
 
 public class NodesFragmentWriterTest {
@@ -21,15 +21,14 @@ public class NodesFragmentWriterTest {
 
         final List<AspectElement> l0 = new ArrayList<AspectElement>();
         final OutputStream out0 = new ByteArrayOutputStream();
-        final JsonWriter t0 = JsonWriter.createInstance(out0);
+        final CxWriter w0 = CxWriter.createInstance(out0, false);
+        w0.addAspectFragmentWriter(NodesFragmentWriter.createInstance());
 
-        final NodesFragmentWriter w0 = NodesFragmentWriter.createInstance();
+        w0.start();
+        w0.writeAspectElements(l0);
+        w0.end();
 
-        t0.start();
-        w0.write(l0, t0);
-        t0.end();
-
-        assertEquals("[{\"nodes\":[]}]", out0.toString());
+        assertEquals("[]", out0.toString());
 
         final NodesElement n0 = new NodesElement("0");
         final NodesElement n1 = new NodesElement("1");
@@ -40,13 +39,12 @@ public class NodesFragmentWriterTest {
         l1.add(n2);
 
         final OutputStream out1 = new ByteArrayOutputStream();
-        final JsonWriter t1 = JsonWriter.createInstance(out1);
+        final CxWriter w1 = CxWriter.createInstance(out1, false);
+        w1.addAspectFragmentWriter(NodesFragmentWriter.createInstance());
 
-        final NodesFragmentWriter w1 = NodesFragmentWriter.createInstance();
-
-        t1.start();
-        w1.write(l1, t1);
-        t1.end();
+        w1.start();
+        w1.writeAspectElements(l1);
+        w1.end();
 
         assertEquals("[{\"nodes\":[{\"@id\":\"0\"},{\"@id\":\"1\"},{\"@id\":\"2\"}]}]",
                      out1.toString());
@@ -61,14 +59,13 @@ public class NodesFragmentWriterTest {
         l3.add(n5);
 
         final OutputStream out2 = new ByteArrayOutputStream();
-        final JsonWriter t2 = JsonWriter.createInstance(out2);
+        final CxWriter w2 = CxWriter.createInstance(out2, false);
+        w2.addAspectFragmentWriter(NodesFragmentWriter.createInstance());
 
-        final NodesFragmentWriter w2 = NodesFragmentWriter.createInstance();
-
-        t2.start();
-        w2.write(l2, t1);
-        w2.write(l3, t1);
-        t2.end();
+        w2.start();
+        w2.writeAspectElements(l2);
+        w2.writeAspectElements(l3);
+        w2.end();
 
         assertEquals("[{\"nodes\":[{\"@id\":\"3\"},{\"@id\":\"4\"}]},{\"nodes\":[{\"@id\":\"5\"}]}]",
                      out2.toString());
