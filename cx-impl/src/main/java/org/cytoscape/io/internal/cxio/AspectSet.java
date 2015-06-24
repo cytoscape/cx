@@ -1,6 +1,8 @@
 package org.cytoscape.io.internal.cxio;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -41,15 +43,15 @@ public final class AspectSet {
     public final boolean contains(final Aspect aspect) {
         return _aspects.contains(aspect);
     }
-    
+
     /**
-     * For each Aspect in the set, this returns the appropriate AspectFragmentWriter 
-     * (in a SortedSet). 
-     * 
-     * @return a SortedSet of AspectFragmentWriters
+     * For each Aspect in the set, this returns the appropriate
+     * AspectFragmentWriter (in a Set).
+     *
+     * @return a SortedSet of AspectFragmentWriter
      */
-    public final SortedSet<AspectFragmentWriter> getAspectAspectFragmentWriters() {
-        final SortedSet<AspectFragmentWriter> writers = new TreeSet<AspectFragmentWriter>();
+    public final Set<AspectFragmentWriter> getAspectFragmentWriters() {
+        final Set<AspectFragmentWriter> writers = new HashSet<AspectFragmentWriter>();
         if (_aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
             writers.add(CartesianLayoutFragmentWriter.createInstance());
         }
@@ -68,9 +70,14 @@ public final class AspectSet {
         return writers;
     }
 
-    
-    public final SortedSet<AspectFragmentReader> getAspectAspectFragmentReaders() {
-        final SortedSet<AspectFragmentReader> readers = new TreeSet<AspectFragmentReader>();
+    /**
+     * For each Aspect in the set, this returns the appropriate
+     * AspectFragmentReader (in a Set).
+     *
+     * @return a Set of AspectFragmentReader
+     */
+    public final Set<AspectFragmentReader> getAspectFragmentReaders() {
+        final Set<AspectFragmentReader> readers = new HashSet<AspectFragmentReader>();
         if (_aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
             readers.add(CartesianLayoutFragmentReader.createInstance());
         }

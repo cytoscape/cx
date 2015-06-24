@@ -1,0 +1,97 @@
+package org.cytoscape.io.internal.cx_reader;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+
+import org.cxio.aspects.datamodels.CartesianLayoutElement;
+import org.cxio.aspects.datamodels.EdgesElement;
+import org.cxio.aspects.datamodels.NodesElement;
+import org.cxio.core.interfaces.AspectElement;
+import org.cytoscape.model.CyEdge;
+import org.cytoscape.model.CyNetwork;
+import org.cytoscape.model.CyNode;
+import org.cytoscape.model.CyTable;
+import org.cytoscape.model.subnetwork.CyRootNetwork;
+import org.cytoscape.model.subnetwork.CySubNetwork;
+
+public final class CxToCy {
+
+    private Map<CyNode, Double[]> position_map;
+
+    public final CyNetwork createNetwork(final SortedMap<String, List<AspectElement>> res,
+                                   final CyNetwork network,
+                                   final String collectionName) throws IOException {
+
+        final List<AspectElement> nodes = res.get(NodesElement.NAME);
+        final List<AspectElement> edges = res.get(EdgesElement.NAME);
+        final List<AspectElement> layout = res.get(CartesianLayoutElement.NAME);
+
+        if ((nodes == null) || nodes.isEmpty()) {
+            throw new IOException("no nodes in input");
+        }
+
+        position_map = new HashMap<CyNode, Double[]>();
+        final Map<String, CyNode> nodeMap = addNodes(network, nodes);
+        addEdges(network, edges, nodeMap);
+        if ((layout != null) && !layout.isEmpty()) {
+            addPositions(layout, nodeMap);
+        }
+
+        if (collectionName != null) {
+            final CyRootNetwork rootNetwork = ((CySubNetwork) network).getRootNetwork();
+            rootNetwork.getRow(rootNetwork).set(CyNetwork.NAME, collectionName);
+        }
+
+        return network;
+    }
+
+    private final void addPositions(final List<AspectElement> layout,
+                                    final Map<String, CyNode> node_map) {
+        for (final AspectElement ae : layout) {
+            final CartesianLayoutElement cle = (CartesianLayoutElement) ae;
+            position_map.put(node_map.get(cle.getNode()), new Double[] {
+                    Double.valueOf(cle.getX()), Double.valueOf(cle.getY()) });
+        }
+    }
+
+    private final Map<String, CyNode> addNodes(final CyNetwork network,
+                                               final List<AspectElement> nodes) {
+
+        final Map<String, CyNode> nodeMap = new HashMap<String, CyNode>();
+
+        for (final AspectElement node : nodes) {
+
+            final String node_id = ((NodesElement) node).getId();
+            CyNode cyNode = nodeMap.get(node_id);
+            if (cyNode == null) {
+                cyNode = network.addNode();
+
+                // Use ID as unique name.
+                network.getRow(cyNode).set(CyNetwork.NAME, node_id);
+                nodeMap.put(node_id, cyNode);
+            }
+
+        }
+        return nodeMap;
+    }
+
+    private final void addEdges(final CyNetwork network,
+                                final List<AspectElement> edges,
+                                final Map<String, CyNode> nodeMap) {
+
+        final CyTable edgeTable = network.getDefaultEdgeTable();
+
+        for (final AspectElement edge : edges) {
+            final CyNode sourceNode = nodeMap.get(((EdgesElement) edge).getSource());
+            final CyNode targetNode = nodeMap.get(((EdgesElement) edge).getTarget());
+            final CyEdge newEdge = network.addEdge(sourceNode, targetNode, true);
+        }
+    }
+
+    public Map<CyNode, Double[]> getNodePosition() {
+        return position_map;
+    }
+}

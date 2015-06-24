@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
-import org.cytoscape.io.internal.cxio.CxNetworkWriterFactory;
+import org.cytoscape.io.internal.cx_writer.CxNetworkWriterFactory;
 import org.cytoscape.io.write.CyWriter;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
