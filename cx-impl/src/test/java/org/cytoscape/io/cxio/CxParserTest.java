@@ -5,7 +5,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.cxio.aspects.datamodels.EdgesElement;
@@ -14,6 +16,7 @@ import org.cxio.aspects.readers.EdgesFragmentReader;
 import org.cxio.aspects.readers.NodesFragmentReader;
 import org.cxio.core.CxReader;
 import org.cxio.core.interfaces.AspectElement;
+import org.cxio.core.interfaces.AspectFragmentReader;
 import org.cxio.tools.AspectFragmentReaderManager;
 import org.junit.Test;
 
@@ -24,7 +27,7 @@ public class CxParserTest {
 
         final String j = "[]";
         final CxReader p = CxReader.createInstance(j, AspectFragmentReaderManager.createInstance()
-                                                   .getAvailableAspectFragmentReaders());
+                .getAvailableAspectFragmentReaders());
 
         assertFalse(p.hasNext());
         assertEquals(p.getNext(), null);
@@ -42,7 +45,7 @@ public class CxParserTest {
     public void testEmpty2() throws IOException {
         final String j = "[{}]";
         final CxReader p = CxReader.createInstance(j, AspectFragmentReaderManager.createInstance()
-                                                   .getAvailableAspectFragmentReaders());
+                .getAvailableAspectFragmentReaders());
 
         assertFalse(p.hasNext());
         assertEquals(p.getNext(), null);
@@ -60,7 +63,7 @@ public class CxParserTest {
     public void test1() throws IOException {
         final String j = "[{\"key\":\"value\"}]";
         final CxReader p = CxReader.createInstance(j, AspectFragmentReaderManager.createInstance()
-                                                   .getAvailableAspectFragmentReaders());
+                .getAvailableAspectFragmentReaders());
 
         assertFalse(p.hasNext());
         assertEquals(p.getNext(), null);
@@ -78,7 +81,7 @@ public class CxParserTest {
     public void test2() throws IOException {
         final String j = "[{\"nodes_we_ignore\":[{\"@id\":\"_0\"},{\"@id\":\"_1\"},{\"@id\":\"_2\"},{\"@id\":\"_3\"}]}]";
         final CxReader p = CxReader.createInstance(j, AspectFragmentReaderManager.createInstance()
-                                                   .getAvailableAspectFragmentReaders());
+                .getAvailableAspectFragmentReaders());
 
         assertFalse(p.hasNext());
         assertEquals(p.getNext(), null);
@@ -96,7 +99,7 @@ public class CxParserTest {
     public void test3() throws IOException {
         final String j = "[{\"nodes\":[{\"@id\":\"_0\"},{\"@id\":\"_1\"},{\"@id\":\"_2\"},{\"@id\":\"_3\"}]}]";
         final CxReader p = CxReader.createInstance(j, AspectFragmentReaderManager.createInstance()
-                                                   .getAvailableAspectFragmentReaders());
+                .getAvailableAspectFragmentReaders());
 
         assertTrue(p.hasNext());
         final List<AspectElement> x = p.getNext();
@@ -143,7 +146,7 @@ public class CxParserTest {
                 + "{\"edges\":[{\"@id\":\"e0\",\"source\":\"_0\",\"target\":\"_1\"},{\"@id\":\"e1\",\"source\":\"_1\",\"target\":\"_2\"}]}"
                 + "]";
         final CxReader p = CxReader.createInstance(j, AspectFragmentReaderManager.createInstance()
-                                                   .getAvailableAspectFragmentReaders());
+                .getAvailableAspectFragmentReaders());
         assertTrue(p.hasNext());
         final List<AspectElement> x = p.getNext();
         assertFalse(x == null);
@@ -205,7 +208,7 @@ public class CxParserTest {
                 + "{\"edges\":[{\"@id\":\"e0\",\"source\":\"_0\",\"target\":\"_1\"},{\"@id\":\"e1\",\"source\":\"_1\",\"target\":\"_2\"}]},"
                 + "{\"key\":\"value\"}" + "]";
         final CxReader p = CxReader.createInstance(j, AspectFragmentReaderManager.createInstance()
-                                                   .getAvailableAspectFragmentReaders());
+                .getAvailableAspectFragmentReaders());
 
         assertTrue(p.hasNext());
         final List<AspectElement> x = p.getNext();
@@ -271,7 +274,7 @@ public class CxParserTest {
                 + "{\"edges\":[{\"@id\":\"e0\",\"source\":\"_0\",\"target\":\"_1\"},{\"@id\":\"e1\",\"source\":\"_1\",\"target\":\"_2\"}]},"
                 + "{\"key\":\"value\"}" + "]";
         final CxReader p = CxReader.createInstance(j, AspectFragmentReaderManager.createInstance()
-                                                   .getAvailableAspectFragmentReaders());
+                .getAvailableAspectFragmentReaders());
 
         assertTrue(p.hasNext());
         final List<AspectElement> x = p.getNext();
@@ -334,7 +337,7 @@ public class CxParserTest {
                 + "{\"edges\":[{\"@id\":\"e0\",\"source\":\"_0\",\"target\":\"_1\"},{\"@id\":\"e1\",\"source\":\"_1\",\"target\":\"_2\"}]},"
                 + "{\"key\":\"value\"}" + "]";
         final CxReader p = CxReader.createInstance(j, AspectFragmentReaderManager.createInstance()
-                                                   .getAvailableAspectFragmentReaders());
+                .getAvailableAspectFragmentReaders());
 
         assertTrue(p.hasNext());
         final List<AspectElement> x = p.getNext();
@@ -397,7 +400,7 @@ public class CxParserTest {
                 + "{\"edges\":[{\"@id\":\"e0\",\"source\":\"_0\",\"target\":\"_1\"},{\"@id\":\"e1\",\"source\":\"_1\",\"target\":\"_2\"}]}"
                 + "]";
         final CxReader p = CxReader.createInstance(j, AspectFragmentReaderManager.createInstance()
-                                                   .getAvailableAspectFragmentReaders());
+                .getAvailableAspectFragmentReaders());
         assertTrue(p.hasNext());
         final List<AspectElement> x = p.getNext();
         assertFalse(x == null);
@@ -479,7 +482,7 @@ public class CxParserTest {
                 + "]";
 
         final CxReader p = CxReader.createInstance(j, AspectFragmentReaderManager.createInstance()
-                                                   .getAvailableAspectFragmentReaders());
+                .getAvailableAspectFragmentReaders());
         //
         assertTrue(p.hasNext());
         List<AspectElement> x = p.getNext();
@@ -565,9 +568,12 @@ public class CxParserTest {
     @Test
     public void test10() throws IOException {
         final String j = "[{\"nodes\":[{\"@id\":\"_0\"},{\"@id\":\"_1\"},{\"@id\":\"_2\"},{\"@id\":\"_3\"}]}]";
-        final CxReader p = CxReader.createInstance(j);
-        p.addAspectFragmentReader(EdgesFragmentReader.createInstance());
-        p.addAspectFragmentReader(NodesFragmentReader.createInstance());
+
+        final Set<AspectFragmentReader> r = new HashSet<AspectFragmentReader>();
+        r.add(EdgesFragmentReader.createInstance());
+        r.add(NodesFragmentReader.createInstance());
+        final CxReader p = CxReader.createInstance(j,r);
+
         p.reset();
         assertTrue(p.hasNext());
         final List<AspectElement> x = p.getNext();

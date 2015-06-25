@@ -3,6 +3,7 @@ package org.cytoscape.io.internal.cxio;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
@@ -35,33 +36,32 @@ public final class CxImporter {
 
     public final CxReader getCxReader(final AspectSet aspects, final InputStream in)
             throws IOException {
-        final CxReader r = CxReader.createInstance(in);
-
-        addAspectFragmentReaders(r, aspects.getAspectFragmentReaders());
-
+        final Set<AspectFragmentReader> all_readers = getAllAspectFragmentReaders(aspects
+                .getAspectFragmentReaders());
+        final CxReader r = CxReader.createInstance(in, all_readers);
         return r;
-
     }
 
     public final SortedMap<String, List<AspectElement>> readAsMap(final AspectSet aspects,
                                                                   final InputStream in)
-            throws IOException {
-
+                                                                          throws IOException {
         final CxReader r = getCxReader(aspects, in);
         return CxReader.parseAsMap(r);
 
     }
 
-    private void addAspectFragmentReaders(final CxReader r, final Set<AspectFragmentReader> readers)
-            throws IOException {
+    private Set<AspectFragmentReader> getAllAspectFragmentReaders(final Set<AspectFragmentReader> readers) {
+
+        final Set<AspectFragmentReader> all = new HashSet<AspectFragmentReader>();
         for (final AspectFragmentReader reader : readers) {
-            r.addAspectFragmentReader(reader);
+            all.add(reader);
         }
         if (_additional_readers != null) {
             for (final AspectFragmentReader reader : _additional_readers) {
-                r.addAspectFragmentReader(reader);
+                all.add(reader);
             }
         }
+        return all;
     }
 
 }

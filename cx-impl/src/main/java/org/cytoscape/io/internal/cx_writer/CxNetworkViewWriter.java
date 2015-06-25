@@ -55,7 +55,20 @@ public class CxNetworkViewWriter implements CyWriter {
         aspects.addAspect(Aspect.NODE_ATTRIBUTES);
         aspects.addAspect(Aspect.EDGE_ATTRIBUTES);
 
+        // final AspectKeyFilter na_filter = new
+        // AspectKeyFilterBasic(NodeAttributesElement.NAME);
+        // final AspectKeyFilter ea_filter = new
+        // AspectKeyFilterBasic(EdgeAttributesElement.NAME);
+
+        // na_filter.addExcludeAspectKey("name");
+        // ea_filter.addExcludeAspectKey("selected");
+        // ea_filter.addExcludeAspectKey("SUID");
+        // final Set<AspectKeyFilter> filters = new HashSet<AspectKeyFilter>();
+        // filters.add(na_filter);
+        // filters.add(ea_filter);
+
         final CxExporter exporter = CxExporter.createInstance();
+        // exporter.writeCX(network_view, aspects, filters, os);
         exporter.writeCX(network_view, aspects, os);
 
         os.close();

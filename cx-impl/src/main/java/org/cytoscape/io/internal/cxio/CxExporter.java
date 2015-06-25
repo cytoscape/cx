@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.cxio.aspects.datamodels.AbstractAttributesElement;
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
@@ -16,6 +18,7 @@ import org.cxio.aspects.datamodels.NodesElement;
 import org.cxio.core.CxWriter;
 import org.cxio.core.interfaces.AspectElement;
 import org.cxio.core.interfaces.AspectFragmentWriter;
+import org.cxio.filters.AspectKeyFilter;
 import org.cytoscape.io.internal.cxio.CxOutput.Status;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
@@ -33,6 +36,35 @@ public class CxExporter {
 
     public final static CxExporter createInstance() {
         return new CxExporter();
+    }
+
+    public final CxOutput writeCX(final CyNetwork network,
+                                  final AspectSet aspects,
+                                  final Set<AspectKeyFilter> filters,
+                                  final OutputStream out) throws IOException {
+        final CxWriter w = CxWriter.createInstance(out, USE_DEFAULT_PRETTY_PRINTER);
+
+        addAspectFragmentWriters(w, aspects.getAspectFragmentWriters(), createFiltersAsMap(filters));
+
+        w.start();
+
+        if (aspects.contains(Aspect.NODES)) {
+            writeNodes(network, w);
+        }
+        if (aspects.contains(Aspect.EDGES)) {
+            writeEdges(network, w);
+        }
+        if (aspects.contains(Aspect.NODE_ATTRIBUTES)) {
+            writeNodeAttributes(network, filters, w);
+        }
+        if (aspects.contains(Aspect.EDGE_ATTRIBUTES)) {
+            writeEdgeAttributes(network, w);
+        }
+
+        w.end();
+
+        return new CxOutput(out, Status.OK);
+
     }
 
     public final CxOutput writeCX(final CyNetwork network,
@@ -92,6 +124,38 @@ public class CxExporter {
 
     }
 
+    public final CxOutput writeCX(final CyNetworkView view,
+                                  final AspectSet aspects,
+                                  final Set<AspectKeyFilter> filters,
+                                  final OutputStream out) throws IOException {
+        final CxWriter w = CxWriter.createInstance(out, USE_DEFAULT_PRETTY_PRINTER);
+
+        addAspectFragmentWriters(w, aspects.getAspectFragmentWriters(), createFiltersAsMap(filters));
+
+        w.start();
+
+        if (aspects.contains(Aspect.NODES)) {
+            writeNodes(view, w);
+        }
+        if (aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
+            writeCartesianLayout(view, w);
+        }
+        if (aspects.contains(Aspect.EDGES)) {
+            writeEdges(view, w);
+        }
+        if (aspects.contains(Aspect.NODE_ATTRIBUTES)) {
+            writeNodeAttributes(view, w);
+        }
+        if (aspects.contains(Aspect.EDGE_ATTRIBUTES)) {
+            writeEdgeAttributes(view, w);
+        }
+
+        w.end();
+
+        return new CxOutput(out, Status.OK);
+
+    }
+
     private final static void writeNodeAttributes(final CyNetwork network, final CxWriter w)
             throws IOException {
         final List<AspectElement> elements = new ArrayList<AspectElement>();
@@ -112,6 +176,41 @@ public class CxExporter {
         }
 
         w.writeAspectElements(elements);
+    }
+
+    private final static void writeNodeAttributes(final CyNetwork network,
+                                                  final Set<AspectKeyFilter> filters,
+                                                  final CxWriter w) throws IOException {
+
+        final List<AspectElement> elements = new ArrayList<AspectElement>();
+
+        for (final CyNode cy_node : network.getNodeList()) {
+
+            final CyRow row = network.getRow(cy_node);
+            if (row != null) {
+                final Map<String, Object> values = row.getAllValues();
+                if ((values != null) && !values.isEmpty()) {
+                    final NodeAttributesElement nae = new NodeAttributesElement(
+                                                                                makeNodeAttributeId(cy_node.getSUID()));
+                    nae.addNode(cy_node.getSUID());
+                    addAttributes(values, nae);
+                    elements.add(nae);
+                }
+            }
+        }
+
+        AspectKeyFilter my_filter = null;
+        for (final AspectKeyFilter filter : filters) {
+            if (filter.getAspectName() == NodeAttributesElement.NAME) {
+                if (my_filter != null) {
+                    throw new IllegalArgumentException(
+                            "cannot have multiple filters for same aspect");
+                }
+                my_filter = filter;
+            }
+        }
+        w.writeAspectElements(elements);
+
     }
 
     private final static void writeNodeAttributes(final CyNetworkView view, final CxWriter w)
@@ -189,10 +288,26 @@ public class CxExporter {
         writeNodes(view.getModel(), w);
     }
 
-    private void addAspectFragmentWriters(final CxWriter w, final Set<AspectFragmentWriter> writers) {
+    private final void addAspectFragmentWriters(final CxWriter w,
+                                                final Set<AspectFragmentWriter> writers) {
         for (final AspectFragmentWriter writer : writers) {
             w.addAspectFragmentWriter(writer);
         }
+    }
+
+    private final void addAspectFragmentWriters(final CxWriter w,
+                                                final Set<AspectFragmentWriter> writers,
+                                                final SortedMap<String, AspectKeyFilter> filters) {
+        for (final AspectFragmentWriter writer : writers) {
+            if (filters != null) {
+                final String aspect = writer.getAspectName();
+                if (filters.containsKey(aspect)) {
+                    writer.addAspectKeyFilter(filters.get(aspect));
+                }
+            }
+            w.addAspectFragmentWriter(writer);
+        }
+
     }
 
     @SuppressWarnings("unchecked")
@@ -209,7 +324,9 @@ public class CxExporter {
                     element.putValue(column_name, o);
                 }
             }
-            element.putValue(column_name, value);
+            else { // TODO need to check this change!!
+                element.putValue(column_name, value);
+            }
         }
     }
 
@@ -219,6 +336,22 @@ public class CxExporter {
 
     private final static String makeEdgeAttributeId(final long edge_suid) {
         return "_ea" + edge_suid;
+    }
+
+    private final static SortedMap<String, AspectKeyFilter> createFiltersAsMap(final Set<AspectKeyFilter> filters) {
+        if (filters == null) {
+            return null;
+        }
+        final SortedMap<String, AspectKeyFilter> filters_map = new TreeMap<String, AspectKeyFilter>();
+        for (final AspectKeyFilter filter : filters) {
+            final String aspect = filter.getAspectName();
+            if (filters_map.containsKey(aspect)) {
+                throw new IllegalArgumentException(
+                                                   "cannot have multiple filters for same aspect ['" + aspect + "']");
+            }
+            filters_map.put(aspect, filter);
+        }
+        return filters_map;
     }
 
 }
