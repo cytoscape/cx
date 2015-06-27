@@ -19,38 +19,55 @@ import org.cxio.aspects.writers.NodesFragmentWriter;
 import org.cxio.core.interfaces.AspectFragmentReader;
 import org.cxio.core.interfaces.AspectFragmentWriter;
 
+/**
+ * This is class to store Aspect identifiers (see the
+ * {@link org.cytoscape.io.internal.cxio.Aspect} enum).
+ * 
+ *
+ */
 public final class AspectSet {
 
-    final SortedSet<Aspect> _aspects;
+    final private SortedSet<Aspect> _aspects;
 
+    /**
+     * Constructor, creates an empty AspectSet.
+     * 
+     */
     public AspectSet() {
         _aspects = new TreeSet<Aspect>();
     }
 
+    /**
+     * Constructor, creates an AspectSet containing 
+     * Aspects.
+     * 
+     * @param aspects the Aspects to initialize this AspectSet with
+     */
     public AspectSet(final Collection<Aspect> aspects) {
         _aspects = new TreeSet<Aspect>();
         _aspects.addAll(aspects);
     }
 
+    /**
+     * To add a single Aspect.
+     * 
+     * @param aspect the Aspect to add
+     */
     public final void addAspect(final Aspect aspect) {
         _aspects.add(aspect);
     }
 
-    public final SortedSet<Aspect> getAspects() {
+    
+    final SortedSet<Aspect> getAspects() {
         return _aspects;
     }
 
-    public final boolean contains(final Aspect aspect) {
+    final boolean contains(final Aspect aspect) {
         return _aspects.contains(aspect);
     }
 
-    /**
-     * For each Aspect in the set, this returns the appropriate
-     * AspectFragmentWriter (in a Set).
-     *
-     * @return a SortedSet of AspectFragmentWriter
-     */
-    public final Set<AspectFragmentWriter> getAspectFragmentWriters() {
+   
+    final Set<AspectFragmentWriter> getAspectFragmentWriters() {
         final Set<AspectFragmentWriter> writers = new HashSet<AspectFragmentWriter>();
         if (_aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
             writers.add(CartesianLayoutFragmentWriter.createInstance());
@@ -70,13 +87,8 @@ public final class AspectSet {
         return writers;
     }
 
-    /**
-     * For each Aspect in the set, this returns the appropriate
-     * AspectFragmentReader (in a Set).
-     *
-     * @return a Set of AspectFragmentReader
-     */
-    public final Set<AspectFragmentReader> getAspectFragmentReaders() {
+    
+    final Set<AspectFragmentReader> getAspectFragmentReaders() {
         final Set<AspectFragmentReader> readers = new HashSet<AspectFragmentReader>();
         if (_aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
             readers.add(CartesianLayoutFragmentReader.createInstance());

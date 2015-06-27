@@ -86,6 +86,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         aspects.addAspect(Aspect.EDGE_ATTRIBUTES);
 
         final CxImporter cx_importer = CxImporter.createInstance();
+       
         final SortedMap<String, List<AspectElement>> res = cx_importer.readAsMap(aspects, in);
 
         cx_to_cy = new CxToCy();

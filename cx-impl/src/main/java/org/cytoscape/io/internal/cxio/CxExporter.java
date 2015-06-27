@@ -28,16 +28,41 @@ import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.View;
 import org.cytoscape.view.presentation.property.BasicVisualLexicon;
 
+/**
+ * This class is for serializing networks, views, and attribute tables as CX.
+ *
+ */
 public class CxExporter {
     private final static boolean USE_DEFAULT_PRETTY_PRINTER = true;
 
     private CxExporter() {
     }
 
+    /**
+     * This returns a new instance of CxExporter.
+     * 
+     * @return a new CxExporter
+     */
     public final static CxExporter createInstance() {
         return new CxExporter();
     }
 
+    /**
+     * This is a method for serializing a network and associated data as CX
+     * formatted OutputStream.
+     * Method arguments control which aspects to serialize, and for data stored in node
+     * and tables (serialized as node attributes and edge attributes aspects),
+     * which table columns to include or exclude.
+     * 
+     * 
+     * @param network the CyNetwork, and by association, tables to be serialized
+     * @param aspects the set of aspects to serialize
+     * @param filters the set of filters controlling which node and edge table columns
+     * to include or exclude
+     * @param out the stream to write to
+     * @return a CxOutput object which contains th output stream as well as a status
+     * @throws IOException
+     */
     public final CxOutput writeCX(final CyNetwork network,
                                   final AspectSet aspects,
                                   final Set<AspectKeyFilter> filters,
@@ -67,6 +92,18 @@ public class CxExporter {
 
     }
 
+    /**
+     * This is a method for serializing a network and associated data as CX
+     * formatted OutputStream.
+     * Method arguments control which aspects to serialize.
+     * 
+     * 
+     * @param network the CyNetwork, and by association, tables to be serialized
+     * @param aspects the set of aspects to serialize
+     * @param out the stream to write to
+     * @return a CxOutput object which contains th output stream as well as a status
+     * @throws IOException
+     */
     public final CxOutput writeCX(final CyNetwork network,
                                   final AspectSet aspects,
                                   final OutputStream out) throws IOException {
@@ -94,6 +131,17 @@ public class CxExporter {
 
     }
 
+    /**
+     * This is a method for serializing a network view and associated data as
+     * CX formatted OutputStream.
+     * Method arguments control which aspects to serialize.
+     * 
+     * @param view the CyNetworkView, and by association, tables to be serialized
+     * @param aspects the set of aspects to serialize
+     * @param out the stream to write to
+     * @return a CxOutput object which contains th output stream as well as a status
+     * @throws IOException
+     */
     public final CxOutput writeCX(final CyNetworkView view,
                                   final AspectSet aspects,
                                   final OutputStream out) throws IOException {
@@ -124,6 +172,23 @@ public class CxExporter {
 
     }
 
+    
+   
+    /**
+     * This is a method for serializing a network view and associated data as
+     * CX formatted OutputStream.
+     * Method arguments control which aspects to serialize, and for data stored in node
+     * and tables (serialized as node attributes and edge attributes aspects),
+     * which table columns to include or exclude.
+     * 
+     * @param view the CyNetworkView, and by association, tables to be serialized
+     * @param aspects the set of aspects to serialize
+     * @param filters the set of filters controlling which node and edge table columns
+     * to include or exclude
+     * @param out the stream to write to
+     * @return a CxOutput object which contains th output stream as well as a status
+     * @throws IOException
+     */
     public final CxOutput writeCX(final CyNetworkView view,
                                   final AspectSet aspects,
                                   final Set<AspectKeyFilter> filters,
