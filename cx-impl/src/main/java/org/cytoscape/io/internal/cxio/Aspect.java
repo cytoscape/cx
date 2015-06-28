@@ -7,7 +7,9 @@ import org.cxio.aspects.datamodels.NodeAttributesElement;
 import org.cxio.aspects.datamodels.NodesElement;
 
 /**
- * This enumeration is used to identify aspects relevant to Cytoscape.
+ * This enumeration is used to identify aspects relevant for Cytoscape networks and tables.
+ * 
+ * @see AspectSet
  *
  */
 public enum Aspect {
@@ -20,15 +22,23 @@ public enum Aspect {
     private Aspect(final String s) {
         _s = s;
     }
-
+    
     /**
-     * Returns aspect identifier as a String
-     *
-     *
+     * This returns an aspect identifier as String.
+     * The returned String is the official name of
+     * the aspect in question.
+     * 
+     * 
+     * @return official name of the aspect identifier
      */
+    public final String asString() {
+        return _s;
+    }
+
+   
     @Override
     public String toString() {
-        return _s;
+        return asString();
     }
 
 }

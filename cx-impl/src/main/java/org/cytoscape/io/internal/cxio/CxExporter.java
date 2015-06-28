@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
-import java.util.TreeMap;
 
 import org.cxio.aspects.datamodels.AbstractAttributesElement;
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
@@ -29,18 +28,58 @@ import org.cytoscape.view.model.View;
 import org.cytoscape.view.presentation.property.BasicVisualLexicon;
 
 /**
- * This class is for serializing networks, views, and attribute tables as CX.
+ * This class is for serializing Cytoscape networks, views, and attribute tables
+ * as CX formatted output streams.
+ * <br>
+ * <br>
+ * In particular, it provides the following methods for writing CX:
+ * <br> 
+ * <ul>
+ * <li>
+ * {@link #writeCX(CyNetwork, AspectSet, OutputStream)}
+ * </li>
+ * <li>
+ * {@link #writeCX(CyNetworkView, AspectSet, OutputStream)}
+ * </li>
+ * <li>
+ * {@link #writeCX(CyNetwork, AspectSet, FilterSet, OutputStream)}
+ * </li>
+ * <li>
+ * {@link #writeCX(CyNetworkView, AspectSet, FilterSet, OutputStream)}
+ * </li>
+ * </ul>
+ * <br> 
+ * <br>
+ * These methods use:
+ * <br>
+ * <ul>
+ * <li>
+ * {@link AspectSet} to control which aspects to serialize
+ * </li>
+ * <li>
+ * {@link FilterSet} to control which aspect keys/fields to include within an aspect 
+ * </li>
+ * </ul>
+ * <br> 
+ * @see AspectSet
+ * @see Aspect
+ * @see FilterSet
+ * @see CxOutput
+ * @see CxImporter 
+
  *
  */
 public class CxExporter {
-    private final static boolean USE_DEFAULT_PRETTY_PRINTER = true;
 
+    private final static boolean USE_DEFAULT_PRETTY_PRINTER = true;
+    
     private CxExporter() {
     }
 
+    
     /**
      * This returns a new instance of CxExporter.
-     * 
+     *
      * @return a new CxExporter
      */
     public final static CxExporter createInstance() {
@@ -48,28 +87,41 @@ public class CxExporter {
     }
 
     /**
-     * This is a method for serializing a network and associated data as CX
-     * formatted OutputStream.
-     * Method arguments control which aspects to serialize, and for data stored in node
-     * and tables (serialized as node attributes and edge attributes aspects),
-     * which table columns to include or exclude.
-     * 
-     * 
-     * @param network the CyNetwork, and by association, tables to be serialized
-     * @param aspects the set of aspects to serialize
-     * @param filters the set of filters controlling which node and edge table columns
-     * to include or exclude
+     * This is a method for serializing a Cytoscape network and associated table 
+     * data as CX formatted OutputStream.
+     * <br>
+     * Method arguments control which aspects to
+     * serialize, and for data stored in node and tables (serialized as node
+     * attributes and edge attributes aspects), which table columns to include
+     * or exclude.
+     *
+     *
+     * @param network
+     *            the CyNetwork, and by association, tables to be serialized
+     * @param aspects
+     *            the set of aspects to serialize
+     * @param filters
+     *            the set of filters controlling which node and edge table
+     *            columns to include or exclude
      * @param out the stream to write to
-     * @return a CxOutput object which contains th output stream as well as a status
+     * @return a CxOutput object which contains the output stream as well as a
+     *         status
      * @throws IOException
+     * 
+     * 
+     * @see AspectSet
+     * @see Aspect
+     * @see FilterSet
+     * @see CxOutput
+     * 
      */
     public final CxOutput writeCX(final CyNetwork network,
                                   final AspectSet aspects,
-                                  final Set<AspectKeyFilter> filters,
+                                  final FilterSet filters,
                                   final OutputStream out) throws IOException {
         final CxWriter w = CxWriter.createInstance(out, USE_DEFAULT_PRETTY_PRINTER);
 
-        addAspectFragmentWriters(w, aspects.getAspectFragmentWriters(), createFiltersAsMap(filters));
+        addAspectFragmentWriters(w, aspects.getAspectFragmentWriters(), filters.getFiltersAsMap());
 
         w.start();
 
@@ -80,7 +132,7 @@ public class CxExporter {
             writeEdges(network, w);
         }
         if (aspects.contains(Aspect.NODE_ATTRIBUTES)) {
-            writeNodeAttributes(network, filters, w);
+            writeNodeAttributes(network, w);
         }
         if (aspects.contains(Aspect.EDGE_ATTRIBUTES)) {
             writeEdgeAttributes(network, w);
@@ -93,16 +145,27 @@ public class CxExporter {
     }
 
     /**
-     * This is a method for serializing a network and associated data as CX
-     * formatted OutputStream.
-     * Method arguments control which aspects to serialize.
-     * 
-     * 
-     * @param network the CyNetwork, and by association, tables to be serialized
-     * @param aspects the set of aspects to serialize
+     * This is a method for serializing a Cytoscape network and associated table 
+     * data as CX formatted OutputStream.
+     * <br>
+     * Method arguments control which aspects to
+     * serialize.
+     *
+     *
+     * @param network
+     *            the CyNetwork, and by association, tables to be serialized
+     * @param aspects
+     *            the set of aspects to serialize
      * @param out the stream to write to
-     * @return a CxOutput object which contains th output stream as well as a status
+     * @return a CxOutput object which contains the output stream as well as a
+     *         status
      * @throws IOException
+     * 
+     * 
+     * @see AspectSet
+     * @see Aspect
+     * @see CxOutput
+     * 
      */
     public final CxOutput writeCX(final CyNetwork network,
                                   final AspectSet aspects,
@@ -132,15 +195,89 @@ public class CxExporter {
     }
 
     /**
-     * This is a method for serializing a network view and associated data as
-     * CX formatted OutputStream.
-     * Method arguments control which aspects to serialize.
-     * 
-     * @param view the CyNetworkView, and by association, tables to be serialized
-     * @param aspects the set of aspects to serialize
+     * This is a method for serializing a Cytoscape network view and associated table 
+     * data as CX formatted OutputStream.
+     * <br>
+     * Method arguments control which aspects to
+     * serialize, and for data stored in node and tables (serialized as node
+     * attributes and edge attributes aspects), which table columns to include
+     * or exclude.
+     *
+     *
+     * @param view
+     *            the CyNetworkView, and by association, tables to be serialized
+     * @param aspects
+     *            the set of aspects to serialize
+     * @param filters
+     *            the set of filters controlling which node and edge table
+     *            columns to include or exclude
      * @param out the stream to write to
-     * @return a CxOutput object which contains th output stream as well as a status
+     * @return a CxOutput object which contains the output stream as well as a
+     *         status
      * @throws IOException
+     * 
+     * 
+     * @see AspectSet
+     * @see Aspect
+     * @see FilterSet
+     * @see CxOutput
+     * 
+     */
+    public final CxOutput writeCX(final CyNetworkView view,
+                                  final AspectSet aspects,
+                                  final FilterSet filters,
+                                  final OutputStream out) throws IOException {
+        final CxWriter w = CxWriter.createInstance(out, USE_DEFAULT_PRETTY_PRINTER);
+
+        addAspectFragmentWriters(w, aspects.getAspectFragmentWriters(), filters.getFiltersAsMap());
+
+        w.start();
+
+        if (aspects.contains(Aspect.NODES)) {
+            writeNodes(view, w);
+        }
+        if (aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
+            writeCartesianLayout(view, w);
+        }
+        if (aspects.contains(Aspect.EDGES)) {
+            writeEdges(view, w);
+        }
+        if (aspects.contains(Aspect.NODE_ATTRIBUTES)) {
+            writeNodeAttributes(view, w);
+        }
+        if (aspects.contains(Aspect.EDGE_ATTRIBUTES)) {
+            writeEdgeAttributes(view, w);
+        }
+
+        w.end();
+
+        return new CxOutput(out, Status.OK);
+
+    }
+
+    /**
+     * This is a method for serializing a Cytoscape network view and associated table 
+     * data as CX formatted OutputStream.
+     * <br>
+     * Method arguments control which aspects to
+     * serialize.
+     *
+     *
+     * @param view
+     *            the CyNetworkView, and by association, tables to be serialized
+     * @param aspects
+     *            the set of aspects to serialize
+     * @param out the stream to write to
+     * @return a CxOutput object which contains the output stream as well as a
+     *         status
+     * @throws IOException
+     * 
+     * 
+     * @see AspectSet
+     * @see Aspect
+     * @see FilterSet
+     * @see CxOutput
+     * 
      */
     public final CxOutput writeCX(final CyNetworkView view,
                                   final AspectSet aspects,
@@ -171,131 +308,52 @@ public class CxExporter {
         return new CxOutput(out, Status.OK);
 
     }
-
     
+    
+    
+    @SuppressWarnings("unchecked")
+    private final static void addAttributes(final Map<String, Object> values,
+                                            final AbstractAttributesElement element) {
+        for (final String column_name : values.keySet()) {
+            final Object value = values.get(column_name);
+            if (value == null) {
+                continue;
+            }
+            if (value instanceof List) {
+                final List<Object> list = ((List<Object>) value);
+                for (final Object o : list) {
+                    element.putValue(column_name, o);
+                }
+            }
+            else { 
+                element.putValue(column_name, value);
+            }
+        }
+    }
+
    
-    /**
-     * This is a method for serializing a network view and associated data as
-     * CX formatted OutputStream.
-     * Method arguments control which aspects to serialize, and for data stored in node
-     * and tables (serialized as node attributes and edge attributes aspects),
-     * which table columns to include or exclude.
-     * 
-     * @param view the CyNetworkView, and by association, tables to be serialized
-     * @param aspects the set of aspects to serialize
-     * @param filters the set of filters controlling which node and edge table columns
-     * to include or exclude
-     * @param out the stream to write to
-     * @return a CxOutput object which contains th output stream as well as a status
-     * @throws IOException
-     */
-    public final CxOutput writeCX(final CyNetworkView view,
-                                  final AspectSet aspects,
-                                  final Set<AspectKeyFilter> filters,
-                                  final OutputStream out) throws IOException {
-        final CxWriter w = CxWriter.createInstance(out, USE_DEFAULT_PRETTY_PRINTER);
 
-        addAspectFragmentWriters(w, aspects.getAspectFragmentWriters(), createFiltersAsMap(filters));
-
-        w.start();
-
-        if (aspects.contains(Aspect.NODES)) {
-            writeNodes(view, w);
-        }
-        if (aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
-            writeCartesianLayout(view, w);
-        }
-        if (aspects.contains(Aspect.EDGES)) {
-            writeEdges(view, w);
-        }
-        if (aspects.contains(Aspect.NODE_ATTRIBUTES)) {
-            writeNodeAttributes(view, w);
-        }
-        if (aspects.contains(Aspect.EDGE_ATTRIBUTES)) {
-            writeEdgeAttributes(view, w);
-        }
-
-        w.end();
-
-        return new CxOutput(out, Status.OK);
-
+    private final static String makeEdgeAttributeId(final long edge_suid) {
+        return "_ea" + edge_suid;
     }
 
-    private final static void writeNodeAttributes(final CyNetwork network, final CxWriter w)
-            throws IOException {
-        final List<AspectElement> elements = new ArrayList<AspectElement>();
+    private final static String makeNodeAttributeId(final long node_suid) {
+        return "_na" + node_suid;
+    }
 
+    private final static void writeCartesianLayout(final CyNetworkView view, final CxWriter w)
+            throws IOException {
+        final CyNetwork network = view.getModel();
+        final List<AspectElement> elements = new ArrayList<AspectElement>();
         for (final CyNode cy_node : network.getNodeList()) {
+            final View<CyNode> node_view = view.getNodeView(cy_node);
+            elements.add(new CartesianLayoutElement(cy_node.getSUID(), node_view
+                                                    .getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
+                                                    .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION)));
 
-            final CyRow row = network.getRow(cy_node);
-            if (row != null) {
-                final Map<String, Object> values = row.getAllValues();
-                if ((values != null) && !values.isEmpty()) {
-                    final NodeAttributesElement nae = new NodeAttributesElement(
-                                                                                makeNodeAttributeId(cy_node.getSUID()));
-                    nae.addNode(cy_node.getSUID());
-                    addAttributes(values, nae);
-                    elements.add(nae);
-                }
-            }
         }
 
         w.writeAspectElements(elements);
-    }
-
-    private final static void writeNodeAttributes(final CyNetwork network,
-                                                  final Set<AspectKeyFilter> filters,
-                                                  final CxWriter w) throws IOException {
-
-        final List<AspectElement> elements = new ArrayList<AspectElement>();
-
-        for (final CyNode cy_node : network.getNodeList()) {
-
-            final CyRow row = network.getRow(cy_node);
-            if (row != null) {
-                final Map<String, Object> values = row.getAllValues();
-                if ((values != null) && !values.isEmpty()) {
-                    final NodeAttributesElement nae = new NodeAttributesElement(
-                                                                                makeNodeAttributeId(cy_node.getSUID()));
-                    nae.addNode(cy_node.getSUID());
-                    addAttributes(values, nae);
-                    elements.add(nae);
-                }
-            }
-        }
-
-        AspectKeyFilter my_filter = null;
-        for (final AspectKeyFilter filter : filters) {
-            if (filter.getAspectName() == NodeAttributesElement.NAME) {
-                if (my_filter != null) {
-                    throw new IllegalArgumentException(
-                            "cannot have multiple filters for same aspect");
-                }
-                my_filter = filter;
-            }
-        }
-        w.writeAspectElements(elements);
-
-    }
-
-    private final static void writeNodeAttributes(final CyNetworkView view, final CxWriter w)
-            throws IOException {
-        writeNodeAttributes(view.getModel(), w);
-    }
-
-    private final static void writeEdges(final CyNetwork network, final CxWriter w)
-            throws IOException {
-        final List<AspectElement> elements = new ArrayList<AspectElement>();
-        for (final CyEdge cyEdge : network.getEdgeList()) {
-            elements.add(new EdgesElement(cyEdge.getSUID(), cyEdge.getSource().getSUID(), cyEdge
-                                          .getTarget().getSUID()));
-        }
-        w.writeAspectElements(elements);
-    }
-
-    private final static void writeEdges(final CyNetworkView view, final CxWriter w)
-            throws IOException {
-        writeEdges(view.getModel(), w);
     }
 
     private final static void writeEdgeAttributes(final CyNetwork network, final CxWriter w)
@@ -308,7 +366,7 @@ public class CxExporter {
                 final Map<String, Object> values = row.getAllValues();
                 if ((values != null) && !values.isEmpty()) {
                     final EdgeAttributesElement eae = new EdgeAttributesElement(
-                                                                                makeEdgeAttributeId(cy_edge.getSUID()));
+                            makeEdgeAttributeId(cy_edge.getSUID()));
                     eae.addEdge(cy_edge.getSUID());
 
                     addAttributes(values, eae);
@@ -324,19 +382,46 @@ public class CxExporter {
         writeEdgeAttributes(view.getModel(), w);
     }
 
-    private final static void writeCartesianLayout(final CyNetworkView view, final CxWriter w)
+    private final static void writeEdges(final CyNetwork network, final CxWriter w)
             throws IOException {
-        final CyNetwork network = view.getModel();
         final List<AspectElement> elements = new ArrayList<AspectElement>();
-        for (final CyNode cy_node : network.getNodeList()) {
-            final View<CyNode> node_view = view.getNodeView(cy_node);
-            elements.add(new CartesianLayoutElement(cy_node.getSUID(), node_view
-                    .getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
-                    .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION)));
+        for (final CyEdge cyEdge : network.getEdgeList()) {
+            elements.add(new EdgesElement(cyEdge.getSUID(), cyEdge.getSource().getSUID(), cyEdge
+                    .getTarget().getSUID()));
+        }
+        w.writeAspectElements(elements);
+    }
 
+    private final static void writeEdges(final CyNetworkView view, final CxWriter w)
+            throws IOException {
+        writeEdges(view.getModel(), w);
+    }
+
+    private final static void writeNodeAttributes(final CyNetwork network, final CxWriter w)
+            throws IOException {
+        final List<AspectElement> elements = new ArrayList<AspectElement>();
+
+        for (final CyNode cy_node : network.getNodeList()) {
+
+            final CyRow row = network.getRow(cy_node);
+            if (row != null) {
+                final Map<String, Object> values = row.getAllValues();
+                if ((values != null) && !values.isEmpty()) {
+                    final NodeAttributesElement nae = new NodeAttributesElement(
+                            makeNodeAttributeId(cy_node.getSUID()));
+                    nae.addNode(cy_node.getSUID());
+                    addAttributes(values, nae);
+                    elements.add(nae);
+                }
+            }
         }
 
         w.writeAspectElements(elements);
+    }
+
+    private final static void writeNodeAttributes(final CyNetworkView view, final CxWriter w)
+            throws IOException {
+        writeNodeAttributes(view.getModel(), w);
     }
 
     private final static void writeNodes(final CyNetwork network, final CxWriter w)
@@ -375,48 +460,6 @@ public class CxExporter {
 
     }
 
-    @SuppressWarnings("unchecked")
-    private final static void addAttributes(final Map<String, Object> values,
-                                            final AbstractAttributesElement element) {
-        for (final String column_name : values.keySet()) {
-            final Object value = values.get(column_name);
-            if (value == null) {
-                continue;
-            }
-            if (value instanceof List) {
-                final List<Object> list = ((List<Object>) value);
-                for (final Object o : list) {
-                    element.putValue(column_name, o);
-                }
-            }
-            else { // TODO need to check this change!!
-                element.putValue(column_name, value);
-            }
-        }
-    }
-
-    private final static String makeNodeAttributeId(final long node_suid) {
-        return "_na" + node_suid;
-    }
-
-    private final static String makeEdgeAttributeId(final long edge_suid) {
-        return "_ea" + edge_suid;
-    }
-
-    private final static SortedMap<String, AspectKeyFilter> createFiltersAsMap(final Set<AspectKeyFilter> filters) {
-        if (filters == null) {
-            return null;
-        }
-        final SortedMap<String, AspectKeyFilter> filters_map = new TreeMap<String, AspectKeyFilter>();
-        for (final AspectKeyFilter filter : filters) {
-            final String aspect = filter.getAspectName();
-            if (filters_map.containsKey(aspect)) {
-                throw new IllegalArgumentException(
-                                                   "cannot have multiple filters for same aspect ['" + aspect + "']");
-            }
-            filters_map.put(aspect, filter);
-        }
-        return filters_map;
-    }
+   
 
 }

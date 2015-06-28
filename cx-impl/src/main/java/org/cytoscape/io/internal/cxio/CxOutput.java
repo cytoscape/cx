@@ -2,6 +2,12 @@ package org.cytoscape.io.internal.cxio;
 
 import java.io.OutputStream;
 
+/**
+ * This class is to hold a OutputStream
+ * and a associated status.
+ * 
+ *
+ */
 public final class CxOutput {
 
     private final OutputStream _os;

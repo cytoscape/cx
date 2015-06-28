@@ -20,9 +20,13 @@ import org.cxio.core.interfaces.AspectFragmentReader;
 import org.cxio.core.interfaces.AspectFragmentWriter;
 
 /**
- * This is class to store Aspect identifiers (see the
- * {@link org.cytoscape.io.internal.cxio.Aspect} enum).
+ * This class is primarily for storing of {@link Aspect Aspect identifiers} to
+ * be imported or exported in {@link CxImporter} and {@link CxExporter}.
  * 
+ * 
+ * @see Aspect
+ * @see CxImporter
+ * @see CxExporter
  *
  */
 public final class AspectSet {
@@ -39,7 +43,7 @@ public final class AspectSet {
 
     /**
      * Constructor, creates an AspectSet containing 
-     * Aspects.
+     * Aspects identifiers.
      * 
      * @param aspects the Aspects to initialize this AspectSet with
      */
