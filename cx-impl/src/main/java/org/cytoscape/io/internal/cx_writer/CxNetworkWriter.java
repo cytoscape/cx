@@ -1,5 +1,6 @@
 package org.cytoscape.io.internal.cx_writer;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
@@ -23,8 +24,8 @@ public class CxNetworkWriter implements CyWriter {
     private final CyNetwork      network;
     private final CharsetEncoder encoder;
 
-    public CxNetworkWriter(final OutputStream outputStream, final CyNetwork network) {
-        this.os = outputStream;
+    public CxNetworkWriter(final OutputStream os, final CyNetwork network) {
+        this.os = os;
         this.network = network;
 
         if (Charset.isSupported(ENCODING)) {
@@ -55,9 +56,19 @@ public class CxNetworkWriter implements CyWriter {
         aspects.addAspect(Aspect.EDGE_ATTRIBUTES);
 
         final CxExporter exporter = CxExporter.createInstance();
-        exporter.writeCX(network, aspects, os);
 
-        os.close();
+        final long t0 = System.currentTimeMillis();
+        if (!CxNetworkViewWriter.WRITE_TO_BAS) {
+            exporter.writeCX(network, aspects, os);
+            os.close();
+        }
+        else {
+            exporter.writeCX(network, aspects, new ByteArrayOutputStream());
+        }
+
+        if (CxNetworkViewWriter.TIMING) {
+            CxExporter.reportTime(t0, "total time", 0);
+        }
     }
 
     @Override

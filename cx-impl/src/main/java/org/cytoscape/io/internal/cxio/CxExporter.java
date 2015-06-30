@@ -18,6 +18,7 @@ import org.cxio.core.CxWriter;
 import org.cxio.core.interfaces.AspectElement;
 import org.cxio.core.interfaces.AspectFragmentWriter;
 import org.cxio.filters.AspectKeyFilter;
+import org.cytoscape.io.internal.cx_writer.CxNetworkViewWriter;
 import org.cytoscape.io.internal.cxio.CxOutput.Status;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
@@ -29,54 +30,46 @@ import org.cytoscape.view.presentation.property.BasicVisualLexicon;
 
 /**
  * This class is for serializing Cytoscape networks, views, and attribute tables
- * as CX formatted output streams.
+ * as CX formatted output streams. <br>
  * <br>
- * <br>
- * In particular, it provides the following methods for writing CX:
- * <br> 
+ * In particular, it provides the following methods for writing CX: <br>
  * <ul>
  * <li>
- * {@link #writeCX(CyNetwork, AspectSet, OutputStream)}
- * </li>
+ * {@link #writeCX(CyNetwork, AspectSet, OutputStream)}</li>
  * <li>
- * {@link #writeCX(CyNetworkView, AspectSet, OutputStream)}
- * </li>
+ * {@link #writeCX(CyNetworkView, AspectSet, OutputStream)}</li>
  * <li>
- * {@link #writeCX(CyNetwork, AspectSet, FilterSet, OutputStream)}
- * </li>
+ * {@link #writeCX(CyNetwork, AspectSet, FilterSet, OutputStream)}</li>
  * <li>
- * {@link #writeCX(CyNetworkView, AspectSet, FilterSet, OutputStream)}
- * </li>
+ * {@link #writeCX(CyNetworkView, AspectSet, FilterSet, OutputStream)}</li>
  * </ul>
- * <br> 
  * <br>
- * These methods use:
  * <br>
+ * These methods use: <br>
  * <ul>
  * <li>
- * {@link AspectSet} to control which aspects to serialize
- * </li>
+ * {@link AspectSet} to control which aspects to serialize</li>
  * <li>
- * {@link FilterSet} to control which aspect keys/fields to include within an aspect 
- * </li>
+ * {@link FilterSet} to control which aspect keys/fields to include within an
+ * aspect</li>
  * </ul>
- * <br> 
+ * <br>
+ *
  * @see AspectSet
  * @see Aspect
  * @see FilterSet
  * @see CxOutput
- * @see CxImporter 
-
+ * @see CxImporter
+ *
  *
  */
 public class CxExporter {
 
     private final static boolean USE_DEFAULT_PRETTY_PRINTER = true;
-    
+
     private CxExporter() {
     }
 
-    
     /**
      * This returns a new instance of CxExporter.
      *
@@ -87,13 +80,11 @@ public class CxExporter {
     }
 
     /**
-     * This is a method for serializing a Cytoscape network and associated table 
-     * data as CX formatted OutputStream.
-     * <br>
-     * Method arguments control which aspects to
-     * serialize, and for data stored in node and tables (serialized as node
-     * attributes and edge attributes aspects), which table columns to include
-     * or exclude.
+     * This is a method for serializing a Cytoscape network and associated table
+     * data as CX formatted OutputStream. <br>
+     * Method arguments control which aspects to serialize, and for data stored
+     * in node and tables (serialized as node attributes and edge attributes
+     * aspects), which table columns to include or exclude.
      *
      *
      * @param network
@@ -103,17 +94,18 @@ public class CxExporter {
      * @param filters
      *            the set of filters controlling which node and edge table
      *            columns to include or exclude
-     * @param out the stream to write to
+     * @param out
+     *            the stream to write to
      * @return a CxOutput object which contains the output stream as well as a
      *         status
      * @throws IOException
-     * 
-     * 
+     *
+     *
      * @see AspectSet
      * @see Aspect
      * @see FilterSet
      * @see CxOutput
-     * 
+     *
      */
     public final CxOutput writeCX(final CyNetwork network,
                                   final AspectSet aspects,
@@ -145,27 +137,26 @@ public class CxExporter {
     }
 
     /**
-     * This is a method for serializing a Cytoscape network and associated table 
-     * data as CX formatted OutputStream.
-     * <br>
-     * Method arguments control which aspects to
-     * serialize.
+     * This is a method for serializing a Cytoscape network and associated table
+     * data as CX formatted OutputStream. <br>
+     * Method arguments control which aspects to serialize.
      *
      *
      * @param network
      *            the CyNetwork, and by association, tables to be serialized
      * @param aspects
      *            the set of aspects to serialize
-     * @param out the stream to write to
+     * @param out
+     *            the stream to write to
      * @return a CxOutput object which contains the output stream as well as a
      *         status
      * @throws IOException
-     * 
-     * 
+     *
+     *
      * @see AspectSet
      * @see Aspect
      * @see CxOutput
-     * 
+     *
      */
     public final CxOutput writeCX(final CyNetwork network,
                                   final AspectSet aspects,
@@ -195,13 +186,11 @@ public class CxExporter {
     }
 
     /**
-     * This is a method for serializing a Cytoscape network view and associated table 
-     * data as CX formatted OutputStream.
-     * <br>
-     * Method arguments control which aspects to
-     * serialize, and for data stored in node and tables (serialized as node
-     * attributes and edge attributes aspects), which table columns to include
-     * or exclude.
+     * This is a method for serializing a Cytoscape network view and associated
+     * table data as CX formatted OutputStream. <br>
+     * Method arguments control which aspects to serialize, and for data stored
+     * in node and tables (serialized as node attributes and edge attributes
+     * aspects), which table columns to include or exclude.
      *
      *
      * @param view
@@ -211,17 +200,18 @@ public class CxExporter {
      * @param filters
      *            the set of filters controlling which node and edge table
      *            columns to include or exclude
-     * @param out the stream to write to
+     * @param out
+     *            the stream to write to
      * @return a CxOutput object which contains the output stream as well as a
      *         status
      * @throws IOException
-     * 
-     * 
+     *
+     *
      * @see AspectSet
      * @see Aspect
      * @see FilterSet
      * @see CxOutput
-     * 
+     *
      */
     public final CxOutput writeCX(final CyNetworkView view,
                                   final AspectSet aspects,
@@ -256,28 +246,27 @@ public class CxExporter {
     }
 
     /**
-     * This is a method for serializing a Cytoscape network view and associated table 
-     * data as CX formatted OutputStream.
-     * <br>
-     * Method arguments control which aspects to
-     * serialize.
+     * This is a method for serializing a Cytoscape network view and associated
+     * table data as CX formatted OutputStream. <br>
+     * Method arguments control which aspects to serialize.
      *
      *
      * @param view
      *            the CyNetworkView, and by association, tables to be serialized
      * @param aspects
      *            the set of aspects to serialize
-     * @param out the stream to write to
+     * @param out
+     *            the stream to write to
      * @return a CxOutput object which contains the output stream as well as a
      *         status
      * @throws IOException
-     * 
-     * 
+     *
+     *
      * @see AspectSet
      * @see Aspect
      * @see FilterSet
      * @see CxOutput
-     * 
+     *
      */
     public final CxOutput writeCX(final CyNetworkView view,
                                   final AspectSet aspects,
@@ -308,9 +297,7 @@ public class CxExporter {
         return new CxOutput(out, Status.OK);
 
     }
-    
-    
-    
+
     @SuppressWarnings("unchecked")
     private final static void addAttributes(final Map<String, Object> values,
                                             final AbstractAttributesElement element) {
@@ -325,13 +312,11 @@ public class CxExporter {
                     element.putValue(column_name, o);
                 }
             }
-            else { 
+            else {
                 element.putValue(column_name, value);
             }
         }
     }
-
-   
 
     private final static String makeEdgeAttributeId(final long edge_suid) {
         return "_ea" + edge_suid;
@@ -343,21 +328,26 @@ public class CxExporter {
 
     private final static void writeCartesianLayout(final CyNetworkView view, final CxWriter w)
             throws IOException {
+        final long t0 = System.currentTimeMillis();
         final CyNetwork network = view.getModel();
         final List<AspectElement> elements = new ArrayList<AspectElement>();
         for (final CyNode cy_node : network.getNodeList()) {
             final View<CyNode> node_view = view.getNodeView(cy_node);
             elements.add(new CartesianLayoutElement(cy_node.getSUID(), node_view
-                                                    .getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
-                                                    .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION)));
+                    .getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
+                    .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION)));
 
         }
 
         w.writeAspectElements(elements);
+        if (CxNetworkViewWriter.TIMING) {
+            reportTime(t0, "cartesian layout", elements.size());
+        }
     }
 
     private final static void writeEdgeAttributes(final CyNetwork network, final CxWriter w)
             throws IOException {
+        final long t0 = System.currentTimeMillis();
         final List<AspectElement> elements = new ArrayList<AspectElement>();
 
         for (final CyEdge cy_edge : network.getEdgeList()) {
@@ -366,7 +356,7 @@ public class CxExporter {
                 final Map<String, Object> values = row.getAllValues();
                 if ((values != null) && !values.isEmpty()) {
                     final EdgeAttributesElement eae = new EdgeAttributesElement(
-                            makeEdgeAttributeId(cy_edge.getSUID()));
+                                                                                makeEdgeAttributeId(cy_edge.getSUID()));
                     eae.addEdge(cy_edge.getSUID());
 
                     addAttributes(values, eae);
@@ -375,6 +365,9 @@ public class CxExporter {
             }
         }
         w.writeAspectElements(elements);
+        if (CxNetworkViewWriter.TIMING) {
+            reportTime(t0, "edge attributes", elements.size());
+        }
     }
 
     private final static void writeEdgeAttributes(final CyNetworkView view, final CxWriter w)
@@ -384,12 +377,16 @@ public class CxExporter {
 
     private final static void writeEdges(final CyNetwork network, final CxWriter w)
             throws IOException {
+        final long t0 = System.currentTimeMillis();
         final List<AspectElement> elements = new ArrayList<AspectElement>();
         for (final CyEdge cyEdge : network.getEdgeList()) {
             elements.add(new EdgesElement(cyEdge.getSUID(), cyEdge.getSource().getSUID(), cyEdge
-                    .getTarget().getSUID()));
+                                          .getTarget().getSUID()));
         }
         w.writeAspectElements(elements);
+        if (CxNetworkViewWriter.TIMING) {
+            reportTime(t0, "edges", elements.size());
+        }
     }
 
     private final static void writeEdges(final CyNetworkView view, final CxWriter w)
@@ -399,6 +396,7 @@ public class CxExporter {
 
     private final static void writeNodeAttributes(final CyNetwork network, final CxWriter w)
             throws IOException {
+        final long t0 = System.currentTimeMillis();
         final List<AspectElement> elements = new ArrayList<AspectElement>();
 
         for (final CyNode cy_node : network.getNodeList()) {
@@ -408,7 +406,7 @@ public class CxExporter {
                 final Map<String, Object> values = row.getAllValues();
                 if ((values != null) && !values.isEmpty()) {
                     final NodeAttributesElement nae = new NodeAttributesElement(
-                            makeNodeAttributeId(cy_node.getSUID()));
+                                                                                makeNodeAttributeId(cy_node.getSUID()));
                     nae.addNode(cy_node.getSUID());
                     addAttributes(values, nae);
                     elements.add(nae);
@@ -417,6 +415,9 @@ public class CxExporter {
         }
 
         w.writeAspectElements(elements);
+        if (CxNetworkViewWriter.TIMING) {
+            reportTime(t0, "node attributes", elements.size());
+        }
     }
 
     private final static void writeNodeAttributes(final CyNetworkView view, final CxWriter w)
@@ -426,11 +427,26 @@ public class CxExporter {
 
     private final static void writeNodes(final CyNetwork network, final CxWriter w)
             throws IOException {
+        final long t0 = System.currentTimeMillis();
         final List<AspectElement> elements = new ArrayList<AspectElement>();
         for (final CyNode cy_node : network.getNodeList()) {
             elements.add(new NodesElement(cy_node.getSUID()));
         }
         w.writeAspectElements(elements);
+        if (CxNetworkViewWriter.TIMING) {
+            reportTime(t0, "nodes", elements.size());
+        }
+    }
+
+    public final static void reportTime(final long t0, final String label, final int n) {
+        if (n > 0) {
+            System.out.println(String.format("%-20s%-8s: %s ms", label, n,
+                                             (System.currentTimeMillis() - t0)));
+        }
+        else {
+            System.out.println(String.format("%-20s%-8s: %s ms", label, " ",
+                                             (System.currentTimeMillis() - t0)));
+        }
     }
 
     private final static void writeNodes(final CyNetworkView view, final CxWriter w)
@@ -459,7 +475,5 @@ public class CxExporter {
         }
 
     }
-
-   
 
 }

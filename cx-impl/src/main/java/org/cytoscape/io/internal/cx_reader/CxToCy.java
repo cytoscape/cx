@@ -22,8 +22,8 @@ public final class CxToCy {
     private Map<CyNode, Double[]> position_map;
 
     public final CyNetwork createNetwork(final SortedMap<String, List<AspectElement>> res,
-                                   final CyNetwork network,
-                                   final String collectionName) throws IOException {
+                                         final CyNetwork network,
+                                         final String collectionName) throws IOException {
 
         final List<AspectElement> nodes = res.get(NodesElement.NAME);
         final List<AspectElement> edges = res.get(EdgesElement.NAME);
@@ -53,7 +53,7 @@ public final class CxToCy {
         for (final AspectElement ae : layout) {
             final CartesianLayoutElement cle = (CartesianLayoutElement) ae;
             position_map.put(node_map.get(cle.getNode()), new Double[] {
-                    Double.valueOf(cle.getX()), Double.valueOf(cle.getY()) });
+                Double.valueOf(cle.getX()), Double.valueOf(cle.getY()) });
         }
     }
 

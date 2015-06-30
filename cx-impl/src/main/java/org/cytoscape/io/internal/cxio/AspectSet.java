@@ -22,8 +22,8 @@ import org.cxio.core.interfaces.AspectFragmentWriter;
 /**
  * This class is primarily for storing of {@link Aspect Aspect identifiers} to
  * be imported or exported in {@link CxImporter} and {@link CxExporter}.
- * 
- * 
+ *
+ *
  * @see Aspect
  * @see CxImporter
  * @see CxExporter
@@ -35,17 +35,17 @@ public final class AspectSet {
 
     /**
      * Constructor, creates an empty AspectSet.
-     * 
+     *
      */
     public AspectSet() {
         _aspects = new TreeSet<Aspect>();
     }
 
     /**
-     * Constructor, creates an AspectSet containing 
-     * Aspects identifiers.
-     * 
-     * @param aspects the Aspects to initialize this AspectSet with
+     * Constructor, creates an AspectSet containing Aspects identifiers.
+     *
+     * @param aspects
+     *            the Aspects to initialize this AspectSet with
      */
     public AspectSet(final Collection<Aspect> aspects) {
         _aspects = new TreeSet<Aspect>();
@@ -54,14 +54,14 @@ public final class AspectSet {
 
     /**
      * To add a single Aspect.
-     * 
-     * @param aspect the Aspect to add
+     *
+     * @param aspect
+     *            the Aspect to add
      */
     public final void addAspect(final Aspect aspect) {
         _aspects.add(aspect);
     }
 
-    
     final SortedSet<Aspect> getAspects() {
         return _aspects;
     }
@@ -70,7 +70,6 @@ public final class AspectSet {
         return _aspects.contains(aspect);
     }
 
-   
     final Set<AspectFragmentWriter> getAspectFragmentWriters() {
         final Set<AspectFragmentWriter> writers = new HashSet<AspectFragmentWriter>();
         if (_aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
@@ -91,7 +90,6 @@ public final class AspectSet {
         return writers;
     }
 
-    
     final Set<AspectFragmentReader> getAspectFragmentReaders() {
         final Set<AspectFragmentReader> readers = new HashSet<AspectFragmentReader>();
         if (_aspects.contains(Aspect.CARTESIAN_LAYOUT)) {

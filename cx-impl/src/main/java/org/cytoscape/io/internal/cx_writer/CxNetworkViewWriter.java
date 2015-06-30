@@ -1,5 +1,6 @@
 package org.cytoscape.io.internal.cx_writer;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
@@ -16,8 +17,10 @@ import org.slf4j.LoggerFactory;
 
 public class CxNetworkViewWriter implements CyWriter {
 
-    private final static Logger  logger   = LoggerFactory.getLogger(CxNetworkViewWriter.class);
-    private final static String  ENCODING = "UTF-8";
+    private final static Logger  logger       = LoggerFactory.getLogger(CxNetworkViewWriter.class);
+    private final static String  ENCODING     = "UTF-8";
+    public final static boolean  TIMING       = true;
+    final static boolean         WRITE_TO_BAS = false;
 
     private final OutputStream   os;
     private final CyNetworkView  network_view;
@@ -69,9 +72,19 @@ public class CxNetworkViewWriter implements CyWriter {
 
         final CxExporter exporter = CxExporter.createInstance();
         // exporter.writeCX(network_view, aspects, filters, os);
-        exporter.writeCX(network_view, aspects, os);
 
-        os.close();
+        final long t0 = System.currentTimeMillis();
+        if (!WRITE_TO_BAS) {
+            exporter.writeCX(network_view, aspects, os);
+            os.close();
+        }
+        else {
+            exporter.writeCX(network_view, aspects, new ByteArrayOutputStream());
+        }
+
+        if (TIMING) {
+            CxExporter.reportTime(t0, "total time", 0);
+        }
     }
 
     @Override

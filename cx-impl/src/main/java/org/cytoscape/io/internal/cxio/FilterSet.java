@@ -9,10 +9,10 @@ import java.util.TreeSet;
 import org.cxio.filters.AspectKeyFilter;
 
 /**
- * This class is primarily for storing of AspectKeyFilters to
- * be applied to certain aspects in {@link CxExporter}.
- * 
- * 
+ * This class is primarily for storing of AspectKeyFilters to be applied to
+ * certain aspects in {@link CxExporter}.
+ *
+ *
  * @see CxExporter
  *
  */
@@ -62,7 +62,7 @@ public final class FilterSet {
             final String aspect = filter.getAspectName();
             if (filters_map.containsKey(aspect)) {
                 throw new IllegalArgumentException(
-                        "cannot have multiple filters for same aspect ['" + aspect + "']");
+                                                   "cannot have multiple filters for same aspect ['" + aspect + "']");
             }
             filters_map.put(aspect, filter);
         }

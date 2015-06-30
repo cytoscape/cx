@@ -36,14 +36,14 @@ public class EdgesFragmentReaderTest {
                 + "{\"nodes\":[{\"@id\":\"_7\"}]}" + "]";
 
         final CxReader p = CxReader.createInstance(t0, AspectFragmentReaderManager.createInstance()
-                                                   .getAvailableAspectFragmentReaders());
+                .getAvailableAspectFragmentReaders());
         final SortedMap<String, List<AspectElement>> r0 = CxReader.parseAsMap(p);
 
         assertTrue("failed to parse " + EdgesElement.NAME + " aspect",
                    r0.containsKey(EdgesElement.NAME));
 
         assertFalse("failed to parse " + EdgesElement.NAME + " aspect", r0.get(EdgesElement.NAME)
-                .isEmpty());
+                    .isEmpty());
 
         assertTrue("failed to parse expected number of " + EdgesElement.NAME + " aspects",
                    r0.get(EdgesElement.NAME).size() == 4);
@@ -77,7 +77,7 @@ public class EdgesFragmentReaderTest {
                 + "{\"edges\":[{\"@id\":\"e3\",\"source\":\"_6\",\"target\":\"_7\"}]}" + "]";
 
         final CxReader p = CxReader.createInstance(t0, AspectFragmentReaderManager.createInstance()
-                                                   .getAvailableAspectFragmentReaders());
+                .getAvailableAspectFragmentReaders());
         CxReader.parseAsMap(p);
 
     }
@@ -95,7 +95,7 @@ public class EdgesFragmentReaderTest {
                 + "{\"edges\":[{\"@id\":\"e3\",\"source\":\"_6\",\"target\":\"_7\"}]}" + "]";
 
         final CxReader p = CxReader.createInstance(t0, AspectFragmentReaderManager.createInstance()
-                                                   .getAvailableAspectFragmentReaders());
+                .getAvailableAspectFragmentReaders());
         CxReader.parseAsMap(p);
 
     }
@@ -119,7 +119,7 @@ public class EdgesFragmentReaderTest {
                 + "]";
 
         final CxReader p = CxReader.createInstance(t0, AspectFragmentReaderManager.createInstance()
-                                                   .getAvailableAspectFragmentReaders());
+                .getAvailableAspectFragmentReaders());
         final SortedMap<String, List<AspectElement>> r0 = CxReader.parseAsMap(p);
 
         assertFalse("expected to parse no " + EdgesElement.NAME + " aspects, got some",

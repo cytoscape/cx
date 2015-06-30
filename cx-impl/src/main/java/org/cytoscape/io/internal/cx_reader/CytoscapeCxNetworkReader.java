@@ -5,11 +5,15 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
+import java.util.TreeMap;
 
+import org.cxio.core.CxReader;
 import org.cxio.core.interfaces.AspectElement;
 import org.cytoscape.application.CyApplicationManager;
+import org.cytoscape.io.internal.cx_writer.CxNetworkViewWriter;
 import org.cytoscape.io.internal.cxio.Aspect;
 import org.cytoscape.io.internal.cxio.AspectSet;
+import org.cytoscape.io.internal.cxio.CxExporter;
 import org.cytoscape.io.internal.cxio.CxImporter;
 import org.cytoscape.io.read.AbstractCyNetworkReader;
 import org.cytoscape.model.CyNetwork;
@@ -40,9 +44,9 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                                     final CyNetworkFactory cyNetworkFactory,
                                     final CyNetworkManager cyNetworkManager,
                                     final CyRootNetworkManager cyRootNetworkManager)
-            throws IOException {
+                                            throws IOException {
         super(input_stream, cyApplicationManager, cyNetworkFactory, cyNetworkManager,
-              cyRootNetworkManager);
+                cyRootNetworkManager);
 
         this.networkCollectionName = networkCollectionName;
 
@@ -75,6 +79,49 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         return view;
     }
 
+    private static SortedMap<String, List<AspectElement>> parseAsMap(final CxReader cxr, long t)
+            throws IOException {
+        long time_total = 0;
+        if (cxr == null) {
+            throw new IllegalArgumentException("reader is null");
+        }
+        long prev_time = System.currentTimeMillis() - t;
+        if (CxNetworkViewWriter.TIMING) {
+            System.out.println();
+            System.out.println();
+        }
+        final SortedMap<String, List<AspectElement>> all_aspects = new TreeMap<String, List<AspectElement>>();
+
+        while (cxr.hasNext()) {
+            t = System.currentTimeMillis();
+            final List<AspectElement> aspects = cxr.getNext();
+
+            if ((aspects != null) && !aspects.isEmpty()) {
+                final String name = aspects.get(0).getAspectName();
+                if (CxNetworkViewWriter.TIMING) {
+
+                    reportTime(prev_time, name, aspects.size());
+                    time_total += prev_time;
+                    prev_time = System.currentTimeMillis() - t;
+                }
+                if (!all_aspects.containsKey(name)) {
+                    all_aspects.put(name, aspects);
+                }
+                else {
+                    all_aspects.get(name).addAll(aspects);
+                }
+            }
+        }
+        reportTime(time_total, "sum", 0);
+        return all_aspects;
+    }
+
+    public final static void reportTime(final long t, final String label, final int n) {
+
+        System.out.println(String.format("%-20s%-8s: %s ms", label, n, t));
+
+    }
+
     @Override
     public void run(final TaskMonitor taskMonitor) throws Exception {
 
@@ -86,8 +133,19 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         aspects.addAspect(Aspect.EDGE_ATTRIBUTES);
 
         final CxImporter cx_importer = CxImporter.createInstance();
-       
-        final SortedMap<String, List<AspectElement>> res = cx_importer.readAsMap(aspects, in);
+
+        final long t0 = System.currentTimeMillis();
+        final CxReader cxr = cx_importer.getCxReader(aspects, in);
+
+        final SortedMap<String, List<AspectElement>> res = parseAsMap(cxr, t0);
+
+        if (CxNetworkViewWriter.TIMING) {
+            CxExporter.reportTime(t0, "total time", 0);
+
+        }
+
+        // final SortedMap<String, List<AspectElement>> res =
+        // cx_importer.readAsMap(aspects, in);
 
         cx_to_cy = new CxToCy();
 

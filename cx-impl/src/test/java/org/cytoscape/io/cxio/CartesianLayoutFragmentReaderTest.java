@@ -40,7 +40,7 @@ public class CartesianLayoutFragmentReaderTest {
                 + "{\"nodes\":[{\"@id\":\"_7\"}]}" + "]";
 
         final CxReader p = CxReader.createInstance(t0, AspectFragmentReaderManager.createInstance()
-                                                   .getAvailableAspectFragmentReaders());
+                .getAvailableAspectFragmentReaders());
         final SortedMap<String, List<AspectElement>> r0 = CxReader.parseAsMap(p);
 
         assertTrue("failed to parse " + CartesianLayoutElement.NAME + " aspect",
