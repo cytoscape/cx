@@ -18,7 +18,6 @@ import org.cxio.core.CxWriter;
 import org.cxio.core.interfaces.AspectElement;
 import org.cxio.core.interfaces.AspectFragmentWriter;
 import org.cxio.filters.AspectKeyFilter;
-import org.cytoscape.io.internal.cx_writer.CxNetworkViewWriter;
 import org.cytoscape.io.internal.cxio.CxOutput.Status;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
@@ -334,14 +333,14 @@ public class CxExporter {
         for (final CyNode cy_node : network.getNodeList()) {
             final View<CyNode> node_view = view.getNodeView(cy_node);
             elements.add(new CartesianLayoutElement(cy_node.getSUID(), node_view
-                    .getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
-                    .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION)));
+                                                    .getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
+                                                    .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION)));
 
         }
 
         w.writeAspectElements(elements);
-        if (CxNetworkViewWriter.TIMING) {
-            reportTime(t0, "cartesian layout", elements.size());
+        if (TimingUtil.TIMING) {
+            TimingUtil.reportTimeDifference(t0, "cartesian layout", elements.size());
         }
     }
 
@@ -356,7 +355,7 @@ public class CxExporter {
                 final Map<String, Object> values = row.getAllValues();
                 if ((values != null) && !values.isEmpty()) {
                     final EdgeAttributesElement eae = new EdgeAttributesElement(
-                                                                                makeEdgeAttributeId(cy_edge.getSUID()));
+                            makeEdgeAttributeId(cy_edge.getSUID()));
                     eae.addEdge(cy_edge.getSUID());
 
                     addAttributes(values, eae);
@@ -365,8 +364,8 @@ public class CxExporter {
             }
         }
         w.writeAspectElements(elements);
-        if (CxNetworkViewWriter.TIMING) {
-            reportTime(t0, "edge attributes", elements.size());
+        if (TimingUtil.TIMING) {
+            TimingUtil.reportTimeDifference(t0, "edge attributes", elements.size());
         }
     }
 
@@ -381,11 +380,11 @@ public class CxExporter {
         final List<AspectElement> elements = new ArrayList<AspectElement>();
         for (final CyEdge cyEdge : network.getEdgeList()) {
             elements.add(new EdgesElement(cyEdge.getSUID(), cyEdge.getSource().getSUID(), cyEdge
-                                          .getTarget().getSUID()));
+                    .getTarget().getSUID()));
         }
         w.writeAspectElements(elements);
-        if (CxNetworkViewWriter.TIMING) {
-            reportTime(t0, "edges", elements.size());
+        if (TimingUtil.TIMING) {
+            TimingUtil.reportTimeDifference(t0, "edges", elements.size());
         }
     }
 
@@ -406,7 +405,7 @@ public class CxExporter {
                 final Map<String, Object> values = row.getAllValues();
                 if ((values != null) && !values.isEmpty()) {
                     final NodeAttributesElement nae = new NodeAttributesElement(
-                                                                                makeNodeAttributeId(cy_node.getSUID()));
+                            makeNodeAttributeId(cy_node.getSUID()));
                     nae.addNode(cy_node.getSUID());
                     addAttributes(values, nae);
                     elements.add(nae);
@@ -415,8 +414,8 @@ public class CxExporter {
         }
 
         w.writeAspectElements(elements);
-        if (CxNetworkViewWriter.TIMING) {
-            reportTime(t0, "node attributes", elements.size());
+        if (TimingUtil.TIMING) {
+            TimingUtil.reportTimeDifference(t0, "node attributes", elements.size());
         }
     }
 
@@ -433,19 +432,8 @@ public class CxExporter {
             elements.add(new NodesElement(cy_node.getSUID()));
         }
         w.writeAspectElements(elements);
-        if (CxNetworkViewWriter.TIMING) {
-            reportTime(t0, "nodes", elements.size());
-        }
-    }
-
-    public final static void reportTime(final long t0, final String label, final int n) {
-        if (n > 0) {
-            System.out.println(String.format("%-20s%-8s: %s ms", label, n,
-                                             (System.currentTimeMillis() - t0)));
-        }
-        else {
-            System.out.println(String.format("%-20s%-8s: %s ms", label, " ",
-                                             (System.currentTimeMillis() - t0)));
+        if (TimingUtil.TIMING) {
+            TimingUtil.reportTimeDifference(t0, "nodes", elements.size());
         }
     }
 

@@ -9,6 +9,7 @@ import java.nio.charset.CharsetEncoder;
 import org.cytoscape.io.internal.cxio.Aspect;
 import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxExporter;
+import org.cytoscape.io.internal.cxio.TimingUtil;
 import org.cytoscape.io.write.CyWriter;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.work.TaskMonitor;
@@ -58,7 +59,7 @@ public class CxNetworkWriter implements CyWriter {
         final CxExporter exporter = CxExporter.createInstance();
 
         final long t0 = System.currentTimeMillis();
-        if (!CxNetworkViewWriter.WRITE_TO_BAS) {
+        if (!TimingUtil.WRITE_TO_BYTE_ARRAY_OUTPUTSTREAM) {
             exporter.writeCX(network, aspects, os);
             os.close();
         }
@@ -66,8 +67,8 @@ public class CxNetworkWriter implements CyWriter {
             exporter.writeCX(network, aspects, new ByteArrayOutputStream());
         }
 
-        if (CxNetworkViewWriter.TIMING) {
-            CxExporter.reportTime(t0, "total time", 0);
+        if (TimingUtil.TIMING) {
+            TimingUtil.reportTimeDifference(t0, "total time", 0);
         }
     }
 
