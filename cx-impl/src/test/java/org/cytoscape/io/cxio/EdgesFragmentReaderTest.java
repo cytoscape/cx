@@ -10,7 +10,6 @@ import java.util.SortedMap;
 import org.cxio.aspects.datamodels.EdgesElement;
 import org.cxio.core.CxReader;
 import org.cxio.core.interfaces.AspectElement;
-import org.cxio.tools.AspectFragmentReaderManager;
 import org.junit.Test;
 
 public class EdgesFragmentReaderTest {
@@ -27,31 +26,26 @@ public class EdgesFragmentReaderTest {
                 + "{\"functionTerms\":[{\"@id\":\"ft0\",\"function\":\"functions zero\",\"parameters\":[\"HGNC:FAS\",\"HGNC:MAPK1\"]},{\"@id\":\"ft1\",\"function\":\"functions one\",\"parameters\":[\"HGNC:FAS\",\"HGNC:MAPK1\"]}]},"
                 + "{\"weHaveNodesAndEdges\":[{\"nodes\":[{\"@id\":\"_0\"},{\"@id\":\"_1\"}]}]},"
                 + "{\"weHaveNodesAndEdges\":[{\"edges\":[{\"@id\":\"e0\",\"source\":\"_0\",\"target\":\"_1\"}]}]},"
-                + "{\"weHaveNodesToo\":[{\"nodes\":\"nodes\"}]},"
-                + "{\"weHaveEdgesToo\":[{\"edges\":\"edges\"}]},"
+                + "{\"weHaveNodesToo\":[{\"nodes\":\"nodes\"}]}," + "{\"weHaveEdgesToo\":[{\"edges\":\"edges\"}]},"
                 + "{\"nodes\":[{\"@id\":\"_5\"}]},"
                 + "{\"edges\":[{\"@id\":\"e2\",\"source\":\"_4\",\"target\":\"_5\"}]},"
                 + "{\"edges\":[{\"@id\":\"e3\",\"source\":\"_6\",\"target\":\"_7\"}]},"
                 + "{\"nodes\":[{\"@id\":\"_4\"}]}," + "{\"nodes\":[{\"@id\":\"_6\"}]},"
                 + "{\"nodes\":[{\"@id\":\"_7\"}]}" + "]";
 
-        final CxReader p = CxReader.createInstance(t0, AspectFragmentReaderManager.createInstance()
-                .getAvailableAspectFragmentReaders());
+        final CxReader p = CxReader.createInstance(t0, TestUtil.getCytoscapeAspectFragmentReaders());
         final SortedMap<String, List<AspectElement>> r0 = CxReader.parseAsMap(p);
 
-        assertTrue("failed to parse " + EdgesElement.NAME + " aspect",
-                   r0.containsKey(EdgesElement.NAME));
+        assertTrue("failed to parse " + EdgesElement.NAME + " aspect", r0.containsKey(EdgesElement.NAME));
 
-        assertFalse("failed to parse " + EdgesElement.NAME + " aspect", r0.get(EdgesElement.NAME)
-                    .isEmpty());
+        assertFalse("failed to parse " + EdgesElement.NAME + " aspect", r0.get(EdgesElement.NAME).isEmpty());
 
-        assertTrue("failed to parse expected number of " + EdgesElement.NAME + " aspects",
-                   r0.get(EdgesElement.NAME).size() == 4);
+        assertTrue("failed to parse expected number of " + EdgesElement.NAME + " aspects", r0.get(EdgesElement.NAME)
+                .size() == 4);
 
         final List<AspectElement> edge_aspects = r0.get(EdgesElement.NAME);
 
-        assertTrue("failed to get expected NodeAspect instance",
-                   edge_aspects.get(0) instanceof EdgesElement);
+        assertTrue("failed to get expected NodeAspect instance", edge_aspects.get(0) instanceof EdgesElement);
 
         assertTrue("failed to get expected " + EdgesElement.NAME + " aspect",
                    edge_aspects.contains(new EdgesElement("e0", "0", "0")));
@@ -76,8 +70,7 @@ public class EdgesFragmentReaderTest {
                 + "{\"edges\":[{\"@id\":\"e2\",\"source\":\"_4\",\"target\":\"_5\"}]},"
                 + "{\"edges\":[{\"@id\":\"e3\",\"source\":\"_6\",\"target\":\"_7\"}]}" + "]";
 
-        final CxReader p = CxReader.createInstance(t0, AspectFragmentReaderManager.createInstance()
-                .getAvailableAspectFragmentReaders());
+        final CxReader p = CxReader.createInstance(t0, TestUtil.getCytoscapeAspectFragmentReaders());
         CxReader.parseAsMap(p);
 
     }
@@ -94,8 +87,7 @@ public class EdgesFragmentReaderTest {
                 + "{\"edges\":[{\"@id\":\"e2\",\"source\":\"_4\",\"target\":\"_5\"}]},"
                 + "{\"edges\":[{\"@id\":\"e3\",\"source\":\"_6\",\"target\":\"_7\"}]}" + "]";
 
-        final CxReader p = CxReader.createInstance(t0, AspectFragmentReaderManager.createInstance()
-                .getAvailableAspectFragmentReaders());
+        final CxReader p = CxReader.createInstance(t0, TestUtil.getCytoscapeAspectFragmentReaders());
         CxReader.parseAsMap(p);
 
     }
@@ -111,15 +103,13 @@ public class EdgesFragmentReaderTest {
                 + "{\"functionTerms\":[{\"@id\":\"ft0\",\"function\":\"functions zero\",\"parameters\":[\"HGNC:FAS\",\"HGNC:MAPK1\"]},{\"@id\":\"ft1\",\"function\":\"functions one\",\"parameters\":[\"HGNC:FAS\",\"HGNC:MAPK1\"]}]},"
                 + "{\"weHaveNodesAndEdges\":[{\"nodes\":[{\"@id\":\"_0\"},{\"@id\":\"_1\"}]}]},"
                 + "{\"weHaveNodesAndEdges\":[{\"edges\":[{\"@id\":\"e0\",\"source\":\"_0\",\"target\":\"_1\"}]}]},"
-                + "{\"weHaveNodesToo\":[{\"nodes\":\"nodes\"}]},"
-                + "{\"weHaveEdgesToo\":[{\"edges\":\"edges\"}]},"
+                + "{\"weHaveNodesToo\":[{\"nodes\":\"nodes\"}]}," + "{\"weHaveEdgesToo\":[{\"edges\":\"edges\"}]},"
                 + "{\"edges_we_ignore\":[{\"@id\":\"e2\",\"source\":\"_4\",\"target\":\"_5\"}]},"
                 + "{\"edges_we_ignore\":[{\"@id\":\"e3\",\"source\":\"_6\",\"target\":\"_7\"}]}"
 
                 + "]";
 
-        final CxReader p = CxReader.createInstance(t0, AspectFragmentReaderManager.createInstance()
-                .getAvailableAspectFragmentReaders());
+        final CxReader p = CxReader.createInstance(t0, TestUtil.getCytoscapeAspectFragmentReaders());
         final SortedMap<String, List<AspectElement>> r0 = CxReader.parseAsMap(p);
 
         assertFalse("expected to parse no " + EdgesElement.NAME + " aspects, got some",

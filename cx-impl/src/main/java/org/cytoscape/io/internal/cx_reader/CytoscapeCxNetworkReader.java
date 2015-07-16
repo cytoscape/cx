@@ -43,10 +43,8 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                                     final CyApplicationManager cyApplicationManager,
                                     final CyNetworkFactory cyNetworkFactory,
                                     final CyNetworkManager cyNetworkManager,
-                                    final CyRootNetworkManager cyRootNetworkManager)
-                                            throws IOException {
-        super(input_stream, cyApplicationManager, cyNetworkFactory, cyNetworkManager,
-                cyRootNetworkManager);
+                                    final CyRootNetworkManager cyRootNetworkManager) throws IOException {
+        super(input_stream, cyApplicationManager, cyNetworkFactory, cyNetworkManager, cyRootNetworkManager);
 
         this.networkCollectionName = networkCollectionName;
 
@@ -71,10 +69,8 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         final Map<CyNode, Double[]> positionMap = cx_to_cy.getNodePosition();
         for (final CyNode node : positionMap.keySet()) {
             final Double[] position = positionMap.get(node);
-            view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_X_LOCATION,
-                                                     position[0]);
-            view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION,
-                                                     position[1]);
+            view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_X_LOCATION, position[0]);
+            view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION, position[1]);
         }
         return view;
     }
@@ -94,15 +90,17 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         long t0 = 0;
         SortedMap<String, List<AspectElement>> res = null;
         if (TimingUtil.TIMING) {
-            t0 = System.currentTimeMillis();
+
             final byte[] buff = new byte[8000];
             int bytes_read = 0;
             final ByteArrayOutputStream bao = new ByteArrayOutputStream();
             while ((bytes_read = in.read(buff)) != -1) {
                 bao.write(buff, 0, bytes_read);
             }
-            final CxReader cxr = cx_importer
-                    .getCxReader(aspects, new ByteArrayInputStream(bao.toByteArray()));
+            final ByteArrayInputStream bis = new ByteArrayInputStream(bao.toByteArray());
+            t0 = System.currentTimeMillis();
+            final CxReader cxr = cx_importer.getCxReader(aspects, bis);
+
             res = TimingUtil.parseAsMap(cxr, t0);
             TimingUtil.reportTimeDifference(t0, "total time parsing", 0);
             t0 = System.currentTimeMillis();

@@ -61,8 +61,7 @@ public final class FilterSet {
         for (final AspectKeyFilter filter : _filters) {
             final String aspect = filter.getAspectName();
             if (filters_map.containsKey(aspect)) {
-                throw new IllegalArgumentException(
-                        "cannot have multiple filters for same aspect ['" + aspect + "']");
+                throw new IllegalArgumentException("cannot have multiple filters for same aspect ['" + aspect + "']");
             }
             filters_map.put(aspect, filter);
         }

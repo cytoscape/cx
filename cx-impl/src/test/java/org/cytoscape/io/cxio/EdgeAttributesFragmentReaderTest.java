@@ -11,7 +11,6 @@ import org.cxio.aspects.datamodels.AbstractAttributesElement.ATTRIBUTE_TYPE;
 import org.cxio.aspects.datamodels.EdgeAttributesElement;
 import org.cxio.core.CxReader;
 import org.cxio.core.interfaces.AspectElement;
-import org.cxio.tools.AspectFragmentReaderManager;
 import org.junit.Test;
 
 public class EdgeAttributesFragmentReaderTest {
@@ -43,14 +42,13 @@ public class EdgeAttributesFragmentReaderTest {
                 + "{\"edgeAttributes\":[{\"@id\":\"_ea2\",\"edges\":[\"_e38\"], \"attributes\":{\"deleted\":[\"true\"]}, \"types\":{\"deleted\":\"boolean\"}}]}"
                 + "]";
 
-        final CxReader p = CxReader.createInstance(t0, AspectFragmentReaderManager.createInstance()
-                .getAvailableAspectFragmentReaders());
+        final CxReader p = CxReader.createInstance(t0, TestUtil.getCytoscapeAspectFragmentReaders());
         final SortedMap<String, List<AspectElement>> r0 = CxReader.parseAsMap(p);
 
         assertTrue("failed to parse " + EdgeAttributesElement.NAME + " aspect",
                    r0.containsKey(EdgeAttributesElement.NAME));
-        assertFalse("failed to parse " + EdgeAttributesElement.NAME + " aspect",
-                    r0.get(EdgeAttributesElement.NAME).isEmpty());
+        assertFalse("failed to parse " + EdgeAttributesElement.NAME + " aspect", r0.get(EdgeAttributesElement.NAME)
+                .isEmpty());
         assertTrue("failed to get expected number of " + EdgeAttributesElement.NAME + " aspects",
                    r0.get(EdgeAttributesElement.NAME).size() == 3);
 

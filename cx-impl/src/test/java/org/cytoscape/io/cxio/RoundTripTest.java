@@ -30,8 +30,7 @@ public class RoundTripTest {
                 + "\"80961\"],\"entrez_gene_locuslink\":[\"322397\",\"one more\"],"
                 + "\"name\":[\"_322397\"]}},{\"@id\":\"_na1\","
                 + "\"nodes\":[\"_2\"],\"attributes\":{\"key\":[\"value\"]}},"
-                + "{\"@id\":\"_na2\",\"nodes\":[\"_3\"]},"
-                + "{\"@id\":\"_na3\",\"nodes\":[\"_33\"]}]},"
+                + "{\"@id\":\"_na2\",\"nodes\":[\"_3\"]}," + "{\"@id\":\"_na3\",\"nodes\":[\"_33\"]}]},"
                 + "{\"edgeAttributes\":[{\"@id\":\"_ea0\",\"edges\":[\"_e0\",\"_e22\"],"
                 + "\"attributes\":{\"PSIMI_25_detection_method\":[\"genetic interference\"],"
                 + "\"interaction\":[\"479019\",\"one more\"],\"name\":[\"768303 (479019) 791595\"]}}]}]";

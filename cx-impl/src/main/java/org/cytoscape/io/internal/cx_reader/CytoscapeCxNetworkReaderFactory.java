@@ -34,8 +34,8 @@ public class CytoscapeCxNetworkReaderFactory extends AbstractInputStreamTaskFact
     public TaskIterator createTaskIterator(final InputStream is, final String collectionName) {
         try {
 
-            return new TaskIterator(new CytoscapeCxNetworkReader(collectionName, is,
-                                                                 cyApplicationManager, cyNetworkFactory, cyNetworkManager, cyRootNetworkManager));
+            return new TaskIterator(new CytoscapeCxNetworkReader(collectionName, is, cyApplicationManager,
+                    cyNetworkFactory, cyNetworkManager, cyRootNetworkManager));
         }
         catch (final IOException e) {
 

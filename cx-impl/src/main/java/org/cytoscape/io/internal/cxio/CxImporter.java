@@ -44,9 +44,9 @@ import org.cxio.core.interfaces.AspectFragmentReader;
  * aspects.addAspect(Aspect.NODES);
  * aspects.addAspect(Aspect.CARTESIAN_LAYOUT);
  * aspects.addAspect(Aspect.EDGES);
- *
+ * 
  * CxReader r = cx_importer.getCxReader(aspects, in);
- *
+ * 
  * while (r.hasNext()) {
  *     List&lt;AspectElement&gt; elements = r.getNext();
  *     if (!elements.isEmpty()) {
@@ -70,7 +70,7 @@ import org.cxio.core.interfaces.AspectFragmentReader;
  * aspects.addAspect(Aspect.NODES);
  * aspects.addAspect(Aspect.CARTESIAN_LAYOUT);
  * aspects.addAspect(Aspect.EDGES);
- *
+ * 
  * SortedMap&lt;String, List&lt;AspectElement&gt;&gt; res = cx_importer.readAsMap(aspects, in);
  * </pre>
  *
@@ -130,9 +130,9 @@ public final class CxImporter {
      * CxImporter cx_importer = CxImporter.createInstance();
      * AspectSet aspects = new AspectSet();
      * aspects.addAspect(Aspect.NODES);
-     *
+     * 
      * CxReader r = cx_importer.getCxReader(aspects, in);
-     *
+     * 
      * while (r.hasNext()) {
      *     List&lt;AspectElement&gt; elements = r.getNext();
      *     if (!elements.isEmpty()) {
@@ -159,10 +159,8 @@ public final class CxImporter {
      * @see AspectSet
      * @see Aspect
      */
-    public final CxReader getCxReader(final AspectSet aspects, final InputStream in)
-            throws IOException {
-        final Set<AspectFragmentReader> all_readers = getAllAspectFragmentReaders(aspects
-                                                                                  .getAspectFragmentReaders());
+    public final CxReader getCxReader(final AspectSet aspects, final InputStream in) throws IOException {
+        final Set<AspectFragmentReader> all_readers = getAllAspectFragmentReaders(aspects.getAspectFragmentReaders());
         final CxReader r = CxReader.createInstance(in, all_readers);
         return r;
     }
@@ -184,9 +182,8 @@ public final class CxImporter {
      * @see AspectSet
      * @see Aspect
      */
-    public final SortedMap<String, List<AspectElement>> readAsMap(final AspectSet aspects,
-                                                                  final InputStream in)
-                                                                          throws IOException {
+    public final SortedMap<String, List<AspectElement>> readAsMap(final AspectSet aspects, final InputStream in)
+            throws IOException {
         final CxReader r = getCxReader(aspects, in);
         return CxReader.parseAsMap(r);
 

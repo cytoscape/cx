@@ -1,6 +1,8 @@
 package org.cytoscape.io.internal.cx_writer;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
@@ -71,12 +73,15 @@ public class CxNetworkViewWriter implements CyWriter {
         final CxExporter exporter = CxExporter.createInstance();
 
         final long t0 = System.currentTimeMillis();
-        if (!TimingUtil.WRITE_TO_BYTE_ARRAY_OUTPUTSTREAM) {
-            exporter.writeCX(network_view, aspects, os);
-            os.close();
+        if (TimingUtil.WRITE_TO_DEV_NULL) {
+            exporter.writeCX(network_view, aspects, new FileOutputStream(new File("/dev/null")));
+        }
+        else if (TimingUtil.WRITE_TO_BYTE_ARRAY_OUTPUTSTREAM) {
+            exporter.writeCX(network_view, aspects, new ByteArrayOutputStream());
         }
         else {
-            exporter.writeCX(network_view, aspects, new ByteArrayOutputStream());
+            exporter.writeCX(network_view, aspects, os);
+            os.close();
         }
 
         if (TimingUtil.TIMING) {

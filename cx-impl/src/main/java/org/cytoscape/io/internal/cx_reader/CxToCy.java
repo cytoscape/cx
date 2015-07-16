@@ -151,8 +151,7 @@ public final class CxToCy {
         for (final Entry<String, List<String>> entry : attributes.entrySet()) {
             final String field_name = entry.getKey();
             // Ignore unnecessary fields (ID, SUID, SELECTED)
-            if ((field_name.equals(CyIdentifiable.SUID) == false)
-                    && (field_name.equals(CyNetwork.SELECTED) == false)) {
+            if ((field_name.equals(CyIdentifiable.SUID) == false) && (field_name.equals(CyNetwork.SELECTED) == false)) {
 
                 final List<String> values = entry.getValue();
                 // New column creation:
@@ -189,8 +188,7 @@ public final class CxToCy {
         for (final Entry<String, List<String>> entry : attributes.entrySet()) {
             final String field_name = entry.getKey();
             // Ignore unnecessary fields (ID, SUID, SELECTED)
-            if ((field_name.equals(CyIdentifiable.SUID) == false)
-                    && (field_name.equals(CyNetwork.SELECTED) == false)) {
+            if ((field_name.equals(CyIdentifiable.SUID) == false) && (field_name.equals(CyNetwork.SELECTED) == false)) {
 
                 final List<String> values = entry.getValue();
                 // New column creation:
@@ -213,12 +211,11 @@ public final class CxToCy {
 
     }
 
-    private final void addPositions(final List<AspectElement> layout,
-                                    final Map<String, CyNode> node_map) {
+    private final void addPositions(final List<AspectElement> layout, final Map<String, CyNode> node_map) {
         for (final AspectElement ae : layout) {
             final CartesianLayoutElement cle = (CartesianLayoutElement) ae;
-            position_map.put(node_map.get(cle.getNode()), new Double[] {
-                    Double.valueOf(cle.getX()), Double.valueOf(cle.getY()) });
+            position_map.put(node_map.get(cle.getNode()),
+                             new Double[] { Double.valueOf(cle.getX()), Double.valueOf(cle.getY()) });
         }
     }
 

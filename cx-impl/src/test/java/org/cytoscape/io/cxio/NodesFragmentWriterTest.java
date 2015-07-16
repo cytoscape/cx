@@ -46,8 +46,7 @@ public class NodesFragmentWriterTest {
         w1.writeAspectElements(l1);
         w1.end();
 
-        assertEquals("[{\"nodes\":[{\"@id\":\"0\"},{\"@id\":\"1\"},{\"@id\":\"2\"}]}]",
-                     out1.toString());
+        assertEquals("[{\"nodes\":[{\"@id\":\"0\"},{\"@id\":\"1\"},{\"@id\":\"2\"}]}]", out1.toString());
 
         final NodesElement n3 = new NodesElement("3");
         final NodesElement n4 = new NodesElement("4");
@@ -67,8 +66,7 @@ public class NodesFragmentWriterTest {
         w2.writeAspectElements(l3);
         w2.end();
 
-        assertEquals("[{\"nodes\":[{\"@id\":\"3\"},{\"@id\":\"4\"}]},{\"nodes\":[{\"@id\":\"5\"}]}]",
-                     out2.toString());
+        assertEquals("[{\"nodes\":[{\"@id\":\"3\"},{\"@id\":\"4\"}]},{\"nodes\":[{\"@id\":\"5\"}]}]", out2.toString());
 
     }
 
