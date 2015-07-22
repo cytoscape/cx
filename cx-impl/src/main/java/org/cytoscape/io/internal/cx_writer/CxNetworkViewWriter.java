@@ -8,12 +8,14 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 
+import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.io.internal.cxio.Aspect;
 import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxExporter;
 import org.cytoscape.io.internal.cxio.TimingUtil;
 import org.cytoscape.io.write.CyWriter;
 import org.cytoscape.view.model.CyNetworkView;
+import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.work.TaskMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,11 +27,33 @@ public class CxNetworkViewWriter implements CyWriter {
     private final OutputStream   os;
     private final CyNetworkView  network_view;
     private final CharsetEncoder encoder;
+    private final VisualMappingManager visual_mapping_manager;
+    private final CyApplicationManager application_manager;
 
     public CxNetworkViewWriter(final OutputStream os, final CyNetworkView network_view) {
         this.os = os;
         this.network_view = network_view;
-
+        this.visual_mapping_manager = null;
+        this.application_manager = null;
+        if (Charset.isSupported(ENCODING)) {
+            // UTF-8 is supported by system
+            this.encoder = Charset.forName(ENCODING).newEncoder();
+        }
+        else {
+            // Use default.
+            logger.warn("UTF-8 is not supported by this system.  This can be a problem for non-English annotations.");
+            this.encoder = Charset.defaultCharset().newEncoder();
+        }
+    }
+    
+    public CxNetworkViewWriter(final OutputStream os,
+                               final CyNetworkView network_view,
+                               final VisualMappingManager visual_mapping_manager,
+                               final CyApplicationManager application_manager) {
+        this.os = os;
+        this.network_view = network_view;
+        this.visual_mapping_manager = visual_mapping_manager;
+        this.application_manager =application_manager;
         if (Charset.isSupported(ENCODING)) {
             // UTF-8 is supported by system
             this.encoder = Charset.forName(ENCODING).newEncoder();
@@ -57,6 +81,7 @@ public class CxNetworkViewWriter implements CyWriter {
         aspects.addAspect(Aspect.EDGES);
         aspects.addAspect(Aspect.NODE_ATTRIBUTES);
         aspects.addAspect(Aspect.EDGE_ATTRIBUTES);
+        aspects.addAspect(Aspect.VISUAL_STYLES);
 
         // final AspectKeyFilter na_filter = new
         // AspectKeyFilterBasic(NodeAttributesElement.NAME);

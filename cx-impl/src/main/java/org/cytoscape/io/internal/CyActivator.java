@@ -15,6 +15,7 @@ import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.subnetwork.CyRootNetworkManager;
 import org.cytoscape.service.util.AbstractCyActivator;
+import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -35,20 +36,23 @@ public class CyActivator extends AbstractCyActivator {
                                                                  new String[] { "application/json" }, "CX JSON", DataCategory.NETWORK, streamUtil);
 
         // Writer:
-        final CxNetworkWriterFactory cxNetworkViewWriterFactory = new CxNetworkWriterFactory(cxFilter);
+        final VisualMappingManager visualMappingManager = getService(bc,VisualMappingManager.class);
+        final CyApplicationManager applicationManager = getService(bc, CyApplicationManager.class);
+        final CxNetworkWriterFactory cxNetworkWriterFactory = new CxNetworkWriterFactory(cxFilter,
+                                                                                         visualMappingManager,
+                                                                                         applicationManager);
 
         final Properties cxWriterFactoryProperties = new Properties();
 
         cxWriterFactoryProperties.put(ID, "cxNetworkWriterFactory");
 
-        registerAllServices(bc, cxNetworkViewWriterFactory, cxWriterFactoryProperties);
+        registerAllServices(bc, cxNetworkWriterFactory, cxWriterFactoryProperties);
 
         // registerService(bc, cxNetworkViewWriterFactory,
         // CyWriterFactory.class, new Properties());
 
         // Reader:
         final CyNetworkFactory cyNetworkFactory = getService(bc, CyNetworkFactory.class);
-        final CyApplicationManager applicationManager = getService(bc, CyApplicationManager.class);
         final CyNetworkManager cyNetworkManager = getService(bc, CyNetworkManager.class);
         final CyRootNetworkManager cyRootNetworkManager = getService(bc, CyRootNetworkManager.class);
         final BasicCyFileFilter cytoscapejsReaderFilter = new BasicCyFileFilter(new String[] { "cx", "json" },

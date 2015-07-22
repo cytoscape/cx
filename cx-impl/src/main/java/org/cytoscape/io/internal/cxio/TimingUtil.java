@@ -13,7 +13,6 @@ public final class TimingUtil {
     public final static boolean TIMING                           = true;
     public final static boolean WRITE_TO_BYTE_ARRAY_OUTPUTSTREAM = false;
     public static final boolean WRITE_TO_DEV_NULL                = false;
-    public static final boolean THROW_AWAY_ELEMENTS              = true;
 
     public final static SortedMap<String, List<AspectElement>> parseAsMap(final CxReader cxr, long t)
             throws IOException {
