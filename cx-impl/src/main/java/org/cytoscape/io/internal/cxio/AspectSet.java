@@ -12,6 +12,7 @@ import org.cxio.aspects.readers.EdgesFragmentReader;
 import org.cxio.aspects.readers.NodeAttributesFragmentReader;
 import org.cxio.aspects.readers.NodesFragmentReader;
 import org.cxio.aspects.writers.CartesianLayoutFragmentWriter;
+import org.cxio.aspects.writers.CytoscapeVisualStyleFragmentWriter;
 import org.cxio.aspects.writers.EdgeAttributesFragmentWriter;
 import org.cxio.aspects.writers.EdgesFragmentWriter;
 import org.cxio.aspects.writers.NodeAttributesFragmentWriter;
@@ -86,6 +87,9 @@ public final class AspectSet {
         }
         if (_aspects.contains(Aspect.NODES)) {
             writers.add(NodesFragmentWriter.createInstance());
+        }
+        if (_aspects.contains(Aspect.VISUAL_STYLES)) {
+            writers.add(CytoscapeVisualStyleFragmentWriter.createInstance());
         }
         return writers;
     }

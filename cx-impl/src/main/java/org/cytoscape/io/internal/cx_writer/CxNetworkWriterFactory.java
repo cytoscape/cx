@@ -8,6 +8,7 @@ import org.cytoscape.io.write.CyNetworkViewWriterFactory;
 import org.cytoscape.io.write.CyWriter;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.view.model.CyNetworkView;
+import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 
 public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
@@ -42,10 +43,12 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
     @Override
     public CyWriter createWriter(final OutputStream os, final CyNetworkView view) {
         if ( _visual_mapping_manager != null &&  _application_manager != null ) {
+            final VisualLexicon lexicon = _application_manager.getCurrentRenderingEngine().getVisualLexicon();
+            
             return new CxNetworkViewWriter(os,
                                            view,
                                            _visual_mapping_manager,
-                                           _application_manager);
+                                           lexicon);
         }
         return new CxNetworkViewWriter(os, view);
 

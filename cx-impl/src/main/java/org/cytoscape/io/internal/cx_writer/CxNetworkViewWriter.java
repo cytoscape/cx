@@ -8,13 +8,13 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 
-import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.io.internal.cxio.Aspect;
 import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxExporter;
 import org.cytoscape.io.internal.cxio.TimingUtil;
 import org.cytoscape.io.write.CyWriter;
 import org.cytoscape.view.model.CyNetworkView;
+import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.work.TaskMonitor;
 import org.slf4j.Logger;
@@ -28,13 +28,13 @@ public class CxNetworkViewWriter implements CyWriter {
     private final CyNetworkView  network_view;
     private final CharsetEncoder encoder;
     private final VisualMappingManager visual_mapping_manager;
-    private final CyApplicationManager application_manager;
+    private final VisualLexicon lexicon;
 
     public CxNetworkViewWriter(final OutputStream os, final CyNetworkView network_view) {
         this.os = os;
         this.network_view = network_view;
         this.visual_mapping_manager = null;
-        this.application_manager = null;
+        this.lexicon = null;
         if (Charset.isSupported(ENCODING)) {
             // UTF-8 is supported by system
             this.encoder = Charset.forName(ENCODING).newEncoder();
@@ -49,11 +49,11 @@ public class CxNetworkViewWriter implements CyWriter {
     public CxNetworkViewWriter(final OutputStream os,
                                final CyNetworkView network_view,
                                final VisualMappingManager visual_mapping_manager,
-                               final CyApplicationManager application_manager) {
+                               final VisualLexicon lexicon) {
         this.os = os;
         this.network_view = network_view;
         this.visual_mapping_manager = visual_mapping_manager;
-        this.application_manager =application_manager;
+        this.lexicon =lexicon;
         if (Charset.isSupported(ENCODING)) {
             // UTF-8 is supported by system
             this.encoder = Charset.forName(ENCODING).newEncoder();
@@ -96,7 +96,9 @@ public class CxNetworkViewWriter implements CyWriter {
         // filters.add(ea_filter);
 
         final CxExporter exporter = CxExporter.createInstance();
-
+        exporter.setLexicon(lexicon);
+        exporter.setVisualMappingManager(visual_mapping_manager);
+        exporter.setUseDefaultPrettyPrinting(true);
         final long t0 = System.currentTimeMillis();
         if (TimingUtil.WRITE_TO_DEV_NULL) {
             exporter.writeCX(network_view, aspects, new FileOutputStream(new File("/dev/null")));

@@ -1,12 +1,8 @@
 package org.cytoscape.io.internal.cxio;
 
-import static org.cytoscape.io.internal.write.json.serializer.CytoscapeJsToken.CSS;
-import static org.cytoscape.io.internal.write.json.serializer.CytoscapeJsToken.SELECTOR;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,6 +10,7 @@ import java.util.SortedMap;
 
 import org.cxio.aspects.datamodels.AbstractAttributesElement;
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
+import org.cxio.aspects.datamodels.CytoscapeVisualStyleElement;
 import org.cxio.aspects.datamodels.EdgeAttributesElement;
 import org.cxio.aspects.datamodels.EdgesElement;
 import org.cxio.aspects.datamodels.NodeAttributesElement;
@@ -23,18 +20,16 @@ import org.cxio.core.interfaces.AspectElement;
 import org.cxio.core.interfaces.AspectFragmentWriter;
 import org.cxio.filters.AspectKeyFilter;
 import org.cytoscape.io.internal.cxio.CxOutput.Status;
+import org.cytoscape.io.internal.visual_properties.VisualPropertiesWriter;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyRow;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.View;
-import org.cytoscape.view.model.VisualProperty;
+import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.presentation.property.BasicVisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingManager;
-import org.cytoscape.view.vizmap.VisualStyle;
-
-import com.fasterxml.jackson.core.JsonGenerator;
 
 /**
  * This class is for serializing Cytoscape networks, views, and attribute tables
@@ -74,19 +69,16 @@ import com.fasterxml.jackson.core.JsonGenerator;
 public final class CxExporter {
 
     private final static boolean DEFAULT_USE_DEFAULT_PRETTY_PRINTING = false;
-    
-    private boolean _use_default_pretty_printing;
-    private VisualMappingManager _visual_mapping_manager;
 
-   
-    
-    
-    
+    private boolean              _use_default_pretty_printing;
+    private VisualMappingManager _visual_mapping_manager;
+    private VisualLexicon        _lexicon;
+
     private CxExporter() {
         _use_default_pretty_printing = DEFAULT_USE_DEFAULT_PRETTY_PRINTING;
         _visual_mapping_manager = null;
     }
-    
+
     /**
      * This returns a new instance of CxExporter.
      *
@@ -96,15 +88,18 @@ public final class CxExporter {
         return new CxExporter();
     }
 
-    public void setVisualMappingManager( final VisualMappingManager visual_mapping_manager ) {
+    public void setLexicon(final VisualLexicon lexicon) {
+        _lexicon = lexicon;
+    }
+
+    public void setVisualMappingManager(final VisualMappingManager visual_mapping_manager) {
         _visual_mapping_manager = visual_mapping_manager;
     }
-    
-    
-    public void setUseDefaultPrettyPrinting( final boolean use_default_pretty_printing ) {
+
+    public void setUseDefaultPrettyPrinting(final boolean use_default_pretty_printing) {
         _use_default_pretty_printing = use_default_pretty_printing;
     }
-    
+
     /**
      * This is a method for serializing a Cytoscape network and associated table
      * data as CX formatted OutputStream. <br>
@@ -316,7 +311,8 @@ public final class CxExporter {
             writeEdgeAttributes(view, w);
         }
         if (aspects.contains(Aspect.VISUAL_STYLES)) {
-            writeVisualStyles(view, _visual_mapping_manager, w);
+            // writeVisualStyles(view, _visual_mapping_manager, w);
+            writeVisualProperties(view, w);
         }
 
         w.end();
@@ -324,8 +320,6 @@ public final class CxExporter {
         return new CxOutput(out, Status.OK);
 
     }
-
-    
 
     @SuppressWarnings("unchecked")
     private final static void addAttributes(final Map<String, Object> values, final AbstractAttributesElement element) {
@@ -370,43 +364,44 @@ public final class CxExporter {
             TimingUtil.reportTimeDifference(t0, "cartesian layout", elements.size());
         }
     }
-    
-    private final static void writeVisualStyles(final CyNetworkView view,
-                                         final VisualMappingManager visual_mapping_manager,
-                                         final CxWriter w) {
-        final CyNetwork network = view.getModel();
-        Set<VisualStyle> visual_styles = visual_mapping_manager.getAllVisualStyles();
-        
-        for (VisualStyle visual_style : visual_styles) {
-            serializeVisualProperties(BasicVisualLexicon.NODE, visual_style, w);
-        }
-        
-        
-    }
-    
-    //
-    private final void serializeVisualProperties(final VisualProperty<?> vp, final VisualStyle vs,
-                                                 final CxWriter w) throws IOException {
-                                            
-                                             // Generate mappings
-                                             final Collection<VisualProperty<?>> visualProperties = lexicon.getAllDescendants(vp);
-                                             //for (VisualProperty<?> removed : NODE_SELECTED_PROPERTIES) {
-                                             //    visualProperties.remove(removed);
-                                             //}
-                                             //for (VisualProperty<?> removed : EDGE_SELECTED_PROPERTIES) {
-                                             //    visualProperties.remove(removed);
-                                             //}
-                                             createDefaults(visualProperties, vs, jg);
-                                             
-                                             // Mappings - Passthrough ONLY, because others needs special selectors.
-                                             //createMappings(visualProperties, vs, jg);
 
-                                           
-                                         }
+    // private final void writeVisualStyles(final CyNetworkView view,
+    // final VisualMappingManager visual_mapping_manager,
+    // final CxWriter w) throws IOException {
+    // final CyNetwork network = view.getModel();
+    // Set<VisualStyle> visual_styles =
+    // visual_mapping_manager.getAllVisualStyles();
     //
+    // for (VisualStyle visual_style : visual_styles) {
+    // serializeVisualProperties(BasicVisualLexicon.NODE, visual_style, w);
+    // }
+    //
+    // }
+
+    //
+
+    private final static void writeVisualProperties(final CyNetworkView view, final CxWriter w) throws IOException {
+        final CyNetwork network = view.getModel();
+        final List<AspectElement> elements = new ArrayList<AspectElement>();
+        final CytoscapeVisualStyleElement node_visual_properties = new CytoscapeVisualStyleElement("nodes");
+        final CytoscapeVisualStyleElement network_visual_properties = new CytoscapeVisualStyleElement("network");
+        final CytoscapeVisualStyleElement edge_visual_properties = new CytoscapeVisualStyleElement("edges");
+        VisualPropertiesWriter.obtainVisualProperties(view, network, node_visual_properties, network_visual_properties, edge_visual_properties);
+
+        elements.add(network_visual_properties);
+        elements.add(node_visual_properties);
+        elements.add(edge_visual_properties);
+
+        final long t0 = System.currentTimeMillis();
+        w.writeAspectElements(elements);
+        if (TimingUtil.TIMING) {
+            TimingUtil.reportTimeDifference(t0, "visual properties", elements.size());
+        }
+    }
+
+    
 
     private final static void writeEdgeAttributes(final CyNetwork network, final CxWriter w) throws IOException {
-        // final long t0 = System.currentTimeMillis();
         final List<AspectElement> elements = new ArrayList<AspectElement>();
 
         for (final CyEdge cy_edge : network.getEdgeList()) {
@@ -451,7 +446,6 @@ public final class CxExporter {
     }
 
     private final static void writeNodeAttributes(final CyNetwork network, final CxWriter w) throws IOException {
-        // final long t0 = System.currentTimeMillis();
         final List<AspectElement> elements = new ArrayList<AspectElement>();
 
         for (final CyNode cy_node : network.getNodeList()) {
