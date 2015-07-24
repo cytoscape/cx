@@ -81,7 +81,7 @@ public class CxNetworkViewWriter implements CyWriter {
         aspects.addAspect(Aspect.EDGES);
         aspects.addAspect(Aspect.NODE_ATTRIBUTES);
         aspects.addAspect(Aspect.EDGE_ATTRIBUTES);
-        aspects.addAspect(Aspect.VISUAL_STYLES);
+        aspects.addAspect(Aspect.VISUAL_PROPERTIES);
 
         // final AspectKeyFilter na_filter = new
         // AspectKeyFilterBasic(NodeAttributesElement.NAME);

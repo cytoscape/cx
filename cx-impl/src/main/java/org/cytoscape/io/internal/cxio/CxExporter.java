@@ -10,7 +10,7 @@ import java.util.SortedMap;
 
 import org.cxio.aspects.datamodels.AbstractAttributesElement;
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
-import org.cxio.aspects.datamodels.CytoscapeVisualStyleElement;
+import org.cxio.aspects.datamodels.VisualPropertiesElement;
 import org.cxio.aspects.datamodels.EdgeAttributesElement;
 import org.cxio.aspects.datamodels.EdgesElement;
 import org.cxio.aspects.datamodels.NodeAttributesElement;
@@ -258,6 +258,9 @@ public final class CxExporter {
         if (aspects.contains(Aspect.EDGE_ATTRIBUTES)) {
             writeEdgeAttributes(view, w);
         }
+        if (aspects.contains(Aspect.VISUAL_PROPERTIES)) {
+            writeVisualProperties(view, _visual_mapping_manager, w);
+        }
 
         w.end();
 
@@ -310,9 +313,8 @@ public final class CxExporter {
         if (aspects.contains(Aspect.EDGE_ATTRIBUTES)) {
             writeEdgeAttributes(view, w);
         }
-        if (aspects.contains(Aspect.VISUAL_STYLES)) {
-            // writeVisualStyles(view, _visual_mapping_manager, w);
-            writeVisualProperties(view, w);
+        if (aspects.contains(Aspect.VISUAL_PROPERTIES)) {
+            writeVisualProperties(view,_visual_mapping_manager, w);
         }
 
         w.end();
@@ -380,13 +382,20 @@ public final class CxExporter {
 
     //
 
-    private final static void writeVisualProperties(final CyNetworkView view, final CxWriter w) throws IOException {
+    private final static void writeVisualProperties(final CyNetworkView view, 
+                                                    final VisualMappingManager visual_mapping_manager,
+                                                    final CxWriter w) throws IOException {
         final CyNetwork network = view.getModel();
         final List<AspectElement> elements = new ArrayList<AspectElement>();
-        final CytoscapeVisualStyleElement node_visual_properties = new CytoscapeVisualStyleElement("nodes");
-        final CytoscapeVisualStyleElement network_visual_properties = new CytoscapeVisualStyleElement("network");
-        final CytoscapeVisualStyleElement edge_visual_properties = new CytoscapeVisualStyleElement("edges");
-        VisualPropertiesWriter.obtainVisualProperties(view, network, node_visual_properties, network_visual_properties, edge_visual_properties);
+        final VisualPropertiesElement node_visual_properties = new VisualPropertiesElement("nodes");
+        final VisualPropertiesElement network_visual_properties = new VisualPropertiesElement("network");
+        final VisualPropertiesElement edge_visual_properties = new VisualPropertiesElement("edges");
+        VisualPropertiesWriter.obtainVisualProperties(view,
+                                                      network,
+                                                      visual_mapping_manager,
+                                                      node_visual_properties,
+                                                      network_visual_properties,
+                                                      edge_visual_properties);
 
         elements.add(network_visual_properties);
         elements.add(node_visual_properties);

@@ -88,7 +88,7 @@ public final class AspectSet {
         if (_aspects.contains(Aspect.NODES)) {
             writers.add(NodesFragmentWriter.createInstance());
         }
-        if (_aspects.contains(Aspect.VISUAL_STYLES)) {
+        if (_aspects.contains(Aspect.VISUAL_PROPERTIES)) {
             writers.add(CytoscapeVisualStyleFragmentWriter.createInstance());
         }
         return writers;

@@ -1,7 +1,7 @@
 package org.cytoscape.io.internal.cxio;
 
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
-import org.cxio.aspects.datamodels.CytoscapeVisualStyleElement;
+import org.cxio.aspects.datamodels.VisualPropertiesElement;
 import org.cxio.aspects.datamodels.EdgeAttributesElement;
 import org.cxio.aspects.datamodels.EdgesElement;
 import org.cxio.aspects.datamodels.NodeAttributesElement;
@@ -21,7 +21,7 @@ public enum Aspect {
     EDGE_ATTRIBUTES(EdgeAttributesElement.NAME),
     NODE_ATTRIBUTES(NodeAttributesElement.NAME),
     CARTESIAN_LAYOUT(CartesianLayoutElement.NAME),
-    VISUAL_STYLES(CytoscapeVisualStyleElement.NAME);
+    VISUAL_PROPERTIES(VisualPropertiesElement.NAME);
 
     private final String _s;
 
