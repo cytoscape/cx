@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.cxio.aspects.datamodels.VisualProperties;
 import org.cxio.aspects.datamodels.VisualPropertiesElement;
+import org.cxio.core.interfaces.AspectElement;
 import org.cxio.util.Util;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
@@ -17,7 +17,6 @@ import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.View;
 import org.cytoscape.view.model.VisualProperty;
 import org.cytoscape.view.presentation.property.BasicVisualLexicon;
-import org.cytoscape.view.presentation.property.values.NodeShape;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.view.vizmap.VisualStyle;
 
@@ -145,24 +144,24 @@ public final class VisualPropertiesWriter {
         return sb.toString();
     }
 
-    private final static void processFont(final VisualProperties cvp, final String suffix, final Font f) {
-        cvp.put(suffix + "_font_family", f.getFamily());
+    private final static void processFont(final VisualPropertiesElement cvp, final String suffix, final Font f) {
+        cvp.putProperty(suffix + "_font_family", f.getFamily());
         if (f.isPlain()) {
-            cvp.put(suffix + "_font_style", "plain");
+            cvp.putProperty(suffix + "_font_style", "plain");
         }
         else if (f.isBold() && f.isItalic()) {
-            cvp.put(suffix + "_font_style", "bold_italic");
+            cvp.putProperty(suffix + "_font_style", "bold_italic");
         }
         else if (f.isBold()) {
-            cvp.put(suffix + "_font_style", "bold");
+            cvp.putProperty(suffix + "_font_style", "bold");
         }
         else {
-            cvp.put(suffix + "_font_style", "italic");
+            cvp.putProperty(suffix + "_font_style", "italic");
         }
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    private final static void addProperties(final View view, final VisualProperty vp, final VisualProperties cvp) {
+    private final static void addProperties(final View view, final VisualProperty vp, final VisualPropertiesElement cvp) {
         final Object vp_value = view.getVisualProperty(vp);
         if (vp_value != null) {
             if ((vp == BasicVisualLexicon.NODE_BORDER_PAINT) || (vp == BasicVisualLexicon.NODE_FILL_COLOR)
@@ -172,7 +171,7 @@ public final class VisualPropertiesWriter {
                     || (vp == BasicVisualLexicon.EDGE_STROKE_SELECTED_PAINT)
                     || (vp == BasicVisualLexicon.EDGE_STROKE_UNSELECTED_PAINT)
                     || (vp == BasicVisualLexicon.EDGE_UNSELECTED_PAINT)) {
-                cvp.put(obtainLabel(vp), processColor((Color) vp_value));
+                cvp.putProperty(obtainLabel(vp), processColor((Color) vp_value));
             }
             else if ((vp == BasicVisualLexicon.NODE_LABEL_FONT_FACE) || (vp == BasicVisualLexicon.EDGE_LABEL_FONT_FACE)) {
                 processFont(cvp, "label", (Font) vp_value);
@@ -180,14 +179,16 @@ public final class VisualPropertiesWriter {
             else {
                 final String value_str = String.valueOf(vp_value);
                 if (!Util.isEmpty(value_str)) {
-                    cvp.put(obtainLabel(vp), value_str);
+                    cvp.putProperty(obtainLabel(vp), value_str);
                 }
             }
         }
     }
-    
+
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    private final static void addProperties(final VisualStyle style, final VisualProperty vp, final VisualProperties cvp) {
+    private final static void addProperties(final VisualStyle style,
+                                            final VisualProperty vp,
+                                            final VisualPropertiesElement cvp) {
         final Object vp_value = style.getDefaultValue(vp);
         if (vp_value != null) {
             if ((vp == BasicVisualLexicon.NODE_BORDER_PAINT) || (vp == BasicVisualLexicon.NODE_FILL_COLOR)
@@ -197,7 +198,7 @@ public final class VisualPropertiesWriter {
                     || (vp == BasicVisualLexicon.EDGE_STROKE_SELECTED_PAINT)
                     || (vp == BasicVisualLexicon.EDGE_STROKE_UNSELECTED_PAINT)
                     || (vp == BasicVisualLexicon.EDGE_UNSELECTED_PAINT)) {
-                cvp.put(obtainLabel(vp), processColor((Color) vp_value));
+                cvp.putProperty(obtainLabel(vp), processColor((Color) vp_value));
             }
             else if ((vp == BasicVisualLexicon.NODE_LABEL_FONT_FACE) || (vp == BasicVisualLexicon.EDGE_LABEL_FONT_FACE)) {
                 processFont(cvp, "label", (Font) vp_value);
@@ -205,7 +206,7 @@ public final class VisualPropertiesWriter {
             else {
                 final String value_str = String.valueOf(vp_value);
                 if (!Util.isEmpty(value_str)) {
-                    cvp.put(obtainLabel(vp), value_str);
+                    cvp.putProperty(obtainLabel(vp), value_str);
                 }
             }
         }
@@ -224,58 +225,60 @@ public final class VisualPropertiesWriter {
     public static final void obtainVisualProperties(final CyNetworkView view,
                                                     final CyNetwork network,
                                                     final VisualMappingManager visual_mapping_manager,
-                                                    final VisualPropertiesElement node_visual_properties,
-                                                    final VisualPropertiesElement network_visual_properties,
-                                                    final VisualPropertiesElement edge_visual_properties) {
+                                                    final List<AspectElement> visual_properties) {
 
         final VisualStyle current_visual_style = visual_mapping_manager.getVisualStyle(view);
 
-        final VisualProperties node_default_cxvp = new VisualProperties("nodes default", "X");
+        final VisualPropertiesElement node_default_cxvp = new VisualPropertiesElement("nodes:default");
         for (final VisualProperty visual_property : VisualPropertiesWriter.NODE_VISUAL_PROPERTIES) {
             addProperties(current_visual_style, visual_property, node_default_cxvp);
         }
-        node_visual_properties.addProperties(node_default_cxvp);
-        
-        final VisualProperties edge_default_cxvp = new VisualProperties("edges default", "X");
+        visual_properties.add(node_default_cxvp);
+
+        final VisualPropertiesElement edge_default_cxvp = new VisualPropertiesElement("edges:default");
         for (final VisualProperty visual_property : VisualPropertiesWriter.EDGE_VISUAL_PROPERTIES) {
             addProperties(current_visual_style, visual_property, edge_default_cxvp);
         }
-        edge_visual_properties.addProperties(edge_default_cxvp);
-        
+        visual_properties.add(edge_default_cxvp);
+
         for (final CyNode cy_node : network.getNodeList()) {
             final View<CyNode> node_view = view.getNodeView(cy_node);
-            final VisualProperties node_cxvp = new VisualProperties("nodes", String.valueOf(cy_node.getSUID()));
+            final VisualPropertiesElement node_cxvp = new VisualPropertiesElement("nodes");
+            node_cxvp.addAppliesTo(String.valueOf(cy_node.getSUID()));
             for (final VisualProperty visual_property : VisualPropertiesWriter.NODE_VISUAL_PROPERTIES) {
-                addProperties(node_view, visual_property,  node_cxvp);
+                addProperties(node_view, visual_property, node_cxvp);
             }
-            node_visual_properties.addProperties( node_cxvp);
+            visual_properties.add(node_cxvp);
         }
 
         for (final CyEdge edge : network.getEdgeList()) {
             final View<CyEdge> edge_view = view.getEdgeView(edge);
-            final VisualProperties edge_cxvp = new VisualProperties("edges", String.valueOf(edge.getSUID()));
+            final VisualPropertiesElement edge_cxvp = new VisualPropertiesElement("edges");
+
+            edge_cxvp.addAppliesTo(String.valueOf(edge.getSUID()));
             for (final VisualProperty visual_property : VisualPropertiesWriter.EDGE_VISUAL_PROPERTIES) {
                 addProperties(edge_view, visual_property, edge_cxvp);
             }
-            edge_visual_properties.addProperties(edge_cxvp);
+            visual_properties.add(edge_cxvp);
         }
 
-        final VisualProperties cvp = new VisualProperties("network", String.valueOf(network.getSUID()));
+        final VisualPropertiesElement cvp = new VisualPropertiesElement("network");
 
-        cvp.put("background_paint", String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_BACKGROUND_PAINT)));
-        cvp.put("center_x_location",
-                String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_CENTER_X_LOCATION)));
-        cvp.put("center_y_location",
-                String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_CENTER_Y_LOCATION)));
-        cvp.put("center_z_location",
-                String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_CENTER_Z_LOCATION)));
-        cvp.put("depth", String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_DEPTH)));
-        cvp.put("height", String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_HEIGHT)));
-        cvp.put("scale_factor", String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_SCALE_FACTOR)));
-        cvp.put("size", String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_SIZE)));
-        cvp.put("title", String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_TITLE)));
-        cvp.put("width", String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_WIDTH)));
-        network_visual_properties.addProperties(cvp);
+        cvp.putProperty("background_paint",
+                        String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_BACKGROUND_PAINT)));
+        cvp.putProperty("center_x_location",
+                        String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_CENTER_X_LOCATION)));
+        cvp.putProperty("center_y_location",
+                        String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_CENTER_Y_LOCATION)));
+        cvp.putProperty("center_z_location",
+                        String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_CENTER_Z_LOCATION)));
+        cvp.putProperty("depth", String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_DEPTH)));
+        cvp.putProperty("height", String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_HEIGHT)));
+        cvp.putProperty("scale_factor", String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_SCALE_FACTOR)));
+        cvp.putProperty("size", String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_SIZE)));
+        cvp.putProperty("title", String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_TITLE)));
+        cvp.putProperty("width", String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_WIDTH)));
+        visual_properties.add(cvp);
 
     }
 

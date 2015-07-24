@@ -10,7 +10,6 @@ import java.util.SortedMap;
 
 import org.cxio.aspects.datamodels.AbstractAttributesElement;
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
-import org.cxio.aspects.datamodels.VisualPropertiesElement;
 import org.cxio.aspects.datamodels.EdgeAttributesElement;
 import org.cxio.aspects.datamodels.EdgesElement;
 import org.cxio.aspects.datamodels.NodeAttributesElement;
@@ -314,7 +313,7 @@ public final class CxExporter {
             writeEdgeAttributes(view, w);
         }
         if (aspects.contains(Aspect.VISUAL_PROPERTIES)) {
-            writeVisualProperties(view,_visual_mapping_manager, w);
+            writeVisualProperties(view, _visual_mapping_manager, w);
         }
 
         w.end();
@@ -367,39 +366,14 @@ public final class CxExporter {
         }
     }
 
-    // private final void writeVisualStyles(final CyNetworkView view,
-    // final VisualMappingManager visual_mapping_manager,
-    // final CxWriter w) throws IOException {
-    // final CyNetwork network = view.getModel();
-    // Set<VisualStyle> visual_styles =
-    // visual_mapping_manager.getAllVisualStyles();
-    //
-    // for (VisualStyle visual_style : visual_styles) {
-    // serializeVisualProperties(BasicVisualLexicon.NODE, visual_style, w);
-    // }
-    //
-    // }
+   
 
-    //
-
-    private final static void writeVisualProperties(final CyNetworkView view, 
+    private final static void writeVisualProperties(final CyNetworkView view,
                                                     final VisualMappingManager visual_mapping_manager,
                                                     final CxWriter w) throws IOException {
         final CyNetwork network = view.getModel();
         final List<AspectElement> elements = new ArrayList<AspectElement>();
-        final VisualPropertiesElement node_visual_properties = new VisualPropertiesElement("nodes");
-        final VisualPropertiesElement network_visual_properties = new VisualPropertiesElement("network");
-        final VisualPropertiesElement edge_visual_properties = new VisualPropertiesElement("edges");
-        VisualPropertiesWriter.obtainVisualProperties(view,
-                                                      network,
-                                                      visual_mapping_manager,
-                                                      node_visual_properties,
-                                                      network_visual_properties,
-                                                      edge_visual_properties);
-
-        elements.add(network_visual_properties);
-        elements.add(node_visual_properties);
-        elements.add(edge_visual_properties);
+        VisualPropertiesWriter.obtainVisualProperties(view, network, visual_mapping_manager, elements);
 
         final long t0 = System.currentTimeMillis();
         w.writeAspectElements(elements);
@@ -407,8 +381,6 @@ public final class CxExporter {
             TimingUtil.reportTimeDifference(t0, "visual properties", elements.size());
         }
     }
-
-    
 
     private final static void writeEdgeAttributes(final CyNetwork network, final CxWriter w) throws IOException {
         final List<AspectElement> elements = new ArrayList<AspectElement>();
