@@ -12,7 +12,7 @@ import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 
 public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
-    private final CyFileFilter _filter;
+    private final CyFileFilter         _filter;
     private final VisualMappingManager _visual_mapping_manager;
     private final CyApplicationManager _application_manager;
 
@@ -21,7 +21,7 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
         _visual_mapping_manager = null;
         _application_manager = null;
     }
-    
+
     public CxNetworkWriterFactory(final CyFileFilter filter,
                                   final VisualMappingManager visual_mapping_manager,
                                   final CyApplicationManager application_manager) {
@@ -42,13 +42,10 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
 
     @Override
     public CyWriter createWriter(final OutputStream os, final CyNetworkView view) {
-        if ( _visual_mapping_manager != null &&  _application_manager != null ) {
+        if ((_visual_mapping_manager != null) && (_application_manager != null)) {
             final VisualLexicon lexicon = _application_manager.getCurrentRenderingEngine().getVisualLexicon();
-            
-            return new CxNetworkViewWriter(os,
-                                           view,
-                                           _visual_mapping_manager,
-                                           lexicon);
+
+            return new CxNetworkViewWriter(os, view, _visual_mapping_manager, lexicon);
         }
         return new CxNetworkViewWriter(os, view);
 

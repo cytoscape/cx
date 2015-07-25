@@ -22,13 +22,13 @@ import org.slf4j.LoggerFactory;
 
 public class CxNetworkViewWriter implements CyWriter {
 
-    private final static Logger  logger   = LoggerFactory.getLogger(CxNetworkViewWriter.class);
-    private final static String  ENCODING = "UTF-8";
-    private final OutputStream   os;
-    private final CyNetworkView  network_view;
-    private final CharsetEncoder encoder;
+    private final static Logger        logger   = LoggerFactory.getLogger(CxNetworkViewWriter.class);
+    private final static String        ENCODING = "UTF-8";
+    private final OutputStream         os;
+    private final CyNetworkView        network_view;
+    private final CharsetEncoder       encoder;
     private final VisualMappingManager visual_mapping_manager;
-    private final VisualLexicon lexicon;
+    private final VisualLexicon        lexicon;
 
     public CxNetworkViewWriter(final OutputStream os, final CyNetworkView network_view) {
         this.os = os;
@@ -45,7 +45,7 @@ public class CxNetworkViewWriter implements CyWriter {
             this.encoder = Charset.defaultCharset().newEncoder();
         }
     }
-    
+
     public CxNetworkViewWriter(final OutputStream os,
                                final CyNetworkView network_view,
                                final VisualMappingManager visual_mapping_manager,
@@ -53,7 +53,7 @@ public class CxNetworkViewWriter implements CyWriter {
         this.os = os;
         this.network_view = network_view;
         this.visual_mapping_manager = visual_mapping_manager;
-        this.lexicon =lexicon;
+        this.lexicon = lexicon;
         if (Charset.isSupported(ENCODING)) {
             // UTF-8 is supported by system
             this.encoder = Charset.forName(ENCODING).newEncoder();

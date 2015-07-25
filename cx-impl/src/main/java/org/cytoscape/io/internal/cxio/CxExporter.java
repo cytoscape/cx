@@ -245,9 +245,9 @@ public final class CxExporter {
         if (aspects.contains(Aspect.NODES)) {
             writeNodes(view, w);
         }
-        if (aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
-            writeCartesianLayout(view, w);
-        }
+        // if (aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
+        // writeCartesianLayout(view, w);
+        // }
         if (aspects.contains(Aspect.EDGES)) {
             writeEdges(view, w);
         }
@@ -300,9 +300,9 @@ public final class CxExporter {
         if (aspects.contains(Aspect.NODES)) {
             writeNodes(view, w);
         }
-        if (aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
-            writeCartesianLayout(view, w);
-        }
+        // if (aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
+        // writeCartesianLayout(view, w);
+        // }
         if (aspects.contains(Aspect.EDGES)) {
             writeEdges(view, w);
         }
@@ -365,8 +365,6 @@ public final class CxExporter {
             TimingUtil.reportTimeDifference(t0, "cartesian layout", elements.size());
         }
     }
-
-   
 
     private final static void writeVisualProperties(final CyNetworkView view,
                                                     final VisualMappingManager visual_mapping_manager,

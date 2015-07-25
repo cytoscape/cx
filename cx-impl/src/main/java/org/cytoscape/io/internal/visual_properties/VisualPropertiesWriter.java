@@ -22,6 +22,25 @@ import org.cytoscape.view.vizmap.VisualStyle;
 
 public final class VisualPropertiesWriter {
 
+    public final static String NESTED_NETWORK_VISIBLE = "nested_network_visible";
+    public final static String BORDER_TRANSPARENCY = "border_transparency";
+    public final static String BORDER_WIDTH = "border_width";
+    public final static String DEPTH = "depth";
+    public final static String LABEL = "label";
+    public final static String LABEL_TRANSPARENCY = "label_transparency";
+    public final static String LABEL_WIDTH = "label_width";
+    public final static String SELECTED = "selected";
+    public final static  String TOOLTIP = "tooltip";
+    public final static String                       SHAPE                  = "shape";
+    public final static String                       TRANSPARENCY           = "transparency";
+    public final static String                       VISIBLE                = "visible";
+    public final static String                       WIDTH                  = "width";
+    public final static String                       HEIGHT                 = "height";
+    public final static String                       Z_LOCATION             = "z_location";
+    public final static String                       Y_LOCATION             = "y_location";
+    public final static String                       X_LOCATION             = "x_location";
+    public final static String                       NODES                  = "nodes";
+
     @SuppressWarnings("rawtypes")
     final private static Map<VisualProperty, String> M                      = new HashMap<VisualProperty, String>();
 
@@ -85,49 +104,49 @@ public final class VisualPropertiesWriter {
         // Mappings for nodes:
         M.put(BasicVisualLexicon.NODE_BORDER_LINE_TYPE, "border_line_type");
         M.put(BasicVisualLexicon.NODE_BORDER_PAINT, "border_color");
-        M.put(BasicVisualLexicon.NODE_BORDER_TRANSPARENCY, "border_transparency");
-        M.put(BasicVisualLexicon.NODE_BORDER_WIDTH, "border_width");
-        M.put(BasicVisualLexicon.NODE_DEPTH, "depth");
+        M.put(BasicVisualLexicon.NODE_BORDER_TRANSPARENCY, BORDER_TRANSPARENCY);
+        M.put(BasicVisualLexicon.NODE_BORDER_WIDTH, BORDER_WIDTH);
+        M.put(BasicVisualLexicon.NODE_DEPTH, DEPTH);
         M.put(BasicVisualLexicon.NODE_FILL_COLOR, "fill_color");
-        M.put(BasicVisualLexicon.NODE_HEIGHT, "height");
-        M.put(BasicVisualLexicon.NODE_LABEL, "label");
+        M.put(BasicVisualLexicon.NODE_HEIGHT, HEIGHT);
+        M.put(BasicVisualLexicon.NODE_LABEL, LABEL);
         M.put(BasicVisualLexicon.NODE_LABEL_COLOR, "label_color");
         M.put(BasicVisualLexicon.NODE_LABEL_FONT_SIZE, "label_font_size");
-        M.put(BasicVisualLexicon.NODE_LABEL_TRANSPARENCY, "label_transparency");
-        M.put(BasicVisualLexicon.NODE_LABEL_WIDTH, "label_width");
-        M.put(BasicVisualLexicon.NODE_NESTED_NETWORK_IMAGE_VISIBLE, "nested_network_visible");
+        M.put(BasicVisualLexicon.NODE_LABEL_TRANSPARENCY, LABEL_TRANSPARENCY);
+        M.put(BasicVisualLexicon.NODE_LABEL_WIDTH, LABEL_WIDTH);
+        M.put(BasicVisualLexicon.NODE_NESTED_NETWORK_IMAGE_VISIBLE, NESTED_NETWORK_VISIBLE);
         M.put(BasicVisualLexicon.NODE_PAINT, "color");
-        M.put(BasicVisualLexicon.NODE_SELECTED, "selected");
+        M.put(BasicVisualLexicon.NODE_SELECTED, SELECTED);
         M.put(BasicVisualLexicon.NODE_SELECTED_PAINT, "selected_color");
-        M.put(BasicVisualLexicon.NODE_SHAPE, "shape");
+        M.put(BasicVisualLexicon.NODE_SHAPE, SHAPE);
         M.put(BasicVisualLexicon.NODE_SIZE, "size");
-        M.put(BasicVisualLexicon.NODE_TOOLTIP, "toolip");
-        M.put(BasicVisualLexicon.NODE_TRANSPARENCY, "transparency");
-        M.put(BasicVisualLexicon.NODE_VISIBLE, "visible");
-        M.put(BasicVisualLexicon.NODE_WIDTH, "width");
-        M.put(BasicVisualLexicon.NODE_X_LOCATION, "x_location");
-        M.put(BasicVisualLexicon.NODE_Y_LOCATION, "y_location");
-        M.put(BasicVisualLexicon.NODE_Z_LOCATION, "z_location");
+        M.put(BasicVisualLexicon.NODE_TOOLTIP, TOOLTIP);
+        M.put(BasicVisualLexicon.NODE_TRANSPARENCY, TRANSPARENCY);
+        M.put(BasicVisualLexicon.NODE_VISIBLE, VISIBLE);
+        M.put(BasicVisualLexicon.NODE_WIDTH, WIDTH);
+        M.put(BasicVisualLexicon.NODE_X_LOCATION, X_LOCATION);
+        M.put(BasicVisualLexicon.NODE_Y_LOCATION, Y_LOCATION);
+        M.put(BasicVisualLexicon.NODE_Z_LOCATION, Z_LOCATION);
 
         // Mappings for edges:
-        M.put(BasicVisualLexicon.EDGE_LABEL, "label");
+        M.put(BasicVisualLexicon.EDGE_LABEL, LABEL);
         M.put(BasicVisualLexicon.EDGE_LABEL_COLOR, "label_color");
         M.put(BasicVisualLexicon.EDGE_LABEL_FONT_SIZE, "label_font_size");
-        M.put(BasicVisualLexicon.EDGE_LABEL_TRANSPARENCY, "label_transparency");
-        M.put(BasicVisualLexicon.EDGE_LABEL_WIDTH, "label_width");
+        M.put(BasicVisualLexicon.EDGE_LABEL_TRANSPARENCY, LABEL_TRANSPARENCY);
+        M.put(BasicVisualLexicon.EDGE_LABEL_WIDTH, LABEL_WIDTH);
         M.put(BasicVisualLexicon.EDGE_LINE_TYPE, "line_type");
         M.put(BasicVisualLexicon.EDGE_PAINT, "color");
-        M.put(BasicVisualLexicon.EDGE_SELECTED, "selected");
+        M.put(BasicVisualLexicon.EDGE_SELECTED, SELECTED);
         M.put(BasicVisualLexicon.EDGE_SELECTED_PAINT, "selected_color");
         M.put(BasicVisualLexicon.EDGE_SOURCE_ARROW_SHAPE, "source_arrow_shape");
         M.put(BasicVisualLexicon.EDGE_STROKE_SELECTED_PAINT, "stroke_selected_color");
         M.put(BasicVisualLexicon.EDGE_STROKE_UNSELECTED_PAINT, "stroke_unselected_paint");
         M.put(BasicVisualLexicon.EDGE_TARGET_ARROW_SHAPE, "target_arrow_shape");
         M.put(BasicVisualLexicon.EDGE_TOOLTIP, "tooltip");
-        M.put(BasicVisualLexicon.EDGE_TRANSPARENCY, "transparency");
+        M.put(BasicVisualLexicon.EDGE_TRANSPARENCY, TRANSPARENCY);
         M.put(BasicVisualLexicon.EDGE_UNSELECTED_PAINT, "unselected_color");
-        M.put(BasicVisualLexicon.EDGE_VISIBLE, "visible");
-        M.put(BasicVisualLexicon.EDGE_WIDTH, "width");
+        M.put(BasicVisualLexicon.EDGE_VISIBLE, VISIBLE);
+        M.put(BasicVisualLexicon.EDGE_WIDTH, WIDTH);
         M.put(BasicVisualLexicon.EDGE_BEND, "bend");
 
     }
@@ -163,6 +182,7 @@ public final class VisualPropertiesWriter {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private final static void addProperties(final View view, final VisualProperty vp, final VisualPropertiesElement cvp) {
         final Object vp_value = view.getVisualProperty(vp);
+        
         if (vp_value != null) {
             if ((vp == BasicVisualLexicon.NODE_BORDER_PAINT) || (vp == BasicVisualLexicon.NODE_FILL_COLOR)
                     || (vp == BasicVisualLexicon.NODE_LABEL_COLOR) || (vp == BasicVisualLexicon.NODE_PAINT)
@@ -174,7 +194,7 @@ public final class VisualPropertiesWriter {
                 cvp.putProperty(obtainLabel(vp), processColor((Color) vp_value));
             }
             else if ((vp == BasicVisualLexicon.NODE_LABEL_FONT_FACE) || (vp == BasicVisualLexicon.EDGE_LABEL_FONT_FACE)) {
-                processFont(cvp, "label", (Font) vp_value);
+                processFont(cvp, LABEL, (Font) vp_value);
             }
             else {
                 final String value_str = String.valueOf(vp_value);
@@ -201,7 +221,7 @@ public final class VisualPropertiesWriter {
                 cvp.putProperty(obtainLabel(vp), processColor((Color) vp_value));
             }
             else if ((vp == BasicVisualLexicon.NODE_LABEL_FONT_FACE) || (vp == BasicVisualLexicon.EDGE_LABEL_FONT_FACE)) {
-                processFont(cvp, "label", (Font) vp_value);
+                processFont(cvp, LABEL, (Font) vp_value);
             }
             else {
                 final String value_str = String.valueOf(vp_value);
@@ -243,7 +263,7 @@ public final class VisualPropertiesWriter {
 
         for (final CyNode cy_node : network.getNodeList()) {
             final View<CyNode> node_view = view.getNodeView(cy_node);
-            final VisualPropertiesElement node_cxvp = new VisualPropertiesElement("nodes");
+            final VisualPropertiesElement node_cxvp = new VisualPropertiesElement(NODES);
             node_cxvp.addAppliesTo(String.valueOf(cy_node.getSUID()));
             for (final VisualProperty visual_property : VisualPropertiesWriter.NODE_VISUAL_PROPERTIES) {
                 addProperties(node_view, visual_property, node_cxvp);
@@ -272,12 +292,12 @@ public final class VisualPropertiesWriter {
                         String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_CENTER_Y_LOCATION)));
         cvp.putProperty("center_z_location",
                         String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_CENTER_Z_LOCATION)));
-        cvp.putProperty("depth", String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_DEPTH)));
-        cvp.putProperty("height", String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_HEIGHT)));
+        cvp.putProperty(DEPTH, String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_DEPTH)));
+        cvp.putProperty(HEIGHT, String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_HEIGHT)));
         cvp.putProperty("scale_factor", String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_SCALE_FACTOR)));
         cvp.putProperty("size", String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_SIZE)));
         cvp.putProperty("title", String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_TITLE)));
-        cvp.putProperty("width", String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_WIDTH)));
+        cvp.putProperty(WIDTH, String.valueOf(view.getVisualProperty(BasicVisualLexicon.NETWORK_WIDTH)));
         visual_properties.add(cvp);
 
     }

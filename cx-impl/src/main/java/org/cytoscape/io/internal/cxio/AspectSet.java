@@ -6,17 +6,16 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.cxio.aspects.readers.CartesianLayoutFragmentReader;
 import org.cxio.aspects.readers.EdgeAttributesFragmentReader;
 import org.cxio.aspects.readers.EdgesFragmentReader;
 import org.cxio.aspects.readers.NodeAttributesFragmentReader;
 import org.cxio.aspects.readers.NodesFragmentReader;
-import org.cxio.aspects.writers.CartesianLayoutFragmentWriter;
-import org.cxio.aspects.writers.VisualPropertiesFragmentWriter;
+import org.cxio.aspects.readers.VisualPropertiesFragmentReader;
 import org.cxio.aspects.writers.EdgeAttributesFragmentWriter;
 import org.cxio.aspects.writers.EdgesFragmentWriter;
 import org.cxio.aspects.writers.NodeAttributesFragmentWriter;
 import org.cxio.aspects.writers.NodesFragmentWriter;
+import org.cxio.aspects.writers.VisualPropertiesFragmentWriter;
 import org.cxio.core.interfaces.AspectFragmentReader;
 import org.cxio.core.interfaces.AspectFragmentWriter;
 
@@ -73,9 +72,9 @@ public final class AspectSet {
 
     final Set<AspectFragmentWriter> getAspectFragmentWriters() {
         final Set<AspectFragmentWriter> writers = new HashSet<AspectFragmentWriter>();
-        if (_aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
-            writers.add(CartesianLayoutFragmentWriter.createInstance());
-        }
+        // if (_aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
+        // writers.add(CartesianLayoutFragmentWriter.createInstance());
+        // }
         if (_aspects.contains(Aspect.EDGE_ATTRIBUTES)) {
             writers.add(EdgeAttributesFragmentWriter.createInstance());
         }
@@ -96,9 +95,9 @@ public final class AspectSet {
 
     final Set<AspectFragmentReader> getAspectFragmentReaders() {
         final Set<AspectFragmentReader> readers = new HashSet<AspectFragmentReader>();
-        if (_aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
-            readers.add(CartesianLayoutFragmentReader.createInstance());
-        }
+        // if (_aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
+        // readers.add(CartesianLayoutFragmentReader.createInstance());
+        // }
         if (_aspects.contains(Aspect.EDGE_ATTRIBUTES)) {
             readers.add(EdgeAttributesFragmentReader.createInstance());
         }
@@ -110,6 +109,9 @@ public final class AspectSet {
         }
         if (_aspects.contains(Aspect.NODES)) {
             readers.add(NodesFragmentReader.createInstance());
+        }
+        if (_aspects.contains(Aspect.VISUAL_PROPERTIES)) {
+            readers.add(VisualPropertiesFragmentReader.createInstance());
         }
         return readers;
     }

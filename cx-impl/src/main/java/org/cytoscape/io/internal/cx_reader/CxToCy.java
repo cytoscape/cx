@@ -14,7 +14,9 @@ import org.cxio.aspects.datamodels.EdgeAttributesElement;
 import org.cxio.aspects.datamodels.EdgesElement;
 import org.cxio.aspects.datamodels.NodeAttributesElement;
 import org.cxio.aspects.datamodels.NodesElement;
+import org.cxio.aspects.datamodels.VisualPropertiesElement;
 import org.cxio.core.interfaces.AspectElement;
+import org.cytoscape.io.internal.visual_properties.VisualPropertiesWriter;
 import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyIdentifiable;
@@ -26,7 +28,9 @@ import org.cytoscape.model.subnetwork.CySubNetwork;
 
 public final class CxToCy {
 
-    private Map<CyNode, Double[]> position_map;
+    private Map<CyNode, Double[]>                position_map;
+    private Map<CyNode, VisualPropertiesElement> node_vpe_map;
+    private Map<String, VisualPropertiesElement> edge_vpe_map;
 
     public final CyNetwork createNetwork(final SortedMap<String, List<AspectElement>> res,
                                          final CyNetwork network,
@@ -34,12 +38,18 @@ public final class CxToCy {
 
         final List<AspectElement> nodes = res.get(NodesElement.NAME);
         final List<AspectElement> edges = res.get(EdgesElement.NAME);
-        final List<AspectElement> layout = res.get(CartesianLayoutElement.NAME);
+        // final List<AspectElement> layout =
+        // res.get(CartesianLayoutElement.NAME);
         final List<AspectElement> node_attributes = res.get(NodeAttributesElement.NAME);
         final List<AspectElement> edge_attributes = res.get(EdgeAttributesElement.NAME);
+        final List<AspectElement> visual_properties = res.get(VisualPropertiesElement.NAME);
 
         final Map<String, NodeAttributesElement> node_attributes_map = new HashMap<String, NodeAttributesElement>();
         final Map<String, EdgeAttributesElement> edge_attributes_map = new HashMap<String, EdgeAttributesElement>();
+
+        if ((nodes == null) || nodes.isEmpty()) {
+            throw new IOException("no nodes in input");
+        }
 
         if (node_attributes != null) {
             for (final AspectElement node_attribute : node_attributes) {
@@ -55,16 +65,38 @@ public final class CxToCy {
             }
         }
 
-        if ((nodes == null) || nodes.isEmpty()) {
-            throw new IOException("no nodes in input");
-        }
-
         position_map = new HashMap<CyNode, Double[]>();
         final Map<String, CyNode> nodeMap = addNodes(network, nodes, node_attributes_map);
+
         addEdges(network, edges, nodeMap, edge_attributes_map);
-        if ((layout != null) && !layout.isEmpty()) {
-            addPositions(layout, nodeMap);
+
+        if (visual_properties != null) {
+            node_vpe_map = new HashMap<CyNode, VisualPropertiesElement>();
+            for (final AspectElement element : visual_properties) {
+                final VisualPropertiesElement vpe = (VisualPropertiesElement) element;
+                if (vpe.getPropertiesOf().equals(VisualPropertiesWriter.NODES)) {
+                    final List<String> applies_to_nodes = vpe.getAppliesTo();
+                    for (final String applies_to_node : applies_to_nodes) {
+                        node_vpe_map.put(nodeMap.get(applies_to_node), vpe);
+                    }
+                }
+            }
+            edge_vpe_map = new HashMap<String, VisualPropertiesElement>();
+            // for (final AspectElement element : visual_properties) {
+            // final VisualPropertiesElement vpe = (VisualPropertiesElement)
+            // element;
+            // if ( vpe.getPropertiesOf().equals("edges") ) {
+            // List<String> applies_to_edges = vpe.getAppliesTo();
+            // for (String applies_to_node : applies_to_edges) {
+            // edge_vpe_map.put(applies_to_node, vpe);
+            // }
+            // }
+            // }
         }
+
+        // if ((layout != null) && !layout.isEmpty()) {
+        // addPositions(layout, nodeMap);
+        // }
 
         if (collectionName != null) {
             final CyRootNetwork rootNetwork = ((CySubNetwork) network).getRootNetwork();
@@ -266,5 +298,9 @@ public final class CxToCy {
 
     public Map<CyNode, Double[]> getNodePosition() {
         return position_map;
+    }
+
+    public Map<CyNode, VisualPropertiesElement> getNodeVisualPropertiesElementsMap() {
+        return node_vpe_map;
     }
 }
