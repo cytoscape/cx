@@ -24,25 +24,25 @@ public class CxNetworkViewWriter implements CyWriter {
 
     private final static Logger        logger   = LoggerFactory.getLogger(CxNetworkViewWriter.class);
     private final static String        ENCODING = "UTF-8";
-    private final OutputStream         os;
-    private final CyNetworkView        network_view;
-    private final CharsetEncoder       encoder;
-    private final VisualMappingManager visual_mapping_manager;
-    private final VisualLexicon        lexicon;
+    private final OutputStream         _os;
+    private final CyNetworkView        _network_view;
+    private final CharsetEncoder       _encoder;
+    private final VisualMappingManager _visual_mapping_manager;
+    private final VisualLexicon        _lexicon;
 
     public CxNetworkViewWriter(final OutputStream os, final CyNetworkView network_view) {
-        this.os = os;
-        this.network_view = network_view;
-        this.visual_mapping_manager = null;
-        this.lexicon = null;
+        _os = os;
+        _network_view = network_view;
+        _visual_mapping_manager = null;
+        _lexicon = null;
         if (Charset.isSupported(ENCODING)) {
             // UTF-8 is supported by system
-            this.encoder = Charset.forName(ENCODING).newEncoder();
+            _encoder = Charset.forName(ENCODING).newEncoder();
         }
         else {
             // Use default.
             logger.warn("UTF-8 is not supported by this system.  This can be a problem for non-English annotations.");
-            this.encoder = Charset.defaultCharset().newEncoder();
+            _encoder = Charset.defaultCharset().newEncoder();
         }
     }
 
@@ -50,18 +50,18 @@ public class CxNetworkViewWriter implements CyWriter {
                                final CyNetworkView network_view,
                                final VisualMappingManager visual_mapping_manager,
                                final VisualLexicon lexicon) {
-        this.os = os;
-        this.network_view = network_view;
-        this.visual_mapping_manager = visual_mapping_manager;
-        this.lexicon = lexicon;
+        _os = os;
+        _network_view = network_view;
+        _visual_mapping_manager = visual_mapping_manager;
+        _lexicon = lexicon;
         if (Charset.isSupported(ENCODING)) {
             // UTF-8 is supported by system
-            this.encoder = Charset.forName(ENCODING).newEncoder();
+            _encoder = Charset.forName(ENCODING).newEncoder();
         }
         else {
             // Use default.
             logger.warn("UTF-8 is not supported by this system.  This can be a problem for non-English annotations.");
-            this.encoder = Charset.defaultCharset().newEncoder();
+            _encoder = Charset.defaultCharset().newEncoder();
         }
     }
 
@@ -73,7 +73,7 @@ public class CxNetworkViewWriter implements CyWriter {
             taskMonitor.setStatusMessage("Exporting current network view as CX...");
         }
 
-        System.out.println("Encoding = " + encoder.charset());
+        System.out.println("Encoding = " + _encoder.charset());
 
         final AspectSet aspects = new AspectSet();
         aspects.addAspect(Aspect.NODES);
@@ -96,19 +96,19 @@ public class CxNetworkViewWriter implements CyWriter {
         // filters.add(ea_filter);
 
         final CxExporter exporter = CxExporter.createInstance();
-        exporter.setLexicon(lexicon);
-        exporter.setVisualMappingManager(visual_mapping_manager);
+        exporter.setLexicon(_lexicon);
+        exporter.setVisualMappingManager(_visual_mapping_manager);
         exporter.setUseDefaultPrettyPrinting(true);
         final long t0 = System.currentTimeMillis();
         if (TimingUtil.WRITE_TO_DEV_NULL) {
-            exporter.writeCX(network_view, aspects, new FileOutputStream(new File("/dev/null")));
+            exporter.writeCX(_network_view, aspects, new FileOutputStream(new File("/dev/null")));
         }
         else if (TimingUtil.WRITE_TO_BYTE_ARRAY_OUTPUTSTREAM) {
-            exporter.writeCX(network_view, aspects, new ByteArrayOutputStream());
+            exporter.writeCX(_network_view, aspects, new ByteArrayOutputStream());
         }
         else {
-            exporter.writeCX(network_view, aspects, os);
-            os.close();
+            exporter.writeCX(_network_view, aspects, _os);
+            _os.close();
         }
 
         if (TimingUtil.TIMING) {
@@ -118,12 +118,12 @@ public class CxNetworkViewWriter implements CyWriter {
 
     @Override
     public void cancel() {
-        if (os == null) {
+        if (_os == null) {
             return;
         }
 
         try {
-            os.close();
+            _os.close();
         }
         catch (final IOException e) {
             logger.error("Could not close Outputstream for CxNetworkViewWriter.", e);

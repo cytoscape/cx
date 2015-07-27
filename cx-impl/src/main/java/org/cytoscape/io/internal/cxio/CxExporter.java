@@ -245,9 +245,6 @@ public final class CxExporter {
         if (aspects.contains(Aspect.NODES)) {
             writeNodes(view, w);
         }
-        // if (aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
-        // writeCartesianLayout(view, w);
-        // }
         if (aspects.contains(Aspect.EDGES)) {
             writeEdges(view, w);
         }
@@ -258,7 +255,7 @@ public final class CxExporter {
             writeEdgeAttributes(view, w);
         }
         if (aspects.contains(Aspect.VISUAL_PROPERTIES)) {
-            writeVisualProperties(view, _visual_mapping_manager, w);
+            writeVisualProperties(view, _visual_mapping_manager, _lexicon, w);
         }
 
         w.end();
@@ -300,9 +297,6 @@ public final class CxExporter {
         if (aspects.contains(Aspect.NODES)) {
             writeNodes(view, w);
         }
-        // if (aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
-        // writeCartesianLayout(view, w);
-        // }
         if (aspects.contains(Aspect.EDGES)) {
             writeEdges(view, w);
         }
@@ -313,7 +307,7 @@ public final class CxExporter {
             writeEdgeAttributes(view, w);
         }
         if (aspects.contains(Aspect.VISUAL_PROPERTIES)) {
-            writeVisualProperties(view, _visual_mapping_manager, w);
+            writeVisualProperties(view, _visual_mapping_manager, _lexicon, w);
         }
 
         w.end();
@@ -368,10 +362,11 @@ public final class CxExporter {
 
     private final static void writeVisualProperties(final CyNetworkView view,
                                                     final VisualMappingManager visual_mapping_manager,
+                                                    final VisualLexicon lexicon,
                                                     final CxWriter w) throws IOException {
         final CyNetwork network = view.getModel();
         final List<AspectElement> elements = new ArrayList<AspectElement>();
-        VisualPropertiesWriter.obtainVisualProperties(view, network, visual_mapping_manager, elements);
+        VisualPropertiesWriter.obtainVisualProperties(view, network, visual_mapping_manager, lexicon, elements);
 
         final long t0 = System.currentTimeMillis();
         w.writeAspectElements(elements);

@@ -28,9 +28,9 @@ import org.cytoscape.model.subnetwork.CySubNetwork;
 
 public final class CxToCy {
 
-    private Map<CyNode, Double[]>                position_map;
-    private Map<CyNode, VisualPropertiesElement> node_vpe_map;
-    private Map<String, VisualPropertiesElement> edge_vpe_map;
+    private Map<CyNode, Double[]>                _position_map;
+    private Map<CyNode, VisualPropertiesElement> _node_vpe_map;
+    private Map<CyEdge, VisualPropertiesElement> _edge_vpe_map;
 
     public final CyNetwork createNetwork(final SortedMap<String, List<AspectElement>> res,
                                          final CyNetwork network,
@@ -65,23 +65,30 @@ public final class CxToCy {
             }
         }
 
-        position_map = new HashMap<CyNode, Double[]>();
-        final Map<String, CyNode> nodeMap = addNodes(network, nodes, node_attributes_map);
+        _position_map = new HashMap<CyNode, Double[]>();
+        final Map<String, CyNode> node_map = addNodes(network, nodes, node_attributes_map);
 
-        addEdges(network, edges, nodeMap, edge_attributes_map);
+        final Map<String, CyEdge> edge_map = addEdges(network, edges, node_map, edge_attributes_map);
 
         if (visual_properties != null) {
-            node_vpe_map = new HashMap<CyNode, VisualPropertiesElement>();
+            _node_vpe_map = new HashMap<CyNode, VisualPropertiesElement>();
+            _edge_vpe_map = new HashMap<CyEdge, VisualPropertiesElement>();
             for (final AspectElement element : visual_properties) {
                 final VisualPropertiesElement vpe = (VisualPropertiesElement) element;
                 if (vpe.getPropertiesOf().equals(VisualPropertiesWriter.NODES)) {
                     final List<String> applies_to_nodes = vpe.getAppliesTo();
                     for (final String applies_to_node : applies_to_nodes) {
-                        node_vpe_map.put(nodeMap.get(applies_to_node), vpe);
+                        _node_vpe_map.put(node_map.get(applies_to_node), vpe);
+                    }
+                }
+                else if (vpe.getPropertiesOf().equals(VisualPropertiesWriter.EDGES)) {
+                    final List<String> applies_to_edges = vpe.getAppliesTo();
+                    for (final String applies_to_edge : applies_to_edges) {
+                        _edge_vpe_map.put(edge_map.get(applies_to_edge), vpe);
                     }
                 }
             }
-            edge_vpe_map = new HashMap<String, VisualPropertiesElement>();
+            
             // for (final AspectElement element : visual_properties) {
             // final VisualPropertiesElement vpe = (VisualPropertiesElement)
             // element;
@@ -246,7 +253,7 @@ public final class CxToCy {
     private final void addPositions(final List<AspectElement> layout, final Map<String, CyNode> node_map) {
         for (final AspectElement ae : layout) {
             final CartesianLayoutElement cle = (CartesianLayoutElement) ae;
-            position_map.put(node_map.get(cle.getNode()),
+            _position_map.put(node_map.get(cle.getNode()),
                              new Double[] { Double.valueOf(cle.getX()), Double.valueOf(cle.getY()) });
         }
     }
@@ -255,52 +262,58 @@ public final class CxToCy {
                                                final List<AspectElement> nodes,
                                                final Map<String, NodeAttributesElement> node_attributes_map) {
 
-        final Map<String, CyNode> nodeMap = new HashMap<String, CyNode>();
+        final Map<String, CyNode> node_map = new HashMap<String, CyNode>();
 
-        final CyTable nodeTable = network.getDefaultNodeTable();
+        final CyTable node_table = network.getDefaultNodeTable();
 
         for (final AspectElement node : nodes) {
-
             final String node_id = ((NodesElement) node).getId();
-            CyNode cyNode = nodeMap.get(node_id);
+            CyNode cyNode = node_map.get(node_id);
             if (cyNode == null) {
                 cyNode = network.addNode();
-
                 // Use ID as unique name.
                 network.getRow(cyNode).set(CyNetwork.NAME, node_id);
-                nodeMap.put(node_id, cyNode);
+                node_map.put(node_id, cyNode);
                 if ((node_attributes_map != null) && !node_attributes_map.isEmpty()) {
-                    addTableData(node_attributes_map.get(node_id), cyNode, network, nodeTable);
+                    addTableData(node_attributes_map.get(node_id), cyNode, network, node_table);
                 }
             }
-
         }
-        return nodeMap;
+        return node_map;
     }
+    
+   
 
-    private final void addEdges(final CyNetwork network,
+    private final Map<String, CyEdge> addEdges(final CyNetwork network,
                                 final List<AspectElement> edges,
                                 final Map<String, CyNode> nodeMap,
                                 final Map<String, EdgeAttributesElement> edge_attributes_map) {
 
         final CyTable edgeTable = network.getDefaultEdgeTable();
-
+        final Map<String, CyEdge> edge_map = new HashMap<String, CyEdge>();
         for (final AspectElement edge : edges) {
             final EdgesElement e = (EdgesElement) edge;
+           
             final CyNode sourceNode = nodeMap.get(e.getSource());
             final CyNode targetNode = nodeMap.get(e.getTarget());
             final CyEdge newEdge = network.addEdge(sourceNode, targetNode, true);
+            edge_map.put(e.getId(),newEdge );
             if ((edge_attributes_map != null) && !edge_attributes_map.isEmpty()) {
                 addTableData(edge_attributes_map.get(e.getId()), newEdge, network, edgeTable);
             }
         }
+        return edge_map;
     }
 
     public Map<CyNode, Double[]> getNodePosition() {
-        return position_map;
+        return _position_map;
     }
 
     public Map<CyNode, VisualPropertiesElement> getNodeVisualPropertiesElementsMap() {
-        return node_vpe_map;
+        return _node_vpe_map;
+    }
+    
+    public Map<CyEdge, VisualPropertiesElement> getEdgeVisualPropertiesElementsMap() {
+        return _edge_vpe_map;
     }
 }

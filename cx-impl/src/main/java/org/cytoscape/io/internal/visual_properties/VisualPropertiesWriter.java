@@ -15,6 +15,7 @@ import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.View;
+import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.model.VisualProperty;
 import org.cytoscape.view.presentation.property.BasicVisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingManager;
@@ -22,15 +23,15 @@ import org.cytoscape.view.vizmap.VisualStyle;
 
 public final class VisualPropertiesWriter {
 
-    public final static String NESTED_NETWORK_VISIBLE = "nested_network_visible";
-    public final static String BORDER_TRANSPARENCY = "border_transparency";
-    public final static String BORDER_WIDTH = "border_width";
-    public final static String DEPTH = "depth";
-    public final static String LABEL = "label";
-    public final static String LABEL_TRANSPARENCY = "label_transparency";
-    public final static String LABEL_WIDTH = "label_width";
-    public final static String SELECTED = "selected";
-    public final static  String TOOLTIP = "tooltip";
+    public final static String                       NESTED_NETWORK_VISIBLE = "nested_network_visible";
+    public final static String                       BORDER_TRANSPARENCY    = "border_transparency";
+    public final static String                       BORDER_WIDTH           = "border_width";
+    public final static String                       DEPTH                  = "depth";
+    public final static String                       LABEL                  = "label";
+    public final static String                       LABEL_TRANSPARENCY     = "label_transparency";
+    public final static String                       LABEL_WIDTH            = "label_width";
+    public final static String                       SELECTED               = "selected";
+    public final static String                       TOOLTIP                = "tooltip";
     public final static String                       SHAPE                  = "shape";
     public final static String                       TRANSPARENCY           = "transparency";
     public final static String                       VISIBLE                = "visible";
@@ -40,6 +41,7 @@ public final class VisualPropertiesWriter {
     public final static String                       Y_LOCATION             = "y_location";
     public final static String                       X_LOCATION             = "x_location";
     public final static String                       NODES                  = "nodes";
+    public final static String                       EDGES                  = "edges";
 
     @SuppressWarnings("rawtypes")
     final private static Map<VisualProperty, String> M                      = new HashMap<VisualProperty, String>();
@@ -180,29 +182,44 @@ public final class VisualPropertiesWriter {
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    private final static void addProperties(final View view, final VisualProperty vp, final VisualPropertiesElement cvp) {
+    private final static void addProperties(final View view,
+                                            final VisualProperty vp,
+                                            final VisualLexicon lexicon,
+                                            final VisualPropertiesElement cvp) {
         final Object vp_value = view.getVisualProperty(vp);
-        
+
         if (vp_value != null) {
-            if ((vp == BasicVisualLexicon.NODE_BORDER_PAINT) || (vp == BasicVisualLexicon.NODE_FILL_COLOR)
-                    || (vp == BasicVisualLexicon.NODE_LABEL_COLOR) || (vp == BasicVisualLexicon.NODE_PAINT)
-                    || (vp == BasicVisualLexicon.NODE_SELECTED_PAINT) || (vp == BasicVisualLexicon.EDGE_LABEL_COLOR)
-                    || (vp == BasicVisualLexicon.EDGE_PAINT) || (vp == BasicVisualLexicon.EDGE_SELECTED_PAINT)
-                    || (vp == BasicVisualLexicon.EDGE_STROKE_SELECTED_PAINT)
-                    || (vp == BasicVisualLexicon.EDGE_STROKE_UNSELECTED_PAINT)
-                    || (vp == BasicVisualLexicon.EDGE_UNSELECTED_PAINT)) {
-                cvp.putProperty(obtainLabel(vp), processColor((Color) vp_value));
-            }
-            else if ((vp == BasicVisualLexicon.NODE_LABEL_FONT_FACE) || (vp == BasicVisualLexicon.EDGE_LABEL_FONT_FACE)) {
-                processFont(cvp, LABEL, (Font) vp_value);
-            }
-            else {
-                final String value_str = String.valueOf(vp_value);
-                if (!Util.isEmpty(value_str)) {
-                    cvp.putProperty(obtainLabel(vp), value_str);
-                }
+            // if ((vp == BasicVisualLexicon.NODE_BORDER_PAINT) || (vp ==
+            // BasicVisualLexicon.NODE_FILL_COLOR)
+            // || (vp == BasicVisualLexicon.NODE_LABEL_COLOR) || (vp ==
+            // BasicVisualLexicon.NODE_PAINT)
+            // || (vp == BasicVisualLexicon.NODE_SELECTED_PAINT) || (vp ==
+            // BasicVisualLexicon.EDGE_LABEL_COLOR)
+            // || (vp == BasicVisualLexicon.EDGE_PAINT) || (vp ==
+            // BasicVisualLexicon.EDGE_SELECTED_PAINT)
+            // || (vp == BasicVisualLexicon.EDGE_STROKE_SELECTED_PAINT)
+            // || (vp == BasicVisualLexicon.EDGE_STROKE_UNSELECTED_PAINT)
+            // || (vp == BasicVisualLexicon.EDGE_UNSELECTED_PAINT)) {
+            // cvp.putProperty(obtainLabel(vp), processColor((Color) vp_value));
+            //
+            // }
+            // if ((vp == BasicVisualLexicon.NODE_LABEL_FONT_FACE) || (vp ==
+            // BasicVisualLexicon.EDGE_LABEL_FONT_FACE)) {
+            // processFont(cvp, LABEL, (Font) vp_value);
+            // }
+            // else {
+
+            // final VisualProperty vpl = lexicon.lookup(CyNode.class,
+            // BasicVisualLexicon.NODE_SHAPE.getIdString());
+
+            final String value_str = vp.toSerializableString(vp_value);
+
+            // final String value_str = String.valueOf(vp_value);
+            if (!Util.isEmpty(value_str)) {
+                cvp.putProperty(vp.getIdString(), value_str);
             }
         }
+        // }
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -245,6 +262,7 @@ public final class VisualPropertiesWriter {
     public static final void obtainVisualProperties(final CyNetworkView view,
                                                     final CyNetwork network,
                                                     final VisualMappingManager visual_mapping_manager,
+                                                    final VisualLexicon lexicon,
                                                     final List<AspectElement> visual_properties) {
 
         final VisualStyle current_visual_style = visual_mapping_manager.getVisualStyle(view);
@@ -266,7 +284,7 @@ public final class VisualPropertiesWriter {
             final VisualPropertiesElement node_cxvp = new VisualPropertiesElement(NODES);
             node_cxvp.addAppliesTo(String.valueOf(cy_node.getSUID()));
             for (final VisualProperty visual_property : VisualPropertiesWriter.NODE_VISUAL_PROPERTIES) {
-                addProperties(node_view, visual_property, node_cxvp);
+                addProperties(node_view, visual_property, lexicon, node_cxvp);
             }
             visual_properties.add(node_cxvp);
         }
@@ -277,7 +295,7 @@ public final class VisualPropertiesWriter {
 
             edge_cxvp.addAppliesTo(String.valueOf(edge.getSUID()));
             for (final VisualProperty visual_property : VisualPropertiesWriter.EDGE_VISUAL_PROPERTIES) {
-                addProperties(edge_view, visual_property, edge_cxvp);
+                addProperties(edge_view, visual_property, lexicon, edge_cxvp);
             }
             visual_properties.add(edge_cxvp);
         }
