@@ -17,8 +17,8 @@ import org.cxio.aspects.datamodels.VisualPropertiesElement;
 public enum Aspect {
 
     NODES(NodesElement.NAME), EDGES(EdgesElement.NAME), EDGE_ATTRIBUTES(EdgeAttributesElement.NAME), NODE_ATTRIBUTES(
-                                                                                                                     NodeAttributesElement.NAME), CARTESIAN_LAYOUT(CartesianLayoutElement.NAME), VISUAL_PROPERTIES(
-                                                                                                                                                                                                                   VisualPropertiesElement.NAME);
+            NodeAttributesElement.NAME), CARTESIAN_LAYOUT(CartesianLayoutElement.NAME), VISUAL_PROPERTIES(
+            VisualPropertiesElement.NAME);
 
     private final String _s;
 

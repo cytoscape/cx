@@ -31,7 +31,7 @@ public final class VisualPropertiesWriter {
 
         if (vp_value != null) {
             final String value_str = vp.toSerializableString(vp_value);
-            if (Util.isEmpty(value_str)) {
+            if (!Util.isEmpty(value_str)) {
                 final String id_string = vp.getIdString();
                 if (id_string.startsWith("NODE_CUSTOM") || id_string.equals("NODE") || id_string.equals("EDGE")
                         || id_string.equals("NETWORK")) { // TODO //FIXME
@@ -52,9 +52,14 @@ public final class VisualPropertiesWriter {
 
         if (vp_value != null) {
             final String value_str = vp.toSerializableString(vp_value);
-
-            if (value_str != null) {
-                cvp.putProperty(vp.getIdString(), value_str);
+            if (!Util.isEmpty(value_str)) {
+                final String id_string = vp.getIdString();
+                if (id_string.startsWith("NODE_CUSTOM") || id_string.equals("NODE") || id_string.equals("EDGE")
+                        || id_string.equals("NETWORK")) { // TODO //FIXME
+                }
+                else {
+                    cvp.putProperty(id_string, value_str);
+                }
             }
         }
     }

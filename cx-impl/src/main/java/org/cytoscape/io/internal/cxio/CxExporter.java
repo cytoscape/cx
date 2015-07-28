@@ -349,8 +349,8 @@ public final class CxExporter {
         for (final CyNode cy_node : network.getNodeList()) {
             final View<CyNode> node_view = view.getNodeView(cy_node);
             elements.add(new CartesianLayoutElement(cy_node.getSUID(), node_view
-                    .getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
-                    .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION)));
+                                                    .getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
+                                                    .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION)));
 
         }
         final long t0 = System.currentTimeMillis();
