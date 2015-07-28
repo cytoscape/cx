@@ -366,7 +366,7 @@ public final class CxExporter {
                                                     final CxWriter w) throws IOException {
         final CyNetwork network = view.getModel();
         final List<AspectElement> elements = new ArrayList<AspectElement>();
-        VisualPropertiesWriter.obtainVisualProperties(view, network, visual_mapping_manager, lexicon, elements);
+        VisualPropertiesWriter.gatherVisualProperties(view, network, visual_mapping_manager, lexicon, elements);
 
         final long t0 = System.currentTimeMillis();
         w.writeAspectElements(elements);

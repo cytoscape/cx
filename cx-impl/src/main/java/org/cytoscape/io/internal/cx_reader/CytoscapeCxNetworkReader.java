@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.cxio.aspects.datamodels.VisualPropertiesElement;
 import org.cxio.core.CxReader;
@@ -30,6 +32,7 @@ import org.cytoscape.view.model.View;
 import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.model.VisualProperty;
 import org.cytoscape.view.presentation.RenderingEngineManager;
+import org.cytoscape.view.presentation.property.BasicVisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.work.TaskMonitor;
 import org.cytoscape.work.util.ListSingleSelection;
@@ -77,45 +80,60 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     @Override
     public CyNetworkView buildCyNetworkView(final CyNetwork network) {
         final CyNetworkView view = getNetworkViewFactory().createNetworkView(network);
-
         final VisualLexicon lexicon = _rendering_engine_manager.getDefaultVisualLexicon();
+
+        setProperties(lexicon, _cx_to_cy.getNetworkVisualPropertiesElement().getProperties(), view, CyNetwork.class);
+
         final Map<CyNode, VisualPropertiesElement> node_vpe = _cx_to_cy.getNodeVisualPropertiesElementsMap();
         for (final CyNode node : node_vpe.keySet()) {
-            final VisualPropertiesElement vpe = node_vpe.get(node);
-            final SortedMap<String, String> props = vpe.getProperties();
-            final View<CyNode> node_view = view.getNodeView(node);
-            for (final Map.Entry<String, String> entry : props.entrySet()) {
-                final String key = entry.getKey();
-                final String value = entry.getValue();
-                final VisualProperty vp = lexicon.lookup(CyNode.class, key);
-                if (vp != null) {
-                    final Object parsed_value = vp.parseSerializableString(value);
-                    if (parsed_value != null) {
-                        node_view.setLockedValue(vp, parsed_value);
-                    }
-                }
-            }
+            setProperties(lexicon, node_vpe.get(node).getProperties(), view.getNodeView(node), CyNode.class);
         }
 
         final Map<CyEdge, VisualPropertiesElement> edge_vpe = _cx_to_cy.getEdgeVisualPropertiesElementsMap();
         for (final CyEdge edge : edge_vpe.keySet()) {
-            final VisualPropertiesElement vpe = edge_vpe.get(edge);
-            final SortedMap<String, String> props = vpe.getProperties();
-            final View<CyEdge> edge_view = view.getEdgeView(edge);
-            for (final Map.Entry<String, String> entry : props.entrySet()) {
-                final String key = entry.getKey();
-                final String value = entry.getValue();
-                final VisualProperty vp = lexicon.lookup(CyEdge.class, key);
-                if (vp != null) {
-                    final Object parsed_value = vp.parseSerializableString(value);
-                    if (parsed_value != null) {
-                        edge_view.setLockedValue(vp, parsed_value);
+            setProperties(lexicon, edge_vpe.get(edge).getProperties(), view.getEdgeView(edge), CyEdge.class);
+        }
+
+        return view;
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private final static void setProperties(final VisualLexicon lexicon,
+                                            final SortedMap<String, String> props,
+                                            final View view,
+                                            final Class my_class) {
+        for (final Map.Entry<String, String> entry : props.entrySet()) {
+            final VisualProperty vp = lexicon.lookup(my_class, entry.getKey());
+            if (vp != null) {
+                final Object parsed_value = vp.parseSerializableString(entry.getValue());
+                if (parsed_value != null) {
+                    if (shouldSetAsLocked(vp)) {
+                        view.setLockedValue(vp, parsed_value);
+                    }
+                    else {
+                        view.setVisualProperty(vp, parsed_value);
                     }
                 }
             }
         }
+    }
 
-        return view;
+    private static final Pattern DIRECT_NET_PROPS_PATTERN = Pattern
+            .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
+
+    @SuppressWarnings("rawtypes")
+    private final static boolean shouldSetAsLocked(final VisualProperty vp) {
+        if (vp.getTargetDataType() == CyNode.class) {
+            if ((vp == BasicVisualLexicon.NODE_X_LOCATION) || (vp == BasicVisualLexicon.NODE_Y_LOCATION)
+                    || (vp == BasicVisualLexicon.NODE_Z_LOCATION)) {
+                return false;
+            }
+        }
+        else if (vp.getTargetDataType() == CyNetwork.class) { // TODO //FIXME
+            final Matcher netMatcher = DIRECT_NET_PROPS_PATTERN.matcher(vp.getIdString());
+            return !netMatcher.matches();
+        }
+        return true;
     }
 
     @Override

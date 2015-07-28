@@ -15,11 +15,11 @@ import org.cytoscape.work.TaskIterator;
 
 public class CytoscapeCxNetworkReaderFactory extends AbstractInputStreamTaskFactory {
 
-    private final CyApplicationManager cyApplicationManager;
-    protected final CyNetworkFactory   cyNetworkFactory;
-    private final CyNetworkManager     cyNetworkManager;
-    private final CyRootNetworkManager cyRootNetworkManager;
-    private final VisualMappingManager _visual_mapping_manager;
+    private final CyApplicationManager   cyApplicationManager;
+    protected final CyNetworkFactory     cyNetworkFactory;
+    private final CyNetworkManager       cyNetworkManager;
+    private final CyRootNetworkManager   cyRootNetworkManager;
+    private final VisualMappingManager   _visual_mapping_manager;
     private final RenderingEngineManager _rendering_engine_manager;
 
     public CytoscapeCxNetworkReaderFactory(final CyFileFilter filter,
@@ -43,7 +43,8 @@ public class CytoscapeCxNetworkReaderFactory extends AbstractInputStreamTaskFact
         try {
 
             return new TaskIterator(new CytoscapeCxNetworkReader(collectionName, is, cyApplicationManager,
-                    cyNetworkFactory, cyNetworkManager, cyRootNetworkManager, _visual_mapping_manager, _rendering_engine_manager));
+                    cyNetworkFactory, cyNetworkManager, cyRootNetworkManager, _visual_mapping_manager,
+                                                                 _rendering_engine_manager));
         }
         catch (final IOException e) {
 

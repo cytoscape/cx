@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 
 import org.cxio.aspects.datamodels.AbstractAttributesElement.ATTRIBUTE_TYPE;
-import org.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.cxio.aspects.datamodels.EdgeAttributesElement;
 import org.cxio.aspects.datamodels.EdgesElement;
 import org.cxio.aspects.datamodels.NodeAttributesElement;
@@ -28,9 +27,12 @@ import org.cytoscape.model.subnetwork.CySubNetwork;
 
 public final class CxToCy {
 
-    private Map<CyNode, Double[]>                _position_map;
     private Map<CyNode, VisualPropertiesElement> _node_vpe_map;
     private Map<CyEdge, VisualPropertiesElement> _edge_vpe_map;
+
+    private VisualPropertiesElement              _nodes_default_vpe;
+    private VisualPropertiesElement              _edges_default_vpe;
+    private VisualPropertiesElement              _network_vpe;
 
     public final CyNetwork createNetwork(final SortedMap<String, List<AspectElement>> res,
                                          final CyNetwork network,
@@ -65,7 +67,6 @@ public final class CxToCy {
             }
         }
 
-        _position_map = new HashMap<CyNode, Double[]>();
         final Map<String, CyNode> node_map = addNodes(network, nodes, node_attributes_map);
 
         final Map<String, CyEdge> edge_map = addEdges(network, edges, node_map, edge_attributes_map);
@@ -75,20 +76,30 @@ public final class CxToCy {
             _edge_vpe_map = new HashMap<CyEdge, VisualPropertiesElement>();
             for (final AspectElement element : visual_properties) {
                 final VisualPropertiesElement vpe = (VisualPropertiesElement) element;
-                if (vpe.getPropertiesOf().equals(VisualPropertiesWriter.NODES)) {
+
+                if (vpe.getPropertiesOf().equals(VisualPropertiesWriter.NETWORK_VPE_LABEL)) {
+                    _network_vpe = vpe;
+                }
+                else if (vpe.getPropertiesOf().equals(VisualPropertiesWriter.NODES_DEFAULT_VPE_LABEL)) {
+                    _nodes_default_vpe = vpe;
+                }
+                else if (vpe.getPropertiesOf().equals(VisualPropertiesWriter.EDGES_DEFAULT_VPE_LABEL)) {
+                    _edges_default_vpe = vpe;
+                }
+                else if (vpe.getPropertiesOf().equals(VisualPropertiesWriter.NODES_VPE_LABEL)) {
                     final List<String> applies_to_nodes = vpe.getAppliesTo();
                     for (final String applies_to_node : applies_to_nodes) {
                         _node_vpe_map.put(node_map.get(applies_to_node), vpe);
                     }
                 }
-                else if (vpe.getPropertiesOf().equals(VisualPropertiesWriter.EDGES)) {
+                else if (vpe.getPropertiesOf().equals(VisualPropertiesWriter.EDGES_VPE_LABEL)) {
                     final List<String> applies_to_edges = vpe.getAppliesTo();
                     for (final String applies_to_edge : applies_to_edges) {
                         _edge_vpe_map.put(edge_map.get(applies_to_edge), vpe);
                     }
                 }
             }
-            
+
             // for (final AspectElement element : visual_properties) {
             // final VisualPropertiesElement vpe = (VisualPropertiesElement)
             // element;
@@ -100,10 +111,6 @@ public final class CxToCy {
             // }
             // }
         }
-
-        // if ((layout != null) && !layout.isEmpty()) {
-        // addPositions(layout, nodeMap);
-        // }
 
         if (collectionName != null) {
             final CyRootNetwork rootNetwork = ((CySubNetwork) network).getRootNetwork();
@@ -250,14 +257,6 @@ public final class CxToCy {
 
     }
 
-    private final void addPositions(final List<AspectElement> layout, final Map<String, CyNode> node_map) {
-        for (final AspectElement ae : layout) {
-            final CartesianLayoutElement cle = (CartesianLayoutElement) ae;
-            _position_map.put(node_map.get(cle.getNode()),
-                             new Double[] { Double.valueOf(cle.getX()), Double.valueOf(cle.getY()) });
-        }
-    }
-
     private final Map<String, CyNode> addNodes(final CyNetwork network,
                                                final List<AspectElement> nodes,
                                                final Map<String, NodeAttributesElement> node_attributes_map) {
@@ -281,23 +280,21 @@ public final class CxToCy {
         }
         return node_map;
     }
-    
-   
 
     private final Map<String, CyEdge> addEdges(final CyNetwork network,
-                                final List<AspectElement> edges,
-                                final Map<String, CyNode> nodeMap,
-                                final Map<String, EdgeAttributesElement> edge_attributes_map) {
+                                               final List<AspectElement> edges,
+                                               final Map<String, CyNode> nodeMap,
+                                               final Map<String, EdgeAttributesElement> edge_attributes_map) {
 
         final CyTable edgeTable = network.getDefaultEdgeTable();
         final Map<String, CyEdge> edge_map = new HashMap<String, CyEdge>();
         for (final AspectElement edge : edges) {
             final EdgesElement e = (EdgesElement) edge;
-           
+
             final CyNode sourceNode = nodeMap.get(e.getSource());
             final CyNode targetNode = nodeMap.get(e.getTarget());
             final CyEdge newEdge = network.addEdge(sourceNode, targetNode, true);
-            edge_map.put(e.getId(),newEdge );
+            edge_map.put(e.getId(), newEdge);
             if ((edge_attributes_map != null) && !edge_attributes_map.isEmpty()) {
                 addTableData(edge_attributes_map.get(e.getId()), newEdge, network, edgeTable);
             }
@@ -305,15 +302,23 @@ public final class CxToCy {
         return edge_map;
     }
 
-    public Map<CyNode, Double[]> getNodePosition() {
-        return _position_map;
-    }
-
     public Map<CyNode, VisualPropertiesElement> getNodeVisualPropertiesElementsMap() {
         return _node_vpe_map;
     }
-    
+
     public Map<CyEdge, VisualPropertiesElement> getEdgeVisualPropertiesElementsMap() {
         return _edge_vpe_map;
+    }
+
+    public VisualPropertiesElement getNodesDefaultVisualPropertiesElement() {
+        return _nodes_default_vpe;
+    }
+
+    public VisualPropertiesElement getEdgesDefaultVisualPropertiesElement() {
+        return _edges_default_vpe;
+    }
+
+    public VisualPropertiesElement getNetworkVisualPropertiesElement() {
+        return _network_vpe;
     }
 }
