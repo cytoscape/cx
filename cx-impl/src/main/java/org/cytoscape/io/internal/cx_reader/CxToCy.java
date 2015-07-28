@@ -15,7 +15,8 @@ import org.cxio.aspects.datamodels.NodeAttributesElement;
 import org.cxio.aspects.datamodels.NodesElement;
 import org.cxio.aspects.datamodels.VisualPropertiesElement;
 import org.cxio.core.interfaces.AspectElement;
-import org.cytoscape.io.internal.visual_properties.VisualPropertiesWriter;
+import org.cytoscape.io.internal.cx_writer.VisualPropertiesGatherer;
+import org.cytoscape.io.internal.cxio.VisualPropertyType;
 import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyIdentifiable;
@@ -77,22 +78,22 @@ public final class CxToCy {
             for (final AspectElement element : visual_properties) {
                 final VisualPropertiesElement vpe = (VisualPropertiesElement) element;
 
-                if (vpe.getPropertiesOf().equals(VisualPropertiesWriter.NETWORK_VPE_LABEL)) {
+                if (vpe.getPropertiesOf().equals(VisualPropertyType.NETWORK.asString())) {
                     _network_vpe = vpe;
                 }
-                else if (vpe.getPropertiesOf().equals(VisualPropertiesWriter.NODES_DEFAULT_VPE_LABEL)) {
+                else if (vpe.getPropertiesOf().equals(VisualPropertyType.NODES_DEFAULT.asString())) {
                     _nodes_default_vpe = vpe;
                 }
-                else if (vpe.getPropertiesOf().equals(VisualPropertiesWriter.EDGES_DEFAULT_VPE_LABEL)) {
+                else if (vpe.getPropertiesOf().equals(VisualPropertyType.EDGES_DEFAULT.asString())) {
                     _edges_default_vpe = vpe;
                 }
-                else if (vpe.getPropertiesOf().equals(VisualPropertiesWriter.NODES_VPE_LABEL)) {
+                else if (vpe.getPropertiesOf().equals(VisualPropertyType.NODES.asString())) {
                     final List<String> applies_to_nodes = vpe.getAppliesTo();
                     for (final String applies_to_node : applies_to_nodes) {
                         _node_vpe_map.put(node_map.get(applies_to_node), vpe);
                     }
                 }
-                else if (vpe.getPropertiesOf().equals(VisualPropertiesWriter.EDGES_VPE_LABEL)) {
+                else if (vpe.getPropertiesOf().equals(VisualPropertyType.EDGES.asString())) {
                     final List<String> applies_to_edges = vpe.getAppliesTo();
                     for (final String applies_to_edge : applies_to_edges) {
                         _edge_vpe_map.put(edge_map.get(applies_to_edge), vpe);

@@ -34,6 +34,7 @@ import org.cytoscape.view.model.VisualProperty;
 import org.cytoscape.view.presentation.RenderingEngineManager;
 import org.cytoscape.view.presentation.property.BasicVisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingManager;
+import org.cytoscape.view.vizmap.VisualStyle;
 import org.cytoscape.work.TaskMonitor;
 import org.cytoscape.work.util.ListSingleSelection;
 
@@ -47,7 +48,6 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     private CxToCy                       _cx_to_cy;
     private final InputStream            _in;
     private final VisualMappingManager   _visual_mapping_manager;
-    private final CyApplicationManager   _application_manager;
     private final RenderingEngineManager _rendering_engine_manager;
 
     public CytoscapeCxNetworkReader(final String networkCollectionName,
@@ -63,7 +63,6 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         if (input_stream == null) {
             throw new NullPointerException("input stream cannot be null");
         }
-        _application_manager = cyApplicationManager;
         _in = input_stream;
         _network_collection_name = networkCollectionName;
         _visual_mapping_manager = visualMappingManager;
@@ -80,9 +79,15 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     @Override
     public CyNetworkView buildCyNetworkView(final CyNetwork network) {
         final CyNetworkView view = getNetworkViewFactory().createNetworkView(network);
+        
         final VisualLexicon lexicon = _rendering_engine_manager.getDefaultVisualLexicon();
 
         setProperties(lexicon, _cx_to_cy.getNetworkVisualPropertiesElement().getProperties(), view, CyNetwork.class);
+        
+        final VisualStyle default_style =  _visual_mapping_manager.getDefaultVisualStyle();
+        setProperties(lexicon, _cx_to_cy.getNodesDefaultVisualPropertiesElement().getProperties(), default_style , CyNode.class);
+        setProperties(lexicon, _cx_to_cy.getEdgesDefaultVisualPropertiesElement().getProperties(), default_style , CyEdge.class);
+        
 
         final Map<CyNode, VisualPropertiesElement> node_vpe = _cx_to_cy.getNodeVisualPropertiesElementsMap();
         for (final CyNode node : node_vpe.keySet()) {
@@ -113,6 +118,23 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                     else {
                         view.setVisualProperty(vp, parsed_value);
                     }
+                }
+            }
+        }
+    }
+    
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private final static void setProperties(final VisualLexicon lexicon,
+                                            final SortedMap<String, String> props,
+                                            final VisualStyle style,
+                                            final Class my_class) {
+        for (final Map.Entry<String, String> entry : props.entrySet()) {
+            final VisualProperty vp = lexicon.lookup(my_class, entry.getKey());
+            if (vp != null) {
+                final Object parsed_value = vp.parseSerializableString(entry.getValue());
+                if (parsed_value != null) {
+                    style.setDefaultValue(vp, parsed_value);
+                   
                 }
             }
         }

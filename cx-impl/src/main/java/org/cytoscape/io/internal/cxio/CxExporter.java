@@ -3,13 +3,13 @@ package org.cytoscape.io.internal.cxio;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 
 import org.cxio.aspects.datamodels.AbstractAttributesElement;
-import org.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.cxio.aspects.datamodels.EdgeAttributesElement;
 import org.cxio.aspects.datamodels.EdgesElement;
 import org.cxio.aspects.datamodels.NodeAttributesElement;
@@ -18,16 +18,14 @@ import org.cxio.core.CxWriter;
 import org.cxio.core.interfaces.AspectElement;
 import org.cxio.core.interfaces.AspectFragmentWriter;
 import org.cxio.filters.AspectKeyFilter;
+import org.cytoscape.io.internal.cx_writer.VisualPropertiesGatherer;
 import org.cytoscape.io.internal.cxio.CxOutput.Status;
-import org.cytoscape.io.internal.visual_properties.VisualPropertiesWriter;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyRow;
 import org.cytoscape.view.model.CyNetworkView;
-import org.cytoscape.view.model.View;
 import org.cytoscape.view.model.VisualLexicon;
-import org.cytoscape.view.presentation.property.BasicVisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 
 /**
@@ -93,6 +91,7 @@ public final class CxExporter {
 
     public void setVisualMappingManager(final VisualMappingManager visual_mapping_manager) {
         _visual_mapping_manager = visual_mapping_manager;
+
     }
 
     public void setUseDefaultPrettyPrinting(final boolean use_default_pretty_printing) {
@@ -343,30 +342,20 @@ public final class CxExporter {
         return "_na" + node_suid;
     }
 
-    private final static void writeCartesianLayout(final CyNetworkView view, final CxWriter w) throws IOException {
-        final CyNetwork network = view.getModel();
-        final List<AspectElement> elements = new ArrayList<AspectElement>();
-        for (final CyNode cy_node : network.getNodeList()) {
-            final View<CyNode> node_view = view.getNodeView(cy_node);
-            elements.add(new CartesianLayoutElement(cy_node.getSUID(), node_view
-                                                    .getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
-                                                    .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION)));
-
-        }
-        final long t0 = System.currentTimeMillis();
-        w.writeAspectElements(elements);
-        if (TimingUtil.TIMING) {
-            TimingUtil.reportTimeDifference(t0, "cartesian layout", elements.size());
-        }
-    }
-
     private final static void writeVisualProperties(final CyNetworkView view,
                                                     final VisualMappingManager visual_mapping_manager,
                                                     final VisualLexicon lexicon,
                                                     final CxWriter w) throws IOException {
         final CyNetwork network = view.getModel();
-        final List<AspectElement> elements = new ArrayList<AspectElement>();
-        VisualPropertiesWriter.gatherVisualProperties(view, network, visual_mapping_manager, lexicon, elements);
+        final Set<VisualPropertyType> types = new HashSet<VisualPropertyType>();
+        types.add(VisualPropertyType.NETWORK);
+        types.add(VisualPropertyType.NODES);
+        types.add(VisualPropertyType.EDGES);
+        types.add(VisualPropertyType.NODES_DEFAULT);
+        types.add(VisualPropertyType.EDGES_DEFAULT);
+
+        final List<AspectElement> elements = VisualPropertiesGatherer
+                .gatherVisualPropertiesAsAspectElements(view, network, visual_mapping_manager, lexicon, types);
 
         final long t0 = System.currentTimeMillis();
         w.writeAspectElements(elements);
