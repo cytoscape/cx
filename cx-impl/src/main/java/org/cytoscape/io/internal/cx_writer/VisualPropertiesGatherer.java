@@ -19,11 +19,9 @@ import org.cytoscape.view.vizmap.VisualMappingFunction;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.view.vizmap.VisualStyle;
 
-
-
 /**
  * This class is used to gather visual properties from network views.
- * 
+ *
  * @author cmzmasek
  *
  */
@@ -83,17 +81,19 @@ public final class VisualPropertiesGatherer {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private final static void addProperties(final View view, final VisualProperty vp, final VisualPropertiesElement cvp) {
-        final Object vp_value = view.getVisualProperty(vp);
 
-        if (vp_value != null) {
-            final String value_str = vp.toSerializableString(vp_value);
-            if (!Util.isEmpty(value_str)) {
-                final String id_string = vp.getIdString();
-                if (id_string.startsWith("NODE_CUSTOM") || id_string.equals("NODE") || id_string.equals("EDGE")
-                        || id_string.equals("NETWORK")) { // TODO //FIXME
-                }
-                else {
-                    cvp.putProperty(id_string, value_str);
+        if (view.isSet(vp) && view.isValueLocked(vp)) {
+            final Object vp_value = view.getVisualProperty(vp);
+            if (vp_value != null) {
+                final String value_str = vp.toSerializableString(vp_value);
+                if (!Util.isEmpty(value_str)) {
+                    final String id_string = vp.getIdString();
+                    if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")) { // TODO
+                        // //FIXME
+                    }
+                    else {
+                        cvp.putProperty(id_string, value_str);
+                    }
                 }
             }
         }
@@ -106,16 +106,12 @@ public final class VisualPropertiesGatherer {
         final Object vp_value = style.getDefaultValue(vp);
         final VisualMappingFunction mapping_function = style.getVisualMappingFunction(vp); // TODO
 
-        if (mapping_function != null) {
-            System.out.println(mapping_function.toString());
-        }
-
         if (vp_value != null) {
             final String value_str = vp.toSerializableString(vp_value);
             if (!Util.isEmpty(value_str)) {
                 final String id_string = vp.getIdString();
-                if (id_string.startsWith("NODE_CUSTOM") || id_string.equals("NODE") || id_string.equals("EDGE")
-                        || id_string.equals("NETWORK")) { // TODO //FIXME
+                if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")) { // TODO
+                    // //FIXME
                 }
                 else {
                     cvp.putProperty(id_string, value_str);
@@ -124,12 +120,17 @@ public final class VisualPropertiesGatherer {
         }
     }
 
+    // private final static void x(VisualProperty vp,
+    // final View view ) {
+    // final Object vp_value = view.isSet(vp)
+    //
+    // }
+
     @SuppressWarnings("rawtypes")
     private static void gatherEdgesDefaultVisualProperties(final List<AspectElement> visual_properties,
                                                            final VisualStyle current_visual_style,
                                                            final Set<VisualProperty<?>> all_visual_properties) {
-        final VisualPropertiesElement edge_default_cxvp = new VisualPropertiesElement(
-                                                                                      VisualPropertyType.EDGES_DEFAULT.asString());
+        final VisualPropertiesElement edge_default_cxvp = new VisualPropertiesElement(VisualPropertyType.EDGES_DEFAULT.asString());
         for (final VisualProperty visual_property : all_visual_properties) {
             if (visual_property.getTargetDataType() == CyEdge.class) {
 
@@ -175,8 +176,7 @@ public final class VisualPropertiesGatherer {
     private static void gatherNodesDefaultVisualProperties(final List<AspectElement> visual_properties,
                                                            final VisualStyle current_visual_style,
                                                            final Set<VisualProperty<?>> all_visual_properties) {
-        final VisualPropertiesElement node_default_cxvp = new VisualPropertiesElement(
-                                                                                      VisualPropertyType.NODES_DEFAULT.asString());
+        final VisualPropertiesElement node_default_cxvp = new VisualPropertiesElement(VisualPropertyType.NODES_DEFAULT.asString());
         for (final VisualProperty visual_property : all_visual_properties) {
             if (visual_property.getTargetDataType() == CyNode.class) {
                 addProperties(current_visual_style, visual_property, node_default_cxvp);

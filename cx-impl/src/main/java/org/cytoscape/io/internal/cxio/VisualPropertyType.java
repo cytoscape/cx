@@ -1,13 +1,9 @@
 package org.cytoscape.io.internal.cxio;
 
 public enum VisualPropertyType {
-    
-    EDGES_DEFAULT("edges:default"),
-    EDGES("edges"),
-    NETWORK("network"),
-    NODES_DEFAULT("nodes:default"),
-    NODES("nodes");
-    
+
+    EDGES_DEFAULT("edges:default"), EDGES("edges"), NETWORK("network"), NODES_DEFAULT("nodes:default"), NODES("nodes");
+
     private final String _s;
 
     private VisualPropertyType(final String s) {
@@ -15,8 +11,8 @@ public enum VisualPropertyType {
     }
 
     /**
-     * This returns an visual property type as String. The returned String is the
-     * official name of the property type in question.
+     * This returns an visual property type as String. The returned String is
+     * the official name of the property type in question.
      *
      *
      * @return official name of the property type
@@ -29,5 +25,5 @@ public enum VisualPropertyType {
     public String toString() {
         return asString();
     }
-    
+
 }

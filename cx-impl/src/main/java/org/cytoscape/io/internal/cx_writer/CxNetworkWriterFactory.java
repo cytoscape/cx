@@ -3,6 +3,7 @@ package org.cytoscape.io.internal.cx_writer;
 import java.io.OutputStream;
 
 import org.cytoscape.application.CyApplicationManager;
+import org.cytoscape.ding.customgraphics.CustomGraphicsManager;
 import org.cytoscape.io.CyFileFilter;
 import org.cytoscape.io.write.CyNetworkViewWriterFactory;
 import org.cytoscape.io.write.CyWriter;
@@ -12,22 +13,26 @@ import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 
 public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
-    private final CyFileFilter         _filter;
-    private final VisualMappingManager _visual_mapping_manager;
-    private final CyApplicationManager _application_manager;
+    private final CyFileFilter          _filter;
+    private final VisualMappingManager  _visual_mapping_manager;
+    private final CyApplicationManager  _application_manager;
+    private final CustomGraphicsManager _custom_graphics_manager;
 
     public CxNetworkWriterFactory(final CyFileFilter filter) {
         _filter = filter;
         _visual_mapping_manager = null;
         _application_manager = null;
+        _custom_graphics_manager = null;
     }
 
     public CxNetworkWriterFactory(final CyFileFilter filter,
                                   final VisualMappingManager visual_mapping_manager,
-                                  final CyApplicationManager application_manager) {
+                                  final CyApplicationManager application_manager,
+                                  final CustomGraphicsManager custom_graphics_manager) {
         _filter = filter;
         _visual_mapping_manager = visual_mapping_manager;
         _application_manager = application_manager;
+        _custom_graphics_manager = custom_graphics_manager;
     }
 
     @Override
@@ -45,7 +50,7 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
         if ((_visual_mapping_manager != null) && (_application_manager != null)) {
             final VisualLexicon lexicon = _application_manager.getCurrentRenderingEngine().getVisualLexicon();
 
-            return new CxNetworkViewWriter(os, view, _visual_mapping_manager, lexicon);
+            return new CxNetworkViewWriter(os, view, _visual_mapping_manager, _custom_graphics_manager, lexicon);
         }
         return new CxNetworkViewWriter(os, view);
 

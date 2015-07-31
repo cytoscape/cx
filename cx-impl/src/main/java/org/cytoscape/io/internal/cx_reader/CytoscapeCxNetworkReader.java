@@ -79,15 +79,20 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     @Override
     public CyNetworkView buildCyNetworkView(final CyNetwork network) {
         final CyNetworkView view = getNetworkViewFactory().createNetworkView(network);
-        
+
         final VisualLexicon lexicon = _rendering_engine_manager.getDefaultVisualLexicon();
 
         setProperties(lexicon, _cx_to_cy.getNetworkVisualPropertiesElement().getProperties(), view, CyNetwork.class);
-        
-        final VisualStyle default_style =  _visual_mapping_manager.getDefaultVisualStyle();
-        setProperties(lexicon, _cx_to_cy.getNodesDefaultVisualPropertiesElement().getProperties(), default_style , CyNode.class);
-        setProperties(lexicon, _cx_to_cy.getEdgesDefaultVisualPropertiesElement().getProperties(), default_style , CyEdge.class);
-        
+
+        final VisualStyle default_style = _visual_mapping_manager.getDefaultVisualStyle();
+        setProperties(lexicon,
+                      _cx_to_cy.getNodesDefaultVisualPropertiesElement().getProperties(),
+                      default_style,
+                      CyNode.class);
+        setProperties(lexicon,
+                      _cx_to_cy.getEdgesDefaultVisualPropertiesElement().getProperties(),
+                      default_style,
+                      CyEdge.class);
 
         final Map<CyNode, VisualPropertiesElement> node_vpe = _cx_to_cy.getNodeVisualPropertiesElementsMap();
         for (final CyNode node : node_vpe.keySet()) {
@@ -122,7 +127,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
             }
         }
     }
-    
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private final static void setProperties(final VisualLexicon lexicon,
                                             final SortedMap<String, String> props,
@@ -134,14 +139,14 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                 final Object parsed_value = vp.parseSerializableString(entry.getValue());
                 if (parsed_value != null) {
                     style.setDefaultValue(vp, parsed_value);
-                   
+
                 }
             }
         }
     }
 
     private static final Pattern DIRECT_NET_PROPS_PATTERN = Pattern
-                                                                  .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
+            .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
 
     @SuppressWarnings("rawtypes")
     private final static boolean shouldSetAsLocked(final VisualProperty vp) {

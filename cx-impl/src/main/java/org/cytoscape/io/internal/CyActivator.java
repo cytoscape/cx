@@ -34,13 +34,21 @@ public class CyActivator extends AbstractCyActivator {
         final StreamUtil streamUtil = getService(bc, StreamUtil.class);
 
         final BasicCyFileFilter cxFilter = new BasicCyFileFilter(new String[] { "cx" },
-                new String[] { "application/json" }, "CX JSON", DataCategory.NETWORK, streamUtil);
+                                                                 new String[] { "application/json" },
+                                                                 "CX JSON",
+                                                                 DataCategory.NETWORK,
+                                                                 streamUtil);
 
         // Writer:
-        final VisualMappingManager visualMappingManager = getService(bc, VisualMappingManager.class);
-        final CyApplicationManager applicationManager = getService(bc, CyApplicationManager.class);
+        final VisualMappingManager visual_mapping_manager = getService(bc, VisualMappingManager.class);
+        final CyApplicationManager application_manager = getService(bc, CyApplicationManager.class);
+        // final CustomGraphicsManager custom_graphics_manager = getService(bc,
+        // CustomGraphicsManager.class);
+
         final CxNetworkWriterFactory cxNetworkWriterFactory = new CxNetworkWriterFactory(cxFilter,
-                visualMappingManager, applicationManager);
+                                                                                         visual_mapping_manager,
+                                                                                         application_manager,
+                                                                                         null);
 
         final Properties cxWriterFactoryProperties = new Properties();
 
@@ -48,19 +56,23 @@ public class CyActivator extends AbstractCyActivator {
 
         registerAllServices(bc, cxNetworkWriterFactory, cxWriterFactoryProperties);
 
-        // registerService(bc, cxNetworkViewWriterFactory,
-        // CyWriterFactory.class, new Properties());
-
         // Reader:
         final CyNetworkFactory cyNetworkFactory = getService(bc, CyNetworkFactory.class);
         final CyNetworkManager cyNetworkManager = getService(bc, CyNetworkManager.class);
         final CyRootNetworkManager cyRootNetworkManager = getService(bc, CyRootNetworkManager.class);
         final RenderingEngineManager renderingEngineMgr = getService(bc, RenderingEngineManager.class);
         final BasicCyFileFilter cytoscapejsReaderFilter = new BasicCyFileFilter(new String[] { "cx", "json" },
-                                                                                new String[] { "application/json" }, "CX JSON", DataCategory.NETWORK, streamUtil);
-        final CytoscapeCxNetworkReaderFactory cxReaderFactory = new CytoscapeCxNetworkReaderFactory(
-                cytoscapejsReaderFilter, applicationManager, cyNetworkFactory, cyNetworkManager, cyRootNetworkManager,
-                visualMappingManager, renderingEngineMgr);
+                                                                                new String[] { "application/json" },
+                                                                                "CX JSON",
+                                                                                DataCategory.NETWORK,
+                                                                                streamUtil);
+        final CytoscapeCxNetworkReaderFactory cxReaderFactory = new CytoscapeCxNetworkReaderFactory(cytoscapejsReaderFilter,
+                                                                                                    application_manager,
+                                                                                                    cyNetworkFactory,
+                                                                                                    cyNetworkManager,
+                                                                                                    cyRootNetworkManager,
+                                                                                                    visual_mapping_manager,
+                                                                                                    renderingEngineMgr);
         final Properties cytoscapeJsNetworkReaderFactoryProps = new Properties();
 
         // This is the unique identifier for this reader. 3rd party developer

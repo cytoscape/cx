@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.SortedMap;
 
 import org.cxio.aspects.datamodels.AbstractAttributesElement;
+import org.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.cxio.aspects.datamodels.EdgeAttributesElement;
 import org.cxio.aspects.datamodels.EdgesElement;
 import org.cxio.aspects.datamodels.NodeAttributesElement;
@@ -25,7 +26,9 @@ import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyRow;
 import org.cytoscape.view.model.CyNetworkView;
+import org.cytoscape.view.model.View;
 import org.cytoscape.view.model.VisualLexicon;
+import org.cytoscape.view.presentation.property.BasicVisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 
 /**
@@ -247,6 +250,9 @@ public final class CxExporter {
         if (aspects.contains(Aspect.EDGES)) {
             writeEdges(view, w);
         }
+        if (aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
+            writeCartesianLayout(view, w);
+        }
         if (aspects.contains(Aspect.NODE_ATTRIBUTES)) {
             writeNodeAttributes(view, w);
         }
@@ -299,6 +305,9 @@ public final class CxExporter {
         if (aspects.contains(Aspect.EDGES)) {
             writeEdges(view, w);
         }
+        if (aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
+            writeCartesianLayout(view, w);
+        }
         if (aspects.contains(Aspect.NODE_ATTRIBUTES)) {
             writeNodeAttributes(view, w);
         }
@@ -313,33 +322,6 @@ public final class CxExporter {
 
         return new CxOutput(out, Status.OK);
 
-    }
-
-    @SuppressWarnings("unchecked")
-    private final static void addAttributes(final Map<String, Object> values, final AbstractAttributesElement element) {
-        for (final String column_name : values.keySet()) {
-            final Object value = values.get(column_name);
-            if (value == null) {
-                continue;
-            }
-            if (value instanceof List) {
-                final List<Object> list = ((List<Object>) value);
-                for (final Object o : list) {
-                    element.putValue(column_name, o);
-                }
-            }
-            else {
-                element.putValue(column_name, value);
-            }
-        }
-    }
-
-    private final static String makeEdgeAttributeId(final long edge_suid) {
-        return "_ea" + edge_suid;
-    }
-
-    private final static String makeNodeAttributeId(final long node_suid) {
-        return "_na" + node_suid;
     }
 
     private final static void writeVisualProperties(final CyNetworkView view,
@@ -364,19 +346,48 @@ public final class CxExporter {
         }
     }
 
+    @SuppressWarnings("rawtypes")
     private final static void writeEdgeAttributes(final CyNetwork network, final CxWriter w) throws IOException {
         final List<AspectElement> elements = new ArrayList<AspectElement>();
 
         for (final CyEdge cy_edge : network.getEdgeList()) {
             final CyRow row = network.getRow(cy_edge);
             if (row != null) {
+
                 final Map<String, Object> values = row.getAllValues();
                 if ((values != null) && !values.isEmpty()) {
-                    final EdgeAttributesElement eae = new EdgeAttributesElement(makeEdgeAttributeId(cy_edge.getSUID()));
-                    eae.addEdge(cy_edge.getSUID());
-
-                    addAttributes(values, eae);
-                    elements.add(eae);
+                    for (final String column_name : values.keySet()) {
+                        if (column_name.equals("SUID")) {
+                            continue;
+                        }
+                        final Object value = values.get(column_name);
+                        if (value == null) {
+                            continue;
+                        }
+                        EdgeAttributesElement eae = null;
+                        if (value instanceof List) {
+                            final List<String> attr_values = new ArrayList<String>();
+                            for (final Object v : (List) value) {
+                                attr_values.add(String.valueOf(v));
+                            }
+                            if (!attr_values.isEmpty()) {
+                                eae = new EdgeAttributesElement(makeId(cy_edge.getSUID()),
+                                                                column_name,
+                                                                attr_values,
+                                                                AbstractAttributesElement.determineType(((List) value)
+                                                                                                        .get(0)));
+                            }
+                        }
+                        else {
+                            eae = new EdgeAttributesElement(makeId(cy_edge.getSUID()),
+                                                             column_name,
+                                                             String.valueOf(value),
+                                                             AbstractAttributesElement.determineType(value));
+                        }
+                        if (eae != null) {
+                            elements.add(eae);
+                        }
+                    }
                 }
             }
         }
@@ -387,15 +398,23 @@ public final class CxExporter {
         }
     }
 
+    private final static String makeId(final String id) {
+        return ("_:" + id);
+    }
+
+    private final static String makeId(final long id) {
+        return ("_:" + id);
+    }
+
     private final static void writeEdgeAttributes(final CyNetworkView view, final CxWriter w) throws IOException {
         writeEdgeAttributes(view.getModel(), w);
     }
 
     private final static void writeEdges(final CyNetwork network, final CxWriter w) throws IOException {
-        // final long t0 = System.currentTimeMillis();
         final List<AspectElement> elements = new ArrayList<AspectElement>();
         for (final CyEdge cyEdge : network.getEdgeList()) {
-            elements.add(new EdgesElement(cyEdge.getSUID(), cyEdge.getSource().getSUID(), cyEdge.getTarget().getSUID()));
+            elements.add(new EdgesElement(makeId(cyEdge.getSUID()), makeId(cyEdge.getSource().getSUID()), makeId(cyEdge
+                    .getTarget().getSUID())));
         }
         final long t0 = System.currentTimeMillis();
         w.writeAspectElements(elements);
@@ -408,6 +427,7 @@ public final class CxExporter {
         writeEdges(view.getModel(), w);
     }
 
+    @SuppressWarnings("rawtypes")
     private final static void writeNodeAttributes(final CyNetwork network, final CxWriter w) throws IOException {
         final List<AspectElement> elements = new ArrayList<AspectElement>();
 
@@ -417,10 +437,38 @@ public final class CxExporter {
             if (row != null) {
                 final Map<String, Object> values = row.getAllValues();
                 if ((values != null) && !values.isEmpty()) {
-                    final NodeAttributesElement nae = new NodeAttributesElement(makeNodeAttributeId(cy_node.getSUID()));
-                    nae.addNode(cy_node.getSUID());
-                    addAttributes(values, nae);
-                    elements.add(nae);
+                    for (final String column_name : values.keySet()) {
+                        if (column_name.equals("SUID")) {
+                            continue;
+                        }
+                        final Object value = values.get(column_name);
+                        if (value == null) {
+                            continue;
+                        }
+                        NodeAttributesElement eae = null;
+                        if (value instanceof List) {
+                            final List<String> attr_values = new ArrayList<String>();
+                            for (final Object v : (List) value) {
+                                attr_values.add(String.valueOf(v));
+                            }
+                            if (!attr_values.isEmpty()) {
+                                eae = new NodeAttributesElement(makeId(cy_node.getSUID()),
+                                                                column_name,
+                                                                attr_values,
+                                                                AbstractAttributesElement.determineType(((List) value)
+                                                                                                        .get(0)));
+                            }
+                        }
+                        else {
+                            eae = new NodeAttributesElement(makeId(cy_node.getSUID()),
+                                                            column_name,
+                                                            String.valueOf(value),
+                                                            AbstractAttributesElement.determineType(value));
+                        }
+                        if (eae != null) {
+                            elements.add(eae);
+                        }
+                    }
                 }
             }
         }
@@ -436,10 +484,9 @@ public final class CxExporter {
     }
 
     private final static void writeNodes(final CyNetwork network, final CxWriter w) throws IOException {
-        // final long t0 = System.currentTimeMillis();
         final List<AspectElement> elements = new ArrayList<AspectElement>();
         for (final CyNode cy_node : network.getNodeList()) {
-            elements.add(new NodesElement(cy_node.getSUID()));
+            elements.add(new NodesElement(makeId(cy_node.getSUID())));
         }
         final long t0 = System.currentTimeMillis();
         w.writeAspectElements(elements);
@@ -470,7 +517,24 @@ public final class CxExporter {
             }
             w.addAspectFragmentWriter(writer);
         }
+    }
 
+    private final static void writeCartesianLayout(final CyNetworkView view, final CxWriter w) throws IOException {
+        final CyNetwork network = view.getModel();
+        final List<AspectElement> elements = new ArrayList<AspectElement>();
+        for (final CyNode cy_node : network.getNodeList()) {
+            final View<CyNode> node_view = view.getNodeView(cy_node);
+            elements.add(new CartesianLayoutElement(makeId(cy_node.getSUID()), node_view
+                                                    .getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
+                                                    .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION), node_view
+                                                    .getVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION)));
+
+        }
+        final long t0 = System.currentTimeMillis();
+        w.writeAspectElements(elements);
+        if (TimingUtil.TIMING) {
+            TimingUtil.reportTimeDifference(t0, "cartesian layout", elements.size());
+        }
     }
 
 }

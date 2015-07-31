@@ -59,6 +59,7 @@ public class CxNetworkWriter implements CyWriter {
         aspects.addAspect(Aspect.EDGE_ATTRIBUTES);
 
         final CxExporter exporter = CxExporter.createInstance();
+        exporter.setUseDefaultPrettyPrinting(true);
 
         final long t0 = System.currentTimeMillis();
 
