@@ -24,6 +24,7 @@ public class CxNetworkWriterTest {
         final CyWriter w = factory.createWriter(out, n);
         w.run(null);
         final String out_str = out.toString();
+        System.out.println(out_str);
         assertTrue(out_str.replaceAll("\\s+", "").equals("[]"));
 
     }

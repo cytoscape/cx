@@ -7,6 +7,7 @@ import java.util.Set;
 import org.cxio.aspects.datamodels.VisualPropertiesElement;
 import org.cxio.core.interfaces.AspectElement;
 import org.cxio.util.Util;
+import org.cytoscape.io.internal.cxio.CxExporter;
 import org.cytoscape.io.internal.cxio.VisualPropertyType;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
@@ -148,13 +149,15 @@ public final class VisualPropertiesGatherer {
         for (final CyEdge edge : network.getEdgeList()) {
             final View<CyEdge> edge_view = view.getEdgeView(edge);
             final VisualPropertiesElement edge_cxvp = new VisualPropertiesElement(VisualPropertyType.EDGES.asString());
-            edge_cxvp.addAppliesTo(String.valueOf(edge.getSUID()));
+            edge_cxvp.addAppliesTo(org.cytoscape.io.internal.cxio.Util.makeId(edge.getSUID()));
             for (final VisualProperty visual_property : all_visual_properties) {
                 if (visual_property.getTargetDataType() == CyEdge.class) {
                     addProperties(edge_view, visual_property, edge_cxvp);
                 }
             }
-            visual_properties.add(edge_cxvp);
+            if ( edge_cxvp.getProperties() != null && !edge_cxvp.getProperties().isEmpty() ) {
+                visual_properties.add(edge_cxvp);
+            }
         }
     }
 
@@ -193,14 +196,17 @@ public final class VisualPropertiesGatherer {
         for (final CyNode cy_node : network.getNodeList()) {
             final View<CyNode> node_view = view.getNodeView(cy_node);
             final VisualPropertiesElement node_cxvp = new VisualPropertiesElement(VisualPropertyType.NODES.asString());
-            node_cxvp.addAppliesTo(String.valueOf(cy_node.getSUID()));
+            node_cxvp.addAppliesTo(org.cytoscape.io.internal.cxio.Util.makeId(cy_node.getSUID()));
             for (final VisualProperty visual_property : all_visual_properties) {
                 if (visual_property.getTargetDataType() == CyNode.class) {
                     addProperties(node_view, visual_property, node_cxvp);
                 }
 
             }
-            visual_properties.add(node_cxvp);
+            if ( node_cxvp.getProperties() != null && !node_cxvp.getProperties().isEmpty() ) {
+                visual_properties.add(node_cxvp);
+            }
+            
         }
     }
 

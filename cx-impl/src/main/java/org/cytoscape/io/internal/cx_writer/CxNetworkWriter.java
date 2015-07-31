@@ -55,6 +55,7 @@ public class CxNetworkWriter implements CyWriter {
         final AspectSet aspects = new AspectSet();
         aspects.addAspect(Aspect.NODES);
         aspects.addAspect(Aspect.EDGES);
+        aspects.addAspect(Aspect.NETWORK_ATTRIBUTES);
         aspects.addAspect(Aspect.NODE_ATTRIBUTES);
         aspects.addAspect(Aspect.EDGE_ATTRIBUTES);
 
