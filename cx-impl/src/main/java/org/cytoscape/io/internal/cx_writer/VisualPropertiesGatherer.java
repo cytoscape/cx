@@ -7,7 +7,6 @@ import java.util.Set;
 import org.cxio.aspects.datamodels.VisualPropertiesElement;
 import org.cxio.core.interfaces.AspectElement;
 import org.cxio.util.Util;
-import org.cytoscape.io.internal.cxio.CxExporter;
 import org.cytoscape.io.internal.cxio.VisualPropertyType;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
@@ -155,7 +154,7 @@ public final class VisualPropertiesGatherer {
                     addProperties(edge_view, visual_property, edge_cxvp);
                 }
             }
-            if ( edge_cxvp.getProperties() != null && !edge_cxvp.getProperties().isEmpty() ) {
+            if ((edge_cxvp.getProperties() != null) && !edge_cxvp.getProperties().isEmpty()) {
                 visual_properties.add(edge_cxvp);
             }
         }
@@ -203,10 +202,10 @@ public final class VisualPropertiesGatherer {
                 }
 
             }
-            if ( node_cxvp.getProperties() != null && !node_cxvp.getProperties().isEmpty() ) {
+            if ((node_cxvp.getProperties() != null) && !node_cxvp.getProperties().isEmpty()) {
                 visual_properties.add(node_cxvp);
             }
-            
+
         }
     }
 

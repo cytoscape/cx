@@ -82,7 +82,10 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
         final VisualLexicon lexicon = _rendering_engine_manager.getDefaultVisualLexicon();
 
-        setProperties(lexicon, _cx_to_cy.getNetworkVisualPropertiesElement().getProperties(), view, CyNetwork.class);
+        if ((_cx_to_cy.getNetworkVisualPropertiesElement() != null)
+                && (_cx_to_cy.getNetworkVisualPropertiesElement().getProperties() != null)) {
+            setProperties(lexicon, _cx_to_cy.getNetworkVisualPropertiesElement().getProperties(), view, CyNetwork.class);
+        }
 
         final VisualStyle default_style = _visual_mapping_manager.getDefaultVisualStyle();
         setProperties(lexicon,
@@ -102,6 +105,14 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         final Map<CyEdge, VisualPropertiesElement> edge_vpe = _cx_to_cy.getEdgeVisualPropertiesElementsMap();
         for (final CyEdge edge : edge_vpe.keySet()) {
             setProperties(lexicon, edge_vpe.get(edge).getProperties(), view.getEdgeView(edge), CyEdge.class);
+        }
+
+        final Map<CyNode, Double[]> positionMap = _cx_to_cy.getNodePosition();
+        for (final CyNode node : positionMap.keySet()) {
+            final Double[] position = positionMap.get(node);
+            view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_X_LOCATION, position[0]);
+            view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION, position[1]);
+            view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION, position[2]);
         }
 
         return view;
@@ -146,7 +157,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     }
 
     private static final Pattern DIRECT_NET_PROPS_PATTERN = Pattern
-            .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
+                                                                  .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
 
     @SuppressWarnings("rawtypes")
     private final static boolean shouldSetAsLocked(final VisualProperty vp) {
@@ -172,6 +183,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         aspects.addAspect(Aspect.NODE_ATTRIBUTES);
         aspects.addAspect(Aspect.EDGE_ATTRIBUTES);
         aspects.addAspect(Aspect.VISUAL_PROPERTIES);
+        aspects.addAspect(Aspect.CARTESIAN_LAYOUT);
 
         final CxImporter cx_importer = CxImporter.createInstance();
 
@@ -194,7 +206,6 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
             t0 = System.currentTimeMillis();
         }
         else {
-            final CxReader cxr = cx_importer.getCxReader(aspects, _in);
             res = cx_importer.readAsMap(aspects, _in);
         }
 

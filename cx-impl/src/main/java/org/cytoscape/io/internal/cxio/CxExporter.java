@@ -69,9 +69,9 @@ import org.cytoscape.view.vizmap.VisualMappingManager;
  */
 public final class CxExporter {
 
-    private static final String SELECTED = "selected";
+    private static final String  SELECTED                            = "selected";
 
-    private static final String SUID = "SUID";
+    private static final String  SUID                                = "SUID";
 
     private final static boolean DEFAULT_USE_DEFAULT_PRETTY_PRINTING = false;
 
@@ -83,7 +83,6 @@ public final class CxExporter {
     public final static CxExporter createInstance() {
         return new CxExporter();
     }
-     
 
     private final static void writeCartesianLayout(final CyNetworkView view, final CxWriter w) throws IOException {
         final CyNetwork network = view.getModel();
@@ -91,9 +90,9 @@ public final class CxExporter {
         for (final CyNode cy_node : network.getNodeList()) {
             final View<CyNode> node_view = view.getNodeView(cy_node);
             elements.add(new CartesianLayoutElement(Util.makeId(cy_node.getSUID()), node_view
-                    .getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
-                    .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION), node_view
-                    .getVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION)));
+                                                    .getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
+                                                    .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION), node_view
+                                                    .getVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION)));
 
         }
         final long t0 = System.currentTimeMillis();
@@ -129,17 +128,17 @@ public final class CxExporter {
                             }
                             if (!attr_values.isEmpty()) {
                                 e = new EdgeAttributesElement(Util.makeId(cy_edge.getSUID()),
-                                                                column_name,
-                                                                attr_values,
-                                                                AbstractAttributesElement.determineType(((List) value)
-                                                                        .get(0)));
+                                                              column_name,
+                                                              attr_values,
+                                                              AbstractAttributesElement.determineType(((List) value)
+                                                                      .get(0)));
                             }
                         }
                         else {
                             e = new EdgeAttributesElement(Util.makeId(cy_edge.getSUID()),
-                                                            column_name,
-                                                            String.valueOf(value),
-                                                            AbstractAttributesElement.determineType(value));
+                                                          column_name,
+                                                          String.valueOf(value),
+                                                          AbstractAttributesElement.determineType(value));
                         }
                         if (e != null) {
                             elements.add(e);
@@ -162,8 +161,9 @@ public final class CxExporter {
     private final static void writeEdges(final CyNetwork network, final CxWriter w) throws IOException {
         final List<AspectElement> elements = new ArrayList<AspectElement>();
         for (final CyEdge cyEdge : network.getEdgeList()) {
-            elements.add(new EdgesElement(Util.makeId(cyEdge.getSUID()), Util.makeId(cyEdge.getSource().getSUID()), Util.makeId(cyEdge
-                    .getTarget().getSUID())));
+            elements.add(new EdgesElement(Util.makeId(cyEdge.getSUID()),
+                                          Util.makeId(cyEdge.getSource().getSUID()),
+                                          Util.makeId(cyEdge.getTarget().getSUID())));
         }
         final long t0 = System.currentTimeMillis();
         w.writeAspectElements(elements);
@@ -214,7 +214,6 @@ public final class CxExporter {
             }
         }
 
-
         final long t0 = System.currentTimeMillis();
         w.writeAspectElements(elements);
         if (TimingUtil.TIMING) {
@@ -252,17 +251,17 @@ public final class CxExporter {
                             }
                             if (!attr_values.isEmpty()) {
                                 e = new NodeAttributesElement(Util.makeId(cy_node.getSUID()),
-                                                                column_name,
-                                                                attr_values,
-                                                                AbstractAttributesElement.determineType(((List) value)
-                                                                        .get(0)));
+                                                              column_name,
+                                                              attr_values,
+                                                              AbstractAttributesElement.determineType(((List) value)
+                                                                      .get(0)));
                             }
                         }
                         else {
                             e = new NodeAttributesElement(Util.makeId(cy_node.getSUID()),
-                                                            column_name,
-                                                            String.valueOf(value),
-                                                            AbstractAttributesElement.determineType(value));
+                                                          column_name,
+                                                          String.valueOf(value),
+                                                          AbstractAttributesElement.determineType(value));
                         }
                         if (e != null) {
                             elements.add(e);
@@ -354,7 +353,7 @@ public final class CxExporter {
     public void setLexicon(final VisualLexicon lexicon) {
         _lexicon = lexicon;
     }
-    
+
     public void setUseDefaultPrettyPrinting(final boolean use_default_pretty_printing) {
         _use_default_pretty_printing = use_default_pretty_printing;
     }
