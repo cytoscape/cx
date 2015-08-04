@@ -3,6 +3,7 @@ package org.cytoscape.io.internal.cxio;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyRow;
 import org.cytoscape.view.model.CyNetworkView;
+import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.model.View;
 import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.presentation.property.BasicVisualLexicon;
@@ -225,6 +227,21 @@ public final class CxExporter {
         writeNetworkAttributes(view.getModel(), w);
     }
 
+    
+    private final  void writeSubNetworks(final CyNetwork network, final CxWriter w) throws IOException {
+       Collection<CyNetworkView> views =  _networkview_manager.getNetworkViews(network);
+       for (CyNetworkView view : views) {
+           Collection<View<CyEdge>> edgeviews = view.getEdgeViews();
+           for (View<CyEdge> edgeview : edgeviews) {
+               System.out.println("e=" +  edgeview.getModel().getSUID() ); 
+           }
+           Collection<View<CyNode>> nodeviews = view.getNodeViews();
+           for (View<CyNode> nodeview : nodeviews) {
+               System.out.println("n=" +  nodeview.getModel().getSUID() ); 
+           }
+       } 
+    }
+    
     @SuppressWarnings("rawtypes")
     private final static void writeNodeAttributes(final CyNetwork network, final CxWriter w) throws IOException {
         final List<AspectElement> elements = new ArrayList<AspectElement>();
@@ -320,10 +337,9 @@ public final class CxExporter {
     }
 
     private VisualLexicon        _lexicon;
-
     private boolean              _use_default_pretty_printing;
-
     private VisualMappingManager _visual_mapping_manager;
+    private CyNetworkViewManager _networkview_manager;
 
     private CxExporter() {
         _use_default_pretty_printing = DEFAULT_USE_DEFAULT_PRETTY_PRINTING;
@@ -360,7 +376,10 @@ public final class CxExporter {
 
     public void setVisualMappingManager(final VisualMappingManager visual_mapping_manager) {
         _visual_mapping_manager = visual_mapping_manager;
-
+    }
+    
+    public void setNetworkViewManager(CyNetworkViewManager networkview_manager) {
+        _networkview_manager = networkview_manager;
     }
 
     /**
@@ -575,7 +594,7 @@ public final class CxExporter {
         addAspectFragmentWriters(w, aspects.getAspectFragmentWriters(time_stamp));
 
         w.start();
-
+        
         if (aspects.contains(Aspect.NODES)) {
             writeNodes(view, w);
         }
@@ -597,11 +616,16 @@ public final class CxExporter {
         if (aspects.contains(Aspect.VISUAL_PROPERTIES)) {
             writeVisualProperties(view, _visual_mapping_manager, _lexicon, w);
         }
+       // if (aspects.contains(Aspect.VISUAL_PROPERTIES)) { //TODO
+            writeSubNetworks(view.getModel(), w);
+      //  }
 
         w.end();
 
         return new CxOutput(out, Status.OK);
 
     }
+
+    
 
 }

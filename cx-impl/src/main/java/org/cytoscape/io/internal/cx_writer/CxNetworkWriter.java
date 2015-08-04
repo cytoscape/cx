@@ -15,6 +15,7 @@ import org.cytoscape.io.internal.cxio.Aspect;
 import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxExporter;
 import org.cytoscape.io.internal.cxio.TimingUtil;
+import org.cytoscape.io.internal.cxio.Util;
 import org.cytoscape.io.write.CyWriter;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.work.TaskMonitor;
@@ -26,8 +27,7 @@ public class CxNetworkWriter implements CyWriter {
     private final static Logger  logger      = LoggerFactory.getLogger(CxNetworkWriter.class);
     private final static String  ENCODING    = "UTF-8";
 
-    static DateFormat            DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-
+    
     private final OutputStream   os;
     private final CyNetwork      network;
     private final CharsetEncoder encoder;
@@ -67,7 +67,7 @@ public class CxNetworkWriter implements CyWriter {
         final CxExporter exporter = CxExporter.createInstance();
         exporter.setUseDefaultPrettyPrinting(true);
 
-        final String time_stamp = DATE_FORMAT.format(new Date());
+        final String time_stamp = Util.makeTimeStamp();
 
         final long t0 = System.currentTimeMillis();
 

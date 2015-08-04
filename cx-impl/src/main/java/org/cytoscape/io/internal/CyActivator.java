@@ -15,6 +15,7 @@ import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.subnetwork.CyRootNetworkManager;
 import org.cytoscape.service.util.AbstractCyActivator;
+import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.presentation.RenderingEngineManager;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.osgi.framework.BundleContext;
@@ -33,7 +34,7 @@ public class CyActivator extends AbstractCyActivator {
 
         final StreamUtil streamUtil = getService(bc, StreamUtil.class);
 
-        final BasicCyFileFilter cxFilter = new BasicCyFileFilter(new String[] { "cx" },
+        final BasicCyFileFilter cx_filter = new BasicCyFileFilter(new String[] { "cx" },
                                                                  new String[] { "application/json" },
                                                                  "CX JSON",
                                                                  DataCategory.NETWORK,
@@ -42,13 +43,15 @@ public class CyActivator extends AbstractCyActivator {
         // Writer:
         final VisualMappingManager visual_mapping_manager = getService(bc, VisualMappingManager.class);
         final CyApplicationManager application_manager = getService(bc, CyApplicationManager.class);
+        final CyNetworkViewManager networkview_manager = getService(bc, CyNetworkViewManager.class);
         // final CustomGraphicsManager custom_graphics_manager = getService(bc,
         // CustomGraphicsManager.class);
 
-        final CxNetworkWriterFactory cxNetworkWriterFactory = new CxNetworkWriterFactory(cxFilter,
+        final CxNetworkWriterFactory cxNetworkWriterFactory = new CxNetworkWriterFactory(cx_filter,
                                                                                          visual_mapping_manager,
                                                                                          application_manager,
-                                                                                         null);
+                                                                                         null,
+                                                                                         networkview_manager);
 
         final Properties cxWriterFactoryProperties = new Properties();
 

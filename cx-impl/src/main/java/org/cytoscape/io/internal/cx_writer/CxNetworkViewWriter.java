@@ -14,8 +14,10 @@ import org.cytoscape.io.internal.cxio.Aspect;
 import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxExporter;
 import org.cytoscape.io.internal.cxio.TimingUtil;
+import org.cytoscape.io.internal.cxio.Util;
 import org.cytoscape.io.write.CyWriter;
 import org.cytoscape.view.model.CyNetworkView;
+import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.work.TaskMonitor;
@@ -32,12 +34,14 @@ public class CxNetworkViewWriter implements CyWriter {
     private final VisualMappingManager  _visual_mapping_manager;
     private final VisualLexicon         _lexicon;
     private final CustomGraphicsManager _custom_graphics_manager;
+    private final CyNetworkViewManager _networkview_manager;
 
     public CxNetworkViewWriter(final OutputStream os, final CyNetworkView network_view) {
         _os = os;
         _network_view = network_view;
         _visual_mapping_manager = null;
         _custom_graphics_manager = null;
+        _networkview_manager = null;
         _lexicon = null;
         if (Charset.isSupported(ENCODING)) {
             // UTF-8 is supported by system
@@ -54,11 +58,13 @@ public class CxNetworkViewWriter implements CyWriter {
                                final CyNetworkView network_view,
                                final VisualMappingManager visual_mapping_manager,
                                final CustomGraphicsManager custom_graphics_manager,
+                               final CyNetworkViewManager networkview_manager,
                                final VisualLexicon lexicon) {
         _os = os;
         _network_view = network_view;
         _visual_mapping_manager = visual_mapping_manager;
         _custom_graphics_manager = custom_graphics_manager;
+        _networkview_manager = networkview_manager;
         _lexicon = lexicon;
         if (Charset.isSupported(ENCODING)) {
             // UTF-8 is supported by system
@@ -105,6 +111,7 @@ public class CxNetworkViewWriter implements CyWriter {
         aspects.addAspect(Aspect.NETWORK_ATTRIBUTES);
         aspects.addAspect(Aspect.NODE_ATTRIBUTES);
         aspects.addAspect(Aspect.EDGE_ATTRIBUTES);
+        aspects.addAspect(Aspect.SUBNETWORKS);
         aspects.addAspect(Aspect.VISUAL_PROPERTIES);
 
         // final AspectKeyFilter na_filter = new
@@ -123,8 +130,9 @@ public class CxNetworkViewWriter implements CyWriter {
         exporter.setUseDefaultPrettyPrinting(true);
         exporter.setLexicon(_lexicon);
         exporter.setVisualMappingManager(_visual_mapping_manager);
+        exporter.setNetworkViewManager(_networkview_manager);
 
-        final String time_stamp = CxNetworkWriter.DATE_FORMAT.format(new Date());
+        final String time_stamp = Util.makeTimeStamp();
 
         final long t0 = System.currentTimeMillis();
 

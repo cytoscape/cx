@@ -12,6 +12,7 @@ import org.cxio.aspects.readers.EdgesFragmentReader;
 import org.cxio.aspects.readers.NetworkAttributesFragmentReader;
 import org.cxio.aspects.readers.NodeAttributesFragmentReader;
 import org.cxio.aspects.readers.NodesFragmentReader;
+import org.cxio.aspects.readers.SubNetworkFragmentReader;
 import org.cxio.aspects.readers.VisualPropertiesFragmentReader;
 import org.cxio.aspects.writers.CartesianLayoutFragmentWriter;
 import org.cxio.aspects.writers.EdgeAttributesFragmentWriter;
@@ -19,6 +20,7 @@ import org.cxio.aspects.writers.EdgesFragmentWriter;
 import org.cxio.aspects.writers.NetworkAttributesFragmentWriter;
 import org.cxio.aspects.writers.NodeAttributesFragmentWriter;
 import org.cxio.aspects.writers.NodesFragmentWriter;
+import org.cxio.aspects.writers.SubNetworkFragmentWriter;
 import org.cxio.aspects.writers.VisualPropertiesFragmentWriter;
 import org.cxio.core.interfaces.AspectFragmentReader;
 import org.cxio.core.interfaces.AspectFragmentWriter;
@@ -97,6 +99,9 @@ public final class AspectSet {
         if (_aspects.contains(Aspect.VISUAL_PROPERTIES)) {
             writers.add(VisualPropertiesFragmentWriter.createInstance());
         }
+        if (_aspects.contains(Aspect.SUBNETWORKS)) {
+            writers.add(SubNetworkFragmentWriter.createInstance());
+        }
         return writers;
     }
 
@@ -137,6 +142,11 @@ public final class AspectSet {
             w.setTimeStamp(time_stamp);
             writers.add(w);
         }
+        if (_aspects.contains(Aspect.SUBNETWORKS)) {
+            final SubNetworkFragmentWriter w = SubNetworkFragmentWriter.createInstance();
+            w.setTimeStamp(time_stamp);
+            writers.add(w);
+        }
         return writers;
     }
 
@@ -162,6 +172,9 @@ public final class AspectSet {
         }
         if (_aspects.contains(Aspect.VISUAL_PROPERTIES)) {
             readers.add(VisualPropertiesFragmentReader.createInstance());
+        }
+        if (_aspects.contains(Aspect.SUBNETWORKS)) {
+            readers.add(SubNetworkFragmentReader.createInstance());
         }
         return readers;
     }

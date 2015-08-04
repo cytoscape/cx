@@ -6,6 +6,7 @@ import org.cxio.aspects.datamodels.EdgesElement;
 import org.cxio.aspects.datamodels.NetworkAttributesElement;
 import org.cxio.aspects.datamodels.NodeAttributesElement;
 import org.cxio.aspects.datamodels.NodesElement;
+import org.cxio.aspects.datamodels.SubNetworkElement;
 import org.cxio.aspects.datamodels.VisualPropertiesElement;
 
 /**
@@ -23,6 +24,7 @@ public enum Aspect {
     EDGE_ATTRIBUTES(EdgeAttributesElement.NAME),
     NODE_ATTRIBUTES(NodeAttributesElement.NAME),
     NETWORK_ATTRIBUTES(NetworkAttributesElement.NAME),
+    SUBNETWORKS(SubNetworkElement.NAME),
     VISUAL_PROPERTIES(VisualPropertiesElement.NAME);
 
     private final String _s;
