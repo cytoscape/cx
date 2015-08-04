@@ -1,16 +1,7 @@
 package org.cytoscape.io.cxio;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
-import java.util.List;
-import java.util.SortedMap;
 
-import org.cxio.aspects.datamodels.AbstractAttributesElement.ATTRIBUTE_TYPE;
-import org.cxio.aspects.datamodels.EdgeAttributesElement;
-import org.cxio.core.CxReader;
-import org.cxio.core.interfaces.AspectElement;
 import org.junit.Test;
 
 public class EdgeAttributesFragmentReaderTest {
@@ -42,43 +33,52 @@ public class EdgeAttributesFragmentReaderTest {
                 + "{\"edgeAttributes\":[{\"@id\":\"_ea2\",\"edges\":[\"_e38\"], \"attributes\":{\"deleted\":[\"true\"]}, \"types\":{\"deleted\":\"boolean\"}}]}"
                 + "]";
 
-//        final CxReader p = CxReader.createInstance(t0, TestUtil.getCytoscapeAspectFragmentReaders());
-//        final SortedMap<String, List<AspectElement>> r0 = CxReader.parseAsMap(p);
-//
-//        assertTrue("failed to parse " + EdgeAttributesElement.NAME + " aspect",
-//                   r0.containsKey(EdgeAttributesElement.NAME));
-//        assertFalse("failed to parse " + EdgeAttributesElement.NAME + " aspect", r0.get(EdgeAttributesElement.NAME)
-//                .isEmpty());
-//        assertTrue("failed to get expected number of " + EdgeAttributesElement.NAME + " aspects",
-//                   r0.get(EdgeAttributesElement.NAME).size() == 3);
-//
-//        final List<AspectElement> aspects = r0.get(EdgeAttributesElement.NAME);
-//
-//        final EdgeAttributesElement ea1 = (EdgeAttributesElement) aspects.get(0);
-//        assertTrue(ea1.getId().equals("_ea0"));
-//        assertTrue(ea1.getEdges().size() == 2);
-//        assertTrue(ea1.getAttributes().size() == 3);
-//
-//        assertTrue(ea1.getEdges().contains("_e38"));
-//        assertTrue(ea1.getEdges().contains("_e39"));
-//        assertTrue(ea1.getValues("interaction").size() == 2);
-//        assertTrue(ea1.getValues("PSIMI_25_detection_method").size() == 1);
-//        assertTrue(ea1.getValues("name").size() == 1);
-//        assertTrue(ea1.getValues("interaction").contains("479019"));
-//        assertTrue(ea1.getValues("interaction").contains("one more"));
-//        assertTrue(ea1.getValues("PSIMI_25_detection_method").contains("genetic interference"));
-//        assertTrue(ea1.getValues("name").contains("768303 (479019) 791595"));
-//
-//        final EdgeAttributesElement ea2 = (EdgeAttributesElement) aspects.get(1);
-//        assertTrue(ea2.getId().equals("_ea1"));
-//        assertTrue(ea2.getEdges().size() == 3);
-//        assertTrue(ea2.getAttributes().size() == 0);
-//        assertTrue(ea2.getEdges().contains("_e22"));
-//        assertTrue(ea2.getEdges().contains("_e33"));
-//        assertTrue(ea2.getEdges().contains("_e44"));
-//
-//        final EdgeAttributesElement ea3 = (EdgeAttributesElement) aspects.get(2);
-//        assertTrue(ea3.getType("deleted") == ATTRIBUTE_TYPE.BOOLEAN);
+        // final CxReader p = CxReader.createInstance(t0,
+        // TestUtil.getCytoscapeAspectFragmentReaders());
+        // final SortedMap<String, List<AspectElement>> r0 =
+        // CxReader.parseAsMap(p);
+        //
+        // assertTrue("failed to parse " + EdgeAttributesElement.NAME +
+        // " aspect",
+        // r0.containsKey(EdgeAttributesElement.NAME));
+        // assertFalse("failed to parse " + EdgeAttributesElement.NAME +
+        // " aspect", r0.get(EdgeAttributesElement.NAME)
+        // .isEmpty());
+        // assertTrue("failed to get expected number of " +
+        // EdgeAttributesElement.NAME + " aspects",
+        // r0.get(EdgeAttributesElement.NAME).size() == 3);
+        //
+        // final List<AspectElement> aspects =
+        // r0.get(EdgeAttributesElement.NAME);
+        //
+        // final EdgeAttributesElement ea1 = (EdgeAttributesElement)
+        // aspects.get(0);
+        // assertTrue(ea1.getId().equals("_ea0"));
+        // assertTrue(ea1.getEdges().size() == 2);
+        // assertTrue(ea1.getAttributes().size() == 3);
+        //
+        // assertTrue(ea1.getEdges().contains("_e38"));
+        // assertTrue(ea1.getEdges().contains("_e39"));
+        // assertTrue(ea1.getValues("interaction").size() == 2);
+        // assertTrue(ea1.getValues("PSIMI_25_detection_method").size() == 1);
+        // assertTrue(ea1.getValues("name").size() == 1);
+        // assertTrue(ea1.getValues("interaction").contains("479019"));
+        // assertTrue(ea1.getValues("interaction").contains("one more"));
+        // assertTrue(ea1.getValues("PSIMI_25_detection_method").contains("genetic interference"));
+        // assertTrue(ea1.getValues("name").contains("768303 (479019) 791595"));
+        //
+        // final EdgeAttributesElement ea2 = (EdgeAttributesElement)
+        // aspects.get(1);
+        // assertTrue(ea2.getId().equals("_ea1"));
+        // assertTrue(ea2.getEdges().size() == 3);
+        // assertTrue(ea2.getAttributes().size() == 0);
+        // assertTrue(ea2.getEdges().contains("_e22"));
+        // assertTrue(ea2.getEdges().contains("_e33"));
+        // assertTrue(ea2.getEdges().contains("_e44"));
+        //
+        // final EdgeAttributesElement ea3 = (EdgeAttributesElement)
+        // aspects.get(2);
+        // assertTrue(ea3.getType("deleted") == ATTRIBUTE_TYPE.BOOLEAN);
 
     }
 

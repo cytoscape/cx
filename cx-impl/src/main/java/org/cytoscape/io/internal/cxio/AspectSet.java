@@ -100,6 +100,46 @@ public final class AspectSet {
         return writers;
     }
 
+    final Set<AspectFragmentWriter> getAspectFragmentWriters(final String time_stamp) {
+        final Set<AspectFragmentWriter> writers = new HashSet<AspectFragmentWriter>();
+        if (_aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
+            final CartesianLayoutFragmentWriter w = CartesianLayoutFragmentWriter.createInstance();
+            w.setTimeStamp(time_stamp);
+            writers.add(w);
+        }
+        if (_aspects.contains(Aspect.EDGE_ATTRIBUTES)) {
+            final EdgeAttributesFragmentWriter w = EdgeAttributesFragmentWriter.createInstance();
+            w.setTimeStamp(time_stamp);
+            writers.add(w);
+        }
+        if (_aspects.contains(Aspect.EDGES)) {
+            final EdgesFragmentWriter w = EdgesFragmentWriter.createInstance();
+            w.setTimeStamp(time_stamp);
+            writers.add(w);
+        }
+        if (_aspects.contains(Aspect.NETWORK_ATTRIBUTES)) {
+            final NetworkAttributesFragmentWriter w = NetworkAttributesFragmentWriter.createInstance();
+            w.setTimeStamp(time_stamp);
+            writers.add(w);
+        }
+        if (_aspects.contains(Aspect.NODE_ATTRIBUTES)) {
+            final NodeAttributesFragmentWriter w = NodeAttributesFragmentWriter.createInstance();
+            w.setTimeStamp(time_stamp);
+            writers.add(w);
+        }
+        if (_aspects.contains(Aspect.NODES)) {
+            final NodesFragmentWriter w = NodesFragmentWriter.createInstance();
+            w.setTimeStamp(time_stamp);
+            writers.add(w);
+        }
+        if (_aspects.contains(Aspect.VISUAL_PROPERTIES)) {
+            final VisualPropertiesFragmentWriter w = VisualPropertiesFragmentWriter.createInstance();
+            w.setTimeStamp(time_stamp);
+            writers.add(w);
+        }
+        return writers;
+    }
+
     final Set<AspectFragmentReader> getAspectFragmentReaders() {
         final Set<AspectFragmentReader> readers = new HashSet<AspectFragmentReader>();
         if (_aspects.contains(Aspect.CARTESIAN_LAYOUT)) {

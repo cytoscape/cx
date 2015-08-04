@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
+import java.util.Date;
 
 import org.cytoscape.ding.customgraphics.CustomGraphicsManager;
 import org.cytoscape.io.internal.cxio.Aspect;
@@ -122,15 +123,19 @@ public class CxNetworkViewWriter implements CyWriter {
         exporter.setUseDefaultPrettyPrinting(true);
         exporter.setLexicon(_lexicon);
         exporter.setVisualMappingManager(_visual_mapping_manager);
+
+        final String time_stamp = CxNetworkWriter.DATE_FORMAT.format(new Date());
+
         final long t0 = System.currentTimeMillis();
+
         if (TimingUtil.WRITE_TO_DEV_NULL) {
-            exporter.writeCX(_network_view, aspects, new FileOutputStream(new File("/dev/null")));
+            exporter.writeCX(_network_view, aspects, new FileOutputStream(new File("/dev/null")), time_stamp);
         }
         else if (TimingUtil.WRITE_TO_BYTE_ARRAY_OUTPUTSTREAM) {
-            exporter.writeCX(_network_view, aspects, new ByteArrayOutputStream());
+            exporter.writeCX(_network_view, aspects, new ByteArrayOutputStream(), time_stamp);
         }
         else {
-            exporter.writeCX(_network_view, aspects, _os);
+            exporter.writeCX(_network_view, aspects, _os, time_stamp);
             _os.close();
         }
 

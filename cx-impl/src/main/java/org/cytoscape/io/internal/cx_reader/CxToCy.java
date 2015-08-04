@@ -139,7 +139,7 @@ public final class CxToCy {
             final CartesianLayoutElement cle = (CartesianLayoutElement) ae;
             _position_map.put(node_map.get(cle.getNode()),
                               new Double[] { Double.valueOf(cle.getX()), Double.valueOf(cle.getY()),
-                                      Double.valueOf(cle.getZ()) });
+                Double.valueOf(cle.getZ()) });
         }
     }
 

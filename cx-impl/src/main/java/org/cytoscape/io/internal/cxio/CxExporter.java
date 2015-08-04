@@ -90,9 +90,9 @@ public final class CxExporter {
         for (final CyNode cy_node : network.getNodeList()) {
             final View<CyNode> node_view = view.getNodeView(cy_node);
             elements.add(new CartesianLayoutElement(Util.makeId(cy_node.getSUID()), node_view
-                                                    .getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
-                                                    .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION), node_view
-                                                    .getVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION)));
+                    .getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
+                    .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION), node_view
+                    .getVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION)));
 
         }
         final long t0 = System.currentTimeMillis();
@@ -131,7 +131,7 @@ public final class CxExporter {
                                                               column_name,
                                                               attr_values,
                                                               AbstractAttributesElement.determineType(((List) value)
-                                                                      .get(0)));
+                                                                                                      .get(0)));
                             }
                         }
                         else {
@@ -254,7 +254,7 @@ public final class CxExporter {
                                                               column_name,
                                                               attr_values,
                                                               AbstractAttributesElement.determineType(((List) value)
-                                                                      .get(0)));
+                                                                                                      .get(0)));
                             }
                         }
                         else {
@@ -394,10 +394,11 @@ public final class CxExporter {
     public final CxOutput writeCX(final CyNetwork network,
                                   final AspectSet aspects,
                                   final FilterSet filters,
-                                  final OutputStream out) throws IOException {
+                                  final OutputStream out,
+                                  final String time_stamp) throws IOException {
         final CxWriter w = CxWriter.createInstance(out, _use_default_pretty_printing);
 
-        addAspectFragmentWriters(w, aspects.getAspectFragmentWriters(), filters.getFiltersAsMap());
+        addAspectFragmentWriters(w, aspects.getAspectFragmentWriters(time_stamp), filters.getFiltersAsMap());
 
         w.start();
 
@@ -445,10 +446,12 @@ public final class CxExporter {
      * @see CxOutput
      *
      */
-    public final CxOutput writeCX(final CyNetwork network, final AspectSet aspects, final OutputStream out)
-            throws IOException {
+    public final CxOutput writeCX(final CyNetwork network,
+                                  final AspectSet aspects,
+                                  final OutputStream out,
+                                  final String time_stamp) throws IOException {
         final CxWriter w = CxWriter.createInstance(out, _use_default_pretty_printing);
-        addAspectFragmentWriters(w, aspects.getAspectFragmentWriters());
+        addAspectFragmentWriters(w, aspects.getAspectFragmentWriters(time_stamp));
 
         w.start();
 
@@ -505,10 +508,11 @@ public final class CxExporter {
     public final CxOutput writeCX(final CyNetworkView view,
                                   final AspectSet aspects,
                                   final FilterSet filters,
-                                  final OutputStream out) throws IOException {
+                                  final OutputStream out,
+                                  final String time_stamp) throws IOException {
         final CxWriter w = CxWriter.createInstance(out, _use_default_pretty_printing);
 
-        addAspectFragmentWriters(w, aspects.getAspectFragmentWriters(), filters.getFiltersAsMap());
+        addAspectFragmentWriters(w, aspects.getAspectFragmentWriters(time_stamp), filters.getFiltersAsMap());
 
         w.start();
 
@@ -563,10 +567,12 @@ public final class CxExporter {
      * @see CxOutput
      *
      */
-    public final CxOutput writeCX(final CyNetworkView view, final AspectSet aspects, final OutputStream out)
-            throws IOException {
+    public final CxOutput writeCX(final CyNetworkView view,
+                                  final AspectSet aspects,
+                                  final OutputStream out,
+                                  final String time_stamp) throws IOException {
         final CxWriter w = CxWriter.createInstance(out, _use_default_pretty_printing);
-        addAspectFragmentWriters(w, aspects.getAspectFragmentWriters());
+        addAspectFragmentWriters(w, aspects.getAspectFragmentWriters(time_stamp));
 
         w.start();
 

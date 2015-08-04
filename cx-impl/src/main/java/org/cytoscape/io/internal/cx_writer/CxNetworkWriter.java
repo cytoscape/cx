@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.cytoscape.io.internal.cxio.Aspect;
 import org.cytoscape.io.internal.cxio.AspectSet;
@@ -20,8 +23,10 @@ import org.slf4j.LoggerFactory;
 
 public class CxNetworkWriter implements CyWriter {
 
-    private final static Logger  logger   = LoggerFactory.getLogger(CxNetworkWriter.class);
-    private final static String  ENCODING = "UTF-8";
+    private final static Logger  logger      = LoggerFactory.getLogger(CxNetworkWriter.class);
+    private final static String  ENCODING    = "UTF-8";
+
+    static DateFormat            DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
     private final OutputStream   os;
     private final CyNetwork      network;
@@ -62,16 +67,18 @@ public class CxNetworkWriter implements CyWriter {
         final CxExporter exporter = CxExporter.createInstance();
         exporter.setUseDefaultPrettyPrinting(true);
 
+        final String time_stamp = DATE_FORMAT.format(new Date());
+
         final long t0 = System.currentTimeMillis();
 
         if (TimingUtil.WRITE_TO_DEV_NULL) {
-            exporter.writeCX(network, aspects, new FileOutputStream(new File("/dev/null")));
+            exporter.writeCX(network, aspects, new FileOutputStream(new File("/dev/null")), time_stamp);
         }
         else if (TimingUtil.WRITE_TO_BYTE_ARRAY_OUTPUTSTREAM) {
-            exporter.writeCX(network, aspects, new ByteArrayOutputStream());
+            exporter.writeCX(network, aspects, new ByteArrayOutputStream(), time_stamp);
         }
         else {
-            exporter.writeCX(network, aspects, os);
+            exporter.writeCX(network, aspects, os, time_stamp);
             os.close();
         }
 
