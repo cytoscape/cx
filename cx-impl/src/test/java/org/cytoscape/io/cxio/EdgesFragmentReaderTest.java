@@ -41,7 +41,7 @@ public class EdgesFragmentReaderTest {
         assertFalse("failed to parse " + EdgesElement.NAME + " aspect", r0.get(EdgesElement.NAME).isEmpty());
 
         assertTrue("failed to parse expected number of " + EdgesElement.NAME + " aspects", r0.get(EdgesElement.NAME)
-                   .size() == 4);
+                .size() == 4);
 
         final List<AspectElement> edge_aspects = r0.get(EdgesElement.NAME);
 

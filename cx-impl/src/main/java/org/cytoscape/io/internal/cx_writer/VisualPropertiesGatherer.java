@@ -56,15 +56,15 @@ public final class VisualPropertiesGatherer {
         final Set<VisualProperty<?>> all_visual_properties = lexicon.getAllVisualProperties();
 
         if (types.contains(VisualPropertyType.NETWORK)) {
-            gatherNetworkVisualProperties(view, elements, all_visual_properties);
+            gatherNetworkVisualProperties(view, network, elements, all_visual_properties);
         }
 
         if (types.contains(VisualPropertyType.NODES_DEFAULT)) {
-            gatherNodesDefaultVisualProperties(elements, current_visual_style, all_visual_properties);
+            gatherNodesDefaultVisualProperties(network, elements, current_visual_style, all_visual_properties);
         }
 
         if (types.contains(VisualPropertyType.EDGES_DEFAULT)) {
-            gatherEdgesDefaultVisualProperties(elements, current_visual_style, all_visual_properties);
+            gatherEdgesDefaultVisualProperties(network, elements, current_visual_style, all_visual_properties);
         }
 
         if (types.contains(VisualPropertyType.NODES)) {
@@ -120,24 +120,20 @@ public final class VisualPropertiesGatherer {
         }
     }
 
-    // private final static void x(VisualProperty vp,
-    // final View view ) {
-    // final Object vp_value = view.isSet(vp)
-    //
-    // }
-
     @SuppressWarnings("rawtypes")
-    private static void gatherEdgesDefaultVisualProperties(final List<AspectElement> visual_properties,
+    private static void gatherEdgesDefaultVisualProperties(final CyNetwork network,
+                                                           final List<AspectElement> visual_properties,
                                                            final VisualStyle current_visual_style,
                                                            final Set<VisualProperty<?>> all_visual_properties) {
-        final VisualPropertiesElement edge_default_cxvp = new VisualPropertiesElement(VisualPropertyType.EDGES_DEFAULT.asString());
+        final VisualPropertiesElement e = new VisualPropertiesElement(VisualPropertyType.EDGES_DEFAULT.asString(),
+                                                                      String.valueOf(network.getSUID()));
         for (final VisualProperty visual_property : all_visual_properties) {
             if (visual_property.getTargetDataType() == CyEdge.class) {
 
-                addProperties(current_visual_style, visual_property, edge_default_cxvp);
+                addProperties(current_visual_style, visual_property, e);
             }
         }
-        visual_properties.add(edge_default_cxvp);
+        visual_properties.add(e);
     }
 
     @SuppressWarnings("rawtypes")
@@ -147,44 +143,48 @@ public final class VisualPropertiesGatherer {
                                                    final Set<VisualProperty<?>> all_visual_properties) {
         for (final CyEdge edge : network.getEdgeList()) {
             final View<CyEdge> edge_view = view.getEdgeView(edge);
-            final VisualPropertiesElement edge_cxvp = new VisualPropertiesElement(VisualPropertyType.EDGES.asString());
-            edge_cxvp.addAppliesTo(org.cytoscape.io.internal.cxio.Util.makeId(edge.getSUID()));
+            final VisualPropertiesElement e = new VisualPropertiesElement(VisualPropertyType.EDGES.asString(),
+                                                                          String.valueOf(network.getSUID()));
+            e.addAppliesTo(org.cytoscape.io.internal.cxio.Util.makeId(edge.getSUID()));
             for (final VisualProperty visual_property : all_visual_properties) {
                 if (visual_property.getTargetDataType() == CyEdge.class) {
-                    addProperties(edge_view, visual_property, edge_cxvp);
+                    addProperties(edge_view, visual_property, e);
                 }
             }
-            if ((edge_cxvp.getProperties() != null) && !edge_cxvp.getProperties().isEmpty()) {
-                visual_properties.add(edge_cxvp);
+            if ((e.getProperties() != null) && !e.getProperties().isEmpty()) {
+                visual_properties.add(e);
             }
         }
     }
 
     @SuppressWarnings("rawtypes")
     private static void gatherNetworkVisualProperties(final CyNetworkView view,
+                                                      final CyNetwork network,
                                                       final List<AspectElement> visual_properties,
                                                       final Set<VisualProperty<?>> all_visual_properties) {
-        final VisualPropertiesElement cvp = new VisualPropertiesElement(VisualPropertyType.NETWORK.asString());
+        final VisualPropertiesElement e = new VisualPropertiesElement(VisualPropertyType.NETWORK.asString(),
+                                                                      String.valueOf(network.getSUID()));
         for (final VisualProperty visual_property : all_visual_properties) {
-
             if (visual_property.getTargetDataType() == CyNetwork.class) {
-                addProperties(view, visual_property, cvp);
+                addProperties(view, visual_property, e);
             }
         }
-        visual_properties.add(cvp);
+        visual_properties.add(e);
     }
 
     @SuppressWarnings("rawtypes")
-    private static void gatherNodesDefaultVisualProperties(final List<AspectElement> visual_properties,
+    private static void gatherNodesDefaultVisualProperties(final CyNetwork network,
+                                                           final List<AspectElement> visual_properties,
                                                            final VisualStyle current_visual_style,
                                                            final Set<VisualProperty<?>> all_visual_properties) {
-        final VisualPropertiesElement node_default_cxvp = new VisualPropertiesElement(VisualPropertyType.NODES_DEFAULT.asString());
+        final VisualPropertiesElement e = new VisualPropertiesElement(VisualPropertyType.NODES_DEFAULT.asString(),
+                                                                      String.valueOf(network.getSUID()));
         for (final VisualProperty visual_property : all_visual_properties) {
             if (visual_property.getTargetDataType() == CyNode.class) {
-                addProperties(current_visual_style, visual_property, node_default_cxvp);
+                addProperties(current_visual_style, visual_property, e);
             }
         }
-        visual_properties.add(node_default_cxvp);
+        visual_properties.add(e);
     }
 
     @SuppressWarnings("rawtypes")
@@ -194,16 +194,19 @@ public final class VisualPropertiesGatherer {
                                                    final Set<VisualProperty<?>> all_visual_properties) {
         for (final CyNode cy_node : network.getNodeList()) {
             final View<CyNode> node_view = view.getNodeView(cy_node);
-            final VisualPropertiesElement node_cxvp = new VisualPropertiesElement(VisualPropertyType.NODES.asString());
-            node_cxvp.addAppliesTo(org.cytoscape.io.internal.cxio.Util.makeId(cy_node.getSUID()));
+            final VisualPropertiesElement e = new VisualPropertiesElement(VisualPropertyType.NODES.asString(),
+                                                                          String.valueOf(network.getSUID()));
+
+            e.addAppliesTo(org.cytoscape.io.internal.cxio.Util.makeId(cy_node.getSUID()));
+
             for (final VisualProperty visual_property : all_visual_properties) {
                 if (visual_property.getTargetDataType() == CyNode.class) {
-                    addProperties(node_view, visual_property, node_cxvp);
+                    addProperties(node_view, visual_property, e);
                 }
 
             }
-            if ((node_cxvp.getProperties() != null) && !node_cxvp.getProperties().isEmpty()) {
-                visual_properties.add(node_cxvp);
+            if ((e.getProperties() != null) && !e.getProperties().isEmpty()) {
+                visual_properties.add(e);
             }
 
         }

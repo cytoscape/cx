@@ -9,6 +9,7 @@ import java.util.TreeSet;
 import org.cxio.aspects.readers.CartesianLayoutFragmentReader;
 import org.cxio.aspects.readers.EdgeAttributesFragmentReader;
 import org.cxio.aspects.readers.EdgesFragmentReader;
+import org.cxio.aspects.readers.GroupFragmentReader;
 import org.cxio.aspects.readers.NetworkAttributesFragmentReader;
 import org.cxio.aspects.readers.NodeAttributesFragmentReader;
 import org.cxio.aspects.readers.NodesFragmentReader;
@@ -17,7 +18,9 @@ import org.cxio.aspects.readers.VisualPropertiesFragmentReader;
 import org.cxio.aspects.writers.CartesianLayoutFragmentWriter;
 import org.cxio.aspects.writers.EdgeAttributesFragmentWriter;
 import org.cxio.aspects.writers.EdgesFragmentWriter;
+import org.cxio.aspects.writers.GroupFragmentWriter;
 import org.cxio.aspects.writers.NetworkAttributesFragmentWriter;
+import org.cxio.aspects.writers.NetworkRelationsFragmentWriter;
 import org.cxio.aspects.writers.NodeAttributesFragmentWriter;
 import org.cxio.aspects.writers.NodesFragmentWriter;
 import org.cxio.aspects.writers.SubNetworkFragmentWriter;
@@ -102,6 +105,12 @@ public final class AspectSet {
         if (_aspects.contains(Aspect.SUBNETWORKS)) {
             writers.add(SubNetworkFragmentWriter.createInstance());
         }
+        if (_aspects.contains(Aspect.NETWORK_RELATIONS)) {
+            writers.add(NetworkRelationsFragmentWriter.createInstance());
+        }
+        if (_aspects.contains(Aspect.GROUPS)) {
+            writers.add(GroupFragmentWriter.createInstance());
+        }
         return writers;
     }
 
@@ -147,6 +156,16 @@ public final class AspectSet {
             w.setTimeStamp(time_stamp);
             writers.add(w);
         }
+        if (_aspects.contains(Aspect.NETWORK_RELATIONS)) {
+            final NetworkRelationsFragmentWriter w = NetworkRelationsFragmentWriter.createInstance();
+            w.setTimeStamp(time_stamp);
+            writers.add(w);
+        }
+        if (_aspects.contains(Aspect.GROUPS)) {
+            final GroupFragmentWriter w = GroupFragmentWriter.createInstance();
+            w.setTimeStamp(time_stamp);
+            writers.add(w);
+        }
         return writers;
     }
 
@@ -175,6 +194,9 @@ public final class AspectSet {
         }
         if (_aspects.contains(Aspect.SUBNETWORKS)) {
             readers.add(SubNetworkFragmentReader.createInstance());
+        }
+        if (_aspects.contains(Aspect.GROUPS)) {
+            readers.add(GroupFragmentReader.createInstance());
         }
         return readers;
     }

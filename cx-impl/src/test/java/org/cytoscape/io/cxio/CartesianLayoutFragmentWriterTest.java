@@ -31,9 +31,9 @@ public class CartesianLayoutFragmentWriterTest {
 
         assertEquals("[]", out0.toString());
 
-        final CartesianLayoutElement c0 = new CartesianLayoutElement("00", "0", "0");
-        final CartesianLayoutElement c1 = new CartesianLayoutElement("01", "1", "2");
-        final CartesianLayoutElement c2 = new CartesianLayoutElement("02", "3", "4");
+        final CartesianLayoutElement c0 = new CartesianLayoutElement("00", "0", "0", "0");
+        final CartesianLayoutElement c1 = new CartesianLayoutElement("01", "1", "2", "0");
+        final CartesianLayoutElement c2 = new CartesianLayoutElement("02", "3", "4", "0");
 
         final List<AspectElement> l1 = new ArrayList<AspectElement>();
         l1.add(c0);
@@ -49,7 +49,7 @@ public class CartesianLayoutFragmentWriterTest {
         w1.writeAspectElements(l1);
         w1.end();
 
-        assertEquals("[{\"cartesianLayout\":[{\"node\":\"00\",\"x\":0.0,\"y\":0.0},{\"node\":\"01\",\"x\":1.0,\"y\":2.0},{\"node\":\"02\",\"x\":3.0,\"y\":4.0}]}]",
+        assertEquals("[{\"cartesianLayout\":[{\"node\":\"00\",\"x\":0.0,\"y\":0.0,\"z\":0.0},{\"node\":\"01\",\"x\":1.0,\"y\":2.0,\"z\":0.0},{\"node\":\"02\",\"x\":3.0,\"y\":4.0,\"z\":0.0}]}]",
                      out1.toString());
 
     }

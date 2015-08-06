@@ -45,7 +45,7 @@ public class CartesianLayoutFragmentReaderTest {
                    r0.containsKey(CartesianLayoutElement.NAME));
 
         assertFalse("failed to parse " + CartesianLayoutElement.NAME + " aspect", r0.get(CartesianLayoutElement.NAME)
-                    .isEmpty());
+                .isEmpty());
 
         assertTrue("failed to parse expected number of " + CartesianLayoutElement.NAME + " aspects",
                    r0.get(CartesianLayoutElement.NAME).size() == 3);
