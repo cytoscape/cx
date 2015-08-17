@@ -4,12 +4,14 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.cxio.aspects.datamodels.VisualPropertiesElement;
 import org.cxio.core.CxReader;
 import org.cxio.core.interfaces.AspectElement;
@@ -40,10 +42,7 @@ import org.cytoscape.work.util.ListSingleSelection;
 
 public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
-    private CyNetwork                    _network = null;          // Supports
-    // only one
-    // CyNetwork
-    // per file.
+    private final List<CyNetwork>              _networks;          
     private final String                 _network_collection_name;
     private CxToCy                       _cx_to_cy;
     private final InputStream            _in;
@@ -67,17 +66,21 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         _network_collection_name = networkCollectionName;
         _visual_mapping_manager = visualMappingManager;
         _rendering_engine_manager = renderingEngineMgr;
+        _networks = new ArrayList<CyNetwork>();
     }
 
     @Override
     public CyNetwork[] getNetworks() {
-        final CyNetwork[] result = new CyNetwork[1];
-        result[0] = _network;
-        return result;
+        final CyNetwork[] results = new CyNetwork[_networks.size()];
+        for (int i = 0; i < results.length; ++i) {
+            results[ i ] = _networks.get(i);
+        }
+        return results;
     }
 
     @Override
     public CyNetworkView buildCyNetworkView(final CyNetwork network) {
+
         final CyNetworkView view = getNetworkViewFactory().createNetworkView(network);
 
         final VisualLexicon lexicon = _rendering_engine_manager.getDefaultVisualLexicon();
@@ -107,15 +110,23 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
             setProperties(lexicon, edge_vpe.get(edge).getProperties(), view.getEdgeView(edge), CyEdge.class);
         }
 
-        final Map<CyNode, Double[]> positionMap = _cx_to_cy.getNodePosition();
-        for (final CyNode node : positionMap.keySet()) {
-            final Double[] position = positionMap.get(node);
-            view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_X_LOCATION, position[0]);
-            view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION, position[1]);
-            view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION, position[2]);
+        final Map<String, Map<CyNode, CartesianLayoutElement>> position_map = _cx_to_cy.getNodePosition();
+
+        final Map<CyNode, CartesianLayoutElement> position_map_for_view = position_map.get(obtainNetworkId(network));
+
+        for (final CyNode node : position_map_for_view.keySet()) {
+            final CartesianLayoutElement e = position_map_for_view.get(node);
+            view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_X_LOCATION, e.getX());
+            view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION, e.getY());
+            view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION, e.getZ());
         }
 
         return view;
+    }
+
+    private final String obtainNetworkId(final CyNetwork network) {
+        return _cx_to_cy.getNetworkSuidToNetworkRelationsMap().get(network.getSUID());
+       // return String.valueOf(network.getSUID()); //TODO this is INCORRECT!!!!! FIXME FIXME
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -157,7 +168,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     }
 
     private static final Pattern DIRECT_NET_PROPS_PATTERN = Pattern
-            .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
+                                                                  .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
 
     @SuppressWarnings("rawtypes")
     private final static boolean shouldSetAsLocked(final VisualProperty vp) {
@@ -220,21 +231,23 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
             }
         }
 
-        final CyRootNetwork rootNetwork = getRootNetwork();
+        final CyRootNetwork root_network = getRootNetwork();
 
         // Select Network Collection
         // 1. Check from Tunable
         // 2. If not available, use optional parameter
-        CySubNetwork subNetwork;
-        if (rootNetwork != null) {
+        
+        if (root_network != null) {
             // Root network exists
-            subNetwork = rootNetwork.addSubNetwork();
-            _network = _cx_to_cy.createNetwork(res, subNetwork, null);
+           // subNetwork = root_network.addSubNetwork();
+           // _network = _cx_to_cy.createNetwork(res, subNetwork, null);
+            _networks.addAll( _cx_to_cy.createNetwork(res, root_network, null, null) );
         }
         else {
             // Need to create new network with new root.
-            subNetwork = (CySubNetwork) cyNetworkFactory.createNetwork();
-            _network = _cx_to_cy.createNetwork(res, subNetwork, _network_collection_name);
+            //subNetwork = (CySubNetwork) cyNetworkFactory.createNetwork();
+           // _network = _cx_to_cy.createNetwork(res, subNetwork, _network_collection_name);
+            _networks.addAll( _cx_to_cy.createNetwork(res, null, cyNetworkFactory,  _network_collection_name) );
         }
 
         if (TimingUtil.TIMING) {

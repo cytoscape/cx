@@ -535,10 +535,10 @@ public final class CxExporter {
         for (final CyNetwork n : networks) {
             final CySubNetwork subnet = (CySubNetwork) n;
             final CyRootNetwork root = subnet.getRootNetwork();
-            System.out.println("__ root              = " + root.getSUID());
-            System.out.println("__         nodecount = " + root.getNodeCount());
-            System.out.println("__ network.getSUID() = " + n.getSUID());
-            System.out.println("__         nodecount = " + n.getNodeCount());
+            //System.out.println("__ root              = " + root.getSUID());
+            //System.out.println("__         nodecount = " + root.getNodeCount());
+            //System.out.println("__ network.getSUID() = " + n.getSUID());
+           // System.out.println("__         nodecount = " + n.getNodeCount());
             final Collection<CyNetworkView> views = _networkview_manager.getNetworkViews(n);
             for (final CyNetworkView view : views) {
                 final CyNetwork my_network = view.getModel();
@@ -552,31 +552,31 @@ public final class CxExporter {
         // _networkview_manager.getNetworkViews(network);
         final Collection<CyNetworkView> views = _networkview_manager.getNetworkViewSet();
 
-        System.out.println("network.getSUID() = " + network.getSUID());
-        System.out.println("        nodecount = " + network.getNodeCount());
+        //System.out.println("network.getSUID() = " + network.getSUID());
+        //System.out.println("        nodecount = " + network.getNodeCount());
 
         for (final CyNetworkView view : views) {
 
             final CyNetwork my_network = view.getModel();
 
-            System.out.println("  view.getModel().getSUID() = " + my_network.getSUID());
-            System.out.println("                  nodecount = " + my_network.getNodeCount());
+           // System.out.println("  view.getModel().getSUID() = " + my_network.getSUID());
+           // System.out.println("                  nodecount = " + my_network.getNodeCount());
 
             final CyRow row = my_network.getRow(my_network);
             final String name = row.get("name", String.class);
             final SubNetworkElement subnetwork = new SubNetworkElement(String.valueOf(my_network.getSUID()), name);
 
-            System.out.println("subnet " + name + "-------------------------------------------------");
+          //  System.out.println("subnet " + name + "-------------------------------------------------");
             final Collection<View<CyEdge>> edgeviews = view.getEdgeViews();
-            System.out.println("e: " + edgeviews.size());
+          //  System.out.println("e: " + edgeviews.size());
 
             for (final View<CyEdge> edgeview : edgeviews) {
-                subnetwork.addEdge(String.valueOf(edgeview.getModel().getSUID()));
+                subnetwork.addEdge(Util.makeId(String.valueOf(edgeview.getModel().getSUID())));
             }
             final Collection<View<CyNode>> nodeviews = view.getNodeViews();
-            System.out.println("n: " + nodeviews.size());
+           // System.out.println("n: " + nodeviews.size());
             for (final View<CyNode> nodeview : nodeviews) {
-                subnetwork.addNode(String.valueOf(nodeview.getModel().getSUID()));
+                subnetwork.addNode(Util.makeId(String.valueOf(nodeview.getModel().getSUID())));
             }
             elements.add(subnetwork);
         }
