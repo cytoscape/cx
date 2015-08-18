@@ -3,8 +3,10 @@ package org.cytoscape.io.internal.cx_reader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 
 import org.cxio.aspects.datamodels.AbstractAttributesElement.ATTRIBUTE_TYPE;
@@ -34,17 +36,13 @@ import org.cytoscape.model.subnetwork.CySubNetwork;
 
 public final class CxToCy {
 
-    private Map<CyNode, VisualPropertiesElement> _node_vpe_map;
-    private Map<CyEdge, VisualPropertiesElement> _edge_vpe_map;
+    private Set<CyNode>                _nodes_with_visiual_properties;
+    private Set<CyEdge>                _edges_with_visual_properties;
 
-    private VisualPropertiesElement              _nodes_default_vpe;
-    private VisualPropertiesElement              _edges_default_vpe;
-    private VisualPropertiesElement              _network_vpe;
+    private VisualElementCollectionMap _visual_element_collections;
 
-    private Map<String, VisualElementCollection> _visual_element_collection_map;
-
-    private NetworkRelationsElement              _network_relations;
-    private Map<Long, String>                    _network_suid_to_networkrelations_map;
+    private NetworkRelationsElement    _network_relations;
+    private Map<Long, String>          _network_suid_to_networkrelations_map;
 
     public final Map<Long, String> getNetworkSuidToNetworkRelationsMap() {
         return _network_suid_to_networkrelations_map;
@@ -75,24 +73,35 @@ public final class CxToCy {
         }
 
         _network_suid_to_networkrelations_map = new HashMap<Long, String>();
-        _visual_element_collection_map = new HashMap<String, VisualElementCollection>();
+        _visual_element_collections = new VisualElementCollectionMap();
 
         // Dealing with subnetwork relations:
-        String parent_network_id;
+        String parent_network_id = null;
         List<String> subnetwork_ids;
-        int number_of_subnetworks;
+        int number_of_subnetworks = 1;
+        
+        
+        if (subnetworks != null && !subnetworks.isEmpty()) {
+            for (AspectElement element : subnetworks) {
+                SubNetworkElement subnetwork_element = (SubNetworkElement) element;
+                _visual_element_collections.setSubNetworkElement(subnetwork_element.getId(), subnetwork_element);
+            }
+        }
 
         if ((network_relations != null) && !network_relations.isEmpty()) {
             _network_relations = (NetworkRelationsElement) network_relations.get(0);
             System.out.println(_network_relations.toString());
-            final List<String> parent_ids = NetworkRelationsElement.getAllParentNetworkIds(network_relations);
+            final Set<String> parent_ids = NetworkRelationsElement.getAllParentNetworkIds(network_relations);
             if ((parent_ids == null) || parent_ids.isEmpty()) {
                 throw new IOException("no parent network id");
             }
             else if (parent_ids.size() > 1) {
                 throw new IOException("multiple parent network ids: " + parent_ids);
             }
-            parent_network_id = parent_ids.get(0);
+           
+            for (String s : parent_ids) {
+                parent_network_id = s;
+            }
             subnetwork_ids = NetworkRelationsElement.getSubNetworkIds(parent_network_id, network_relations);
             if ((subnetwork_ids == null) || subnetwork_ids.isEmpty()) {
                 throw new IOException("no subnetwork ids for: " + parent_network_id);
@@ -102,9 +111,7 @@ public final class CxToCy {
         else {
             System.out.println("NO network relations");
             _network_relations = null;
-            parent_network_id = null;
             subnetwork_ids = new ArrayList<String>();
-            number_of_subnetworks = 1;
         }
         // ------------------------------------------------
 
@@ -178,30 +185,38 @@ public final class CxToCy {
             final Map<String, CyEdge> edge_map = addEdges(sub_network, edges, node_map, edge_attributes_map);
 
             if (visual_properties != null) {
-                _node_vpe_map = new HashMap<CyNode, VisualPropertiesElement>();
-                _edge_vpe_map = new HashMap<CyEdge, VisualPropertiesElement>();
+                _nodes_with_visiual_properties = new HashSet<CyNode>();
+                _edges_with_visual_properties = new HashSet<CyEdge>();
                 for (final AspectElement element : visual_properties) {
                     final VisualPropertiesElement vpe = (VisualPropertiesElement) element;
 
+                    final String view = vpe.getView();
+
                     if (vpe.getPropertiesOf().equals(VisualPropertyType.NETWORK.asString())) {
-                        _network_vpe = vpe;
+                        _visual_element_collections.addNetworkVisualPropertiesElement(view, vpe);
                     }
                     else if (vpe.getPropertiesOf().equals(VisualPropertyType.NODES_DEFAULT.asString())) {
-                        _nodes_default_vpe = vpe;
+                        _visual_element_collections.addNodesDefaultVisualPropertiesElement(view, vpe);
                     }
                     else if (vpe.getPropertiesOf().equals(VisualPropertyType.EDGES_DEFAULT.asString())) {
-                        _edges_default_vpe = vpe;
+                        _visual_element_collections.addEdgesDefaultVisualPropertiesElement(view, vpe);
                     }
                     else if (vpe.getPropertiesOf().equals(VisualPropertyType.NODES.asString())) {
                         final List<String> applies_to_nodes = vpe.getAppliesTo();
                         for (final String applies_to_node : applies_to_nodes) {
-                            _node_vpe_map.put(node_map.get(applies_to_node), vpe);
+                            _nodes_with_visiual_properties.add(node_map.get(applies_to_node));
+                            _visual_element_collections.addNodeVisualPropertiesElement(view,
+                                                                                       node_map.get(applies_to_node),
+                                                                                       vpe);
                         }
                     }
                     else if (vpe.getPropertiesOf().equals(VisualPropertyType.EDGES.asString())) {
                         final List<String> applies_to_edges = vpe.getAppliesTo();
                         for (final String applies_to_edge : applies_to_edges) {
-                            _edge_vpe_map.put(edge_map.get(applies_to_edge), vpe);
+                            _edges_with_visual_properties.add(edge_map.get(applies_to_edge));
+                            _visual_element_collections.addEdgeVisualPropertiesElement(view,
+                                                                                       edge_map.get(applies_to_edge),
+                                                                                       vpe);
                         }
                     }
                 }
@@ -209,6 +224,8 @@ public final class CxToCy {
 
             addPositions(layout, node_map);
             new_networks.add(sub_network);
+
+            System.out.println(_visual_element_collections.toString());
 
         }
         // ////////////////////////////////////////////////////////////////////////////////////////
@@ -219,20 +236,14 @@ public final class CxToCy {
         return _network_relations;
     }
 
-    public final Map<String, VisualElementCollection> getVisualElementCollectionMap() {
-        return _visual_element_collection_map;
+    public final VisualElementCollectionMap getVisualElementCollectionMap() {
+        return _visual_element_collections;
     }
 
     private final void addPositions(final List<AspectElement> layout, final Map<String, CyNode> node_map) {
         for (final AspectElement e : layout) {
             final CartesianLayoutElement cle = (CartesianLayoutElement) e;
-            final String view = cle.getView();
-
-            if (!_visual_element_collection_map.containsKey(view)) {
-                _visual_element_collection_map.put(view, new VisualElementCollection());
-            }
-            _visual_element_collection_map.get(view).getPositionMap().put(node_map.get(cle.getNode()), cle);
-
+            _visual_element_collections.addCartesianLayoutElement(cle.getView(), node_map.get(cle.getNode()), cle);
         }
     }
 
@@ -409,23 +420,12 @@ public final class CxToCy {
         return edge_map;
     }
 
-    public Map<CyNode, VisualPropertiesElement> getNodeVisualPropertiesElementsMap() {
-        return _node_vpe_map;
+    public Set<CyNode> getNodeWithVisualProperties() {
+        return _nodes_with_visiual_properties;
     }
 
-    public Map<CyEdge, VisualPropertiesElement> getEdgeVisualPropertiesElementsMap() {
-        return _edge_vpe_map;
+    public Set<CyEdge> getEdgeWithVisualProperties() {
+        return _edges_with_visual_properties;
     }
 
-    public VisualPropertiesElement getNodesDefaultVisualPropertiesElement() {
-        return _nodes_default_vpe;
-    }
-
-    public VisualPropertiesElement getEdgesDefaultVisualPropertiesElement() {
-        return _edges_default_vpe;
-    }
-
-    public VisualPropertiesElement getNetworkVisualPropertiesElement() {
-        return _network_vpe;
-    }
 }
