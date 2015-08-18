@@ -51,7 +51,7 @@ public final class CxToCy {
     
     
     public final List<CyNetwork> createNetwork(final SortedMap<String, List<AspectElement>> aspect_collection,
-                                               final CyRootNetwork root_network,
+                                               CyRootNetwork root_network,
                                                final CyNetworkFactory network_factory,
                                                final String collectionName) throws IOException {
 
@@ -83,6 +83,7 @@ public final class CxToCy {
         
         if (network_relations != null && !network_relations.isEmpty()) {
             _network_relations = (NetworkRelationsElement) network_relations.get(0);
+            System.out.println(  _network_relations.toString());
             final List<String> parent_ids = NetworkRelationsElement.getAllParentNetworkIds(network_relations);
             if ( parent_ids == null || parent_ids.isEmpty() ) {
                 throw new IOException("no parent network id");
@@ -98,11 +99,11 @@ public final class CxToCy {
             number_of_subnetworks = subnetwork_ids.size();
         }
         else {
+            System.out.println( "NO network relations");
             _network_relations = null;
             parent_network_id = null;
-            subnetwork_ids = null;
+            subnetwork_ids = new ArrayList<String>();
             number_of_subnetworks = 1;
-            
         }
         // ------------------------------------------------
 
@@ -119,15 +120,18 @@ public final class CxToCy {
             }
             else {
                 sub_network = (CySubNetwork) network_factory.createNetwork();
+                root_network = sub_network.getRootNetwork();
                 if (!Util.isEmpty(collectionName)) {
-                    final CyRootNetwork my_root_network = sub_network.getRootNetwork();
-                    my_root_network.getRow(my_root_network).set(CyNetwork.NAME, collectionName);
+                    root_network.getRow(root_network).set(CyNetwork.NAME, collectionName);
                 }
-
             }
-            
            
-            _network_suid_to_networkrelations_map.put( sub_network.getSUID(), subnetwork_ids.get(i));
+            if ( _network_relations == null) {
+                _network_suid_to_networkrelations_map.put( sub_network.getSUID(), String.valueOf(sub_network.getSUID()));
+            }
+            else {
+                _network_suid_to_networkrelations_map.put( sub_network.getSUID(), subnetwork_ids.get(i));
+            }
 
             if (node_attributes != null) {
                 for (final AspectElement node_attribute : node_attributes) {

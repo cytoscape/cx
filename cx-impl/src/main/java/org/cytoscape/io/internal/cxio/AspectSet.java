@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.cxio.aspects.datamodels.NetworkRelationsElement;
 import org.cxio.aspects.readers.CartesianLayoutFragmentReader;
 import org.cxio.aspects.readers.EdgeAttributesFragmentReader;
 import org.cxio.aspects.readers.EdgesFragmentReader;
@@ -15,6 +16,7 @@ import org.cxio.aspects.readers.NodeAttributesFragmentReader;
 import org.cxio.aspects.readers.NodesFragmentReader;
 import org.cxio.aspects.readers.SubNetworkFragmentReader;
 import org.cxio.aspects.readers.VisualPropertiesFragmentReader;
+import org.cxio.aspects.readers.NetworkRelationsReader;
 import org.cxio.aspects.writers.CartesianLayoutFragmentWriter;
 import org.cxio.aspects.writers.EdgeAttributesFragmentWriter;
 import org.cxio.aspects.writers.EdgesFragmentWriter;
@@ -197,6 +199,9 @@ public final class AspectSet {
         }
         if (_aspects.contains(Aspect.GROUPS)) {
             readers.add(GroupFragmentReader.createInstance());
+        }
+        if (_aspects.contains(Aspect.NETWORK_RELATIONS)) {
+            readers.add(NetworkRelationsReader.createInstance());
         }
         return readers;
     }

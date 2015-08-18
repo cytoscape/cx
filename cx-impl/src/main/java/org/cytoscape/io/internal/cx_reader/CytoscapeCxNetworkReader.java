@@ -112,6 +112,11 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
         final Map<String, Map<CyNode, CartesianLayoutElement>> position_map = _cx_to_cy.getNodePosition();
 
+        if ( !position_map.containsKey(obtainNetworkId(network)) ) {
+            System.out.println( _cx_to_cy.getNetworkSuidToNetworkRelationsMap());
+            throw new IllegalArgumentException( "no position map found for: " + obtainNetworkId(network) );
+        }
+        
         final Map<CyNode, CartesianLayoutElement> position_map_for_view = position_map.get(obtainNetworkId(network));
 
         for (final CyNode node : position_map_for_view.keySet()) {
@@ -195,6 +200,9 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         aspects.addAspect(Aspect.EDGE_ATTRIBUTES);
         aspects.addAspect(Aspect.VISUAL_PROPERTIES);
         aspects.addAspect(Aspect.CARTESIAN_LAYOUT);
+        aspects.addAspect(Aspect.NETWORK_RELATIONS);
+        aspects.addAspect(Aspect.SUBNETWORKS);
+        aspects.addAspect(Aspect.GROUPS);
 
         final CxImporter cx_importer = CxImporter.createInstance();
 
