@@ -34,22 +34,22 @@ import org.cytoscape.model.subnetwork.CySubNetwork;
 
 public final class CxToCy {
 
-    private Map<CyNode, VisualPropertiesElement>             _node_vpe_map;
-    private Map<CyEdge, VisualPropertiesElement>             _edge_vpe_map;
+    private Map<CyNode, VisualPropertiesElement> _node_vpe_map;
+    private Map<CyEdge, VisualPropertiesElement> _edge_vpe_map;
 
-    private VisualPropertiesElement                          _nodes_default_vpe;
-    private VisualPropertiesElement                          _edges_default_vpe;
-    private VisualPropertiesElement                          _network_vpe;
-    private Map<String, Map<CyNode, CartesianLayoutElement>> _position_map;
-    private NetworkRelationsElement                          _network_relations;
-    private Map<Long,String>                          _network_suid_to_networkrelations_map;
+    private VisualPropertiesElement              _nodes_default_vpe;
+    private VisualPropertiesElement              _edges_default_vpe;
+    private VisualPropertiesElement              _network_vpe;
 
-    
+    private Map<String, VisualElementCollection> _visual_element_collection_map;
+
+    private NetworkRelationsElement              _network_relations;
+    private Map<Long, String>                    _network_suid_to_networkrelations_map;
+
     public final Map<Long, String> getNetworkSuidToNetworkRelationsMap() {
         return _network_suid_to_networkrelations_map;
     }
-    
-    
+
     public final List<CyNetwork> createNetwork(final SortedMap<String, List<AspectElement>> aspect_collection,
                                                CyRootNetwork root_network,
                                                final CyNetworkFactory network_factory,
@@ -75,31 +75,32 @@ public final class CxToCy {
         }
 
         _network_suid_to_networkrelations_map = new HashMap<Long, String>();
-        
+        _visual_element_collection_map = new HashMap<String, VisualElementCollection>();
+
         // Dealing with subnetwork relations:
         String parent_network_id;
         List<String> subnetwork_ids;
         int number_of_subnetworks;
-        
-        if (network_relations != null && !network_relations.isEmpty()) {
+
+        if ((network_relations != null) && !network_relations.isEmpty()) {
             _network_relations = (NetworkRelationsElement) network_relations.get(0);
-            System.out.println(  _network_relations.toString());
+            System.out.println(_network_relations.toString());
             final List<String> parent_ids = NetworkRelationsElement.getAllParentNetworkIds(network_relations);
-            if ( parent_ids == null || parent_ids.isEmpty() ) {
+            if ((parent_ids == null) || parent_ids.isEmpty()) {
                 throw new IOException("no parent network id");
             }
-            else if ( parent_ids.size() > 1 ) {
-                throw new IOException("multiple parent network ids: " + parent_ids );
+            else if (parent_ids.size() > 1) {
+                throw new IOException("multiple parent network ids: " + parent_ids);
             }
             parent_network_id = parent_ids.get(0);
             subnetwork_ids = NetworkRelationsElement.getSubNetworkIds(parent_network_id, network_relations);
-            if ( subnetwork_ids == null || subnetwork_ids.isEmpty() ) {
+            if ((subnetwork_ids == null) || subnetwork_ids.isEmpty()) {
                 throw new IOException("no subnetwork ids for: " + parent_network_id);
             }
             number_of_subnetworks = subnetwork_ids.size();
         }
         else {
-            System.out.println( "NO network relations");
+            System.out.println("NO network relations");
             _network_relations = null;
             parent_network_id = null;
             subnetwork_ids = new ArrayList<String>();
@@ -113,7 +114,7 @@ public final class CxToCy {
         for (int i = 0; i < number_of_subnetworks; ++i) {
 
             CySubNetwork sub_network;
-            
+
             if (root_network != null) {
                 // Root network exists
                 sub_network = root_network.addSubNetwork();
@@ -125,12 +126,12 @@ public final class CxToCy {
                     root_network.getRow(root_network).set(CyNetwork.NAME, collectionName);
                 }
             }
-           
-            if ( _network_relations == null) {
-                _network_suid_to_networkrelations_map.put( sub_network.getSUID(), String.valueOf(sub_network.getSUID()));
+
+            if (_network_relations == null) {
+                _network_suid_to_networkrelations_map.put(sub_network.getSUID(), String.valueOf(sub_network.getSUID()));
             }
             else {
-                _network_suid_to_networkrelations_map.put( sub_network.getSUID(), subnetwork_ids.get(i));
+                _network_suid_to_networkrelations_map.put(sub_network.getSUID(), subnetwork_ids.get(i));
             }
 
             if (node_attributes != null) {
@@ -206,22 +207,9 @@ public final class CxToCy {
                 }
             }
 
-            if ((layout != null) && !layout.isEmpty()) {
-                _position_map = new HashMap<String, Map<CyNode, CartesianLayoutElement>>();
-                addPositions(layout, node_map);
-            }
-            else {
-                _position_map = null;
-            }
-
+            addPositions(layout, node_map);
             new_networks.add(sub_network);
-            
-            // if (collectionName != null) {
-            // final CyRootNetwork rootNetwork = ((CySubNetwork)
-            // network).getRootNetwork();
-            // rootNetwork.getRow(rootNetwork).set(CyNetwork.NAME,
-            // collectionName);
-            // }
+
         }
         // ////////////////////////////////////////////////////////////////////////////////////////
         return new_networks;
@@ -231,18 +219,20 @@ public final class CxToCy {
         return _network_relations;
     }
 
-    public final Map<String, Map<CyNode, CartesianLayoutElement>> getNodePosition() {
-        return _position_map;
+    public final Map<String, VisualElementCollection> getVisualElementCollectionMap() {
+        return _visual_element_collection_map;
     }
 
     private final void addPositions(final List<AspectElement> layout, final Map<String, CyNode> node_map) {
         for (final AspectElement e : layout) {
             final CartesianLayoutElement cle = (CartesianLayoutElement) e;
             final String view = cle.getView();
-            if (!_position_map.containsKey(view)) {
-                _position_map.put(view, new HashMap<CyNode, CartesianLayoutElement>());
+
+            if (!_visual_element_collection_map.containsKey(view)) {
+                _visual_element_collection_map.put(view, new VisualElementCollection());
             }
-            _position_map.get(view).put(node_map.get(cle.getNode()), cle);
+            _visual_element_collection_map.get(view).getPositionMap().put(node_map.get(cle.getNode()), cle);
+
         }
     }
 

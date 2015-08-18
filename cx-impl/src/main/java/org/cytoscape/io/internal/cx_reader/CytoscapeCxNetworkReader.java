@@ -28,7 +28,6 @@ import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CyRootNetworkManager;
-import org.cytoscape.model.subnetwork.CySubNetwork;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.View;
 import org.cytoscape.view.model.VisualLexicon;
@@ -42,7 +41,7 @@ import org.cytoscape.work.util.ListSingleSelection;
 
 public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
-    private final List<CyNetwork>              _networks;          
+    private final List<CyNetwork>        _networks;
     private final String                 _network_collection_name;
     private CxToCy                       _cx_to_cy;
     private final InputStream            _in;
@@ -73,7 +72,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     public CyNetwork[] getNetworks() {
         final CyNetwork[] results = new CyNetwork[_networks.size()];
         for (int i = 0; i < results.length; ++i) {
-            results[ i ] = _networks.get(i);
+            results[i] = _networks.get(i);
         }
         return results;
     }
@@ -110,14 +109,16 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
             setProperties(lexicon, edge_vpe.get(edge).getProperties(), view.getEdgeView(edge), CyEdge.class);
         }
 
-        final Map<String, Map<CyNode, CartesianLayoutElement>> position_map = _cx_to_cy.getNodePosition();
-
-        if ( !position_map.containsKey(obtainNetworkId(network)) ) {
-            System.out.println( _cx_to_cy.getNetworkSuidToNetworkRelationsMap());
-            throw new IllegalArgumentException( "no position map found for: " + obtainNetworkId(network) );
+        final Map<String, VisualElementCollection> visual_element_collection_map = _cx_to_cy
+                .getVisualElementCollectionMap();
+        if (!visual_element_collection_map.containsKey(obtainNetworkId(network))) {
+            System.out.println(_cx_to_cy.getNetworkSuidToNetworkRelationsMap());
+            throw new IllegalArgumentException("no visual elements found for: " + obtainNetworkId(network));
         }
-        
-        final Map<CyNode, CartesianLayoutElement> position_map_for_view = position_map.get(obtainNetworkId(network));
+
+        final VisualElementCollection visual_element_collection = visual_element_collection_map
+                .get(obtainNetworkId(network));
+        final Map<CyNode, CartesianLayoutElement> position_map_for_view = visual_element_collection.getPositionMap();
 
         for (final CyNode node : position_map_for_view.keySet()) {
             final CartesianLayoutElement e = position_map_for_view.get(node);
@@ -131,7 +132,8 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
     private final String obtainNetworkId(final CyNetwork network) {
         return _cx_to_cy.getNetworkSuidToNetworkRelationsMap().get(network.getSUID());
-       // return String.valueOf(network.getSUID()); //TODO this is INCORRECT!!!!! FIXME FIXME
+        // return String.valueOf(network.getSUID()); //TODO this is
+        // INCORRECT!!!!! FIXME FIXME
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -244,18 +246,19 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         // Select Network Collection
         // 1. Check from Tunable
         // 2. If not available, use optional parameter
-        
+
         if (root_network != null) {
             // Root network exists
-           // subNetwork = root_network.addSubNetwork();
-           // _network = _cx_to_cy.createNetwork(res, subNetwork, null);
-            _networks.addAll( _cx_to_cy.createNetwork(res, root_network, null, null) );
+            // subNetwork = root_network.addSubNetwork();
+            // _network = _cx_to_cy.createNetwork(res, subNetwork, null);
+            _networks.addAll(_cx_to_cy.createNetwork(res, root_network, null, null));
         }
         else {
             // Need to create new network with new root.
-            //subNetwork = (CySubNetwork) cyNetworkFactory.createNetwork();
-           // _network = _cx_to_cy.createNetwork(res, subNetwork, _network_collection_name);
-            _networks.addAll( _cx_to_cy.createNetwork(res, null, cyNetworkFactory,  _network_collection_name) );
+            // subNetwork = (CySubNetwork) cyNetworkFactory.createNetwork();
+            // _network = _cx_to_cy.createNetwork(res, subNetwork,
+            // _network_collection_name);
+            _networks.addAll(_cx_to_cy.createNetwork(res, null, cyNetworkFactory, _network_collection_name));
         }
 
         if (TimingUtil.TIMING) {
