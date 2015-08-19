@@ -391,7 +391,7 @@ public final class CxExporter {
                                                               column_name,
                                                               attr_values,
                                                               AbstractAttributesElement.determineType(((List) value)
-                                                                      .get(0)));
+                                                                                                      .get(0)));
                             }
                         }
                         else {
@@ -420,7 +420,8 @@ public final class CxExporter {
 
     private final static void writeEdges(final CyNetwork network, final CxWriter w) throws IOException {
         final List<AspectElement> elements = new ArrayList<AspectElement>();
-        for (final CyEdge cyEdge : network.getEdgeList()) {
+        final CyRootNetwork my_root = ((CySubNetwork) network).getRootNetwork();
+        for (final CyEdge cyEdge : my_root.getEdgeList()) {
             elements.add(new EdgesElement(Util.makeId(cyEdge.getSUID()),
                                           Util.makeId(cyEdge.getSource().getSUID()),
                                           Util.makeId(cyEdge.getTarget().getSUID())));
@@ -436,6 +437,7 @@ public final class CxExporter {
         writeEdges(view.getModel(), w);
     }
 
+    @SuppressWarnings("rawtypes")
     private final static void writeNetworkAttributes(final CyNetwork network, final CxWriter w) throws IOException {
         final List<AspectElement> elements = new ArrayList<AspectElement>();
         final CyRow row = network.getRow(network);
@@ -494,7 +496,7 @@ public final class CxExporter {
         for (final CySubNetwork subnetwork : subnetworks) {
             final NetworkRelationsElement rel = new NetworkRelationsElement(parent,
                                                                             String.valueOf(subnetwork.getSUID()),
-                    "subnetwork");
+                                                                            "subnetwork");
             elements.add(rel);
         }
         final long t0 = System.currentTimeMillis();
@@ -511,129 +513,44 @@ public final class CxExporter {
             return;
         }
         final Set<CyNetwork> networks = _network_manager.getNetworkSet();
-        for (final CyNetwork n : networks) {
-            final CySubNetwork subnet = (CySubNetwork) n;
+        for (@SuppressWarnings("unused")
+        final CyNetwork n : networks) {
 
-            final CyRootNetwork root = subnet.getRootNetwork();
-            final Collection<CyNetworkView> views = _networkview_manager.getNetworkViews(n);
-            for (final CyNetworkView view : views) {
-                final CyNetwork my_network = view.getModel();
-
-                writeView(view, null, w);
-            }
         }
 
     }
 
     private final void writeSubNetworks(final CyNetwork network, final CxWriter w) throws IOException {
-        if (_networkview_manager == null) {
-            System.out.println("networkview manager is null");
-            return;
-        }
-        final Set<CyNetwork> networks = _network_manager.getNetworkSet();
 
-        for (final CyNetwork n : networks) {
-            final CySubNetwork subnet = (CySubNetwork) n;
-            final CyRootNetwork root = subnet.getRootNetwork();
-            //System.out.println("__ root              = " + root.getSUID());
-            //System.out.println("__         nodecount = " + root.getNodeCount());
-            //System.out.println("__ network.getSUID() = " + n.getSUID());
-           // System.out.println("__         nodecount = " + n.getNodeCount());
-            final Collection<CyNetworkView> views = _networkview_manager.getNetworkViews(n);
+        final CySubNetwork my_subnet = (CySubNetwork) network;
+        final CyRootNetwork my_root = my_subnet.getRootNetwork();
+        final List<CySubNetwork> subnets = my_root.getSubNetworkList();
+
+        for (final CySubNetwork subnet : subnets) {
+            final Collection<CyNetworkView> views = _networkview_manager.getNetworkViews(subnet);
             for (final CyNetworkView view : views) {
-                final CyNetwork my_network = view.getModel();
                 writeView(view, null, w);
             }
         }
-
         final List<AspectElement> elements = new ArrayList<AspectElement>();
-
-        // final Collection<CyNetworkView> views =
-        // _networkview_manager.getNetworkViews(network);
-        final Collection<CyNetworkView> views = _networkview_manager.getNetworkViewSet();
-
-        //System.out.println("network.getSUID() = " + network.getSUID());
-        //System.out.println("        nodecount = " + network.getNodeCount());
-
-        for (final CyNetworkView view : views) {
-
-            final CyNetwork my_network = view.getModel();
-
-           // System.out.println("  view.getModel().getSUID() = " + my_network.getSUID());
-           // System.out.println("                  nodecount = " + my_network.getNodeCount());
-
-            final CyRow row = my_network.getRow(my_network);
+        for (final CySubNetwork subnet : subnets) {
+            final CyRow row = subnet.getRow(subnet);
             final String name = row.get("name", String.class);
-            final SubNetworkElement subnetwork = new SubNetworkElement(String.valueOf(my_network.getSUID()), name);
-
-          //  System.out.println("subnet " + name + "-------------------------------------------------");
-            final Collection<View<CyEdge>> edgeviews = view.getEdgeViews();
-          //  System.out.println("e: " + edgeviews.size());
-
-            for (final View<CyEdge> edgeview : edgeviews) {
-                subnetwork.addEdge(Util.makeId(String.valueOf(edgeview.getModel().getSUID())));
+            final SubNetworkElement subnetwork_element = new SubNetworkElement(String.valueOf(subnet.getSUID()), name);
+            for (final CyEdge edgeview : subnet.getEdgeList()) {
+                subnetwork_element.addEdge(Util.makeId(String.valueOf(edgeview.getSUID())));
             }
-            final Collection<View<CyNode>> nodeviews = view.getNodeViews();
-           // System.out.println("n: " + nodeviews.size());
-            for (final View<CyNode> nodeview : nodeviews) {
-                subnetwork.addNode(Util.makeId(String.valueOf(nodeview.getModel().getSUID())));
+            for (final CyNode nodeview : subnet.getNodeList()) {
+                subnetwork_element.addNode(Util.makeId(String.valueOf(nodeview.getSUID())));
             }
-            elements.add(subnetwork);
+            elements.add(subnetwork_element);
         }
-
         final long t0 = System.currentTimeMillis();
         w.writeAspectElements(elements);
         if (TimingUtil.TIMING) {
             TimingUtil.reportTimeDifference(t0, "subnetworks", elements.size());
         }
     }
-
-    // private final void writeSubNetworks(final CyNetworkView networkview,
-    // final CxWriter w) throws IOException {
-    // // Collection<CyNetworkView> views =
-    // // _networkview_manager.getNetworkViews(network);
-    //
-    // final List<AspectElement> elements = new ArrayList<AspectElement>();
-    //
-    // final Collection<CyNetworkView> views =
-    // _networkview_manager.getNetworkViewSet();
-    //
-    // for (final CyNetworkView view : views) {
-    //
-    // final CyNetwork network = view.getModel();
-    //
-    // System.out.println( "view.getModel().getSUID() = " + network.getSUID() );
-    // System.out.println( "                nodecount = " +
-    // network.getNodeCount() );
-    //
-    // final CyRow row = network.getRow(network);
-    //
-    // final String name = row.get("name", String.class);
-    // final SubNetworkElement subnetwork = new
-    // SubNetworkElement(String.valueOf(view.getSUID()), name);
-    //
-    // System.out.println("subnet " + name +
-    // "-------------------------------------------------");
-    // final Collection<View<CyEdge>> edgeviews = view.getEdgeViews();
-    // System.out.println("e: " + edgeviews.size());
-    //
-    // for (final View<CyEdge> edgeview : edgeviews) {
-    // subnetwork.addEdge(String.valueOf(edgeview.getSUID()));
-    // }
-    // final Collection<View<CyNode>> nodeviews = view.getNodeViews();
-    // System.out.println("n: " + nodeviews.size());
-    // for (final View<CyNode> nodeview : nodeviews) {
-    // subnetwork.addNode(String.valueOf(nodeview.getSUID()));
-    // }
-    // elements.add(subnetwork);
-    // }
-    //
-    // final long t0 = System.currentTimeMillis();
-    // w.writeAspectElements(elements);
-    // if (TimingUtil.TIMING) {
-    // TimingUtil.reportTimeDifference(t0, "subnetworks", elements.size());
-    // }
-    // }
 
     @SuppressWarnings("rawtypes")
     private final static void writeNodeAttributes(final CyNetwork network, final CxWriter w) throws IOException {
@@ -664,7 +581,7 @@ public final class CxExporter {
                                                               column_name,
                                                               attr_values,
                                                               AbstractAttributesElement.determineType(((List) value)
-                                                                      .get(0)));
+                                                                                                      .get(0)));
                             }
                         }
                         else {
@@ -693,7 +610,8 @@ public final class CxExporter {
 
     private final static void writeNodes(final CyNetwork network, final CxWriter w) throws IOException {
         final List<AspectElement> elements = new ArrayList<AspectElement>();
-        for (final CyNode cy_node : network.getNodeList()) {
+        final CyRootNetwork my_root = ((CySubNetwork) network).getRootNetwork();
+        for (final CyNode cy_node : my_root.getNodeList()) {
             elements.add(new NodesElement(Util.makeId(cy_node.getSUID())));
         }
         final long t0 = System.currentTimeMillis();

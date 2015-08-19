@@ -111,7 +111,7 @@ final class VisualElementCollectionMap {
         return _data.get(subnet).getSubNetworkElement();
     }
 
-    final void setSubNetworkElement(final String subnet,
+    final void addSubNetworkElement(final String subnet,
                                                       final SubNetworkElement subnetwork_element) {
         checkForKey(subnet);
         _data.get(subnet).setSubNetworkElement(subnetwork_element);

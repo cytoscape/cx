@@ -13,6 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
+import org.cxio.aspects.datamodels.SubNetworkElement;
 import org.cxio.aspects.datamodels.VisualPropertiesElement;
 import org.cxio.core.CxReader;
 import org.cxio.core.interfaces.AspectElement;
@@ -81,8 +82,12 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     @Override
     public CyNetworkView buildCyNetworkView(final CyNetwork network) {
 
+        
+        
         final CyNetworkView view = getNetworkViewFactory().createNetworkView(network);
-
+        return view;
+        
+        /*
         final VisualLexicon lexicon = _rendering_engine_manager.getDefaultVisualLexicon();
 
         final VisualElementCollectionMap collection = _cx_to_cy.getVisualElementCollectionMap();
@@ -111,18 +116,20 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         }
 
         final Set<CyNode> node_vpe = _cx_to_cy.getNodeWithVisualProperties();
+        final SubNetworkElement x = collection.getSubNetworkElement(subnetwork_id);
+        x.getNodes();
         for (final CyNode node : node_vpe) {
             final Map<CyNode, VisualPropertiesElement> nvpm = collection
                     .getNodeVisualPropertiesElementsMap(subnetwork_id);
             setProperties(lexicon, nvpm.get(node).getProperties(), view.getNodeView(node), CyNode.class);
         }
 
-        final Set<CyEdge> edge_vpe = _cx_to_cy.getEdgeWithVisualProperties();
-        for (final CyEdge edge : edge_vpe) {
-            final Map<CyEdge, VisualPropertiesElement> evpm = collection
-                    .getEdgeVisualPropertiesElementsMap(subnetwork_id);
-            setProperties(lexicon, evpm.get(edge).getProperties(), view.getEdgeView(edge), CyEdge.class);
-        }
+//        final Set<CyEdge> edge_vpe = _cx_to_cy.getEdgeWithVisualProperties();
+//        for (final CyEdge edge : edge_vpe) {
+//            final Map<CyEdge, VisualPropertiesElement> evpm = collection
+//                    .getEdgeVisualPropertiesElementsMap(subnetwork_id);
+//            setProperties(lexicon, evpm.get(edge).getProperties(), view.getEdgeView(edge), CyEdge.class);
+//        }
 
         final Map<CyNode, CartesianLayoutElement> position_map_for_view = collection
                 .getCartesianLayoutElements(subnetwork_id);
@@ -134,7 +141,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
             view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION, e.getZ());
         }
 
-        return view;
+        return view;*/
     }
 
     private final String obtainNetworkId(final CyNetwork network) {
