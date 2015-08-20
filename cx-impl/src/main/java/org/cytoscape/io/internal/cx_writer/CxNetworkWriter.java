@@ -9,6 +9,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 
 import org.cytoscape.ding.customgraphics.CustomGraphicsManager;
+import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.internal.cxio.Aspect;
 import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxExporter;
@@ -38,6 +39,7 @@ public class CxNetworkWriter implements CyWriter {
     private final CustomGraphicsManager _custom_graphics_manager;
     private final CyNetworkViewManager  _networkview_manager;
     private final CyNetworkManager      _network_manager;
+    private final CyGroupManager _group_manager;
 
     public CxNetworkWriter(final OutputStream os,
                            final CyNetwork network,
@@ -45,6 +47,7 @@ public class CxNetworkWriter implements CyWriter {
                            final CustomGraphicsManager custom_graphics_manager,
                            final CyNetworkViewManager networkview_manager,
                            final CyNetworkManager network_manager,
+                           final CyGroupManager group_manager,
                            final VisualLexicon lexicon) {
 
         _visual_mapping_manager = visual_mapping_manager;
@@ -54,6 +57,7 @@ public class CxNetworkWriter implements CyWriter {
         _lexicon = lexicon;
         _os = os;
         _network = network;
+        _group_manager = group_manager;
 
         if (Charset.isSupported(ENCODING)) {
             // UTF-8 is supported by system
@@ -75,6 +79,7 @@ public class CxNetworkWriter implements CyWriter {
         _lexicon = null;
         _os = os;
         _network = network;
+        _group_manager =null;
 
         if (Charset.isSupported(ENCODING)) {
             // UTF-8 is supported by system
@@ -117,6 +122,7 @@ public class CxNetworkWriter implements CyWriter {
         exporter.setVisualMappingManager(_visual_mapping_manager);
         exporter.setNetworkViewManager(_networkview_manager);
         exporter.setNetworkManager(_network_manager);
+        exporter.setGroupManager(_group_manager);
 
         final String time_stamp = Util.makeTimeStamp();
 

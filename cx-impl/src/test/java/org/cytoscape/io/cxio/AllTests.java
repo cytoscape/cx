@@ -9,7 +9,7 @@ import org.junit.runners.Suite.SuiteClasses;
         EdgeElementTest.class, EdgeAttributesFragmentReaderTest.class, EdgeAttributesFragmentWriterTest.class,
         EdgesFragmentReaderTest.class, EdgesFragmentWriterTest.class, NodeElementTest.class,
         NodeAttributesFragmentReaderTest.class, NodeAttributesFragmentWriterTest.class, NodesFragmentReaderTest.class,
-        NodesFragmentWriterTest.class, RoundTripTest.class })
+        NodesFragmentWriterTest.class })
 public class AllTests {
 
 }

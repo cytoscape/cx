@@ -59,6 +59,11 @@
 			<artifactId>core-task-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.cytoscape</groupId>
+			<artifactId>group-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
 
 		<!-- 3rd party libraries -->
 		<dependency>

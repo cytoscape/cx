@@ -14,6 +14,7 @@ import org.cxio.aspects.datamodels.AbstractAttributesElement;
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.cxio.aspects.datamodels.EdgeAttributesElement;
 import org.cxio.aspects.datamodels.EdgesElement;
+import org.cxio.aspects.datamodels.GroupElement;
 import org.cxio.aspects.datamodels.NetworkAttributesElement;
 import org.cxio.aspects.datamodels.NetworkRelationsElement;
 import org.cxio.aspects.datamodels.NodeAttributesElement;
@@ -23,6 +24,8 @@ import org.cxio.core.CxWriter;
 import org.cxio.core.interfaces.AspectElement;
 import org.cxio.core.interfaces.AspectFragmentWriter;
 import org.cxio.filters.AspectKeyFilter;
+import org.cytoscape.group.CyGroup;
+import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.internal.cx_writer.VisualPropertiesGatherer;
 import org.cytoscape.io.internal.cxio.CxOutput.Status;
 import org.cytoscape.model.CyEdge;
@@ -85,6 +88,7 @@ public final class CxExporter {
     private VisualMappingManager _visual_mapping_manager;
     private CyNetworkViewManager _networkview_manager;
     private CyNetworkManager     _network_manager;
+    private CyGroupManager       _group_manager;
 
     private CxExporter() {
         _use_default_pretty_printing = DEFAULT_USE_DEFAULT_PRETTY_PRINTING;
@@ -181,11 +185,12 @@ public final class CxExporter {
         // if (aspects.contains(Aspect.VISUAL_PROPERTIES)) {
         // writeVisualProperties(network, _visual_mapping_manager, _lexicon, w);
         // }
-        if (aspects.contains(Aspect.GROUPS)) {
-            writeGroups(network, w);
-        }
+       
         if (aspects.contains(Aspect.SUBNETWORKS)) {
             writeSubNetworks(network, w);
+        }
+        if (aspects.contains(Aspect.GROUPS)) {
+            writeGroups(network, w);
         }
         if (aspects.contains(Aspect.NETWORK_RELATIONS)) {
             writeNetworkRelations(network, w);
@@ -365,9 +370,9 @@ public final class CxExporter {
     @SuppressWarnings("rawtypes")
     private final static void writeEdgeAttributes(final CyNetwork network, final CxWriter w) throws IOException {
         final List<AspectElement> elements = new ArrayList<AspectElement>();
-
-        for (final CyEdge cy_edge : network.getEdgeList()) {
-            final CyRow row = network.getRow(cy_edge);
+        final CyRootNetwork my_root = ((CySubNetwork) network).getRootNetwork();
+        for (final CyEdge cy_edge : my_root.getEdgeList()) {
+            final CyRow row = my_root.getRow(cy_edge); //TODO root or network
             if (row != null) {
 
                 final Map<String, Object> values = row.getAllValues();
@@ -391,7 +396,7 @@ public final class CxExporter {
                                                               column_name,
                                                               attr_values,
                                                               AbstractAttributesElement.determineType(((List) value)
-                                                                                                      .get(0)));
+                                                                      .get(0)));
                             }
                         }
                         else {
@@ -496,7 +501,7 @@ public final class CxExporter {
         for (final CySubNetwork subnetwork : subnetworks) {
             final NetworkRelationsElement rel = new NetworkRelationsElement(parent,
                                                                             String.valueOf(subnetwork.getSUID()),
-                                                                            "subnetwork");
+                    "subnetwork");
             elements.add(rel);
         }
         final long t0 = System.currentTimeMillis();
@@ -508,14 +513,36 @@ public final class CxExporter {
     }
 
     private final void writeGroups(final CyNetwork network, final CxWriter w) throws IOException {
-        if (_networkview_manager == null) {
-            System.out.println("networkview manager is null");
-            return;
-        }
-        final Set<CyNetwork> networks = _network_manager.getNetworkSet();
-        for (@SuppressWarnings("unused")
-        final CyNetwork n : networks) {
+        final CySubNetwork my_subnet = (CySubNetwork) network;
+        final CyRootNetwork my_root = my_subnet.getRootNetwork();
 
+        final List<CySubNetwork> subnets = my_root.getSubNetworkList();
+        final List<AspectElement> elements = new ArrayList<AspectElement>();
+        for (final CySubNetwork subnet : subnets) {
+            final CyRow row = subnet.getRow(subnet);
+            final Set<CyGroup> groups = _group_manager.getGroupSet(subnet);
+            for (final CyGroup group : groups) {
+                final String name = row.get("name", String.class);
+                final GroupElement group_element = new GroupElement(String.valueOf(group.getGroupNode().getSUID()),
+                                                                    name,
+                                                                    String.valueOf(subnet.getSUID()));
+                for (final CyEdge e : group.getExternalEdgeList()) {
+                    group_element.addExternalEdge(String.valueOf(e.getSUID()));
+                }
+                for (final CyEdge e : group.getInternalEdgeList()) {
+                    group_element.addInternalEdge(String.valueOf(e.getSUID()));
+                }
+                for (final CyNode e : group.getNodeList()) {
+                    group_element.addNode(String.valueOf(e.getSUID()));
+                }
+                elements.add(group_element);
+            }
+
+        }
+        final long t0 = System.currentTimeMillis();
+        w.writeAspectElements(elements);
+        if (TimingUtil.TIMING) {
+            TimingUtil.reportTimeDifference(t0, "groups", elements.size());
         }
 
     }
@@ -555,10 +582,12 @@ public final class CxExporter {
     @SuppressWarnings("rawtypes")
     private final static void writeNodeAttributes(final CyNetwork network, final CxWriter w) throws IOException {
         final List<AspectElement> elements = new ArrayList<AspectElement>();
+        final CyRootNetwork my_root = ((CySubNetwork) network).getRootNetwork();
 
-        for (final CyNode cy_node : network.getNodeList()) {
+        for (final CyNode cy_node : my_root.getNodeList()) {
 
-            final CyRow row = network.getRow(cy_node);
+           
+            final CyRow row = my_root.getRow(cy_node); //TODO root or network
             if (row != null) {
                 final Map<String, Object> values = row.getAllValues();
                 if ((values != null) && !values.isEmpty()) {
@@ -581,7 +610,7 @@ public final class CxExporter {
                                                               column_name,
                                                               attr_values,
                                                               AbstractAttributesElement.determineType(((List) value)
-                                                                                                      .get(0)));
+                                                                      .get(0)));
                             }
                         }
                         else {
@@ -669,6 +698,11 @@ public final class CxExporter {
 
     public void setNetworkManager(final CyNetworkManager network_manager) {
         _network_manager = network_manager;
+
+    }
+
+    public void setGroupManager(final CyGroupManager group_manager) {
+        _group_manager = group_manager;
 
     }
 

@@ -4,6 +4,7 @@ import java.io.OutputStream;
 
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.ding.customgraphics.CustomGraphicsManager;
+import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.CyFileFilter;
 import org.cytoscape.io.write.CyNetworkViewWriterFactory;
 import org.cytoscape.io.write.CyWriter;
@@ -21,7 +22,8 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
     private final CustomGraphicsManager _custom_graphics_manager;
     private final CyNetworkViewManager  _networkview_manager;
     private final CyNetworkManager      _network_manager;
-
+    private final CyGroupManager        _group_manager;
+  
     public CxNetworkWriterFactory(final CyFileFilter filter) {
         _filter = filter;
         _visual_mapping_manager = null;
@@ -29,6 +31,7 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
         _custom_graphics_manager = null;
         _networkview_manager = null;
         _network_manager = null;
+        _group_manager = null;
     }
 
     public CxNetworkWriterFactory(final CyFileFilter filter,
@@ -36,13 +39,15 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
                                   final CyApplicationManager application_manager,
                                   final CustomGraphicsManager custom_graphics_manager,
                                   final CyNetworkViewManager networkview_manager,
-                                  final CyNetworkManager network_manager) {
+                                  final CyNetworkManager network_manager,
+                                  final CyGroupManager group_manager ) {
         _filter = filter;
         _visual_mapping_manager = visual_mapping_manager;
         _application_manager = application_manager;
         _custom_graphics_manager = custom_graphics_manager;
         _networkview_manager = networkview_manager;
         _network_manager = network_manager;
+        _group_manager =  group_manager;
     }
 
     @Override
@@ -56,6 +61,7 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
                                        _custom_graphics_manager,
                                        _networkview_manager,
                                        _network_manager,
+                                       _group_manager,
                                        lexicon);
         }
         else {
