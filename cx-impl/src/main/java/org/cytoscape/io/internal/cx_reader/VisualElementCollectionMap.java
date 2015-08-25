@@ -59,7 +59,7 @@ final class VisualElementCollectionMap {
             _data.put(subnet, new VisualElementCollection());
         }
     }
-    
+
     final Map<CyNode, CartesianLayoutElement> getCartesianLayoutElements(final String subnet) {
         if (!_data.containsKey(subnet)) {
             return null;
@@ -101,9 +101,7 @@ final class VisualElementCollectionMap {
         }
         return _data.get(subnet).getNodeVisualPropertiesElementsMap();
     }
-    
-    
-    
+
     final SubNetworkElement getSubNetworkElement(final String subnet) {
         if (!_data.containsKey(subnet)) {
             return null;
@@ -111,8 +109,7 @@ final class VisualElementCollectionMap {
         return _data.get(subnet).getSubNetworkElement();
     }
 
-    final void addSubNetworkElement(final String subnet,
-                                                      final SubNetworkElement subnetwork_element) {
+    final void addSubNetworkElement(final String subnet, final SubNetworkElement subnetwork_element) {
         checkForKey(subnet);
         _data.get(subnet).setSubNetworkElement(subnetwork_element);
     }
@@ -126,7 +123,7 @@ final class VisualElementCollectionMap {
             sb.append("\n");
 
             sb.append("VALUES: ");
-           
+
             sb.append("\n");
             sb.append(entry.getValue().toString());
             sb.append("\n");

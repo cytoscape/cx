@@ -39,7 +39,7 @@ public class CxNetworkWriter implements CyWriter {
     private final CustomGraphicsManager _custom_graphics_manager;
     private final CyNetworkViewManager  _networkview_manager;
     private final CyNetworkManager      _network_manager;
-    private final CyGroupManager _group_manager;
+    private final CyGroupManager        _group_manager;
 
     public CxNetworkWriter(final OutputStream os,
                            final CyNetwork network,
@@ -79,7 +79,7 @@ public class CxNetworkWriter implements CyWriter {
         _lexicon = null;
         _os = os;
         _network = network;
-        _group_manager =null;
+        _group_manager = null;
 
         if (Charset.isSupported(ENCODING)) {
             // UTF-8 is supported by system
@@ -140,7 +140,7 @@ public class CxNetworkWriter implements CyWriter {
         }
 
         if (TimingUtil.TIMING) {
-            TimingUtil.reportTimeDifference(t0, "total time", 0);
+            TimingUtil.reportTimeDifference(t0, "total time", -1);
         }
     }
 

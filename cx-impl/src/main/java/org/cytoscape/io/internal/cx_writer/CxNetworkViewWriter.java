@@ -147,7 +147,7 @@ public class CxNetworkViewWriter implements CyWriter {
         }
 
         if (TimingUtil.TIMING) {
-            TimingUtil.reportTimeDifference(t0, "total time", 0);
+            TimingUtil.reportTimeDifference(t0, "total time", -1);
         }
     }
 

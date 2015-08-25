@@ -50,7 +50,7 @@ public final class TimingUtil {
     }
 
     public final static void reportTime(final long t, final String label, final int n) {
-        if (n > 0) {
+        if (n >= 0) {
             System.out.println(String.format("%-20s%-8s: %s ms", label, n, t));
         }
         else {
@@ -60,7 +60,7 @@ public final class TimingUtil {
     }
 
     public final static void reportTimeDifference(final long t0, final String label, final int n) {
-        if (n > 0) {
+        if (n >= 0) {
             System.out.println(String.format("%-20s%-8s: %s ms", label, n, (System.currentTimeMillis() - t0)));
         }
         else {

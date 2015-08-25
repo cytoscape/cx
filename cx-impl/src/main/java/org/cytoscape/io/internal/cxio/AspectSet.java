@@ -6,17 +6,16 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-
 import org.cxio.aspects.readers.CartesianLayoutFragmentReader;
 import org.cxio.aspects.readers.EdgeAttributesFragmentReader;
 import org.cxio.aspects.readers.EdgesFragmentReader;
 import org.cxio.aspects.readers.GroupFragmentReader;
 import org.cxio.aspects.readers.NetworkAttributesFragmentReader;
+import org.cxio.aspects.readers.NetworkRelationsFragmentReader;
 import org.cxio.aspects.readers.NodeAttributesFragmentReader;
 import org.cxio.aspects.readers.NodesFragmentReader;
 import org.cxio.aspects.readers.SubNetworkFragmentReader;
 import org.cxio.aspects.readers.VisualPropertiesFragmentReader;
-import org.cxio.aspects.readers.NetworkRelationsFragmentReader;
 import org.cxio.aspects.writers.CartesianLayoutFragmentWriter;
 import org.cxio.aspects.writers.EdgeAttributesFragmentWriter;
 import org.cxio.aspects.writers.EdgesFragmentWriter;

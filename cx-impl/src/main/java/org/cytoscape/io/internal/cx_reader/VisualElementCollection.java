@@ -69,7 +69,7 @@ class VisualElementCollection {
     public SubNetworkElement getSubNetworkElement() {
         return _subnetwork_element;
     }
-    
+
     public VisualPropertiesElement getEdgesDefaultVisualPropertiesElement() {
         return _edges_default_vpe;
     }
@@ -113,7 +113,7 @@ class VisualElementCollection {
     public void setPropertOf(final String property_of) {
         _property_of = property_of;
     }
-    
+
     public void setSubNetworkElement(final SubNetworkElement subnetwork_element) {
         _subnetwork_element = subnetwork_element;
     }

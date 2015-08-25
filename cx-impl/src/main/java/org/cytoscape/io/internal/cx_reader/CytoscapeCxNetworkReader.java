@@ -122,7 +122,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
             System.out.println("vpe=" + vpe);
             final SortedMap<String, String> props = vpe.getProperties();
             final View<CyNode> v = view.getNodeView(node);
-            
+
             setProperties(lexicon, props, v, CyNode.class);
         }
 
@@ -196,7 +196,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     }
 
     private static final Pattern DIRECT_NET_PROPS_PATTERN = Pattern
-            .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
+                                                                  .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
 
     @SuppressWarnings("rawtypes")
     private final static boolean shouldSetAsLocked(final VisualProperty vp) {
@@ -244,7 +244,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
             final CxReader cxr = cx_importer.getCxReader(aspects, bis);
 
             res = TimingUtil.parseAsMap(cxr, t0);
-            TimingUtil.reportTimeDifference(t0, "total time parsing", 0);
+            TimingUtil.reportTimeDifference(t0, "total time parsing", -1);
             t0 = System.currentTimeMillis();
         }
         else {

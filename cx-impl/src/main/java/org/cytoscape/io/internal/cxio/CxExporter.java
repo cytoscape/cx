@@ -185,7 +185,7 @@ public final class CxExporter {
         // if (aspects.contains(Aspect.VISUAL_PROPERTIES)) {
         // writeVisualProperties(network, _visual_mapping_manager, _lexicon, w);
         // }
-       
+
         if (aspects.contains(Aspect.SUBNETWORKS)) {
             writeSubNetworks(network, w);
         }
@@ -372,7 +372,7 @@ public final class CxExporter {
         final List<AspectElement> elements = new ArrayList<AspectElement>();
         final CyRootNetwork my_root = ((CySubNetwork) network).getRootNetwork();
         for (final CyEdge cy_edge : my_root.getEdgeList()) {
-            final CyRow row = my_root.getRow(cy_edge); //TODO root or network
+            final CyRow row = my_root.getRow(cy_edge); // TODO root or network
             if (row != null) {
 
                 final Map<String, Object> values = row.getAllValues();
@@ -396,7 +396,7 @@ public final class CxExporter {
                                                               column_name,
                                                               attr_values,
                                                               AbstractAttributesElement.determineType(((List) value)
-                                                                      .get(0)));
+                                                                                                      .get(0)));
                             }
                         }
                         else {
@@ -501,7 +501,7 @@ public final class CxExporter {
         for (final CySubNetwork subnetwork : subnetworks) {
             final NetworkRelationsElement rel = new NetworkRelationsElement(parent,
                                                                             String.valueOf(subnetwork.getSUID()),
-                    "subnetwork");
+                                                                            "subnetwork");
             elements.add(rel);
         }
         final long t0 = System.currentTimeMillis();
@@ -586,8 +586,7 @@ public final class CxExporter {
 
         for (final CyNode cy_node : my_root.getNodeList()) {
 
-           
-            final CyRow row = my_root.getRow(cy_node); //TODO root or network
+            final CyRow row = my_root.getRow(cy_node); // TODO root or network
             if (row != null) {
                 final Map<String, Object> values = row.getAllValues();
                 if ((values != null) && !values.isEmpty()) {
@@ -610,7 +609,7 @@ public final class CxExporter {
                                                               column_name,
                                                               attr_values,
                                                               AbstractAttributesElement.determineType(((List) value)
-                                                                      .get(0)));
+                                                                                                      .get(0)));
                             }
                         }
                         else {

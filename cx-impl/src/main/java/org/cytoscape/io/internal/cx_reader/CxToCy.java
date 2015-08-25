@@ -159,11 +159,10 @@ public final class CxToCy {
                 }
             }
         }
-        // ////////////////////////////////
+     
 
         final List<CyNetwork> new_networks = new ArrayList<CyNetwork>();
 
-        // ///////////////////////////////////////////////////////////////////////////////////////////
         for (int i = 0; i < number_of_subnetworks; ++i) {
 
             CySubNetwork sub_network;
@@ -221,7 +220,7 @@ public final class CxToCy {
                         for (final String applies_to_node : applies_to_nodes) {
                             _nodes_with_visiual_properties.add(cxid_to_cynode_map.get(applies_to_node));
                             _visual_element_collections.addNodeVisualPropertiesElement(view, cxid_to_cynode_map
-                                    .get(applies_to_node), vpe);
+                                                                                       .get(applies_to_node), vpe);
                         }
                     }
                     else if (vpe.getPropertiesOf().equals(VisualPropertyType.EDGES.asString())) {
@@ -229,7 +228,7 @@ public final class CxToCy {
                         for (final String applies_to_edge : applies_to_edges) {
                             _edges_with_visual_properties.add(cxid_to_cyedge_map.get(applies_to_edge));
                             _visual_element_collections.addEdgeVisualPropertiesElement(view, cxid_to_cyedge_map
-                                    .get(applies_to_edge), vpe);
+                                                                                       .get(applies_to_edge), vpe);
                         }
                     }
                 }
@@ -238,10 +237,10 @@ public final class CxToCy {
             addPositions(layout, cxid_to_cynode_map);
             new_networks.add(sub_network);
 
-            // System.out.println(_visual_element_collections.toString());
+          
 
         }
-        // ////////////////////////////////////////////////////////////////////////////////////////
+       
         return new_networks;
     }
 

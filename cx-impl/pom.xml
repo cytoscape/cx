@@ -64,7 +64,16 @@
 			<artifactId>group-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>org.cytoscape</groupId>
+			<artifactId>viewmodel-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.cytoscape</groupId>
+			<artifactId>vizmap-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
 		<!-- 3rd party libraries -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>

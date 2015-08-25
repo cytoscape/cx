@@ -23,7 +23,7 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
     private final CyNetworkViewManager  _networkview_manager;
     private final CyNetworkManager      _network_manager;
     private final CyGroupManager        _group_manager;
-  
+
     public CxNetworkWriterFactory(final CyFileFilter filter) {
         _filter = filter;
         _visual_mapping_manager = null;
@@ -40,14 +40,14 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
                                   final CustomGraphicsManager custom_graphics_manager,
                                   final CyNetworkViewManager networkview_manager,
                                   final CyNetworkManager network_manager,
-                                  final CyGroupManager group_manager ) {
+                                  final CyGroupManager group_manager) {
         _filter = filter;
         _visual_mapping_manager = visual_mapping_manager;
         _application_manager = application_manager;
         _custom_graphics_manager = custom_graphics_manager;
         _networkview_manager = networkview_manager;
         _network_manager = network_manager;
-        _group_manager =  group_manager;
+        _group_manager = group_manager;
     }
 
     @Override
