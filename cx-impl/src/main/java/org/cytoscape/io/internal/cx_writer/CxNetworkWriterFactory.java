@@ -10,6 +10,7 @@ import org.cytoscape.io.write.CyNetworkViewWriterFactory;
 import org.cytoscape.io.write.CyWriter;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkManager;
+import org.cytoscape.model.CyNetworkTableManager;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.model.VisualLexicon;
@@ -23,6 +24,7 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
     private final CyNetworkViewManager  _networkview_manager;
     private final CyNetworkManager      _network_manager;
     private final CyGroupManager        _group_manager;
+    private final CyNetworkTableManager _table_manager;
 
     public CxNetworkWriterFactory(final CyFileFilter filter) {
         _filter = filter;
@@ -32,6 +34,7 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
         _networkview_manager = null;
         _network_manager = null;
         _group_manager = null;
+        _table_manager =null;
     }
 
     public CxNetworkWriterFactory(final CyFileFilter filter,
@@ -40,7 +43,8 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
                                   final CustomGraphicsManager custom_graphics_manager,
                                   final CyNetworkViewManager networkview_manager,
                                   final CyNetworkManager network_manager,
-                                  final CyGroupManager group_manager) {
+                                  final CyGroupManager group_manager,
+                                  final CyNetworkTableManager table_manager) {
         _filter = filter;
         _visual_mapping_manager = visual_mapping_manager;
         _application_manager = application_manager;
@@ -48,6 +52,7 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
         _networkview_manager = networkview_manager;
         _network_manager = network_manager;
         _group_manager = group_manager;
+        _table_manager =table_manager;
     }
 
     @Override
@@ -62,6 +67,7 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
                                        _networkview_manager,
                                        _network_manager,
                                        _group_manager,
+                                       _table_manager,
                                        lexicon);
         }
         else {

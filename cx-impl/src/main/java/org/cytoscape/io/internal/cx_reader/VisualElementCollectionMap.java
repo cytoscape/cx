@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.cxio.aspects.datamodels.SubNetworkElement;
-import org.cxio.aspects.datamodels.VisualPropertiesElement;
+import org.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNode;
 
@@ -23,33 +23,33 @@ final class VisualElementCollectionMap {
     }
 
     final void addEdgesDefaultVisualPropertiesElement(final String subnet,
-                                                      final VisualPropertiesElement edges_default_visual_properties_element) {
+                                                      final CyVisualPropertiesElement edges_default_visual_properties_element) {
         checkForKey(subnet);
         _data.get(subnet).setEdgesDefaultVisualPropertiesElement(edges_default_visual_properties_element);
     }
 
     final void addEdgeVisualPropertiesElement(final String subnet,
                                               final CyEdge edge,
-                                              final VisualPropertiesElement edges_visual_properties_element) {
+                                              final CyVisualPropertiesElement edges_visual_properties_element) {
         checkForKey(subnet);
         _data.get(subnet).getEdgeVisualPropertiesElementsMap().put(edge, edges_visual_properties_element);
     }
 
     final void addNetworkVisualPropertiesElement(final String subnet,
-                                                 final VisualPropertiesElement network_visual_properties_element) {
+                                                 final CyVisualPropertiesElement network_visual_properties_element) {
         checkForKey(subnet);
         _data.get(subnet).setNetworkVisualPropertiesElement(network_visual_properties_element);
     }
 
     final void addNodesDefaultVisualPropertiesElement(final String subnet,
-                                                      final VisualPropertiesElement nodes_default_visual_properties_element) {
+                                                      final CyVisualPropertiesElement nodes_default_visual_properties_element) {
         checkForKey(subnet);
         _data.get(subnet).setNodesDefaultVisualPropertiesElement(nodes_default_visual_properties_element);
     }
 
     final void addNodeVisualPropertiesElement(final String subnet,
                                               final CyNode node,
-                                              final VisualPropertiesElement nodes_visual_properties_element) {
+                                              final CyVisualPropertiesElement nodes_visual_properties_element) {
         checkForKey(subnet);
         _data.get(subnet).getNodeVisualPropertiesElementsMap().put(node, nodes_visual_properties_element);
     }
@@ -67,35 +67,35 @@ final class VisualElementCollectionMap {
         return _data.get(subnet).getCartesianLayoutElementsMap();
     }
 
-    final VisualPropertiesElement getEdgesDefaultVisualPropertiesElement(final String subnet) {
+    final CyVisualPropertiesElement getEdgesDefaultVisualPropertiesElement(final String subnet) {
         if (!_data.containsKey(subnet)) {
             return null;
         }
         return _data.get(subnet).getEdgesDefaultVisualPropertiesElement();
     }
 
-    final Map<CyEdge, VisualPropertiesElement> getEdgeVisualPropertiesElementsMap(final String subnet) {
+    final Map<CyEdge, CyVisualPropertiesElement> getEdgeVisualPropertiesElementsMap(final String subnet) {
         if (!_data.containsKey(subnet)) {
             return null;
         }
         return _data.get(subnet).getEdgeVisualPropertiesElementsMap();
     }
 
-    final VisualPropertiesElement getNetworkVisualPropertiesElement(final String subnet) {
+    final CyVisualPropertiesElement getNetworkVisualPropertiesElement(final String subnet) {
         if (!_data.containsKey(subnet)) {
             return null;
         }
         return _data.get(subnet).getNetworkVisualPropertiesElement();
     }
 
-    final VisualPropertiesElement getNodesDefaultVisualPropertiesElement(final String subnet) {
+    final CyVisualPropertiesElement getNodesDefaultVisualPropertiesElement(final String subnet) {
         if (!_data.containsKey(subnet)) {
             return null;
         }
         return _data.get(subnet).getNodesDefaultVisualPropertiesElement();
     }
 
-    final Map<CyNode, VisualPropertiesElement> getNodeVisualPropertiesElementsMap(final String subnet) {
+    final Map<CyNode, CyVisualPropertiesElement> getNodeVisualPropertiesElementsMap(final String subnet) {
         if (!_data.containsKey(subnet)) {
             return null;
         }

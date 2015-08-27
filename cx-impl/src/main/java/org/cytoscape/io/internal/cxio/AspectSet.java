@@ -9,17 +9,19 @@ import java.util.TreeSet;
 import org.cxio.aspects.readers.CartesianLayoutFragmentReader;
 import org.cxio.aspects.readers.EdgeAttributesFragmentReader;
 import org.cxio.aspects.readers.EdgesFragmentReader;
-import org.cxio.aspects.readers.GroupFragmentReader;
+import org.cxio.aspects.readers.CyGroupsFragmentReader;
+import org.cxio.aspects.readers.HiddenAttributesFragmentReader;
 import org.cxio.aspects.readers.NetworkAttributesFragmentReader;
 import org.cxio.aspects.readers.NetworkRelationsFragmentReader;
 import org.cxio.aspects.readers.NodeAttributesFragmentReader;
 import org.cxio.aspects.readers.NodesFragmentReader;
 import org.cxio.aspects.readers.SubNetworkFragmentReader;
-import org.cxio.aspects.readers.VisualPropertiesFragmentReader;
+import org.cxio.aspects.readers.CyVisualPropertiesFragmentReader;
 import org.cxio.aspects.writers.CartesianLayoutFragmentWriter;
 import org.cxio.aspects.writers.EdgeAttributesFragmentWriter;
 import org.cxio.aspects.writers.EdgesFragmentWriter;
-import org.cxio.aspects.writers.GroupFragmentWriter;
+import org.cxio.aspects.writers.CyGroupsFragmentWriter;
+import org.cxio.aspects.writers.HiddenAttributesFragmentWriter;
 import org.cxio.aspects.writers.NetworkAttributesFragmentWriter;
 import org.cxio.aspects.writers.NetworkRelationsFragmentWriter;
 import org.cxio.aspects.writers.NodeAttributesFragmentWriter;
@@ -97,6 +99,9 @@ public final class AspectSet {
         if (_aspects.contains(Aspect.NODE_ATTRIBUTES)) {
             writers.add(NodeAttributesFragmentWriter.createInstance());
         }
+        if (_aspects.contains(Aspect.HIDDEN_ATTRIBUTES)) {
+            writers.add(HiddenAttributesFragmentWriter.createInstance());
+        }
         if (_aspects.contains(Aspect.NODES)) {
             writers.add(NodesFragmentWriter.createInstance());
         }
@@ -110,65 +115,12 @@ public final class AspectSet {
             writers.add(NetworkRelationsFragmentWriter.createInstance());
         }
         if (_aspects.contains(Aspect.GROUPS)) {
-            writers.add(GroupFragmentWriter.createInstance());
+            writers.add(CyGroupsFragmentWriter.createInstance());
         }
         return writers;
     }
 
-    final Set<AspectFragmentWriter> getAspectFragmentWriters(final String time_stamp) {
-        final Set<AspectFragmentWriter> writers = new HashSet<AspectFragmentWriter>();
-        if (_aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
-            final CartesianLayoutFragmentWriter w = CartesianLayoutFragmentWriter.createInstance();
-            w.setTimeStamp(time_stamp);
-            writers.add(w);
-        }
-        if (_aspects.contains(Aspect.EDGE_ATTRIBUTES)) {
-            final EdgeAttributesFragmentWriter w = EdgeAttributesFragmentWriter.createInstance();
-            w.setTimeStamp(time_stamp);
-            writers.add(w);
-        }
-        if (_aspects.contains(Aspect.EDGES)) {
-            final EdgesFragmentWriter w = EdgesFragmentWriter.createInstance();
-            w.setTimeStamp(time_stamp);
-            writers.add(w);
-        }
-        if (_aspects.contains(Aspect.NETWORK_ATTRIBUTES)) {
-            final NetworkAttributesFragmentWriter w = NetworkAttributesFragmentWriter.createInstance();
-            w.setTimeStamp(time_stamp);
-            writers.add(w);
-        }
-        if (_aspects.contains(Aspect.NODE_ATTRIBUTES)) {
-            final NodeAttributesFragmentWriter w = NodeAttributesFragmentWriter.createInstance();
-            w.setTimeStamp(time_stamp);
-            writers.add(w);
-        }
-        if (_aspects.contains(Aspect.NODES)) {
-            final NodesFragmentWriter w = NodesFragmentWriter.createInstance();
-            w.setTimeStamp(time_stamp);
-            writers.add(w);
-        }
-        if (_aspects.contains(Aspect.VISUAL_PROPERTIES)) {
-            final VisualPropertiesFragmentWriter w = VisualPropertiesFragmentWriter.createInstance();
-            w.setTimeStamp(time_stamp);
-            writers.add(w);
-        }
-        if (_aspects.contains(Aspect.SUBNETWORKS)) {
-            final SubNetworkFragmentWriter w = SubNetworkFragmentWriter.createInstance();
-            w.setTimeStamp(time_stamp);
-            writers.add(w);
-        }
-        if (_aspects.contains(Aspect.NETWORK_RELATIONS)) {
-            final NetworkRelationsFragmentWriter w = NetworkRelationsFragmentWriter.createInstance();
-            w.setTimeStamp(time_stamp);
-            writers.add(w);
-        }
-        if (_aspects.contains(Aspect.GROUPS)) {
-            final GroupFragmentWriter w = GroupFragmentWriter.createInstance();
-            w.setTimeStamp(time_stamp);
-            writers.add(w);
-        }
-        return writers;
-    }
+   
 
     final Set<AspectFragmentReader> getAspectFragmentReaders() {
         final Set<AspectFragmentReader> readers = new HashSet<AspectFragmentReader>();
@@ -187,17 +139,20 @@ public final class AspectSet {
         if (_aspects.contains(Aspect.NODE_ATTRIBUTES)) {
             readers.add(NodeAttributesFragmentReader.createInstance());
         }
+        if (_aspects.contains(Aspect.HIDDEN_ATTRIBUTES)) {
+            readers.add(HiddenAttributesFragmentReader.createInstance());
+        }
         if (_aspects.contains(Aspect.NODES)) {
             readers.add(NodesFragmentReader.createInstance());
         }
         if (_aspects.contains(Aspect.VISUAL_PROPERTIES)) {
-            readers.add(VisualPropertiesFragmentReader.createInstance());
+            readers.add(CyVisualPropertiesFragmentReader.createInstance());
         }
         if (_aspects.contains(Aspect.SUBNETWORKS)) {
             readers.add(SubNetworkFragmentReader.createInstance());
         }
         if (_aspects.contains(Aspect.GROUPS)) {
-            readers.add(GroupFragmentReader.createInstance());
+            readers.add(CyGroupsFragmentReader.createInstance());
         }
         if (_aspects.contains(Aspect.NETWORK_RELATIONS)) {
             readers.add(NetworkRelationsFragmentReader.createInstance());

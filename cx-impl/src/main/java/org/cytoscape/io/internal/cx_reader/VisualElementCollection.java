@@ -5,25 +5,25 @@ import java.util.Map;
 
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.cxio.aspects.datamodels.SubNetworkElement;
-import org.cxio.aspects.datamodels.VisualPropertiesElement;
+import org.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNode;
 
 class VisualElementCollection {
 
-    private final Map<CyEdge, VisualPropertiesElement> _edge_vpe_map;
-    private VisualPropertiesElement                    _edges_default_vpe;
-    private VisualPropertiesElement                    _network_vpe;
-    private final Map<CyNode, VisualPropertiesElement> _node_vpe_map;
-    private VisualPropertiesElement                    _nodes_default_vpe;
+    private final Map<CyEdge, CyVisualPropertiesElement> _edge_vpe_map;
+    private CyVisualPropertiesElement                    _edges_default_vpe;
+    private CyVisualPropertiesElement                    _network_vpe;
+    private final Map<CyNode, CyVisualPropertiesElement> _node_vpe_map;
+    private CyVisualPropertiesElement                    _nodes_default_vpe;
     private final Map<CyNode, CartesianLayoutElement>  _layout_elements_map;
     private SubNetworkElement                          _subnetwork_element;
     private String                                     _property_of;
 
     VisualElementCollection() {
         _property_of = null;
-        _node_vpe_map = new HashMap<CyNode, VisualPropertiesElement>();
-        _edge_vpe_map = new HashMap<CyEdge, VisualPropertiesElement>();
+        _node_vpe_map = new HashMap<CyNode, CyVisualPropertiesElement>();
+        _edge_vpe_map = new HashMap<CyEdge, CyVisualPropertiesElement>();
         _layout_elements_map = new HashMap<CyNode, CartesianLayoutElement>();
         _nodes_default_vpe = null;
         _edges_default_vpe = null;
@@ -70,23 +70,23 @@ class VisualElementCollection {
         return _subnetwork_element;
     }
 
-    public VisualPropertiesElement getEdgesDefaultVisualPropertiesElement() {
+    public CyVisualPropertiesElement getEdgesDefaultVisualPropertiesElement() {
         return _edges_default_vpe;
     }
 
-    public Map<CyEdge, VisualPropertiesElement> getEdgeVisualPropertiesElementsMap() {
+    public Map<CyEdge, CyVisualPropertiesElement> getEdgeVisualPropertiesElementsMap() {
         return _edge_vpe_map;
     }
 
-    public VisualPropertiesElement getNetworkVisualPropertiesElement() {
+    public CyVisualPropertiesElement getNetworkVisualPropertiesElement() {
         return _network_vpe;
     }
 
-    public VisualPropertiesElement getNodesDefaultVisualPropertiesElement() {
+    public CyVisualPropertiesElement getNodesDefaultVisualPropertiesElement() {
         return _nodes_default_vpe;
     }
 
-    public Map<CyNode, VisualPropertiesElement> getNodeVisualPropertiesElementsMap() {
+    public Map<CyNode, CyVisualPropertiesElement> getNodeVisualPropertiesElementsMap() {
         return _node_vpe_map;
     }
 
@@ -98,15 +98,15 @@ class VisualElementCollection {
         return _property_of;
     }
 
-    public void setEdgesDefaultVisualPropertiesElement(final VisualPropertiesElement vpe) {
+    public void setEdgesDefaultVisualPropertiesElement(final CyVisualPropertiesElement vpe) {
         _edges_default_vpe = vpe;
     }
 
-    public void setNetworkVisualPropertiesElement(final VisualPropertiesElement vpe) {
+    public void setNetworkVisualPropertiesElement(final CyVisualPropertiesElement vpe) {
         _network_vpe = vpe;
     }
 
-    public void setNodesDefaultVisualPropertiesElement(final VisualPropertiesElement vpe) {
+    public void setNodesDefaultVisualPropertiesElement(final CyVisualPropertiesElement vpe) {
         _nodes_default_vpe = vpe;
     }
 

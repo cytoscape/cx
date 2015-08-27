@@ -18,6 +18,7 @@ import org.cytoscape.io.internal.cxio.Util;
 import org.cytoscape.io.write.CyWriter;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkManager;
+import org.cytoscape.model.CyNetworkTableManager;
 import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingManager;
@@ -40,6 +41,7 @@ public class CxNetworkWriter implements CyWriter {
     private final CyNetworkViewManager  _networkview_manager;
     private final CyNetworkManager      _network_manager;
     private final CyGroupManager        _group_manager;
+    private final CyNetworkTableManager        _table_manager;
 
     public CxNetworkWriter(final OutputStream os,
                            final CyNetwork network,
@@ -48,6 +50,7 @@ public class CxNetworkWriter implements CyWriter {
                            final CyNetworkViewManager networkview_manager,
                            final CyNetworkManager network_manager,
                            final CyGroupManager group_manager,
+                           final CyNetworkTableManager table_manager,
                            final VisualLexicon lexicon) {
 
         _visual_mapping_manager = visual_mapping_manager;
@@ -58,6 +61,7 @@ public class CxNetworkWriter implements CyWriter {
         _os = os;
         _network = network;
         _group_manager = group_manager;
+        _table_manager = table_manager;
 
         if (Charset.isSupported(ENCODING)) {
             // UTF-8 is supported by system
@@ -80,6 +84,7 @@ public class CxNetworkWriter implements CyWriter {
         _os = os;
         _network = network;
         _group_manager = null;
+        _table_manager = null;
 
         if (Charset.isSupported(ENCODING)) {
             // UTF-8 is supported by system
@@ -115,6 +120,7 @@ public class CxNetworkWriter implements CyWriter {
         aspects.addAspect(Aspect.SUBNETWORKS);
         aspects.addAspect(Aspect.NETWORK_RELATIONS);
         aspects.addAspect(Aspect.GROUPS);
+        aspects.addAspect(Aspect.HIDDEN_ATTRIBUTES);
 
         final CxExporter exporter = CxExporter.createInstance();
         exporter.setUseDefaultPrettyPrinting(true);
@@ -123,19 +129,19 @@ public class CxNetworkWriter implements CyWriter {
         exporter.setNetworkViewManager(_networkview_manager);
         exporter.setNetworkManager(_network_manager);
         exporter.setGroupManager(_group_manager);
+        exporter.setTableManager(_table_manager);
 
-        final String time_stamp = Util.makeTimeStamp();
-
+     
         final long t0 = System.currentTimeMillis();
 
         if (TimingUtil.WRITE_TO_DEV_NULL) {
-            exporter.writeNetwork(_network, aspects, new FileOutputStream(new File("/dev/null")), time_stamp);
+            exporter.writeNetwork(_network, aspects, new FileOutputStream(new File("/dev/null")));
         }
         else if (TimingUtil.WRITE_TO_BYTE_ARRAY_OUTPUTSTREAM) {
-            exporter.writeNetwork(_network, aspects, new ByteArrayOutputStream(), time_stamp);
+            exporter.writeNetwork(_network, aspects, new ByteArrayOutputStream());
         }
         else {
-            exporter.writeNetwork(_network, aspects, _os, time_stamp);
+            exporter.writeNetwork(_network, aspects, _os);
             _os.close();
         }
 

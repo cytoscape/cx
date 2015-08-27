@@ -13,8 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
-import org.cxio.aspects.datamodels.SubNetworkElement;
-import org.cxio.aspects.datamodels.VisualPropertiesElement;
+import org.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.cxio.core.CxReader;
 import org.cxio.core.interfaces.AspectElement;
 import org.cytoscape.application.CyApplicationManager;
@@ -43,6 +42,7 @@ import org.cytoscape.work.util.ListSingleSelection;
 
 public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
+    private static final boolean         DEBUG = true;
     private final List<CyNetwork>        _networks;
     private final String                 _network_collection_name;
     private CxToCy                       _cx_to_cy;
@@ -111,40 +111,73 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                           CyEdge.class);
         }
 
-        final Set<CyNode> node_vpe = _cx_to_cy.getNodeWithVisualProperties();
-        final SubNetworkElement x = collection.getSubNetworkElement(subnetwork_id);
-        x.getNodes();
-        for (final CyNode node : node_vpe) {
-            final Map<CyNode, VisualPropertiesElement> nvpm = collection
-                    .getNodeVisualPropertiesElementsMap(subnetwork_id);
-            System.out.println("nvpm=" + nvpm);
-            final VisualPropertiesElement vpe = nvpm.get(node);
-            System.out.println("vpe=" + vpe);
-            final SortedMap<String, String> props = vpe.getProperties();
-            final View<CyNode> v = view.getNodeView(node);
+        setNodeVisualProperties(view, lexicon, collection, subnetwork_id);
 
-            setProperties(lexicon, props, v, CyNode.class);
-        }
-
-        // final Set<CyEdge> edge_vpe = _cx_to_cy.getEdgeWithVisualProperties();
-        // for (final CyEdge edge : edge_vpe) {
-        // final Map<CyEdge, VisualPropertiesElement> evpm = collection
-        // .getEdgeVisualPropertiesElementsMap(subnetwork_id);
-        // setProperties(lexicon, evpm.get(edge).getProperties(),
-        // view.getEdgeView(edge), CyEdge.class);
-        // }
+        setEdgeVisualProperties(view, lexicon, collection, subnetwork_id);
 
         final Map<CyNode, CartesianLayoutElement> position_map_for_view = collection
                 .getCartesianLayoutElements(subnetwork_id);
 
         for (final CyNode node : position_map_for_view.keySet()) {
             final CartesianLayoutElement e = position_map_for_view.get(node);
-            view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_X_LOCATION, e.getX());
-            view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION, e.getY());
-            view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION, e.getZ());
+            if (e != null) {
+                view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_X_LOCATION, e.getX());
+                view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION, e.getY());
+                view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION, e.getZ());
+            }
         }
 
         return view;
+    }
+
+    private final void setEdgeVisualProperties(final CyNetworkView view,
+                                               final VisualLexicon lexicon,
+                                               final VisualElementCollectionMap collection,
+                                               final String subnetwork_id) {
+        final Set<CyEdge> edges_vpe = _cx_to_cy.getEdgesWithVisualProperties();
+        for (final CyEdge edge : edges_vpe) {
+            final Map<CyEdge, CyVisualPropertiesElement> evpm = collection
+                    .getEdgeVisualPropertiesElementsMap(subnetwork_id);
+            final CyVisualPropertiesElement vpe = evpm.get(edge);
+            if (DEBUG) {
+                if (vpe == null) {
+                    System.out.println(">>>> edge vpe is null");
+                }
+
+            }
+            if (vpe != null) {
+                final SortedMap<String, String> props = vpe.getProperties();
+                if (props != null) {
+                    final View<CyEdge> v = view.getEdgeView(edge);
+                    setProperties(lexicon, props, v, CyEdge.class);
+                }
+            }
+        }
+    }
+
+    private final void setNodeVisualProperties(final CyNetworkView view,
+                                               final VisualLexicon lexicon,
+                                               final VisualElementCollectionMap collection,
+                                               final String subnetwork_id) {
+        final Set<CyNode> nodes_vpe = _cx_to_cy.getNodesWithVisualProperties();
+        for (final CyNode node : nodes_vpe) {
+            final Map<CyNode, CyVisualPropertiesElement> nvpm = collection
+                    .getNodeVisualPropertiesElementsMap(subnetwork_id);
+            final CyVisualPropertiesElement vpe = nvpm.get(node);
+            if (DEBUG) {
+                if (vpe == null) {
+                    System.out.println(">>>> node vpe is null");
+                }
+
+            }
+            if (vpe != null) {
+                final SortedMap<String, String> props = vpe.getProperties();
+                if (props != null) {
+                    final View<CyNode> v = view.getNodeView(node);
+                    setProperties(lexicon, props, v, CyNode.class);
+                }
+            }
+        }
     }
 
     private final String obtainNetworkId(final CyNetwork network) {
@@ -161,6 +194,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         if (props != null) {
             for (final Map.Entry<String, String> entry : props.entrySet()) {
                 final VisualProperty vp = lexicon.lookup(my_class, entry.getKey());
+
                 if (vp != null) {
                     final Object parsed_value = vp.parseSerializableString(entry.getValue());
                     if (parsed_value != null) {
@@ -196,7 +230,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     }
 
     private static final Pattern DIRECT_NET_PROPS_PATTERN = Pattern
-                                                                  .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
+            .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
 
     @SuppressWarnings("rawtypes")
     private final static boolean shouldSetAsLocked(final VisualProperty vp) {

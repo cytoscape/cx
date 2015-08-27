@@ -131,18 +131,16 @@ public class CxNetworkViewWriter implements CyWriter {
         exporter.setVisualMappingManager(_visual_mapping_manager);
         exporter.setNetworkViewManager(_networkview_manager);
 
-        final String time_stamp = Util.makeTimeStamp();
-
         final long t0 = System.currentTimeMillis();
 
         if (TimingUtil.WRITE_TO_DEV_NULL) {
-            exporter.writeNetworkView(_network_view, aspects, new FileOutputStream(new File("/dev/null")), time_stamp);
+            exporter.writeNetworkView(_network_view, aspects, new FileOutputStream(new File("/dev/null")));
         }
         else if (TimingUtil.WRITE_TO_BYTE_ARRAY_OUTPUTSTREAM) {
-            exporter.writeNetworkView(_network_view, aspects, new ByteArrayOutputStream(), time_stamp);
+            exporter.writeNetworkView(_network_view, aspects, new ByteArrayOutputStream());
         }
         else {
-            exporter.writeNetworkView(_network_view, aspects, _os, time_stamp);
+            exporter.writeNetworkView(_network_view, aspects, _os);
             _os.close();
         }
 

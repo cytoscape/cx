@@ -3,13 +3,14 @@ package org.cytoscape.io.internal.cxio;
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.cxio.aspects.datamodels.EdgeAttributesElement;
 import org.cxio.aspects.datamodels.EdgesElement;
-import org.cxio.aspects.datamodels.GroupElement;
+import org.cxio.aspects.datamodels.CyGroupsElement;
+import org.cxio.aspects.datamodels.HiddenAttributesElement;
 import org.cxio.aspects.datamodels.NetworkAttributesElement;
 import org.cxio.aspects.datamodels.NetworkRelationsElement;
 import org.cxio.aspects.datamodels.NodeAttributesElement;
 import org.cxio.aspects.datamodels.NodesElement;
 import org.cxio.aspects.datamodels.SubNetworkElement;
-import org.cxio.aspects.datamodels.VisualPropertiesElement;
+import org.cxio.aspects.datamodels.CyVisualPropertiesElement;
 
 /**
  * This enumeration is used to identify aspects relevant for Cytoscape networks
@@ -27,9 +28,10 @@ public enum Aspect {
     NODE_ATTRIBUTES(NodeAttributesElement.NAME),
     NETWORK_ATTRIBUTES(NetworkAttributesElement.NAME),
     SUBNETWORKS(SubNetworkElement.NAME),
-    VISUAL_PROPERTIES(VisualPropertiesElement.NAME),
+    VISUAL_PROPERTIES(CyVisualPropertiesElement.NAME),
     NETWORK_RELATIONS(NetworkRelationsElement.NAME),
-    GROUPS(GroupElement.NAME);
+    GROUPS(CyGroupsElement.NAME),
+    HIDDEN_ATTRIBUTES(HiddenAttributesElement.NAME);
 
     private final String _s;
 

@@ -14,6 +14,7 @@ import org.cytoscape.io.read.InputStreamTaskFactory;
 import org.cytoscape.io.util.StreamUtil;
 import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
+import org.cytoscape.model.CyNetworkTableManager;
 import org.cytoscape.model.subnetwork.CyRootNetworkManager;
 import org.cytoscape.service.util.AbstractCyActivator;
 import org.cytoscape.view.model.CyNetworkViewManager;
@@ -47,6 +48,7 @@ public class CyActivator extends AbstractCyActivator {
         final CyNetworkViewManager networkview_manager = getService(bc, CyNetworkViewManager.class);
         final CyNetworkManager network_manager = getService(bc, CyNetworkManager.class);
         final CyGroupManager group_manager = getService(bc, CyGroupManager.class);
+        final CyNetworkTableManager table_manager = getService(bc, CyNetworkTableManager.class);
 
         // final CustomGraphicsManager custom_graphics_manager = getService(bc,
         // CustomGraphicsManager.class);
@@ -57,7 +59,8 @@ public class CyActivator extends AbstractCyActivator {
                                                                                          null,
                                                                                          networkview_manager,
                                                                                          network_manager,
-                                                                                         group_manager);
+                                                                                         group_manager,
+                                                                                         table_manager);
 
         final Properties cxWriterFactoryProperties = new Properties();
 
