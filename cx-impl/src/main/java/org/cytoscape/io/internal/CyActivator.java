@@ -36,7 +36,7 @@ public class CyActivator extends AbstractCyActivator {
 
         final StreamUtil streamUtil = getService(bc, StreamUtil.class);
 
-        final BasicCyFileFilter cx_filter = new BasicCyFileFilter(new String[] { "cx" },
+        final BasicCyFileFilter cx_filter = new BasicCyFileFilter(new String[] { "cx", null, "", "  ", "blarg" },
                                                                   new String[] { "application/json" },
                                                                   "CX JSON",
                                                                   DataCategory.NETWORK,

@@ -9,18 +9,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 
-import org.cxio.aspects.datamodels.AbstractAttributesElement.ATTRIBUTE_TYPE;
+import org.cxio.aspects.datamodels.AbstractAttributesAspectElement.ATTRIBUTE_TYPE;
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
+import org.cxio.aspects.datamodels.CyGroupsElement;
 import org.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.cxio.aspects.datamodels.EdgeAttributesElement;
 import org.cxio.aspects.datamodels.EdgesElement;
-import org.cxio.aspects.datamodels.CyGroupsElement;
 import org.cxio.aspects.datamodels.NetworkAttributesElement;
 import org.cxio.aspects.datamodels.NetworkRelationsElement;
 import org.cxio.aspects.datamodels.NodeAttributesElement;
 import org.cxio.aspects.datamodels.NodesElement;
 import org.cxio.aspects.datamodels.SubNetworkElement;
-import org.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.cxio.core.interfaces.AspectElement;
 import org.cxio.util.Util;
 import org.cytoscape.io.internal.cxio.VisualPropertyType;
@@ -186,14 +185,19 @@ public final class CxToCy {
                 _network_suid_to_networkrelations_map.put(sub_network.getSUID(), subnetwork_ids.get(i));
             }
 
-            final Set<String> nodes_in_subnet = new HashSet<String>(_visual_element_collections
-                    .getSubNetworkElement(subnetwork_ids.get(i)).getNodes());
-            final Set<String> edges_in_subnet = new HashSet<String>(_visual_element_collections
-                    .getSubNetworkElement(subnetwork_ids.get(i)).getEdges());
+            Set<String> nodes_in_subnet= null;
+            Set<String> edges_in_subnet = null;
+            
+            if (visual_properties != null) {
+               nodes_in_subnet = new HashSet<String>(_visual_element_collections
+                        .getSubNetworkElement(subnetwork_ids.get(i)).getNodes());
+                edges_in_subnet = new HashSet<String>(_visual_element_collections
+                        .getSubNetworkElement(subnetwork_ids.get(i)).getEdges());
 
-            if (DEBUG) {
-                System.out.println("nodes in subnet: " + nodes_in_subnet);
-                System.out.println("edges in subnet: " + edges_in_subnet);
+                if (DEBUG) {
+                    System.out.println("nodes in subnet: " + nodes_in_subnet);
+                    System.out.println("edges in subnet: " + edges_in_subnet);
+                }
             }
 
             addNodes(sub_network, nodes, nodes_in_subnet, node_attributes_map);
@@ -223,7 +227,7 @@ public final class CxToCy {
                         for (final String applies_to_node : applies_to_nodes) {
                             _nodes_with_visual_properties.add(cxid_to_cynode_map.get(applies_to_node));
                             _visual_element_collections.addNodeVisualPropertiesElement(view, cxid_to_cynode_map
-                                                                                       .get(applies_to_node), vpe);
+                                    .get(applies_to_node), vpe);
                         }
                     }
                     else if (vpe.getPropertiesOf().equals(VisualPropertyType.EDGES.asString())) {
@@ -231,13 +235,16 @@ public final class CxToCy {
                         for (final String applies_to_edge : applies_to_edges) {
                             _edges_with_visual_properties.add(cxid_to_cyedge_map.get(applies_to_edge));
                             _visual_element_collections.addEdgeVisualPropertiesElement(view, cxid_to_cyedge_map
-                                                                                       .get(applies_to_edge), vpe);
+                                    .get(applies_to_edge), vpe);
                         }
                     }
                 }
             }
 
-            addPositions(layout, cxid_to_cynode_map);
+            if ( layout != null && !layout.isEmpty() ) {
+                addPositions(layout, cxid_to_cynode_map);
+            }
+            
             new_networks.add(sub_network);
 
         }
@@ -311,7 +318,7 @@ public final class CxToCy {
         }
         else {
             throw new IllegalArgumentException("don't know how to deal with type '" + type + "' for value '" + value
-                    + "'");
+                                               + "'");
         }
     }
 

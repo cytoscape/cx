@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 
-import org.cxio.aspects.datamodels.AbstractAttributesElement;
+import org.cxio.aspects.datamodels.*;
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.cxio.aspects.datamodels.CyGroupsElement;
 import org.cxio.aspects.datamodels.EdgeAttributesElement;
@@ -446,7 +446,7 @@ public final class CxExporter {
                                                               Util.makeId(cy_edge.getSUID()),
                                                               column_name,
                                                               attr_values,
-                                                              AbstractAttributesElement
+                                                              AbstractAttributesAspectElement
                                                                       .determineDataType(((List) value).get(0)));
                             }
                         }
@@ -455,7 +455,7 @@ public final class CxExporter {
                                                           Util.makeId(cy_edge.getSUID()),
                                                           column_name,
                                                           String.valueOf(value),
-                                                          AbstractAttributesElement.determineDataType(value));
+                                                          AbstractAttributesAspectElement.determineDataType(value));
                         }
                         if (e != null) {
                             elements.add(e);
@@ -516,7 +516,7 @@ public final class CxExporter {
                             e = new HiddenAttributesElement(subnet,
                                                             column_name,
                                                             attr_values,
-                                                            AbstractAttributesElement.determineDataType(((List) value)
+                                                            AbstractAttributesAspectElement.determineDataType(((List) value)
                                                                                                         .get(0)));
                         }
                     }
@@ -524,7 +524,7 @@ public final class CxExporter {
                         e = new HiddenAttributesElement(subnet,
                                                         column_name,
                                                         String.valueOf(value),
-                                                        AbstractAttributesElement.determineDataType(value));
+                                                        AbstractAttributesAspectElement.determineDataType(value));
                     }
                     if (e != null) {
                         elements.add(e);
@@ -585,7 +585,7 @@ public final class CxExporter {
                         e = new NetworkAttributesElement(Util.makeId(network.getSUID()),
                                                          column_name,
                                                          attr_values,
-                                                         AbstractAttributesElement.determineDataType(((List) value)
+                                                         AbstractAttributesAspectElement.determineDataType(((List) value)
                                                                  .get(0)));
                     }
                 }
@@ -593,7 +593,7 @@ public final class CxExporter {
                     e = new NetworkAttributesElement(Util.makeId(network.getSUID()),
                                                      column_name,
                                                      String.valueOf(value),
-                                                     AbstractAttributesElement.determineDataType(value));
+                                                     AbstractAttributesAspectElement.determineDataType(value));
                 }
                 if (e != null) {
                     elements.add(e);
@@ -761,7 +761,7 @@ public final class CxExporter {
                                                               Util.makeId(cy_node.getSUID()),
                                                               column_name,
                                                               attr_values,
-                                                              AbstractAttributesElement
+                                                              AbstractAttributesAspectElement
                                                                       .determineDataType(((List) value).get(0)));
                             }
                         }
@@ -770,7 +770,7 @@ public final class CxExporter {
                                                           Util.makeId(cy_node.getSUID()),
                                                           column_name,
                                                           String.valueOf(value),
-                                                          AbstractAttributesElement.determineDataType(value));
+                                                          AbstractAttributesAspectElement.determineDataType(value));
                         }
                         if (e != null) {
                             elements.add(e);
