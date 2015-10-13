@@ -34,7 +34,7 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
         _networkview_manager = null;
         _network_manager = null;
         _group_manager = null;
-        _table_manager =null;
+        _table_manager = null;
     }
 
     public CxNetworkWriterFactory(final CyFileFilter filter,
@@ -52,7 +52,7 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
         _networkview_manager = networkview_manager;
         _network_manager = network_manager;
         _group_manager = group_manager;
-        _table_manager =table_manager;
+        _table_manager = table_manager;
     }
 
     @Override

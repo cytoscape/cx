@@ -13,7 +13,6 @@ import org.cytoscape.io.internal.cxio.Aspect;
 import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxExporter;
 import org.cytoscape.io.internal.cxio.TimingUtil;
-import org.cytoscape.io.internal.cxio.Util;
 import org.cytoscape.io.write.CyWriter;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewManager;
@@ -25,21 +24,21 @@ import org.slf4j.LoggerFactory;
 
 public class CxNetworkViewWriter implements CyWriter {
 
-    private final static Logger         logger   = LoggerFactory.getLogger(CxNetworkViewWriter.class);
-    private final static String         ENCODING = "UTF-8";
-    private final OutputStream          _os;
-    private final CyNetworkView         _network_view;
-    private final CharsetEncoder        _encoder;
-    private final VisualMappingManager  _visual_mapping_manager;
-    private final VisualLexicon         _lexicon;
-    private final CustomGraphicsManager _custom_graphics_manager;
-    private final CyNetworkViewManager  _networkview_manager;
+    private final static Logger        logger   = LoggerFactory.getLogger(CxNetworkViewWriter.class);
+    private final static String        ENCODING = "UTF-8";
+    private final OutputStream         _os;
+    private final CyNetworkView        _network_view;
+    private final CharsetEncoder       _encoder;
+    private final VisualMappingManager _visual_mapping_manager;
+    private final VisualLexicon        _lexicon;
+    // private final CustomGraphicsManager _custom_graphics_manager;
+    private final CyNetworkViewManager _networkview_manager;
 
     public CxNetworkViewWriter(final OutputStream os, final CyNetworkView network_view) {
         _os = os;
         _network_view = network_view;
         _visual_mapping_manager = null;
-        _custom_graphics_manager = null;
+        // _custom_graphics_manager = null;
         _networkview_manager = null;
         _lexicon = null;
         if (Charset.isSupported(ENCODING)) {
@@ -62,7 +61,7 @@ public class CxNetworkViewWriter implements CyWriter {
         _os = os;
         _network_view = network_view;
         _visual_mapping_manager = visual_mapping_manager;
-        _custom_graphics_manager = custom_graphics_manager;
+        // _custom_graphics_manager = custom_graphics_manager;
         _networkview_manager = networkview_manager;
         _lexicon = lexicon;
         if (Charset.isSupported(ENCODING)) {

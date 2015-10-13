@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 
-import org.cxio.aspects.datamodels.*;
+import org.cxio.aspects.datamodels.AbstractAttributesAspectElement;
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.cxio.aspects.datamodels.CyGroupsElement;
 import org.cxio.aspects.datamodels.EdgeAttributesElement;
@@ -385,7 +385,6 @@ public final class CxExporter {
         return z_used;
     }
 
-    @SuppressWarnings("rawtypes")
     private final void writeEdgeAttributes(final CyNetwork network,
                                            final CxWriter w,
                                            final boolean use_root,
@@ -415,6 +414,7 @@ public final class CxExporter {
         }
     }
 
+    @SuppressWarnings("rawtypes")
     private void writeEdgeAttributesHelper(final String namespace,
                                            final CyNetwork my_network,
                                            final List<CyEdge> edges,
@@ -446,8 +446,7 @@ public final class CxExporter {
                                                               Util.makeId(cy_edge.getSUID()),
                                                               column_name,
                                                               attr_values,
-                                                              AbstractAttributesAspectElement
-                                                                      .determineDataType(((List) value).get(0)));
+                                                              AbstractAttributesAspectElement.determineDataType(value));
                             }
                         }
                         else {
@@ -466,7 +465,6 @@ public final class CxExporter {
         }
     }
 
-    @SuppressWarnings("rawtypes")
     private final void writeHiddenAttributes(final CyNetwork network, final CxWriter w, final boolean write_subnets)
             throws IOException {
 
@@ -516,8 +514,7 @@ public final class CxExporter {
                             e = new HiddenAttributesElement(subnet,
                                                             column_name,
                                                             attr_values,
-                                                            AbstractAttributesAspectElement.determineDataType(((List) value)
-                                                                                                        .get(0)));
+                                                            AbstractAttributesAspectElement.determineDataType(value));
                         }
                     }
                     else {
@@ -585,8 +582,7 @@ public final class CxExporter {
                         e = new NetworkAttributesElement(Util.makeId(network.getSUID()),
                                                          column_name,
                                                          attr_values,
-                                                         AbstractAttributesAspectElement.determineDataType(((List) value)
-                                                                 .get(0)));
+                                                         AbstractAttributesAspectElement.determineDataType(value));
                     }
                 }
                 else {
@@ -682,8 +678,8 @@ public final class CxExporter {
         }
         final List<AspectElement> elements = new ArrayList<AspectElement>();
         for (final CySubNetwork subnet : subnets) {
-            final CyRow row = subnet.getRow(subnet);
-            final String name = row.get("name", String.class);
+            // final CyRow row = subnet.getRow(subnet);
+            // final String name = row.get("name", String.class);
             final SubNetworkElement subnetwork_element = new SubNetworkElement(String.valueOf(subnet.getSUID()));
             for (final CyEdge edgeview : subnet.getEdgeList()) {
                 subnetwork_element.addEdge(Util.makeId(String.valueOf(edgeview.getSUID())));
@@ -700,7 +696,6 @@ public final class CxExporter {
         }
     }
 
-    @SuppressWarnings("rawtypes")
     private final void writeNodeAttributes(final CyNetwork network,
                                            final CxWriter w,
                                            final boolean use_root,
@@ -730,6 +725,7 @@ public final class CxExporter {
         }
     }
 
+    @SuppressWarnings("rawtypes")
     private void writeNodeAttributesHelper(final String namespace,
                                            final CyNetwork my_network,
                                            final List<CyNode> nodes,
@@ -761,8 +757,7 @@ public final class CxExporter {
                                                               Util.makeId(cy_node.getSUID()),
                                                               column_name,
                                                               attr_values,
-                                                              AbstractAttributesAspectElement
-                                                                      .determineDataType(((List) value).get(0)));
+                                                              AbstractAttributesAspectElement.determineDataType(value));
                             }
                         }
                         else {

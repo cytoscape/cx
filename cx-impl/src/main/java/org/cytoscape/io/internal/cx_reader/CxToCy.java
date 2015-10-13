@@ -9,9 +9,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 
-import org.cxio.aspects.datamodels.AbstractAttributesAspectElement.ATTRIBUTE_TYPE;
+import org.cxio.aspects.datamodels.AbstractAttributesAspectElement;
+import org.cxio.aspects.datamodels.AbstractAttributesAspectElement.ATTRIBUTE_DATA_TYPE;
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
-import org.cxio.aspects.datamodels.CyGroupsElement;
 import org.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.cxio.aspects.datamodels.EdgeAttributesElement;
 import org.cxio.aspects.datamodels.EdgesElement;
@@ -59,12 +59,13 @@ public final class CxToCy {
 
         final List<AspectElement> nodes = aspect_collection.get(NodesElement.NAME);
         final List<AspectElement> edges = aspect_collection.get(EdgesElement.NAME);
-        final List<AspectElement> layout = aspect_collection.get(CartesianLayoutElement.NAME);
+        final List<AspectElement> cartesian_layout_elements = aspect_collection.get(CartesianLayoutElement.NAME);
         final List<AspectElement> node_attributes = aspect_collection.get(NodeAttributesElement.NAME);
         final List<AspectElement> edge_attributes = aspect_collection.get(EdgeAttributesElement.NAME);
         final List<AspectElement> network_attributes = aspect_collection.get(NetworkAttributesElement.NAME);
         final List<AspectElement> visual_properties = aspect_collection.get(CyVisualPropertiesElement.NAME);
-        final List<AspectElement> groups = aspect_collection.get(CyGroupsElement.NAME);
+        // final List<AspectElement> groups =
+        // aspect_collection.get(CyGroupsElement.NAME);
         final List<AspectElement> subnetworks = aspect_collection.get(SubNetworkElement.NAME);
         final List<AspectElement> network_relations = aspect_collection.get(NetworkRelationsElement.NAME);
 
@@ -162,7 +163,15 @@ public final class CxToCy {
 
         final List<CyNetwork> new_networks = new ArrayList<CyNetwork>();
 
+        if (DEBUG) {
+            System.out.println("number of subnetworks: " + number_of_subnetworks);
+        }
+
         for (int i = 0; i < number_of_subnetworks; ++i) {
+
+            if (DEBUG) {
+                System.out.println("subnetwork id: " + subnetwork_ids.get(i));
+            }
 
             CySubNetwork sub_network;
 
@@ -185,18 +194,18 @@ public final class CxToCy {
                 _network_suid_to_networkrelations_map.put(sub_network.getSUID(), subnetwork_ids.get(i));
             }
 
-            Set<String> nodes_in_subnet= null;
+            Set<String> nodes_in_subnet = null;
             Set<String> edges_in_subnet = null;
-            
+
             if (visual_properties != null) {
-               nodes_in_subnet = new HashSet<String>(_visual_element_collections
+                nodes_in_subnet = new HashSet<String>(_visual_element_collections
                         .getSubNetworkElement(subnetwork_ids.get(i)).getNodes());
                 edges_in_subnet = new HashSet<String>(_visual_element_collections
                         .getSubNetworkElement(subnetwork_ids.get(i)).getEdges());
 
                 if (DEBUG) {
-                    System.out.println("nodes in subnet: " + nodes_in_subnet);
-                    System.out.println("edges in subnet: " + edges_in_subnet);
+                    System.out.println("nodes count in subnet: " + nodes_in_subnet.size());
+                    System.out.println("edges count in subnet: " + edges_in_subnet.size());
                 }
             }
 
@@ -241,10 +250,10 @@ public final class CxToCy {
                 }
             }
 
-            if ( layout != null && !layout.isEmpty() ) {
-                addPositions(layout, cxid_to_cynode_map);
+            if ((cartesian_layout_elements != null) && !cartesian_layout_elements.isEmpty()) {
+                addPositions(cartesian_layout_elements, cxid_to_cynode_map);
             }
-            
+
             new_networks.add(sub_network);
 
         }
@@ -267,29 +276,30 @@ public final class CxToCy {
         }
     }
 
-    private Class<?> getDataType(final ATTRIBUTE_TYPE type) {
-        if (type == ATTRIBUTE_TYPE.STRING) {
+    private Class<?> getDataType(final ATTRIBUTE_DATA_TYPE type) {
+        switch (type) {
+        case STRING:
+        case LIST_OF_STRING:
             return String.class;
-        }
-        else if (type == ATTRIBUTE_TYPE.BOOLEAN) {
+        case BOOLEAN:
+        case LIST_OF_BOOLEAN:
             return Boolean.class;
-        }
-        else if (type == ATTRIBUTE_TYPE.DOUBLE) {
+        case DOUBLE:
+        case LIST_OF_DOUBLE:
             return Double.class;
-        }
-        else if (type == ATTRIBUTE_TYPE.FLOAT) {
+        case FLOAT:
+        case LIST_OF_FLOAT:
             return Float.class;
-        }
-        else if (type == ATTRIBUTE_TYPE.INTEGER) {
+        case INTEGER:
+        case LIST_OF_INTEGER:
             return Integer.class;
-        }
-        else if (type == ATTRIBUTE_TYPE.LONG) {
+        case LONG:
+        case LIST_OF_LONG:
             return Long.class;
-        }
-        else if (type == ATTRIBUTE_TYPE.SHORT) {
+        case SHORT:
+        case LIST_OF_SHORT:
             return Integer.class;
-        }
-        else {
+        default:
             throw new IllegalArgumentException("don't know how to deal with type '" + type + "'");
         }
     }
@@ -322,84 +332,82 @@ public final class CxToCy {
         }
     }
 
-    private final Object getValue(final List<String> values, final CyColumn column) {
-        if (values.size() > 1) {
+    private final Object getValue(final AbstractAttributesAspectElement e, final CyColumn column) {
+        if (e.isSingleValue()) {
+            return parseValue(e.getValue(), column.getType());
+        }
+        else {
             final List<Object> list = new ArrayList<Object>();
-            for (final String value : values) {
+            for (final String value : e.getValues()) {
                 list.add(parseValue(value, column.getListElementType()));
             }
             return list;
         }
-        else {
-            return parseValue(values.get(0), column.getType());
-        }
     }
 
-    private final void addNodeTableData(final List<NodeAttributesElement> naes,
+    private final void addNodeTableData(final List<NodeAttributesElement> elements,
                                         final CyIdentifiable graph_object,
                                         final CyNetwork network,
                                         final CyTable table,
                                         final String cx_node_id) {
-        if (naes == null) {
+        if (elements == null) {
             if (DEBUG) {
                 System.out.println("info: no node attributes for cx node " + cx_node_id);
             }
             return;
         }
         final CyRow row = network.getRow(graph_object);
-        for (final NodeAttributesElement nae : naes) {
-            final String name = nae.getName();
-            final List<String> values = nae.getValues();
+        for (final NodeAttributesElement e : elements) {
+            final String name = e.getName();
 
             if (!(name.equals(CyIdentifiable.SUID))) {
                 // New column creation:
                 if (table.getColumn(name) == null) {
-                    final Class<?> data_type = getDataType(nae.getDataType());
+                    final Class<?> data_type = getDataType(e.getDataType());
 
-                    if (values.size() == 1) {
+                    if (e.isSingleValue()) {
                         table.createColumn(name, data_type, false);
                     }
-                    else if (values.size() > 1) {
+                    else {
                         table.createListColumn(name, data_type, false);
                     }
                 }
                 final CyColumn col = table.getColumn(name);
-                row.set(name, getValue(values, col));
+                row.set(name, getValue(e, col));
             }
         }
 
     }
 
-    private final void addEdgeTableData(final List<EdgeAttributesElement> eaes,
+    private final void addEdgeTableData(final List<EdgeAttributesElement> elements,
                                         final CyIdentifiable graph_object,
                                         final CyNetwork network,
                                         final CyTable table,
                                         final String cx_edge_id) {
-        if (eaes == null) {
+        if (elements == null) {
             if (DEBUG) {
                 System.out.println("info: no edge attributes for cx edge " + cx_edge_id);
             }
             return;
         }
         final CyRow row = network.getRow(graph_object);
-        for (final EdgeAttributesElement eae : eaes) {
-            final String name = eae.getName();
-            final List<String> values = eae.getValues();
+        for (final EdgeAttributesElement e : elements) {
+            final String name = e.getName();
 
             if (!(name.equals(CyIdentifiable.SUID))) {
                 // New column creation:
                 if (table.getColumn(name) == null) {
-                    final Class<?> data_type = getDataType(eae.getDataType());
+                    final Class<?> data_type = getDataType(e.getDataType());
 
-                    if (values.size() == 1) {
+                    if (e.isSingleValue()) {
                         table.createColumn(name, data_type, false);
                     }
-                    else if (values.size() > 1) {
+                    else {
                         table.createListColumn(name, data_type, false);
                     }
                 }
                 final CyColumn col = table.getColumn(name);
-                row.set(name, getValue(values, col));
+                row.set(name, getValue(e, col));
             }
         }
 

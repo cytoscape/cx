@@ -7,20 +7,20 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.cxio.aspects.readers.CartesianLayoutFragmentReader;
+import org.cxio.aspects.readers.CyGroupsFragmentReader;
+import org.cxio.aspects.readers.CyVisualPropertiesFragmentReader;
 import org.cxio.aspects.readers.EdgeAttributesFragmentReader;
 import org.cxio.aspects.readers.EdgesFragmentReader;
-import org.cxio.aspects.readers.CyGroupsFragmentReader;
 import org.cxio.aspects.readers.HiddenAttributesFragmentReader;
 import org.cxio.aspects.readers.NetworkAttributesFragmentReader;
 import org.cxio.aspects.readers.NetworkRelationsFragmentReader;
 import org.cxio.aspects.readers.NodeAttributesFragmentReader;
 import org.cxio.aspects.readers.NodesFragmentReader;
 import org.cxio.aspects.readers.SubNetworkFragmentReader;
-import org.cxio.aspects.readers.CyVisualPropertiesFragmentReader;
 import org.cxio.aspects.writers.CartesianLayoutFragmentWriter;
+import org.cxio.aspects.writers.CyGroupsFragmentWriter;
 import org.cxio.aspects.writers.EdgeAttributesFragmentWriter;
 import org.cxio.aspects.writers.EdgesFragmentWriter;
-import org.cxio.aspects.writers.CyGroupsFragmentWriter;
 import org.cxio.aspects.writers.HiddenAttributesFragmentWriter;
 import org.cxio.aspects.writers.NetworkAttributesFragmentWriter;
 import org.cxio.aspects.writers.NetworkRelationsFragmentWriter;
@@ -119,8 +119,6 @@ public final class AspectSet {
         }
         return writers;
     }
-
-   
 
     final Set<AspectFragmentReader> getAspectFragmentReaders() {
         final Set<AspectFragmentReader> readers = new HashSet<AspectFragmentReader>();

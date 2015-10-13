@@ -121,17 +121,24 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                     .getCartesianLayoutElements(subnetwork_id);
 
             if (position_map_for_view != null) {
+
                 for (final CyNode node : position_map_for_view.keySet()) {
+
                     final CartesianLayoutElement e = position_map_for_view.get(node);
+
                     if (e != null) {
-                        view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_X_LOCATION, Double.valueOf(e.getX()));
-                        view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION, Double.valueOf(e.getY()));
-                        if ( e.isZset() ) {
-                            view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION, Double.valueOf(e.getZ()));
+                        view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_X_LOCATION,
+                                                                 Double.valueOf(e.getX()));
+                        view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION,
+                                                                 Double.valueOf(e.getY()));
+                        if (e.isZset()) {
+                            view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION,
+                                                                     Double.valueOf(e.getZ()));
                         }
                     }
                 }
             }
+
         }
 
         return view;

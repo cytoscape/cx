@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
-import org.cxio.aspects.datamodels.SubNetworkElement;
 import org.cxio.aspects.datamodels.CyVisualPropertiesElement;
+import org.cxio.aspects.datamodels.SubNetworkElement;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNode;
 
@@ -16,9 +16,9 @@ class VisualElementCollection {
     private CyVisualPropertiesElement                    _network_vpe;
     private final Map<CyNode, CyVisualPropertiesElement> _node_vpe_map;
     private CyVisualPropertiesElement                    _nodes_default_vpe;
-    private final Map<CyNode, CartesianLayoutElement>  _layout_elements_map;
-    private SubNetworkElement                          _subnetwork_element;
-    private String                                     _property_of;
+    private final Map<CyNode, CartesianLayoutElement>    _layout_elements_map;
+    private SubNetworkElement                            _subnetwork_element;
+    private String                                       _property_of;
 
     VisualElementCollection() {
         _property_of = null;

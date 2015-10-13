@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
-import org.cxio.aspects.datamodels.SubNetworkElement;
 import org.cxio.aspects.datamodels.CyVisualPropertiesElement;
+import org.cxio.aspects.datamodels.SubNetworkElement;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNode;
 
@@ -55,6 +55,9 @@ final class VisualElementCollectionMap {
     }
 
     private final void checkForKey(final String subnet) {
+        if (subnet == null) {
+            throw new IllegalArgumentException("subnetwork must not be null");
+        }
         if (!_data.containsKey(subnet)) {
             _data.put(subnet, new VisualElementCollection());
         }
