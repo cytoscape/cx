@@ -27,20 +27,17 @@ import org.slf4j.LoggerFactory;
 
 public class CxNetworkWriter implements CyWriter {
 
-    private final static Logger         logger   = LoggerFactory.getLogger(CxNetworkWriter.class);
-    private final static String         ENCODING = "UTF-8";
-    private static final boolean        DEBUG    = true;
+    private final static Logger        logger   = LoggerFactory.getLogger(CxNetworkWriter.class);
+    private final static String        ENCODING = "UTF-8";
+    private static final boolean       DEBUG    = true;
 
-    private final OutputStream          _os;
-    private final CyNetwork             _network;
-    private final CharsetEncoder        _encoder;
-    private final VisualMappingManager  _visual_mapping_manager;
-    private final VisualLexicon         _lexicon;
-    // private final CustomGraphicsManager _custom_graphics_manager;
-    private final CyNetworkViewManager  _networkview_manager;
-    private final CyNetworkManager      _network_manager;
-    private final CyGroupManager        _group_manager;
-    private final CyNetworkTableManager _table_manager;
+    private final OutputStream         _os;
+    private final CyNetwork            _network;
+    private final CharsetEncoder       _encoder;
+    private final VisualMappingManager _visual_mapping_manager;
+    private final VisualLexicon        _lexicon;
+    private final CyNetworkViewManager _networkview_manager;
+    private final CyGroupManager       _group_manager;
 
     public CxNetworkWriter(final OutputStream os,
                            final CyNetwork network,
@@ -53,14 +50,11 @@ public class CxNetworkWriter implements CyWriter {
                            final VisualLexicon lexicon) {
 
         _visual_mapping_manager = visual_mapping_manager;
-        // _custom_graphics_manager = custom_graphics_manager;
         _networkview_manager = networkview_manager;
-        _network_manager = network_manager;
         _lexicon = lexicon;
         _os = os;
         _network = network;
         _group_manager = group_manager;
-        _table_manager = table_manager;
 
         if (Charset.isSupported(ENCODING)) {
             // UTF-8 is supported by system
@@ -76,14 +70,11 @@ public class CxNetworkWriter implements CyWriter {
     public CxNetworkWriter(final OutputStream os, final CyNetwork network) {
 
         _visual_mapping_manager = null;
-        // _custom_graphics_manager = null;
         _networkview_manager = null;
-        _network_manager = null;
         _lexicon = null;
         _os = os;
         _network = network;
         _group_manager = null;
-        _table_manager = null;
 
         if (Charset.isSupported(ENCODING)) {
             // UTF-8 is supported by system
@@ -114,21 +105,19 @@ public class CxNetworkWriter implements CyWriter {
         aspects.addAspect(Aspect.NETWORK_ATTRIBUTES);
         aspects.addAspect(Aspect.NODE_ATTRIBUTES);
         aspects.addAspect(Aspect.EDGE_ATTRIBUTES);
+        aspects.addAspect(Aspect.HIDDEN_ATTRIBUTES);
         aspects.addAspect(Aspect.CARTESIAN_LAYOUT);
         aspects.addAspect(Aspect.VISUAL_PROPERTIES);
         aspects.addAspect(Aspect.SUBNETWORKS);
         aspects.addAspect(Aspect.NETWORK_RELATIONS);
         aspects.addAspect(Aspect.GROUPS);
-        aspects.addAspect(Aspect.HIDDEN_ATTRIBUTES);
 
         final CxExporter exporter = CxExporter.createInstance();
         exporter.setUseDefaultPrettyPrinting(true);
         exporter.setLexicon(_lexicon);
         exporter.setVisualMappingManager(_visual_mapping_manager);
         exporter.setNetworkViewManager(_networkview_manager);
-        exporter.setNetworkManager(_network_manager);
         exporter.setGroupManager(_group_manager);
-        exporter.setTableManager(_table_manager);
 
         final long t0 = System.currentTimeMillis();
 

@@ -17,6 +17,7 @@ import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.CyNetworkTableManager;
 import org.cytoscape.model.subnetwork.CyRootNetworkManager;
 import org.cytoscape.service.util.AbstractCyActivator;
+import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.presentation.RenderingEngineManager;
 import org.cytoscape.view.vizmap.VisualMappingManager;
@@ -49,9 +50,7 @@ public class CyActivator extends AbstractCyActivator {
         final CyNetworkManager network_manager = getService(bc, CyNetworkManager.class);
         final CyGroupManager group_manager = getService(bc, CyGroupManager.class);
         final CyNetworkTableManager table_manager = getService(bc, CyNetworkTableManager.class);
-
-        // final CustomGraphicsManager custom_graphics_manager = getService(bc,
-        // CustomGraphicsManager.class);
+        final CyNetworkViewFactory networkViewFactory = getService(bc, CyNetworkViewFactory.class);
 
         final CxNetworkWriterFactory cxNetworkWriterFactory = new CxNetworkWriterFactory(cx_filter,
                                                                                          visual_mapping_manager,
@@ -84,7 +83,8 @@ public class CyActivator extends AbstractCyActivator {
                                                                                                     cyNetworkManager,
                                                                                                     cyRootNetworkManager,
                                                                                                     visual_mapping_manager,
-                                                                                                    renderingEngineMgr);
+                                                                                                    renderingEngineMgr,
+                                                                                                    networkViewFactory);
         final Properties cytoscapeJsNetworkReaderFactoryProps = new Properties();
 
         // This is the unique identifier for this reader. 3rd party developer

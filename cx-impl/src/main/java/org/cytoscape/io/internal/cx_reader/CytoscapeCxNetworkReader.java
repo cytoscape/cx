@@ -30,6 +30,7 @@ import org.cytoscape.model.CyNode;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CyRootNetworkManager;
 import org.cytoscape.view.model.CyNetworkView;
+import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.view.model.View;
 import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.model.VisualProperty;
@@ -49,6 +50,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     private final InputStream            _in;
     private final VisualMappingManager   _visual_mapping_manager;
     private final RenderingEngineManager _rendering_engine_manager;
+    private final CyNetworkViewFactory   _networkview_factory;
 
     public CytoscapeCxNetworkReader(final String networkCollectionName,
                                     final InputStream input_stream,
@@ -57,8 +59,11 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                                     final CyNetworkManager cyNetworkManager,
                                     final CyRootNetworkManager cyRootNetworkManager,
                                     final VisualMappingManager visualMappingManager,
-                                    final RenderingEngineManager renderingEngineMgr) throws IOException {
-        super(input_stream, cyApplicationManager, cyNetworkFactory, cyNetworkManager, cyRootNetworkManager);
+                                    final RenderingEngineManager renderingEngineMgr,
+                                    final CyNetworkViewFactory networkview_factory) throws IOException {
+        // super(input_stream, cyApplicationManager, cyNetworkFactory,
+        // cyNetworkManager, cyRootNetworkManager);
+        super(input_stream, networkview_factory, cyNetworkFactory, cyNetworkManager, cyRootNetworkManager);
 
         if (input_stream == null) {
             throw new NullPointerException("input stream cannot be null");
@@ -67,6 +72,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         _network_collection_name = networkCollectionName;
         _visual_mapping_manager = visualMappingManager;
         _rendering_engine_manager = renderingEngineMgr;
+        _networkview_factory = networkview_factory;
         _networks = new ArrayList<CyNetwork>();
     }
 
@@ -82,7 +88,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     @Override
     public CyNetworkView buildCyNetworkView(final CyNetwork network) {
 
-        final CyNetworkView view = getNetworkViewFactory().createNetworkView(network);
+        final CyNetworkView view = _networkview_factory.createNetworkView(network);
 
         final VisualLexicon lexicon = _rendering_engine_manager.getDefaultVisualLexicon();
 

@@ -9,6 +9,7 @@ import org.cytoscape.io.read.AbstractInputStreamTaskFactory;
 import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.subnetwork.CyRootNetworkManager;
+import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.view.presentation.RenderingEngineManager;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.work.TaskIterator;
@@ -21,6 +22,7 @@ public class CytoscapeCxNetworkReaderFactory extends AbstractInputStreamTaskFact
     private final CyRootNetworkManager   cyRootNetworkManager;
     private final VisualMappingManager   _visual_mapping_manager;
     private final RenderingEngineManager _rendering_engine_manager;
+    private final CyNetworkViewFactory   _networkview_factory;
 
     public CytoscapeCxNetworkReaderFactory(final CyFileFilter filter,
                                            final CyApplicationManager cyApplicationManager,
@@ -28,7 +30,8 @@ public class CytoscapeCxNetworkReaderFactory extends AbstractInputStreamTaskFact
                                            final CyNetworkManager cyNetworkManager,
                                            final CyRootNetworkManager cyRootNetworkManager,
                                            final VisualMappingManager visualMappingManager,
-                                           final RenderingEngineManager renderingEngineMgr) {
+                                           final RenderingEngineManager renderingEngineMgr,
+                                           final CyNetworkViewFactory networkview_factory) {
         super(filter);
         this.cyApplicationManager = cyApplicationManager;
         this.cyNetworkFactory = cyNetworkFactory;
@@ -36,6 +39,7 @@ public class CytoscapeCxNetworkReaderFactory extends AbstractInputStreamTaskFact
         this.cyRootNetworkManager = cyRootNetworkManager;
         _visual_mapping_manager = visualMappingManager;
         _rendering_engine_manager = renderingEngineMgr;
+        _networkview_factory = networkview_factory;
     }
 
     @Override
@@ -49,7 +53,8 @@ public class CytoscapeCxNetworkReaderFactory extends AbstractInputStreamTaskFact
                                                                  cyNetworkManager,
                                                                  cyRootNetworkManager,
                                                                  _visual_mapping_manager,
-                                                                 _rendering_engine_manager));
+                                                                 _rendering_engine_manager,
+                                                                 _networkview_factory));
         }
         catch (final IOException e) {
 

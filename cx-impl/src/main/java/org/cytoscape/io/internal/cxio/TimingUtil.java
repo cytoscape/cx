@@ -10,7 +10,7 @@ import org.cxio.core.interfaces.AspectElement;
 
 public final class TimingUtil {
 
-    public final static boolean TIMING                           = true;
+    public final static boolean TIMING                           = false;
     public final static boolean WRITE_TO_BYTE_ARRAY_OUTPUTSTREAM = false;
     public static final boolean WRITE_TO_DEV_NULL                = false;
 

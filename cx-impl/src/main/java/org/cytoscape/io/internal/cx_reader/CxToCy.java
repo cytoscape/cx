@@ -170,7 +170,9 @@ public final class CxToCy {
         for (int i = 0; i < number_of_subnetworks; ++i) {
 
             if (DEBUG) {
-                System.out.println("subnetwork id: " + subnetwork_ids.get(i));
+                if (subnetwork_ids.size() > 0) {
+                    System.out.println("subnetwork id: " + subnetwork_ids.get(i));
+                }
             }
 
             CySubNetwork sub_network;

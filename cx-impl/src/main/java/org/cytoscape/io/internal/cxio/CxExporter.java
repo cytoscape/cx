@@ -28,11 +28,8 @@ import org.cxio.filters.AspectKeyFilter;
 import org.cytoscape.group.CyGroup;
 import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.internal.cx_writer.VisualPropertiesGatherer;
-import org.cytoscape.io.internal.cxio.CxOutput.Status;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
-import org.cytoscape.model.CyNetworkManager;
-import org.cytoscape.model.CyNetworkTableManager;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyRow;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
@@ -81,17 +78,15 @@ import org.cytoscape.view.vizmap.VisualMappingManager;
  */
 public final class CxExporter {
 
-    private static final String   SELECTED                            = "selected";
-    private static final String   SUID                                = "SUID";
-    private final static boolean  DEFAULT_USE_DEFAULT_PRETTY_PRINTING = false;
+    private static final String  SELECTED                            = "selected";
+    private static final String  SUID                                = "SUID";
+    private final static boolean DEFAULT_USE_DEFAULT_PRETTY_PRINTING = false;
 
-    private VisualLexicon         _lexicon;
-    private boolean               _use_default_pretty_printing;
-    private VisualMappingManager  _visual_mapping_manager;
-    private CyNetworkViewManager  _networkview_manager;
-    private CyNetworkManager      _network_manager;
-    private CyGroupManager        _group_manager;
-    private CyNetworkTableManager _table_manager;
+    private VisualLexicon        _lexicon;
+    private boolean              _use_default_pretty_printing;
+    private VisualMappingManager _visual_mapping_manager;
+    private CyNetworkViewManager _networkview_manager;
+    private CyGroupManager       _group_manager;
 
     private CxExporter() {
         _use_default_pretty_printing = DEFAULT_USE_DEFAULT_PRETTY_PRINTING;
@@ -148,13 +143,12 @@ public final class CxExporter {
      * @see AspectSet
      * @see Aspect
      * @see FilterSet
-     * @see CxOutput
      *
      */
-    public final CxOutput writeNetwork(final CyNetwork network,
-                                       final AspectSet aspects,
-                                       final FilterSet filters,
-                                       final OutputStream out) throws IOException {
+    public final boolean writeNetwork(final CyNetwork network,
+                                      final AspectSet aspects,
+                                      final FilterSet filters,
+                                      final OutputStream out) throws IOException {
         final CxWriter w = CxWriter.createInstance(out, _use_default_pretty_printing);
 
         if ((filters != null) && !filters.getFilters().isEmpty()) {
@@ -172,9 +166,6 @@ public final class CxExporter {
         if (aspects.contains(Aspect.EDGES)) {
             writeEdges(network, w);
         }
-        // if (aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
-        // writeCartesianLayout(network, w);
-        // }
         if (aspects.contains(Aspect.NETWORK_ATTRIBUTES)) {
             writeNetworkAttributes(network, w);
         }
@@ -187,10 +178,6 @@ public final class CxExporter {
         if (aspects.contains(Aspect.HIDDEN_ATTRIBUTES)) {
             writeHiddenAttributes(network, w, true);
         }
-        // if (aspects.contains(Aspect.VISUAL_PROPERTIES)) {
-        // writeVisualProperties(network, _visual_mapping_manager, _lexicon, w);
-        // }
-
         if (aspects.contains(Aspect.SUBNETWORKS)) {
             writeSubNetworks(network, w);
         }
@@ -203,7 +190,7 @@ public final class CxExporter {
 
         w.end();
 
-        return new CxOutput(out, Status.OK);
+        return true;
 
     }
 
@@ -219,17 +206,14 @@ public final class CxExporter {
      *            the set of aspects to serialize
      * @param out
      *            the stream to write to
-     * @return a CxOutput object which contains the output stream as well as a
-     *         status
      * @throws IOException
      *
      *
      * @see AspectSet
      * @see Aspect
-     * @see CxOutput
      *
      */
-    public final CxOutput writeNetwork(final CyNetwork network, final AspectSet aspects, final OutputStream out)
+    public final boolean writeNetwork(final CyNetwork network, final AspectSet aspects, final OutputStream out)
             throws IOException {
 
         return writeNetwork(network, aspects, null, out);
@@ -253,8 +237,6 @@ public final class CxExporter {
      *            columns to include or exclude
      * @param out
      *            the stream to write to
-     * @return a CxOutput object which contains the output stream as well as a
-     *         status
      * @throws IOException
      *
      *
@@ -264,10 +246,10 @@ public final class CxExporter {
      * @see CxOutput
      *
      */
-    public final CxOutput writeNetworkView(final CyNetworkView view,
-                                           final AspectSet aspects,
-                                           final FilterSet filters,
-                                           final OutputStream out) throws IOException {
+    public final boolean writeNetworkView(final CyNetworkView view,
+                                          final AspectSet aspects,
+                                          final FilterSet filters,
+                                          final OutputStream out) throws IOException {
         final CxWriter w = CxWriter.createInstance(out, _use_default_pretty_printing);
 
         if ((filters != null) && !filters.getFilters().isEmpty()) {
@@ -304,7 +286,7 @@ public final class CxExporter {
 
         w.end();
 
-        return new CxOutput(out, Status.OK);
+        return true;
 
     }
 
@@ -320,18 +302,15 @@ public final class CxExporter {
      *            the set of aspects to serialize
      * @param out
      *            the stream to write to
-     * @return a CxOutput object which contains the output stream as well as a
-     *         status
      * @throws IOException
      *
      *
      * @see AspectSet
      * @see Aspect
      * @see FilterSet
-     * @see CxOutput
      *
      */
-    public final CxOutput writeNetworkView(final CyNetworkView view, final AspectSet aspects, final OutputStream out)
+    public final boolean writeNetworkView(final CyNetworkView view, final AspectSet aspects, final OutputStream out)
             throws IOException {
         return writeNetworkView(view, aspects, null, out);
 
@@ -340,12 +319,9 @@ public final class CxExporter {
     private final void writeView(final CyNetworkView view, final AspectSet aspects, final CxWriter w)
             throws IOException {
 
-        // if (aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
         final boolean z_used = writeCartesianLayout(view, w);
-        // }
-        // if (aspects.contains(Aspect.VISUAL_PROPERTIES)) {
+
         writeVisualProperties(view, z_used, _visual_mapping_manager, _lexicon, w);
-        // }
 
     }
 
@@ -392,7 +368,7 @@ public final class CxExporter {
                                            final String namespace) throws IOException {
 
         final List<AspectElement> elements = new ArrayList<AspectElement>();
-        // /////
+
         final CySubNetwork my_subnet = (CySubNetwork) network;
         final CyRootNetwork my_root = my_subnet.getRootNetwork();
         final List<CySubNetwork> subnets = my_root.getSubNetworkList();
@@ -400,12 +376,6 @@ public final class CxExporter {
         for (final CySubNetwork subnet : subnets) {
             writeEdgeAttributesHelper(namespace, subnet, subnet.getEdgeList(), elements);
         }
-
-        // /////
-        // CyNetwork my_network = network;
-        // if (use_root) {
-        // my_network = ((CySubNetwork) network).getRootNetwork();
-        // }
 
         final long t0 = System.currentTimeMillis();
         w.writeAspectElements(elements);
@@ -469,7 +439,7 @@ public final class CxExporter {
             throws IOException {
 
         final List<AspectElement> elements = new ArrayList<AspectElement>();
-        // /////
+
         final CySubNetwork my_subnet = (CySubNetwork) network;
         final CyRootNetwork my_root = my_subnet.getRootNetwork();
         final List<CySubNetwork> subnets = my_root.getSubNetworkList();
@@ -678,8 +648,6 @@ public final class CxExporter {
         }
         final List<AspectElement> elements = new ArrayList<AspectElement>();
         for (final CySubNetwork subnet : subnets) {
-            // final CyRow row = subnet.getRow(subnet);
-            // final String name = row.get("name", String.class);
             final SubNetworkElement subnetwork_element = new SubNetworkElement(String.valueOf(subnet.getSUID()));
             for (final CyEdge edgeview : subnet.getEdgeList()) {
                 subnetwork_element.addEdge(Util.makeId(String.valueOf(edgeview.getSUID())));
@@ -703,7 +671,7 @@ public final class CxExporter {
                                            final String namespace) throws IOException {
 
         final List<AspectElement> elements = new ArrayList<AspectElement>();
-        // /////
+
         final CySubNetwork my_subnet = (CySubNetwork) network;
         final CyRootNetwork my_root = my_subnet.getRootNetwork();
         final List<CySubNetwork> subnets = my_root.getSubNetworkList();
@@ -711,12 +679,6 @@ public final class CxExporter {
         for (final CySubNetwork subnet : subnets) {
             writeNodeAttributesHelper(namespace, subnet, subnet.getNodeList(), elements);
         }
-
-        // /////
-        // CyNetwork my_network = network;
-        // if (use_root) {
-        // my_network = ((CySubNetwork) network).getRootNetwork();
-        // }
 
         final long t0 = System.currentTimeMillis();
         w.writeAspectElements(elements);
@@ -843,18 +805,8 @@ public final class CxExporter {
         }
     }
 
-    public void setNetworkManager(final CyNetworkManager network_manager) {
-        _network_manager = network_manager;
-
-    }
-
     public void setGroupManager(final CyGroupManager group_manager) {
         _group_manager = group_manager;
-
-    }
-
-    public void setTableManager(final CyNetworkTableManager table_manager) {
-        _table_manager = table_manager;
 
     }
 

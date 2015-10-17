@@ -61,7 +61,7 @@ public class CxNetworkViewWriter implements CyWriter {
         _os = os;
         _network_view = network_view;
         _visual_mapping_manager = visual_mapping_manager;
-        // _custom_graphics_manager = custom_graphics_manager;
+
         _networkview_manager = networkview_manager;
         _lexicon = lexicon;
         if (Charset.isSupported(ENCODING)) {
@@ -74,22 +74,6 @@ public class CxNetworkViewWriter implements CyWriter {
             _encoder = Charset.defaultCharset().newEncoder();
         }
 
-        // Collection<CyCustomGraphics> x =
-        // _custom_graphics_manager.getAllCustomGraphics();
-        // for (CyCustomGraphics cyCustomGraphics : x) {
-        // Image i = cyCustomGraphics.getRenderedImage();
-        //
-        // ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        // try {
-        // ImageIO.write((RenderedImage) i, "png", baos);
-        // }
-        // catch (IOException e) {
-        // // TODO Auto-generated catch block
-        // e.printStackTrace();
-        // }
-        // baos.toByteArray();
-        //
-        // }
     }
 
     @Override
