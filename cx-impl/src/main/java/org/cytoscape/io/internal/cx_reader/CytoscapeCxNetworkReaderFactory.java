@@ -16,42 +16,42 @@ import org.cytoscape.work.TaskIterator;
 
 public class CytoscapeCxNetworkReaderFactory extends AbstractInputStreamTaskFactory {
 
-    private final CyApplicationManager   cyApplicationManager;
-    protected final CyNetworkFactory     cyNetworkFactory;
-    private final CyNetworkManager       cyNetworkManager;
-    private final CyRootNetworkManager   cyRootNetworkManager;
+    private final CyApplicationManager   _application_manager;
+    protected final CyNetworkFactory     _network_factory;
+    private final CyNetworkManager       _network_manager;
+    private final CyRootNetworkManager   _root_network_manager;
     private final VisualMappingManager   _visual_mapping_manager;
     private final RenderingEngineManager _rendering_engine_manager;
     private final CyNetworkViewFactory   _networkview_factory;
 
     public CytoscapeCxNetworkReaderFactory(final CyFileFilter filter,
-                                           final CyApplicationManager cyApplicationManager,
-                                           final CyNetworkFactory cyNetworkFactory,
-                                           final CyNetworkManager cyNetworkManager,
-                                           final CyRootNetworkManager cyRootNetworkManager,
-                                           final VisualMappingManager visualMappingManager,
-                                           final RenderingEngineManager renderingEngineMgr,
+                                           final CyApplicationManager application_manager,
+                                           final CyNetworkFactory network_factory,
+                                           final CyNetworkManager network_manager,
+                                           final CyRootNetworkManager root_network_manager,
+                                           final VisualMappingManager visual_mapping_manager,
+                                           final RenderingEngineManager rendering_engine_manager,
                                            final CyNetworkViewFactory networkview_factory) {
         super(filter);
-        this.cyApplicationManager = cyApplicationManager;
-        this.cyNetworkFactory = cyNetworkFactory;
-        this.cyNetworkManager = cyNetworkManager;
-        this.cyRootNetworkManager = cyRootNetworkManager;
-        _visual_mapping_manager = visualMappingManager;
-        _rendering_engine_manager = renderingEngineMgr;
+        _application_manager = application_manager;
+        _network_factory = network_factory;
+        _network_manager = network_manager;
+        _root_network_manager = root_network_manager;
+        _visual_mapping_manager = visual_mapping_manager;
+        _rendering_engine_manager = rendering_engine_manager;
         _networkview_factory = networkview_factory;
     }
 
     @Override
-    public TaskIterator createTaskIterator(final InputStream is, final String collectionName) {
+    public TaskIterator createTaskIterator(final InputStream is, final String collection_name) {
         try {
 
-            return new TaskIterator(new CytoscapeCxNetworkReader(collectionName,
+            return new TaskIterator(new CytoscapeCxNetworkReader(collection_name,
                                                                  is,
-                                                                 cyApplicationManager,
-                                                                 cyNetworkFactory,
-                                                                 cyNetworkManager,
-                                                                 cyRootNetworkManager,
+                                                                 _application_manager,
+                                                                 _network_factory,
+                                                                 _network_manager,
+                                                                 _root_network_manager,
                                                                  _visual_mapping_manager,
                                                                  _rendering_engine_manager,
                                                                  _networkview_factory));

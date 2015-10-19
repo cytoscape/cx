@@ -40,13 +40,11 @@ public final class CxToCy {
 
     private Set<CyNode>                _nodes_with_visual_properties;
     private Set<CyEdge>                _edges_with_visual_properties;
-
     private VisualElementCollectionMap _visual_element_collections;
-
     private NetworkRelationsElement    _network_relations;
     private Map<Long, String>          _network_suid_to_networkrelations_map;
-    private Map<String, CyNode>        cxid_to_cynode_map;
-    private Map<String, CyEdge>        cxid_to_cyedge_map;
+    private Map<String, CyNode>        _cxid_to_cynode_map;
+    private Map<String, CyEdge>        _cxid_to_cyedge_map;
 
     public final Map<Long, String> getNetworkSuidToNetworkRelationsMap() {
         return _network_suid_to_networkrelations_map;
@@ -64,8 +62,6 @@ public final class CxToCy {
         final List<AspectElement> edge_attributes = aspect_collection.get(EdgeAttributesElement.NAME);
         final List<AspectElement> network_attributes = aspect_collection.get(NetworkAttributesElement.NAME);
         final List<AspectElement> visual_properties = aspect_collection.get(CyVisualPropertiesElement.NAME);
-        // final List<AspectElement> groups =
-        // aspect_collection.get(CyGroupsElement.NAME);
         final List<AspectElement> subnetworks = aspect_collection.get(SubNetworkElement.NAME);
         final List<AspectElement> network_relations = aspect_collection.get(NetworkRelationsElement.NAME);
 
@@ -79,8 +75,8 @@ public final class CxToCy {
 
         _network_suid_to_networkrelations_map = new HashMap<Long, String>();
         _visual_element_collections = new VisualElementCollectionMap();
-        cxid_to_cynode_map = new HashMap<String, CyNode>();
-        cxid_to_cyedge_map = new HashMap<String, CyEdge>();
+        _cxid_to_cynode_map = new HashMap<String, CyNode>();
+        _cxid_to_cyedge_map = new HashMap<String, CyEdge>();
 
         // Dealing with subnetwork relations:
         String parent_network_id = null;
@@ -236,24 +232,24 @@ public final class CxToCy {
                     else if (vpe.getPropertiesOf().equals(VisualPropertyType.NODES.asString())) {
                         final List<String> applies_to_nodes = vpe.getAppliesTo();
                         for (final String applies_to_node : applies_to_nodes) {
-                            _nodes_with_visual_properties.add(cxid_to_cynode_map.get(applies_to_node));
-                            _visual_element_collections.addNodeVisualPropertiesElement(view, cxid_to_cynode_map
-                                                                                       .get(applies_to_node), vpe);
+                            _nodes_with_visual_properties.add(_cxid_to_cynode_map.get(applies_to_node));
+                            _visual_element_collections.addNodeVisualPropertiesElement(view, _cxid_to_cynode_map
+                                    .get(applies_to_node), vpe);
                         }
                     }
                     else if (vpe.getPropertiesOf().equals(VisualPropertyType.EDGES.asString())) {
                         final List<String> applies_to_edges = vpe.getAppliesTo();
                         for (final String applies_to_edge : applies_to_edges) {
-                            _edges_with_visual_properties.add(cxid_to_cyedge_map.get(applies_to_edge));
-                            _visual_element_collections.addEdgeVisualPropertiesElement(view, cxid_to_cyedge_map
-                                                                                       .get(applies_to_edge), vpe);
+                            _edges_with_visual_properties.add(_cxid_to_cyedge_map.get(applies_to_edge));
+                            _visual_element_collections.addEdgeVisualPropertiesElement(view, _cxid_to_cyedge_map
+                                    .get(applies_to_edge), vpe);
                         }
                     }
                 }
             }
 
             if ((cartesian_layout_elements != null) && !cartesian_layout_elements.isEmpty()) {
-                addPositions(cartesian_layout_elements, cxid_to_cynode_map);
+                addPositions(cartesian_layout_elements, _cxid_to_cynode_map);
             }
 
             new_networks.add(sub_network);
@@ -330,7 +326,7 @@ public final class CxToCy {
         }
         else {
             throw new IllegalArgumentException("don't know how to deal with type '" + type + "' for value '" + value
-                    + "'");
+                                               + "'");
         }
     }
 
@@ -427,13 +423,13 @@ public final class CxToCy {
             if ((nodes_in_subnet != null) && !nodes_in_subnet.contains(node_id)) {
                 continue;
             }
-            CyNode cyNode = cxid_to_cynode_map.get(node_id);
+            CyNode cyNode = _cxid_to_cynode_map.get(node_id);
             if (cyNode == null) {
                 cyNode = network.addNode();
 
                 // Use ID as unique name.
                 network.getRow(cyNode).set(CyNetwork.NAME, node_id);
-                cxid_to_cynode_map.put(node_id, cyNode);
+                _cxid_to_cynode_map.put(node_id, cyNode);
                 if ((node_attributes_map != null) && !node_attributes_map.isEmpty()) {
                     addNodeTableData(node_attributes_map.get(node_id), cyNode, network, node_table, node_id);
                 }
@@ -460,12 +456,12 @@ public final class CxToCy {
                 continue;
             }
 
-            final CyEdge cy_edge = cxid_to_cyedge_map.get(edge_id);
+            final CyEdge cy_edge = _cxid_to_cyedge_map.get(edge_id);
             if (cy_edge == null) {
-                final CyNode source = cxid_to_cynode_map.get(edge_element.getSource());
-                final CyNode target = cxid_to_cynode_map.get(edge_element.getTarget());
+                final CyNode source = _cxid_to_cynode_map.get(edge_element.getSource());
+                final CyNode target = _cxid_to_cynode_map.get(edge_element.getTarget());
                 final CyEdge newEdge = network.addEdge(source, target, true);
-                cxid_to_cyedge_map.put(edge_id, newEdge);
+                _cxid_to_cyedge_map.put(edge_id, newEdge);
                 if ((edge_attributes_map != null) && !edge_attributes_map.isEmpty()) {
                     addEdgeTableData(edge_attributes_map.get(edge_id), newEdge, network, edgeTable, edge_id);
                 }
