@@ -56,11 +56,11 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
     }
 
     @Override
-    public CyWriter createWriter(final OutputStream outputStream, final CyNetwork network) {
+    public CyWriter createWriter(final OutputStream os, final CyNetwork network) {
         if ((_visual_mapping_manager != null) && (_application_manager != null)) {
             final VisualLexicon lexicon = _application_manager.getCurrentRenderingEngine().getVisualLexicon();
 
-            return new CxNetworkWriter(outputStream,
+            return new CxNetworkWriter(os,
                                        network,
                                        _visual_mapping_manager,
                                        _custom_graphics_manager,
@@ -71,7 +71,7 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
                                        lexicon);
         }
         else {
-            return new CxNetworkWriter(outputStream, network);
+            return new CxNetworkWriter(os, network);
         }
     }
 
@@ -85,14 +85,18 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
         if ((_visual_mapping_manager != null) && (_application_manager != null)) {
             final VisualLexicon lexicon = _application_manager.getCurrentRenderingEngine().getVisualLexicon();
 
-            return new CxNetworkViewWriter(os,
-                                           view,
-                                           _visual_mapping_manager,
-                                           _custom_graphics_manager,
-                                           _networkview_manager,
-                                           lexicon);
+            return new CxNetworkWriter(os,
+                                       view.getModel(),
+                                       _visual_mapping_manager,
+                                       _custom_graphics_manager,
+                                       _networkview_manager,
+                                       _network_manager,
+                                       _group_manager,
+                                       _table_manager,
+                                       lexicon);
+
         }
-        return new CxNetworkViewWriter(os, view);
+        return new CxNetworkWriter(os, view.getModel());
 
     }
 }

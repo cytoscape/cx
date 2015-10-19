@@ -238,7 +238,7 @@ public final class CxToCy {
                         for (final String applies_to_node : applies_to_nodes) {
                             _nodes_with_visual_properties.add(cxid_to_cynode_map.get(applies_to_node));
                             _visual_element_collections.addNodeVisualPropertiesElement(view, cxid_to_cynode_map
-                                    .get(applies_to_node), vpe);
+                                                                                       .get(applies_to_node), vpe);
                         }
                     }
                     else if (vpe.getPropertiesOf().equals(VisualPropertyType.EDGES.asString())) {
@@ -246,7 +246,7 @@ public final class CxToCy {
                         for (final String applies_to_edge : applies_to_edges) {
                             _edges_with_visual_properties.add(cxid_to_cyedge_map.get(applies_to_edge));
                             _visual_element_collections.addEdgeVisualPropertiesElement(view, cxid_to_cyedge_map
-                                    .get(applies_to_edge), vpe);
+                                                                                       .get(applies_to_edge), vpe);
                         }
                     }
                 }
@@ -330,7 +330,7 @@ public final class CxToCy {
         }
         else {
             throw new IllegalArgumentException("don't know how to deal with type '" + type + "' for value '" + value
-                                               + "'");
+                    + "'");
         }
     }
 

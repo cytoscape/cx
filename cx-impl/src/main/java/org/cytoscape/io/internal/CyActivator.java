@@ -50,9 +50,9 @@ public class CyActivator extends AbstractCyActivator {
         final CyNetworkManager network_manager = getService(bc, CyNetworkManager.class);
         final CyGroupManager group_manager = getService(bc, CyGroupManager.class);
         final CyNetworkTableManager table_manager = getService(bc, CyNetworkTableManager.class);
-        final CyNetworkViewFactory networkViewFactory = getService(bc, CyNetworkViewFactory.class);
+        final CyNetworkViewFactory network_view_factory = getService(bc, CyNetworkViewFactory.class);
 
-        final CxNetworkWriterFactory cxNetworkWriterFactory = new CxNetworkWriterFactory(cx_filter,
+        final CxNetworkWriterFactory network_writer_factory = new CxNetworkWriterFactory(cx_filter,
                                                                                          visual_mapping_manager,
                                                                                          application_manager,
                                                                                          null,
@@ -61,36 +61,36 @@ public class CyActivator extends AbstractCyActivator {
                                                                                          group_manager,
                                                                                          table_manager);
 
-        final Properties cxWriterFactoryProperties = new Properties();
+        final Properties cx_writer_factory_properties = new Properties();
 
-        cxWriterFactoryProperties.put(ID, "cxNetworkWriterFactory");
+        cx_writer_factory_properties.put(ID, "cxNetworkWriterFactory");
 
-        registerAllServices(bc, cxNetworkWriterFactory, cxWriterFactoryProperties);
+        registerAllServices(bc, network_writer_factory, cx_writer_factory_properties);
 
         // Reader:
-        final CyNetworkFactory cyNetworkFactory = getService(bc, CyNetworkFactory.class);
-        final CyNetworkManager cyNetworkManager = getService(bc, CyNetworkManager.class);
-        final CyRootNetworkManager cyRootNetworkManager = getService(bc, CyRootNetworkManager.class);
-        final RenderingEngineManager renderingEngineMgr = getService(bc, RenderingEngineManager.class);
-        final BasicCyFileFilter cytoscapejsReaderFilter = new BasicCyFileFilter(new String[] { "cx", "json" },
-                                                                                new String[] { "application/json" },
-                                                                                "CX JSON",
-                                                                                DataCategory.NETWORK,
-                                                                                streamUtil);
-        final CytoscapeCxNetworkReaderFactory cxReaderFactory = new CytoscapeCxNetworkReaderFactory(cytoscapejsReaderFilter,
-                                                                                                    application_manager,
-                                                                                                    cyNetworkFactory,
-                                                                                                    cyNetworkManager,
-                                                                                                    cyRootNetworkManager,
-                                                                                                    visual_mapping_manager,
-                                                                                                    renderingEngineMgr,
-                                                                                                    networkViewFactory);
-        final Properties cytoscapeJsNetworkReaderFactoryProps = new Properties();
+        final CyNetworkFactory network_factory = getService(bc, CyNetworkFactory.class);
+        final CyRootNetworkManager root_network_manager = getService(bc, CyRootNetworkManager.class);
+        final RenderingEngineManager rendering_engine_manager = getService(bc, RenderingEngineManager.class);
+        final BasicCyFileFilter basic_file_filter = new BasicCyFileFilter(new String[] { "cx" },
+                                                                          new String[] { "application/json" },
+                                                                          "CX JSON",
+                                                                          DataCategory.NETWORK,
+                                                                          streamUtil);
+
+        final CytoscapeCxNetworkReaderFactory cx_reader_factory = new CytoscapeCxNetworkReaderFactory(basic_file_filter,
+                                                                                                      application_manager,
+                                                                                                      network_factory,
+                                                                                                      network_manager,
+                                                                                                      root_network_manager,
+                                                                                                      visual_mapping_manager,
+                                                                                                      rendering_engine_manager,
+                                                                                                      network_view_factory);
+        final Properties reader_factory_properties = new Properties();
 
         // This is the unique identifier for this reader. 3rd party developer
         // can use this service by using this ID.
-        cytoscapeJsNetworkReaderFactoryProps.put(ID, "cytoscapejsNetworkReaderFactory");
-        registerService(bc, cxReaderFactory, InputStreamTaskFactory.class, cytoscapeJsNetworkReaderFactoryProps);
+        reader_factory_properties.put(ID, "cytoscapejsNetworkReaderFactory");
+        registerService(bc, cx_reader_factory, InputStreamTaskFactory.class, reader_factory_properties);
 
     }
 }
