@@ -55,7 +55,6 @@ public class CyActivator extends AbstractCyActivator {
         final CxNetworkWriterFactory network_writer_factory = new CxNetworkWriterFactory(cx_filter,
                                                                                          visual_mapping_manager,
                                                                                          application_manager,
-                                                                                         null,
                                                                                          networkview_manager,
                                                                                          network_manager,
                                                                                          group_manager,

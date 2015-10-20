@@ -45,7 +45,6 @@ public class CytoscapeCxNetworkReaderFactory extends AbstractInputStreamTaskFact
     @Override
     public TaskIterator createTaskIterator(final InputStream is, final String collection_name) {
         try {
-
             return new TaskIterator(new CytoscapeCxNetworkReader(collection_name,
                                                                  is,
                                                                  _application_manager,

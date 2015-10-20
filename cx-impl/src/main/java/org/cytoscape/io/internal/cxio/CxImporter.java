@@ -4,14 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.cxio.core.CxReader;
-import org.cxio.core.interfaces.AspectElement;
 import org.cxio.core.interfaces.AspectFragmentReader;
 
 /**
@@ -21,7 +18,7 @@ import org.cxio.core.interfaces.AspectFragmentReader;
  * In particular, it provides the following methods for writing CX: <br>
  * <ul>
  * <li>
- * {@link #getCxReader(AspectSet, InputStream)}</li>
+ * {@link #obtainCxReader(AspectSet, InputStream)}</li>
  * <li>
  * {@link #readAsMap(AspectSet, InputStream)}</li>
  * </ul>
@@ -35,7 +32,7 @@ import org.cxio.core.interfaces.AspectFragmentReader;
  * <br>
  * <br>
  * <br>
- * Example using {@link #getCxReader(AspectSet, InputStream)}:
+ * Example using {@link #obtainCxReader(AspectSet, InputStream)}:
  *
  * <pre>
  * {@code}
@@ -159,34 +156,10 @@ public final class CxImporter {
      * @see AspectSet
      * @see Aspect
      */
-    public final CxReader getCxReader(final AspectSet aspects, final InputStream in) throws IOException {
+    public final CxReader obtainCxReader(final AspectSet aspects, final InputStream in) throws IOException {
         final Set<AspectFragmentReader> all_readers = getAllAspectFragmentReaders(aspects.getAspectFragmentReaders());
         final CxReader r = CxReader.createInstance(in, all_readers);
         return r;
-    }
-
-    /**
-     * This is a convenience method to parse a CX formatted input stream. It
-     * returns the aspect present in the input stream as a mapping of aspect
-     * names to lists of aspect elements. This convenience method is not
-     * recommended for very large data sets or if speed is of the essence.
-     *
-     *
-     * @param aspects
-     *            the set of aspects to de-serialize
-     * @param in
-     *            a CX formatted input stream
-     * @return map of aspect names to lists of aspect elements
-     * @throws IOException
-     *
-     * @see AspectSet
-     * @see Aspect
-     */
-    public final SortedMap<String, List<AspectElement>> readAsMap(final AspectSet aspects, final InputStream in)
-            throws IOException {
-        final CxReader r = getCxReader(aspects, in);
-        return CxReader.parseAsMap(r);
-
     }
 
     private Set<AspectFragmentReader> getAllAspectFragmentReaders(final Set<AspectFragmentReader> readers) {

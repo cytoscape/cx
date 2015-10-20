@@ -8,7 +8,6 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 
-import org.cytoscape.ding.customgraphics.CustomGraphicsManager;
 import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.internal.cxio.Aspect;
 import org.cytoscape.io.internal.cxio.AspectSet;
@@ -42,7 +41,6 @@ public class CxNetworkWriter implements CyWriter {
     public CxNetworkWriter(final OutputStream os,
                            final CyNetwork network,
                            final VisualMappingManager visual_mapping_manager,
-                           final CustomGraphicsManager custom_graphics_manager,
                            final CyNetworkViewManager networkview_manager,
                            final CyNetworkManager network_manager,
                            final CyGroupManager group_manager,

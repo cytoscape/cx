@@ -14,8 +14,10 @@ import java.util.regex.Pattern;
 
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.cxio.aspects.datamodels.CyVisualPropertiesElement;
+import org.cxio.core.AspectElementCounts;
 import org.cxio.core.CxReader;
 import org.cxio.core.interfaces.AspectElement;
+import org.cxio.metadata.MetaDataCollection;
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.io.internal.cxio.Aspect;
 import org.cytoscape.io.internal.cxio.AspectSet;
@@ -44,7 +46,7 @@ import org.cytoscape.work.util.ListSingleSelection;
 public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
     private static final Pattern         DIRECT_NET_PROPS_PATTERN = Pattern
-            .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
+                                                                          .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
 
     private static final boolean         DEBUG                    = true;
 
@@ -100,7 +102,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                               CyNetwork.class);
             }
 
-            final VisualStyle default_style = _visual_mapping_manager.getDefaultVisualStyle();
+            final VisualStyle default_style = _visual_mapping_manager.getVisualStyle(view);
             if (collection.getNodesDefaultVisualPropertiesElement(subnetwork_id) != null) {
                 setProperties(lexicon,
                               collection.getNodesDefaultVisualPropertiesElement(subnetwork_id).getProperties(),
@@ -166,6 +168,8 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         aspects.addAspect(Aspect.EDGES);
         aspects.addAspect(Aspect.NODE_ATTRIBUTES);
         aspects.addAspect(Aspect.EDGE_ATTRIBUTES);
+        aspects.addAspect(Aspect.NETWORK_ATTRIBUTES);
+        aspects.addAspect(Aspect.HIDDEN_ATTRIBUTES);
         aspects.addAspect(Aspect.VISUAL_PROPERTIES);
         aspects.addAspect(Aspect.CARTESIAN_LAYOUT);
         aspects.addAspect(Aspect.NETWORK_RELATIONS);
@@ -177,7 +181,6 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         long t0 = 0;
         SortedMap<String, List<AspectElement>> res = null;
         if (TimingUtil.TIMING) {
-
             final byte[] buff = new byte[8000];
             int bytes_read = 0;
             final ByteArrayOutputStream bao = new ByteArrayOutputStream();
@@ -186,14 +189,34 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
             }
             final ByteArrayInputStream bis = new ByteArrayInputStream(bao.toByteArray());
             t0 = System.currentTimeMillis();
-            final CxReader cxr = cx_importer.getCxReader(aspects, bis);
+            final CxReader cxr = cx_importer.obtainCxReader(aspects, bis);
 
             res = TimingUtil.parseAsMap(cxr, t0);
             TimingUtil.reportTimeDifference(t0, "total time parsing", -1);
             t0 = System.currentTimeMillis();
         }
         else {
-            res = cx_importer.readAsMap(aspects, _in);
+            final CxReader cxr = cx_importer.obtainCxReader(aspects, _in);
+            res = CxReader.parseAsMap(cxr);
+            final AspectElementCounts counts = cxr.getAspectElementCounts();
+            final MetaDataCollection pre = cxr.getPreMetaData();
+            final MetaDataCollection post = cxr.getPostMetaData();
+            if (DEBUG) {
+                if (counts != null) {
+                    System.out.println("Aspects elements read in:");
+                    System.out.println(counts);
+                }
+                if (pre != null) {
+                    System.out.println("Pre metadata :");
+                    System.out.println(post);
+                }
+                if (post != null) {
+                    System.out.println("Post metadata :");
+                    System.out.println(post);
+                }
+
+            }
+
         }
 
         _cx_to_cy = new CxToCy();

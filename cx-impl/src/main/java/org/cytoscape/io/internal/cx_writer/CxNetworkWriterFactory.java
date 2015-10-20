@@ -3,7 +3,6 @@ package org.cytoscape.io.internal.cx_writer;
 import java.io.OutputStream;
 
 import org.cytoscape.application.CyApplicationManager;
-import org.cytoscape.ding.customgraphics.CustomGraphicsManager;
 import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.CyFileFilter;
 import org.cytoscape.io.write.CyNetworkViewWriterFactory;
@@ -20,7 +19,6 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
     private final CyFileFilter          _filter;
     private final VisualMappingManager  _visual_mapping_manager;
     private final CyApplicationManager  _application_manager;
-    private final CustomGraphicsManager _custom_graphics_manager;
     private final CyNetworkViewManager  _networkview_manager;
     private final CyNetworkManager      _network_manager;
     private final CyGroupManager        _group_manager;
@@ -30,7 +28,6 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
         _filter = filter;
         _visual_mapping_manager = null;
         _application_manager = null;
-        _custom_graphics_manager = null;
         _networkview_manager = null;
         _network_manager = null;
         _group_manager = null;
@@ -40,7 +37,6 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
     public CxNetworkWriterFactory(final CyFileFilter filter,
                                   final VisualMappingManager visual_mapping_manager,
                                   final CyApplicationManager application_manager,
-                                  final CustomGraphicsManager custom_graphics_manager,
                                   final CyNetworkViewManager networkview_manager,
                                   final CyNetworkManager network_manager,
                                   final CyGroupManager group_manager,
@@ -48,7 +44,6 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
         _filter = filter;
         _visual_mapping_manager = visual_mapping_manager;
         _application_manager = application_manager;
-        _custom_graphics_manager = custom_graphics_manager;
         _networkview_manager = networkview_manager;
         _network_manager = network_manager;
         _group_manager = group_manager;
@@ -63,7 +58,6 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
             return new CxNetworkWriter(os,
                                        network,
                                        _visual_mapping_manager,
-                                       _custom_graphics_manager,
                                        _networkview_manager,
                                        _network_manager,
                                        _group_manager,
@@ -71,7 +65,8 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
                                        lexicon);
         }
         else {
-            return new CxNetworkWriter(os, network);
+            throw new IllegalStateException("visual_mapping_manager and/or application_manager or null");
+            // return new CxNetworkWriter(os, network);
         }
     }
 
@@ -88,7 +83,6 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
             return new CxNetworkWriter(os,
                                        view.getModel(),
                                        _visual_mapping_manager,
-                                       _custom_graphics_manager,
                                        _networkview_manager,
                                        _network_manager,
                                        _group_manager,
@@ -96,7 +90,8 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
                                        lexicon);
 
         }
-        return new CxNetworkWriter(os, view.getModel());
+        throw new IllegalStateException("visual_mapping_manager and/or application_manager or null");
+        // return new CxNetworkWriter(os, view.getModel());
 
     }
 }
