@@ -1,0 +1,633 @@
+[ {
+  "nodes" : [ {
+    "@id" : "_:140"
+  }, {
+    "@id" : "_:117"
+  }, {
+    "@id" : "_:116"
+  }, {
+    "@id" : "_:115"
+  } ]
+}, {
+  "edges" : [ {
+    "@id" : "_:141",
+    "s" : "_:117",
+    "t" : "_:140"
+  }, {
+    "@id" : "_:119",
+    "s" : "_:115",
+    "t" : "_:117"
+  }, {
+    "@id" : "_:118",
+    "s" : "_:115",
+    "t" : "_:116"
+  } ]
+}, {
+  "networkAttributes" : [ {
+    "s" : "105",
+    "n" : "shared name",
+    "v" : "Network1"
+  }, {
+    "s" : "105",
+    "n" : "name",
+    "v" : "Network 1"
+  }, {
+    "s" : "105",
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : "120",
+    "n" : "shared name",
+    "v" : "Network2"
+  }, {
+    "s" : "120",
+    "n" : "name",
+    "v" : "Network 2"
+  }, {
+    "s" : "120",
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : "130",
+    "n" : "shared name",
+    "v" : "Network 3"
+  }, {
+    "s" : "130",
+    "n" : "name",
+    "v" : "Network 3"
+  }, {
+    "s" : "130",
+    "n" : "selected",
+    "v" : "true",
+    "d" : "boolean"
+  } ]
+}, {
+  "nodeAttributes" : [ {
+    "s" : "105",
+    "po" : "_:117",
+    "n" : "shared name",
+    "v" : "Node 1-3"
+  }, {
+    "s" : "105",
+    "po" : "_:117",
+    "n" : "name",
+    "v" : "Node 1-3"
+  }, {
+    "s" : "105",
+    "po" : "_:117",
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : "105",
+    "po" : "_:116",
+    "n" : "shared name",
+    "v" : "Node 1-2"
+  }, {
+    "s" : "105",
+    "po" : "_:116",
+    "n" : "name",
+    "v" : "Node 1-2"
+  }, {
+    "s" : "105",
+    "po" : "_:116",
+    "n" : "exp",
+    "v" : [ "14", "15" ],
+    "d" : "list_of_integer"
+  }, {
+    "s" : "105",
+    "po" : "_:116",
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : "105",
+    "po" : "_:115",
+    "n" : "shared name",
+    "v" : "Node 1-1"
+  }, {
+    "s" : "105",
+    "po" : "_:115",
+    "n" : "name",
+    "v" : "Node 1-1"
+  }, {
+    "s" : "105",
+    "po" : "_:115",
+    "n" : "exp",
+    "v" : [ "12", "13" ],
+    "d" : "list_of_integer"
+  }, {
+    "s" : "105",
+    "po" : "_:115",
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : "120",
+    "po" : "_:116",
+    "n" : "shared name",
+    "v" : "Node 1-2"
+  }, {
+    "s" : "120",
+    "po" : "_:116",
+    "n" : "name",
+    "v" : "Node 2-2"
+  }, {
+    "s" : "120",
+    "po" : "_:116",
+    "n" : "weight",
+    "v" : "9.7",
+    "d" : "double"
+  }, {
+    "s" : "120",
+    "po" : "_:116",
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : "120",
+    "po" : "_:115",
+    "n" : "shared name",
+    "v" : "Node 1-1"
+  }, {
+    "s" : "120",
+    "po" : "_:115",
+    "n" : "name",
+    "v" : "Node 2-1"
+  }, {
+    "s" : "120",
+    "po" : "_:115",
+    "n" : "weight",
+    "v" : "9.3",
+    "d" : "double"
+  }, {
+    "s" : "120",
+    "po" : "_:115",
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : "130",
+    "po" : "_:140",
+    "n" : "shared name",
+    "v" : "Node 3-4"
+  }, {
+    "s" : "130",
+    "po" : "_:140",
+    "n" : "name",
+    "v" : "Node 3-4"
+  }, {
+    "s" : "130",
+    "po" : "_:140",
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : "130",
+    "po" : "_:117",
+    "n" : "shared name",
+    "v" : "Node 1-3"
+  }, {
+    "s" : "130",
+    "po" : "_:117",
+    "n" : "name",
+    "v" : "Node 3-3"
+  }, {
+    "s" : "130",
+    "po" : "_:117",
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  } ]
+}, {
+  "edgeAttributes" : [ {
+    "s" : "105",
+    "po" : "_:119",
+    "n" : "shared name",
+    "v" : "Node 1 (interacts with) Node 2"
+  }, {
+    "s" : "105",
+    "po" : "_:119",
+    "n" : "shared interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : "105",
+    "po" : "_:119",
+    "n" : "name",
+    "v" : "Edge 1-2"
+  }, {
+    "s" : "105",
+    "po" : "_:119",
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : "105",
+    "po" : "_:119",
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : "105",
+    "po" : "_:118",
+    "n" : "shared name",
+    "v" : "Node 1 (interacts with) Node 3"
+  }, {
+    "s" : "105",
+    "po" : "_:118",
+    "n" : "shared interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : "105",
+    "po" : "_:118",
+    "n" : "lengths",
+    "v" : [ "2.0", "1.5", "1.2934" ],
+    "d" : "list_of_double"
+  }, {
+    "s" : "105",
+    "po" : "_:118",
+    "n" : "name",
+    "v" : "Edge 1-1"
+  }, {
+    "s" : "105",
+    "po" : "_:118",
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : "105",
+    "po" : "_:118",
+    "n" : "is ok",
+    "v" : [ "true", "false", "true" ],
+    "d" : "list_of_boolean"
+  }, {
+    "s" : "105",
+    "po" : "_:118",
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : "120",
+    "po" : "_:118",
+    "n" : "shared name",
+    "v" : "Node 1 (interacts with) Node 3"
+  }, {
+    "s" : "120",
+    "po" : "_:118",
+    "n" : "shared interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : "120",
+    "po" : "_:118",
+    "n" : "name",
+    "v" : "Edge 2-1"
+  }, {
+    "s" : "120",
+    "po" : "_:118",
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : "120",
+    "po" : "_:118",
+    "n" : "weights",
+    "v" : [ "1.2", "1.4", "1.5" ],
+    "d" : "list_of_double"
+  }, {
+    "s" : "120",
+    "po" : "_:118",
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : "130",
+    "po" : "_:141",
+    "n" : "shared name",
+    "v" : "Edge 3-3"
+  }, {
+    "s" : "130",
+    "po" : "_:141",
+    "n" : "name",
+    "v" : "Edge 3-3"
+  }, {
+    "s" : "130",
+    "po" : "_:141",
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  } ]
+}, {
+  "cartesianLayout" : [ {
+    "node" : "_:117",
+    "view" : "105",
+    "x" : -54.0,
+    "y" : -179.0
+  }, {
+    "node" : "_:116",
+    "view" : "105",
+    "x" : -169.0,
+    "y" : 11.0
+  }, {
+    "node" : "_:115",
+    "view" : "105",
+    "x" : 99.0,
+    "y" : 3.0
+  } ]
+}, {
+  "visualProperties" : [ {
+    "properties_of" : "network",
+    "applies_to" : "105",
+    "view" : "105",
+    "properties" : {
+      "NETWORK_BACKGROUND_PAINT" : "#FFFFFF",
+      "NETWORK_CENTER_X_LOCATION" : "0.0",
+      "NETWORK_CENTER_Y_LOCATION" : "0.0",
+      "NETWORK_CENTER_Z_LOCATION" : "0.0",
+      "NETWORK_DEPTH" : "0.0",
+      "NETWORK_EDGE_SELECTION" : "true",
+      "NETWORK_HEIGHT" : "550.0",
+      "NETWORK_NODE_SELECTION" : "true",
+      "NETWORK_SCALE_FACTOR" : "1.0",
+      "NETWORK_SIZE" : "550.0",
+      "NETWORK_WIDTH" : "550.0"
+    }
+  }, {
+    "properties_of" : "nodes:default",
+    "applies_to" : "105",
+    "view" : "105",
+    "properties" : {
+      "COMPOUND_NODE_PADDING" : "10.0",
+      "COMPOUND_NODE_SHAPE" : "ROUND_RECTANGLE",
+      "NODE_BORDER_PAINT" : "#666666",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_TRANSPARENCY" : "255",
+      "NODE_BORDER_WIDTH" : "2.0",
+      "NODE_DEPTH" : "0.0",
+      "NODE_FILL_COLOR" : "#FFFFFF",
+      "NODE_HEIGHT" : "50.0",
+      "NODE_LABEL_COLOR" : "#000000",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_LABEL_FONT_SIZE" : "24",
+      "NODE_LABEL_POSITION" : "C,C,c,0.00,0.00",
+      "NODE_LABEL_TRANSPARENCY" : "255",
+      "NODE_LABEL_WIDTH" : "200.0",
+      "NODE_NESTED_NETWORK_IMAGE_VISIBLE" : "true",
+      "NODE_PAINT" : "#1E90FF",
+      "NODE_SELECTED" : "false",
+      "NODE_SELECTED_PAINT" : "#FFFF00",
+      "NODE_SHAPE" : "ROUND_RECTANGLE",
+      "NODE_SIZE" : "35.0",
+      "NODE_TRANSPARENCY" : "100",
+      "NODE_VISIBLE" : "true",
+      "NODE_WIDTH" : "120.0",
+      "NODE_X_LOCATION" : "0.0",
+      "NODE_Y_LOCATION" : "0.0",
+      "NODE_Z_LOCATION" : "0.0",
+      "PASSTHROUGH_MAPPING_NODE_LABEL" : "COL=name,T=string"
+    }
+  }, {
+    "properties_of" : "edges:default",
+    "applies_to" : "105",
+    "view" : "105",
+    "properties" : {
+      "EDGE_CURVED" : "false",
+      "EDGE_LABEL_COLOR" : "#000000",
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LABEL_FONT_SIZE" : "10",
+      "EDGE_LABEL_TRANSPARENCY" : "255",
+      "EDGE_LABEL_WIDTH" : "200.0",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_PAINT" : "#323232",
+      "EDGE_SELECTED" : "false",
+      "EDGE_SELECTED_PAINT" : "#FF0000",
+      "EDGE_SOURCE_ARROW_SELECTED_PAINT" : "#FFFF00",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_SELECTED_PAINT" : "#FF0000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#666666",
+      "EDGE_TARGET_ARROW_SELECTED_PAINT" : "#FFFF00",
+      "EDGE_TARGET_ARROW_SHAPE" : "ARROW",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_TRANSPARENCY" : "150",
+      "EDGE_UNSELECTED_PAINT" : "#404040",
+      "EDGE_VISIBLE" : "true",
+      "EDGE_WIDTH" : "3.0"
+    }
+  } ]
+}, {
+  "cartesianLayout" : [ {
+    "node" : "_:116",
+    "view" : "120",
+    "x" : -50.0,
+    "y" : -50.0
+  }, {
+    "node" : "_:115",
+    "view" : "120",
+    "x" : 40.0,
+    "y" : 40.0
+  } ]
+}, {
+  "visualProperties" : [ {
+    "properties_of" : "network",
+    "applies_to" : "120",
+    "view" : "120",
+    "properties" : {
+      "NETWORK_BACKGROUND_PAINT" : "#FFFFFF",
+      "NETWORK_CENTER_X_LOCATION" : "0.0",
+      "NETWORK_CENTER_Y_LOCATION" : "0.0",
+      "NETWORK_CENTER_Z_LOCATION" : "0.0",
+      "NETWORK_DEPTH" : "0.0",
+      "NETWORK_EDGE_SELECTION" : "true",
+      "NETWORK_HEIGHT" : "400.0",
+      "NETWORK_NODE_SELECTION" : "true",
+      "NETWORK_SCALE_FACTOR" : "1.0",
+      "NETWORK_SIZE" : "550.0",
+      "NETWORK_WIDTH" : "550.0"
+    }
+  }, {
+    "properties_of" : "nodes:default",
+    "applies_to" : "120",
+    "view" : "120",
+    "properties" : {
+      "COMPOUND_NODE_PADDING" : "10.0",
+      "COMPOUND_NODE_SHAPE" : "ROUND_RECTANGLE",
+      "NODE_BORDER_PAINT" : "#666666",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_TRANSPARENCY" : "255",
+      "NODE_BORDER_WIDTH" : "2.0",
+      "NODE_DEPTH" : "0.0",
+      "NODE_FILL_COLOR" : "#FFFFFF",
+      "NODE_HEIGHT" : "50.0",
+      "NODE_LABEL_COLOR" : "#000000",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_LABEL_FONT_SIZE" : "24",
+      "NODE_LABEL_POSITION" : "C,C,c,0.00,0.00",
+      "NODE_LABEL_TRANSPARENCY" : "255",
+      "NODE_LABEL_WIDTH" : "200.0",
+      "NODE_NESTED_NETWORK_IMAGE_VISIBLE" : "true",
+      "NODE_PAINT" : "#1E90FF",
+      "NODE_SELECTED" : "false",
+      "NODE_SELECTED_PAINT" : "#FFFF00",
+      "NODE_SHAPE" : "ROUND_RECTANGLE",
+      "NODE_SIZE" : "35.0",
+      "NODE_TRANSPARENCY" : "100",
+      "NODE_VISIBLE" : "true",
+      "NODE_WIDTH" : "120.0",
+      "NODE_X_LOCATION" : "0.0",
+      "NODE_Y_LOCATION" : "0.0",
+      "NODE_Z_LOCATION" : "0.0",
+      "PASSTHROUGH_MAPPING_NODE_LABEL" : "COL=name,T=string"
+    }
+  }, {
+    "properties_of" : "edges:default",
+    "applies_to" : "120",
+    "view" : "120",
+    "properties" : {
+      "EDGE_CURVED" : "false",
+      "EDGE_LABEL_COLOR" : "#000000",
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LABEL_FONT_SIZE" : "10",
+      "EDGE_LABEL_TRANSPARENCY" : "255",
+      "EDGE_LABEL_WIDTH" : "200.0",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_PAINT" : "#323232",
+      "EDGE_SELECTED" : "false",
+      "EDGE_SELECTED_PAINT" : "#FF0000",
+      "EDGE_SOURCE_ARROW_SELECTED_PAINT" : "#FFFF00",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_SELECTED_PAINT" : "#FF0000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#666666",
+      "EDGE_TARGET_ARROW_SELECTED_PAINT" : "#FFFF00",
+      "EDGE_TARGET_ARROW_SHAPE" : "ARROW",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_TRANSPARENCY" : "150",
+      "EDGE_UNSELECTED_PAINT" : "#404040",
+      "EDGE_VISIBLE" : "true",
+      "EDGE_WIDTH" : "3.0"
+    }
+  } ]
+}, {
+  "cartesianLayout" : [ {
+    "node" : "_:140",
+    "view" : "130",
+    "x" : 40.0,
+    "y" : 0.0
+  }, {
+    "node" : "_:117",
+    "view" : "130",
+    "x" : -40.0,
+    "y" : 0.0
+  } ]
+}, {
+  "visualProperties" : [ {
+    "properties_of" : "network",
+    "applies_to" : "130",
+    "view" : "130",
+    "properties" : {
+      "NETWORK_BACKGROUND_PAINT" : "#FFFFFF",
+      "NETWORK_CENTER_X_LOCATION" : "0.0",
+      "NETWORK_CENTER_Y_LOCATION" : "0.0",
+      "NETWORK_CENTER_Z_LOCATION" : "0.0",
+      "NETWORK_DEPTH" : "0.0",
+      "NETWORK_EDGE_SELECTION" : "true",
+      "NETWORK_HEIGHT" : "400.0",
+      "NETWORK_NODE_SELECTION" : "true",
+      "NETWORK_SCALE_FACTOR" : "1.0",
+      "NETWORK_SIZE" : "550.0",
+      "NETWORK_WIDTH" : "550.0"
+    }
+  }, {
+    "properties_of" : "nodes:default",
+    "applies_to" : "130",
+    "view" : "130",
+    "properties" : {
+      "COMPOUND_NODE_PADDING" : "10.0",
+      "COMPOUND_NODE_SHAPE" : "ROUND_RECTANGLE",
+      "NODE_BORDER_PAINT" : "#666666",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_TRANSPARENCY" : "255",
+      "NODE_BORDER_WIDTH" : "2.0",
+      "NODE_DEPTH" : "0.0",
+      "NODE_FILL_COLOR" : "#FFFFFF",
+      "NODE_HEIGHT" : "50.0",
+      "NODE_LABEL_COLOR" : "#000000",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_LABEL_FONT_SIZE" : "24",
+      "NODE_LABEL_POSITION" : "C,C,c,0.00,0.00",
+      "NODE_LABEL_TRANSPARENCY" : "255",
+      "NODE_LABEL_WIDTH" : "200.0",
+      "NODE_NESTED_NETWORK_IMAGE_VISIBLE" : "true",
+      "NODE_PAINT" : "#1E90FF",
+      "NODE_SELECTED" : "false",
+      "NODE_SELECTED_PAINT" : "#FFFF00",
+      "NODE_SHAPE" : "ROUND_RECTANGLE",
+      "NODE_SIZE" : "35.0",
+      "NODE_TRANSPARENCY" : "100",
+      "NODE_VISIBLE" : "true",
+      "NODE_WIDTH" : "120.0",
+      "NODE_X_LOCATION" : "0.0",
+      "NODE_Y_LOCATION" : "0.0",
+      "NODE_Z_LOCATION" : "0.0",
+      "PASSTHROUGH_MAPPING_NODE_LABEL" : "COL=name,T=string"
+    }
+  }, {
+    "properties_of" : "edges:default",
+    "applies_to" : "130",
+    "view" : "130",
+    "properties" : {
+      "EDGE_CURVED" : "false",
+      "EDGE_LABEL_COLOR" : "#000000",
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LABEL_FONT_SIZE" : "10",
+      "EDGE_LABEL_TRANSPARENCY" : "255",
+      "EDGE_LABEL_WIDTH" : "200.0",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_PAINT" : "#323232",
+      "EDGE_SELECTED" : "false",
+      "EDGE_SELECTED_PAINT" : "#FF0000",
+      "EDGE_SOURCE_ARROW_SELECTED_PAINT" : "#FFFF00",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_SELECTED_PAINT" : "#FF0000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#666666",
+      "EDGE_TARGET_ARROW_SELECTED_PAINT" : "#FFFF00",
+      "EDGE_TARGET_ARROW_SHAPE" : "ARROW",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_TRANSPARENCY" : "150",
+      "EDGE_UNSELECTED_PAINT" : "#404040",
+      "EDGE_VISIBLE" : "true",
+      "EDGE_WIDTH" : "3.0"
+    }
+  } ]
+}, {
+  "subNetworks" : [ {
+    "id" : "105",
+    "nodes" : [ "_:117", "_:116", "_:115" ],
+    "edges" : [ "_:119", "_:118" ]
+  }, {
+    "id" : "120",
+    "nodes" : [ "_:116", "_:115" ],
+    "edges" : "_:118"
+  }, {
+    "id" : "130",
+    "nodes" : [ "_:140", "_:117" ],
+    "edges" : "_:141"
+  } ]
+}, {
+  "networkRelations" : [ {
+    "p" : "89",
+    "c" : "105",
+    "r" : "subnetwork",
+    "name" : "Network 1"
+  }, {
+    "p" : "89",
+    "c" : "120",
+    "r" : "subnetwork",
+    "name" : "Network 2"
+  }, {
+    "p" : "89",
+    "c" : "130",
+    "r" : "subnetwork",
+    "name" : "Network 3"
+  } ]
+} ]

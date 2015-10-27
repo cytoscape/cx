@@ -46,7 +46,7 @@ import org.cytoscape.work.util.ListSingleSelection;
 public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
     private static final Pattern         DIRECT_NET_PROPS_PATTERN = Pattern
-                                                                          .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
+            .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
 
     private static final boolean         DEBUG                    = true;
 
@@ -123,20 +123,22 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
             final Map<CyNode, CartesianLayoutElement> position_map_for_view = collection
                     .getCartesianLayoutElements(subnetwork_id);
 
-            if (position_map_for_view != null) {
-
+            if ((position_map_for_view != null) && (view != null)) {
                 for (final CyNode node : position_map_for_view.keySet()) {
-
-                    final CartesianLayoutElement e = position_map_for_view.get(node);
-
-                    if (e != null) {
-                        view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_X_LOCATION,
-                                                                 Double.valueOf(e.getX()));
-                        view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION,
-                                                                 Double.valueOf(e.getY()));
-                        if (e.isZset()) {
-                            view.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION,
-                                                                     Double.valueOf(e.getZ()));
+                    if (node != null) {
+                        final CartesianLayoutElement e = position_map_for_view.get(node);
+                        if (e != null) {
+                            final View<CyNode> node_view = view.getNodeView(node);
+                            if (node_view != null) {
+                                node_view.setVisualProperty(BasicVisualLexicon.NODE_X_LOCATION,
+                                                            Double.valueOf(e.getX()));
+                                node_view.setVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION,
+                                                            Double.valueOf(e.getY()));
+                                if (e.isZset()) {
+                                    node_view.setVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION,
+                                                                Double.valueOf(e.getZ()));
+                                }
+                            }
                         }
                     }
                 }
