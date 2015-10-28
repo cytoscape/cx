@@ -49,7 +49,7 @@ final class TestUtil {
         w.writeAspectElements(res.get(CartesianLayoutElement.NAME));
         w.writeAspectElements(res.get(NodeAttributesElement.NAME));
         w.writeAspectElements(res.get(EdgeAttributesElement.NAME));
-        w.end();
+        w.end(true, null);
 
         return out.toString();
     }

@@ -359,35 +359,45 @@ public final class CxExporter {
 
         w.start();
 
-        if (aspects.contains(Aspect.NODES)) {
-            writeNodes(network, w);
+        String msg = null;
+        boolean success = true;
+
+        try {
+
+            if (aspects.contains(Aspect.NODES)) {
+                writeNodes(network, w);
+            }
+            if (aspects.contains(Aspect.EDGES)) {
+                writeEdges(network, w);
+            }
+            if (aspects.contains(Aspect.NETWORK_ATTRIBUTES)) {
+                writeNetworkAttributes(network, w, CyNetwork.DEFAULT_ATTRS);
+            }
+            if (aspects.contains(Aspect.HIDDEN_ATTRIBUTES)) {
+                writeHiddenAttributes(network, w, CyNetwork.HIDDEN_ATTRS);
+            }
+            if (aspects.contains(Aspect.NODE_ATTRIBUTES)) {
+                writeNodeAttributes(network, w, CyNetwork.DEFAULT_ATTRS);
+            }
+            if (aspects.contains(Aspect.EDGE_ATTRIBUTES)) {
+                writeEdgeAttributes(network, w, CyNetwork.DEFAULT_ATTRS);
+            }
+            if (aspects.contains(Aspect.SUBNETWORKS)) {
+                writeSubNetworks(network, w);
+            }
+            if (aspects.contains(Aspect.GROUPS)) {
+                writeGroups(network, w);
+            }
+            if (aspects.contains(Aspect.NETWORK_RELATIONS)) {
+                writeNetworkRelations(network, w);
+            }
         }
-        if (aspects.contains(Aspect.EDGES)) {
-            writeEdges(network, w);
-        }
-        if (aspects.contains(Aspect.NETWORK_ATTRIBUTES)) {
-            writeNetworkAttributes(network, w, CyNetwork.DEFAULT_ATTRS);
-        }
-        if (aspects.contains(Aspect.HIDDEN_ATTRIBUTES)) {
-            writeHiddenAttributes(network, w, CyNetwork.HIDDEN_ATTRS);
-        }
-        if (aspects.contains(Aspect.NODE_ATTRIBUTES)) {
-            writeNodeAttributes(network, w, CyNetwork.DEFAULT_ATTRS);
-        }
-        if (aspects.contains(Aspect.EDGE_ATTRIBUTES)) {
-            writeEdgeAttributes(network, w, CyNetwork.DEFAULT_ATTRS);
-        }
-        if (aspects.contains(Aspect.SUBNETWORKS)) {
-            writeSubNetworks(network, w);
-        }
-        if (aspects.contains(Aspect.GROUPS)) {
-            writeGroups(network, w);
-        }
-        if (aspects.contains(Aspect.NETWORK_RELATIONS)) {
-            writeNetworkRelations(network, w);
+        catch (final Exception e) {
+            msg = e.getMessage();
+            success = false;
         }
 
-        w.end();
+        w.end(success, msg);
 
         final AspectElementCounts counts = w.getAspectElementCounts();
 
@@ -622,14 +632,14 @@ public final class CxExporter {
             final View<CyNode> node_view = view.getNodeView(cy_node);
             if (z_used) {
                 elements.add(new CartesianLayoutElement(Util.makeId(cy_node.getSUID()), String.valueOf(network
-                                                                                                       .getSUID()), node_view.getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
-                                                                                                       .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION), node_view
-                                                                                                       .getVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION)));
+                        .getSUID()), node_view.getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
+                        .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION), node_view
+                        .getVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION)));
             }
             else {
                 elements.add(new CartesianLayoutElement(Util.makeId(cy_node.getSUID()), String.valueOf(network
-                                                                                                       .getSUID()), node_view.getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
-                                                                                                       .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION)));
+                        .getSUID()), node_view.getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
+                        .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION)));
             }
 
         }
