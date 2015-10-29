@@ -9,8 +9,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 
+import org.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
 import org.cxio.aspects.datamodels.AbstractAttributesAspectElement;
-import org.cxio.aspects.datamodels.AbstractAttributesAspectElement.ATTRIBUTE_DATA_TYPE;
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.cxio.aspects.datamodels.EdgeAttributesElement;
@@ -56,16 +56,16 @@ public final class CxToCy {
                                                final CyNetworkFactory network_factory,
                                                final String collectionName) throws IOException {
 
-        final List<AspectElement> nodes = aspect_collection.get(NodesElement.NAME);
-        final List<AspectElement> edges = aspect_collection.get(EdgesElement.NAME);
-        final List<AspectElement> cartesian_layout_elements = aspect_collection.get(CartesianLayoutElement.NAME);
-        final List<AspectElement> node_attributes = aspect_collection.get(NodeAttributesElement.NAME);
-        final List<AspectElement> edge_attributes = aspect_collection.get(EdgeAttributesElement.NAME);
-        final List<AspectElement> network_attributes = aspect_collection.get(NetworkAttributesElement.NAME);
-        final List<AspectElement> hidden_attributes = aspect_collection.get(HiddenAttributesElement.NAME);
-        final List<AspectElement> visual_properties = aspect_collection.get(CyVisualPropertiesElement.NAME);
-        final List<AspectElement> subnetworks = aspect_collection.get(SubNetworkElement.NAME);
-        final List<AspectElement> network_relations = aspect_collection.get(NetworkRelationsElement.NAME);
+        final List<AspectElement> nodes = aspect_collection.get(NodesElement.ASPECT_NAME);
+        final List<AspectElement> edges = aspect_collection.get(EdgesElement.ASPECT_NAME);
+        final List<AspectElement> cartesian_layout_elements = aspect_collection.get(CartesianLayoutElement.ASPECT_NAME);
+        final List<AspectElement> node_attributes = aspect_collection.get(NodeAttributesElement.ASPECT_NAME);
+        final List<AspectElement> edge_attributes = aspect_collection.get(EdgeAttributesElement.ASPECT_NAME);
+        final List<AspectElement> network_attributes = aspect_collection.get(NetworkAttributesElement.ASPECT_NAME);
+        final List<AspectElement> hidden_attributes = aspect_collection.get(HiddenAttributesElement.ASPECT_NAME);
+        final List<AspectElement> visual_properties = aspect_collection.get(CyVisualPropertiesElement.ASPECT_NAME);
+        final List<AspectElement> subnetworks = aspect_collection.get(SubNetworkElement.ASPECT_NAME);
+        final List<AspectElement> network_relations = aspect_collection.get(NetworkRelationsElement.ASPECT_NAME);
 
         final Map<String, List<NodeAttributesElement>> node_attributes_map = new HashMap<String, List<NodeAttributesElement>>();
         final Map<String, List<EdgeAttributesElement>> edge_attributes_map = new HashMap<String, List<EdgeAttributesElement>>();
@@ -151,7 +151,7 @@ public final class CxToCy {
             }
 
             final String subnetwork_id = subnetwork_ids.size() > 0 ? subnetwork_ids.get(i) : String.valueOf(sub_network
-                                                                                                            .getSUID());
+                    .getSUID());
 
             if (DEBUG) {
                 System.out.println("subnetwork id: " + subnetwork_id);
@@ -184,7 +184,8 @@ public final class CxToCy {
             addNetworkAttributeData(network_attributes_map.get(subnetwork_id), sub_network, network_attribute_table);
 
             final CyTable hidden_attribute_table = sub_network.getTable(CyNetwork.class, CyNetwork.HIDDEN_ATTRS);
-            addHiddenAttributeData(hidden_attributes_map.get(subnetwork_id), sub_network, hidden_attribute_table);
+            // addHiddenAttributeData(hidden_attributes_map.get(subnetwork_id),
+            // sub_network, hidden_attribute_table);
 
             if (visual_properties != null) {
                 _nodes_with_visual_properties = new HashSet<CyNode>();
@@ -209,7 +210,7 @@ public final class CxToCy {
                         for (final String applies_to_node : applies_to_nodes) {
                             _nodes_with_visual_properties.add(_cxid_to_cynode_map.get(applies_to_node));
                             _visual_element_collections.addNodeVisualPropertiesElement(view, _cxid_to_cynode_map
-                                                                                       .get(applies_to_node), vpe);
+                                    .get(applies_to_node), vpe);
                         }
                     }
                     else if (vpe.getPropertiesOf().equals(VisualPropertyType.EDGES.asString())) {
@@ -217,7 +218,7 @@ public final class CxToCy {
                         for (final String applies_to_edge : applies_to_edges) {
                             _edges_with_visual_properties.add(_cxid_to_cyedge_map.get(applies_to_edge));
                             _visual_element_collections.addEdgeVisualPropertiesElement(view, _cxid_to_cyedge_map
-                                                                                       .get(applies_to_edge), vpe);
+                                    .get(applies_to_edge), vpe);
                         }
                     }
                 }
@@ -377,7 +378,7 @@ public final class CxToCy {
         }
         else {
             throw new IllegalArgumentException("don't know how to deal with type '" + type + "' for value '" + value
-                    + "'");
+                                               + "'");
         }
     }
 
@@ -479,31 +480,37 @@ public final class CxToCy {
     private final void addNetworkAttributeData(final List<NetworkAttributesElement> elements,
                                                final CyNetwork network,
                                                final CyTable table) {
+        if (table == null) {
+            throw new IllegalArgumentException("table (network) must not be null");
+        }
         if (elements == null) {
             return;
         }
         final CyRow row = network.getRow(network);
         if (row != null) {
-            for (final NetworkAttributesElement e : elements) {
-                if (e != null) {
-                    final String name = e.getName();
-                    if (name != null) {
-                        if (!(name.equals(CyIdentifiable.SUID))) {
-                            // New column creation:
-                            if (table.getColumn(name) == null) {
-                                final Class<?> data_type = getDataType(e.getDataType());
+            for (final AbstractAttributesAspectElement e : elements) {
+                addToColumn(table, row, e);
+            }
+        }
+    }
 
-                                if (e.isSingleValue()) {
-                                    table.createColumn(name, data_type, false);
-                                }
-                                else {
-                                    table.createListColumn(name, data_type, false);
-                                }
-                            }
-                            final CyColumn col = table.getColumn(name);
-                            row.set(name, getValue(e, col));
+    private void addToColumn(final CyTable table, final CyRow row, final AbstractAttributesAspectElement e) {
+        if (e != null) {
+            final String name = e.getName();
+            if (name != null) {
+                if (!(name.equals(CyIdentifiable.SUID))) {
+                    // New column creation:
+                    if (table.getColumn(name) == null) {
+                        final Class<?> data_type = getDataType(e.getDataType());
+                        if (e.isSingleValue()) {
+                            table.createColumn(name, data_type, false);
+                        }
+                        else {
+                            table.createListColumn(name, data_type, false);
                         }
                     }
+                    final CyColumn col = table.getColumn(name);
+                    row.set(name, getValue(e, col));
                 }
             }
         }
@@ -512,32 +519,16 @@ public final class CxToCy {
     private final void addHiddenAttributeData(final List<HiddenAttributesElement> elements,
                                               final CyNetwork network,
                                               final CyTable table) {
+        if (table == null) {
+            throw new IllegalArgumentException("table (hidden) must not be null");
+        }
         if (elements == null) {
             return;
         }
         final CyRow row = network.getRow(network);
         if (row != null) {
-            for (final HiddenAttributesElement e : elements) {
-                if (e != null) {
-                    final String name = e.getName();
-                    if (name != null) {
-                        if (!(name.equals(CyIdentifiable.SUID))) {
-                            // New column creation:
-                            if (table.getColumn(name) == null) {
-                                final Class<?> data_type = getDataType(e.getDataType());
-
-                                if (e.isSingleValue()) {
-                                    table.createColumn(name, data_type, false);
-                                }
-                                else {
-                                    table.createListColumn(name, data_type, false);
-                                }
-                            }
-                            final CyColumn col = table.getColumn(name);
-                            row.set(name, getValue(e, col));
-                        }
-                    }
-                }
+            for (final AbstractAttributesAspectElement e : elements) {
+                addToColumn(table, row, e);
             }
         }
     }

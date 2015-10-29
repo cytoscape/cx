@@ -21,17 +21,17 @@ import org.cxio.aspects.datamodels.SubNetworkElement;
  */
 public enum Aspect {
 
-    NODES(NodesElement.NAME),
-    EDGES(EdgesElement.NAME),
-    CARTESIAN_LAYOUT(CartesianLayoutElement.NAME),
-    EDGE_ATTRIBUTES(EdgeAttributesElement.NAME),
-    NODE_ATTRIBUTES(NodeAttributesElement.NAME),
-    NETWORK_ATTRIBUTES(NetworkAttributesElement.NAME),
-    SUBNETWORKS(SubNetworkElement.NAME),
-    VISUAL_PROPERTIES(CyVisualPropertiesElement.NAME),
-    NETWORK_RELATIONS(NetworkRelationsElement.NAME),
-    GROUPS(CyGroupsElement.NAME),
-    HIDDEN_ATTRIBUTES(HiddenAttributesElement.NAME);
+    NODES(NodesElement.ASPECT_NAME),
+    EDGES(EdgesElement.ASPECT_NAME),
+    CARTESIAN_LAYOUT(CartesianLayoutElement.ASPECT_NAME),
+    EDGE_ATTRIBUTES(EdgeAttributesElement.ASPECT_NAME),
+    NODE_ATTRIBUTES(NodeAttributesElement.ASPECT_NAME),
+    NETWORK_ATTRIBUTES(NetworkAttributesElement.ASPECT_NAME),
+    SUBNETWORKS(SubNetworkElement.ASPECT_NAME),
+    VISUAL_PROPERTIES(CyVisualPropertiesElement.ASPECT_NAME),
+    NETWORK_RELATIONS(NetworkRelationsElement.ASPECT_NAME),
+    GROUPS(CyGroupsElement.ASPECT_NAME),
+    HIDDEN_ATTRIBUTES(HiddenAttributesElement.ASPECT_NAME);
 
     private final String _s;
 

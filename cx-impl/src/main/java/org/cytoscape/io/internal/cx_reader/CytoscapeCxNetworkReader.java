@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.cxio.aspects.datamodels.CyVisualPropertiesElement;
-import org.cxio.core.AspectElementCounts;
+import org.cxio.aux.AspectElementCounts;
 import org.cxio.core.CxReader;
 import org.cxio.core.interfaces.AspectElement;
 import org.cxio.metadata.MetaDataCollection;
@@ -46,7 +46,7 @@ import org.cytoscape.work.util.ListSingleSelection;
 public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
     private static final Pattern         DIRECT_NET_PROPS_PATTERN = Pattern
-                                                                          .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
+            .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
 
     private static final boolean         DEBUG                    = true;
 
