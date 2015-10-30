@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.cxio.core.interfaces.AspectElement;
-import org.cxio.util.Util;
+import org.cxio.util.CxioUtil;
 import org.cytoscape.io.internal.cxio.VisualPropertyType;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
@@ -95,7 +95,7 @@ public final class VisualPropertiesGatherer {
             final Object vp_value = view.getVisualProperty(vp);
             if (vp_value != null) {
                 final String value_str = vp.toSerializableString(vp_value);
-                if (!Util.isEmpty(value_str)) {
+                if (!CxioUtil.isEmpty(value_str)) {
                     final String id_string = vp.getIdString();
                     if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")
                             || (!z_used && (id_string.equals(BasicVisualLexicon.NODE_Z_LOCATION)))) {
@@ -118,7 +118,7 @@ public final class VisualPropertiesGatherer {
             final Object vp_value = view.getVisualProperty(vp);
             if (vp_value != null) {
                 final String value_str = vp.toSerializableString(vp_value);
-                if (!Util.isEmpty(value_str)) {
+                if (!CxioUtil.isEmpty(value_str)) {
                     final String id_string = vp.getIdString();
                     if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")) {
                         // TODO
@@ -133,7 +133,7 @@ public final class VisualPropertiesGatherer {
             final Object vp_value = style.getDefaultValue(vp);
             if (vp_value != null) {
                 final String value_str = vp.toSerializableString(vp_value);
-                if (!Util.isEmpty(value_str)) {
+                if (!CxioUtil.isEmpty(value_str)) {
                     final String id_string = vp.getIdString();
                     if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")
                             || id_string.startsWith("NODE_CUSTOM")) {
@@ -154,7 +154,7 @@ public final class VisualPropertiesGatherer {
         final Object vp_value = style.getDefaultValue(vp);
         if (vp_value != null) {
             final String value_str = vp.toSerializableString(vp_value);
-            if (!Util.isEmpty(value_str)) {
+            if (!CxioUtil.isEmpty(value_str)) {
                 final String id_string = vp.getIdString();
                 if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")
                         || id_string.startsWith("NODE_CUSTOM")) {
