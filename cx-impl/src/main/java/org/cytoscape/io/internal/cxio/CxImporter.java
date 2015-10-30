@@ -41,9 +41,9 @@ import org.cxio.core.interfaces.AspectFragmentReader;
  * aspects.addAspect(Aspect.NODES);
  * aspects.addAspect(Aspect.CARTESIAN_LAYOUT);
  * aspects.addAspect(Aspect.EDGES);
- *
+ * 
  * CxReader r = cx_importer.getCxReader(aspects, in);
- *
+ * 
  * while (r.hasNext()) {
  *     List&lt;AspectElement&gt; elements = r.getNext();
  *     if (!elements.isEmpty()) {
@@ -67,7 +67,7 @@ import org.cxio.core.interfaces.AspectFragmentReader;
  * aspects.addAspect(Aspect.NODES);
  * aspects.addAspect(Aspect.CARTESIAN_LAYOUT);
  * aspects.addAspect(Aspect.EDGES);
- *
+ * 
  * SortedMap&lt;String, List&lt;AspectElement&gt;&gt; res = cx_importer.readAsMap(aspects, in);
  * </pre>
  *
@@ -127,9 +127,9 @@ public final class CxImporter {
      * CxImporter cx_importer = CxImporter.createInstance();
      * AspectSet aspects = new AspectSet();
      * aspects.addAspect(Aspect.NODES);
-     *
+     * 
      * CxReader r = cx_importer.getCxReader(aspects, in);
-     *
+     * 
      * while (r.hasNext()) {
      *     List&lt;AspectElement&gt; elements = r.getNext();
      *     if (!elements.isEmpty()) {

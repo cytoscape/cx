@@ -184,6 +184,7 @@ public final class CxToCy {
             addNetworkAttributeData(network_attributes_map.get(subnetwork_id), sub_network, network_attribute_table);
 
             final CyTable hidden_attribute_table = sub_network.getTable(CyNetwork.class, CyNetwork.HIDDEN_ATTRS);
+            // TODO
             // addHiddenAttributeData(hidden_attributes_map.get(subnetwork_id),
             // sub_network, hidden_attribute_table);
 
@@ -540,9 +541,10 @@ public final class CxToCy {
                                 final String subnetwork_id) throws IOException {
 
         final CyTable node_table = network.getTable(CyNode.class, CyNetwork.LOCAL_ATTRS);
-        for (final AspectElement node : nodes) {
-
-            final String node_id = ((NodesElement) node).getId();
+        final CyTable node_table_default = network.getTable(CyNode.class, CyNetwork.DEFAULT_ATTRS);
+        for (final AspectElement e : nodes) {
+            final NodesElement node_element = (NodesElement) e;
+            final String node_id = node_element.getId();
             if ((nodes_in_subnet != null) && !nodes_in_subnet.contains(node_id)) {
                 continue;
             }
@@ -550,6 +552,20 @@ public final class CxToCy {
             if (cy_node == null) {
                 cy_node = network.addNode();
                 network.getRow(cy_node).set(CyNetwork.NAME, node_id);
+                if (node_element.getNodeRepresents() != null) {
+                    if (node_table_default.getColumn(org.cytoscape.io.internal.cxio.Util.REPRESENTS) == null) {
+                        node_table_default.createColumn(org.cytoscape.io.internal.cxio.Util.REPRESENTS,
+                                                        String.class,
+                                                        false);
+                    }
+                    network.getRow(cy_node).set(org.cytoscape.io.internal.cxio.Util.REPRESENTS,
+                                                node_element.getNodeRepresents());
+                }
+                if (node_element.getNodeName() != null) {
+                    network.getRow(cy_node).set(org.cytoscape.io.internal.cxio.Util.SHARED_NAME,
+                                                node_element.getNodeName());
+                }
+
                 _cxid_to_cynode_map.put(node_id, cy_node);
             }
             else {
@@ -567,8 +583,9 @@ public final class CxToCy {
                                 final Map<String, List<EdgeAttributesElement>> edge_attributes_map,
                                 final String subnetwork_id) {
 
-        final CyTable edgeTable = network.getTable(CyEdge.class, CyNetwork.LOCAL_ATTRS);
-
+        final CyTable edge_table = network.getTable(CyEdge.class, CyNetwork.LOCAL_ATTRS);
+        // final CyTable edge_table_default = network.getTable(CyEdge.class,
+        // CyNetwork.DEFAULT_ATTRS);
         for (final AspectElement e : edges) {
 
             final EdgesElement edge_element = (EdgesElement) e;
@@ -581,14 +598,25 @@ public final class CxToCy {
                 final CyNode source = _cxid_to_cynode_map.get(edge_element.getSource());
                 final CyNode target = _cxid_to_cynode_map.get(edge_element.getTarget());
                 cy_edge = network.addEdge(source, target, true);
-                _cxid_to_cyedge_map.put(edge_id, cy_edge);
+                if (edge_element.getInteraction() != null) {
+                    // if
+                    // (edge_table_default.getColumn(org.cytoscape.io.internal.cxio.Util.SHARED_INTERACTION)
+                    // == null) {
+                    // edge_table_default.createColumn(org.cytoscape.io.internal.cxio.Util.SHARED_INTERACTION,
+                    // String.class,
+                    // false);
+                    // }
+                    network.getRow(cy_edge).set(org.cytoscape.io.internal.cxio.Util.SHARED_INTERACTION,
+                                                edge_element.getInteraction());
 
+                }
+                _cxid_to_cyedge_map.put(edge_id, cy_edge);
             }
             else {
                 ((CySubNetwork) network).addEdge(cy_edge);
             }
             if ((edge_attributes_map != null) && !edge_attributes_map.isEmpty()) {
-                addEdgeTableData(edge_attributes_map.get(edge_id), cy_edge, network, edgeTable, edge_id, subnetwork_id);
+                addEdgeTableData(edge_attributes_map.get(edge_id), cy_edge, network, edge_table, edge_id, subnetwork_id);
             }
         }
     }

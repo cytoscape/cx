@@ -10,4 +10,9 @@ public final class Util {
         return ("_:" + id);
     }
 
+    public final static String SELECTED           = "selected";
+    public final static String REPRESENTS         = "represents";
+    public final static String SHARED_NAME        = "shared name";
+    public static final String SHARED_INTERACTION = "shared interaction";
+
 }
