@@ -46,7 +46,7 @@ import org.cytoscape.work.util.ListSingleSelection;
 public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
     private static final Pattern         DIRECT_NET_PROPS_PATTERN = Pattern
-            .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
+                                                                          .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
 
     private static final boolean         DEBUG                    = true;
 
@@ -58,6 +58,8 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     private final RenderingEngineManager _rendering_engine_manager;
     private final CyNetworkViewFactory   _networkview_factory;
 
+    private final boolean                _perform_basic_integrity_checks;
+
     public CytoscapeCxNetworkReader(final String network_collection_name,
                                     final InputStream input_stream,
                                     final CyApplicationManager application_manager,
@@ -66,9 +68,9 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                                     final CyRootNetworkManager root_network_manager,
                                     final VisualMappingManager visual_mapping_manager,
                                     final RenderingEngineManager rendering_engine_manager,
-                                    final CyNetworkViewFactory networkview_factory) throws IOException {
-        // super(input_stream, cyApplicationManager, cyNetworkFactory,
-        // cyNetworkManager, cyRootNetworkManager);
+                                    final CyNetworkViewFactory networkview_factory,
+                                    final boolean perform_basic_integrity_checks) throws IOException {
+
         super(input_stream, networkview_factory, network_factory, network_manager, root_network_manager);
 
         if (input_stream == null) {
@@ -80,6 +82,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         _rendering_engine_manager = rendering_engine_manager;
         _networkview_factory = networkview_factory;
         _networks = new ArrayList<CyNetwork>();
+        _perform_basic_integrity_checks = perform_basic_integrity_checks;
     }
 
     @Override
@@ -242,14 +245,18 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
             // Root network exists
             // subNetwork = root_network.addSubNetwork();
             // _network = _cx_to_cy.createNetwork(res, subNetwork, null);
-            _networks.addAll(_cx_to_cy.createNetwork(res, root_network, null, null));
+            _networks.addAll(_cx_to_cy.createNetwork(res, root_network, null, null, _perform_basic_integrity_checks));
         }
         else {
             // Need to create new network with new root.
             // subNetwork = (CySubNetwork) cyNetworkFactory.createNetwork();
             // _network = _cx_to_cy.createNetwork(res, subNetwork,
             // _network_collection_name);
-            _networks.addAll(_cx_to_cy.createNetwork(res, null, cyNetworkFactory, _network_collection_name));
+            _networks.addAll(_cx_to_cy.createNetwork(res,
+                                                     null,
+                                                     cyNetworkFactory,
+                                                     _network_collection_name,
+                                                     _perform_basic_integrity_checks));
         }
 
         if (TimingUtil.TIMING) {

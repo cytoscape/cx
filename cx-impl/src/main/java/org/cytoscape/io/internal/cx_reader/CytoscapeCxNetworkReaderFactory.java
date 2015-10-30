@@ -16,6 +16,7 @@ import org.cytoscape.work.TaskIterator;
 
 public class CytoscapeCxNetworkReaderFactory extends AbstractInputStreamTaskFactory {
 
+    private static final boolean         PERFORM_BASIC_INTEGRITY_CHECKS = true;
     private final CyApplicationManager   _application_manager;
     protected final CyNetworkFactory     _network_factory;
     private final CyNetworkManager       _network_manager;
@@ -53,7 +54,8 @@ public class CytoscapeCxNetworkReaderFactory extends AbstractInputStreamTaskFact
                                                                  _root_network_manager,
                                                                  _visual_mapping_manager,
                                                                  _rendering_engine_manager,
-                                                                 _networkview_factory));
+                                                                 _networkview_factory,
+                                                                 PERFORM_BASIC_INTEGRITY_CHECKS));
         }
         catch (final IOException e) {
 

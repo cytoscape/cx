@@ -54,7 +54,8 @@ public final class CxToCy {
     public final List<CyNetwork> createNetwork(final SortedMap<String, List<AspectElement>> aspect_collection,
                                                CyRootNetwork root_network,
                                                final CyNetworkFactory network_factory,
-                                               final String collectionName) throws IOException {
+                                               final String collection_name,
+                                               final boolean perform_basic_integrity_checks) throws IOException {
 
         final List<AspectElement> nodes = aspect_collection.get(NodesElement.ASPECT_NAME);
         final List<AspectElement> edges = aspect_collection.get(EdgesElement.ASPECT_NAME);
@@ -74,6 +75,18 @@ public final class CxToCy {
 
         if ((nodes == null) || nodes.isEmpty()) {
             throw new IOException("no nodes in input");
+        }
+
+        final Set<String> node_ids = new HashSet<String>();
+
+        if (perform_basic_integrity_checks) {
+            checkNodeIds(nodes, node_ids);
+        }
+
+        final Set<String> edge_ids = new HashSet<String>();
+
+        if (perform_basic_integrity_checks) {
+            checkEdgeIds(edges, edge_ids);
         }
 
         _network_suid_to_networkrelations_map = new HashMap<Long, String>();
@@ -121,9 +134,9 @@ public final class CxToCy {
             subnetwork_ids = new ArrayList<String>();
         }
 
-        processNodeAttributes(node_attributes, node_attributes_map);
+        processNodeAttributes(node_attributes, node_attributes_map, perform_basic_integrity_checks, node_ids);
 
-        processEdgeAttributes(edge_attributes, edge_attributes_map);
+        processEdgeAttributes(edge_attributes, edge_attributes_map, perform_basic_integrity_checks, edge_ids);
 
         processNetworkAttributes(network_attributes, network_attributes_map);
 
@@ -145,8 +158,8 @@ public final class CxToCy {
             else {
                 sub_network = (CySubNetwork) network_factory.createNetwork();
                 root_network = sub_network.getRootNetwork();
-                if (!CxioUtil.isEmpty(collectionName)) {
-                    root_network.getRow(root_network).set(CyNetwork.NAME, collectionName);
+                if (!CxioUtil.isEmpty(collection_name)) {
+                    root_network.getRow(root_network).set(CyNetwork.NAME, collection_name);
                 }
             }
 
@@ -178,7 +191,13 @@ public final class CxToCy {
 
             addNodes(sub_network, nodes, nodes_in_subnet, node_attributes_map, subnetwork_id);
 
-            addEdges(sub_network, edges, edges_in_subnet, edge_attributes_map, subnetwork_id);
+            addEdges(sub_network,
+                     edges,
+                     edges_in_subnet,
+                     edge_attributes_map,
+                     subnetwork_id,
+                     node_ids,
+                     perform_basic_integrity_checks);
 
             final CyTable network_attribute_table = sub_network.getTable(CyNetwork.class, CyNetwork.LOCAL_ATTRS);
             addNetworkAttributeData(network_attributes_map.get(subnetwork_id), sub_network, network_attribute_table);
@@ -197,7 +216,6 @@ public final class CxToCy {
                     final String view = vpe.getView();
 
                     if (vpe.getPropertiesOf().equals(VisualPropertyType.NETWORK.asString())) {
-
                         _visual_element_collections.addNetworkVisualPropertiesElement(view, vpe);
                     }
                     else if (vpe.getPropertiesOf().equals(VisualPropertyType.NODES_DEFAULT.asString())) {
@@ -241,13 +259,51 @@ public final class CxToCy {
         return new_networks;
     }
 
-    private void processNodeAttributes(final List<AspectElement> node_attributes,
-                                       final Map<String, List<NodeAttributesElement>> node_attributes_map) {
+    private final static void checkEdgeIds(final List<AspectElement> edges, final Set<String> edge_ids)
+            throws IOException {
+        for (final AspectElement edge : edges) {
+            final String edge_id = ((EdgesElement) edge).getId();
+            if ((edge_id == null) || (edge_id.length() == 0)) {
+                throw new IOException("edge identifiers must not be null or empty");
+            }
+            if (edge_ids.contains(edge_id)) {
+                throw new IOException("edge identifier '" + edge_id + "' is not unique");
+            }
+            edge_ids.add(edge_id);
+        }
+    }
+
+    private final static void checkNodeIds(final List<AspectElement> nodes, final Set<String> node_ids)
+            throws IOException {
+        for (final AspectElement node : nodes) {
+            final String node_id = ((NodesElement) node).getId();
+            if ((node_id == null) || (node_id.length() == 0)) {
+                throw new IOException("node identifiers must not be null or empty");
+            }
+            if (node_ids.contains(node_id)) {
+                throw new IOException("node identifier '" + node_id + "' is not unique");
+            }
+            node_ids.add(node_id);
+        }
+    }
+
+    private final static void processNodeAttributes(final List<AspectElement> node_attributes,
+                                                    final Map<String, List<NodeAttributesElement>> node_attributes_map,
+                                                    final boolean perform_basic_integrity_checks,
+                                                    final Set<String> node_ids) throws IOException {
         if (node_attributes != null) {
-            for (final AspectElement node_attribute : node_attributes) {
-                final NodeAttributesElement nae = (NodeAttributesElement) node_attribute;
+            for (final AspectElement e : node_attributes) {
+                final NodeAttributesElement nae = (NodeAttributesElement) e;
                 final List<String> pos = nae.getPropertyOf();
                 for (final String po : pos) {
+                    if (perform_basic_integrity_checks) {
+                        if ((po == null) || (po.length() == 0)) {
+                            throw new IOException("node identifiers must not be null or empty in node attributes");
+                        }
+                        if (!node_ids.contains(po)) {
+                            throw new IOException("node with id '" + po + "' not present in nodes aspect");
+                        }
+                    }
                     if (!node_attributes_map.containsKey(po)) {
                         node_attributes_map.put(po, new ArrayList<NodeAttributesElement>());
                     }
@@ -257,14 +313,24 @@ public final class CxToCy {
         }
     }
 
-    private void processEdgeAttributes(final List<AspectElement> edge_attributes,
-                                       final Map<String, List<EdgeAttributesElement>> edge_attributes_map) {
+    private final static void processEdgeAttributes(final List<AspectElement> edge_attributes,
+                                                    final Map<String, List<EdgeAttributesElement>> edge_attributes_map,
+                                                    final boolean perform_basic_integrity_checks,
+                                                    final Set<String> edge_ids) throws IOException {
         if (edge_attributes != null) {
-            for (final AspectElement edge_attribute : edge_attributes) {
-                final EdgeAttributesElement eae = (EdgeAttributesElement) edge_attribute;
+            for (final AspectElement e : edge_attributes) {
+                final EdgeAttributesElement eae = (EdgeAttributesElement) e;
                 final List<String> pos = eae.getPropertyOf();
                 for (final String po : pos) {
                     if (!edge_attributes_map.containsKey(po)) {
+                        if (perform_basic_integrity_checks) {
+                            if ((po == null) || (po.length() == 0)) {
+                                throw new IOException("edge identifiers must not be null or empty in edge attributes");
+                            }
+                            if (!edge_ids.contains(po)) {
+                                throw new IOException("edge with id '" + po + "' not present in edges aspect");
+                            }
+                        }
                         edge_attributes_map.put(po, new ArrayList<EdgeAttributesElement>());
                     }
                     edge_attributes_map.get(po).add(eae);
@@ -538,13 +604,14 @@ public final class CxToCy {
                                 final List<AspectElement> nodes,
                                 final Set<String> nodes_in_subnet,
                                 final Map<String, List<NodeAttributesElement>> node_attributes_map,
-                                final String subnetwork_id) throws IOException {
+                                final String subnetwork_id) {
 
         final CyTable node_table = network.getTable(CyNode.class, CyNetwork.LOCAL_ATTRS);
         final CyTable node_table_default = network.getTable(CyNode.class, CyNetwork.DEFAULT_ATTRS);
         for (final AspectElement e : nodes) {
             final NodesElement node_element = (NodesElement) e;
             final String node_id = node_element.getId();
+
             if ((nodes_in_subnet != null) && !nodes_in_subnet.contains(node_id)) {
                 continue;
             }
@@ -581,7 +648,9 @@ public final class CxToCy {
                                 final List<AspectElement> edges,
                                 final Set<String> edges_in_subnet,
                                 final Map<String, List<EdgeAttributesElement>> edge_attributes_map,
-                                final String subnetwork_id) {
+                                final String subnetwork_id,
+                                final Set<String> node_ids,
+                                final boolean perform_basic_integrity_checks) throws IOException {
 
         final CyTable edge_table = network.getTable(CyEdge.class, CyNetwork.LOCAL_ATTRS);
         // final CyTable edge_table_default = network.getTable(CyEdge.class,
@@ -590,13 +659,36 @@ public final class CxToCy {
 
             final EdgesElement edge_element = (EdgesElement) e;
             final String edge_id = edge_element.getId();
+            if ((edge_id == null) || (edge_id.length() == 0)) {
+                throw new IOException("edge identifiers must not be null or empty");
+            }
+
             if ((edges_in_subnet != null) && !edges_in_subnet.contains(edge_id)) {
                 continue;
             }
             CyEdge cy_edge = _cxid_to_cyedge_map.get(edge_id);
             if (cy_edge == null) {
-                final CyNode source = _cxid_to_cynode_map.get(edge_element.getSource());
-                final CyNode target = _cxid_to_cynode_map.get(edge_element.getTarget());
+
+                final String source_id = edge_element.getSource();
+                final String target_id = edge_element.getTarget();
+
+                if (perform_basic_integrity_checks) {
+                    if ((source_id == null) || (source_id.length() == 0)) {
+                        throw new IOException("source node identifiers in edges must not be null or empty");
+                    }
+                    if ((target_id == null) || (target_id.length() == 0)) {
+                        throw new IOException("target node identifiers in edges must not be null or empty");
+                    }
+                    if (!node_ids.contains(source_id)) {
+                        throw new IOException("source node with id '" + source_id + "' not present in nodes aspect");
+                    }
+                    if (!node_ids.contains(target_id)) {
+                        throw new IOException("target node with id '" + target_id + "' not present in nodes aspect");
+                    }
+                }
+
+                final CyNode source = _cxid_to_cynode_map.get(source_id);
+                final CyNode target = _cxid_to_cynode_map.get(target_id);
                 cy_edge = network.addEdge(source, target, true);
                 if (edge_element.getInteraction() != null) {
                     // if
