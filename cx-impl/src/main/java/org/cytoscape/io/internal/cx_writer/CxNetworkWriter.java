@@ -116,6 +116,7 @@ public class CxNetworkWriter implements CyWriter {
         exporter.setVisualMappingManager(_visual_mapping_manager);
         exporter.setNetworkViewManager(_networkview_manager);
         exporter.setGroupManager(_group_manager);
+        exporter.setWritePreMetadata(true);
 
         final long t0 = System.currentTimeMillis();
 
