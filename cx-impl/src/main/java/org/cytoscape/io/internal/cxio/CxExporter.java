@@ -243,7 +243,6 @@ public final class CxExporter {
                             continue;
                         }
                         ++counter;
-
                     }
                 }
             }
