@@ -37,7 +37,9 @@ import org.cytoscape.model.subnetwork.CySubNetwork;
 
 public final class CxToCy {
 
-    private final static boolean       DEBUG = true;
+    private final static boolean       DEBUG          = true;
+
+    private static final String        DEFAULT_SUBNET = "__0__";
 
     private Set<CyNode>                _nodes_with_visual_properties;
     private Set<CyEdge>                _edges_with_visual_properties;
@@ -164,7 +166,7 @@ public final class CxToCy {
             }
 
             final String subnetwork_id = subnetwork_ids.size() > 0 ? subnetwork_ids.get(i) : String.valueOf(sub_network
-                                                                                                            .getSUID());
+                    .getSUID());
 
             if (DEBUG) {
                 System.out.println("subnetwork id: " + subnetwork_id);
@@ -200,7 +202,18 @@ public final class CxToCy {
                      perform_basic_integrity_checks);
 
             final CyTable network_attribute_table = sub_network.getTable(CyNetwork.class, CyNetwork.LOCAL_ATTRS);
-            addNetworkAttributeData(network_attributes_map.get(subnetwork_id), sub_network, network_attribute_table);
+
+            if (network_attributes_map.containsKey(subnetwork_id)) {
+                addNetworkAttributeData(network_attributes_map.get(subnetwork_id), sub_network, network_attribute_table);
+            }
+            else if (network_attributes_map.containsKey(DEFAULT_SUBNET)) {
+                if (DEBUG) {
+                    System.out.println("adding network attributes lacking sub-network information");
+                }
+                addNetworkAttributeData(network_attributes_map.get(DEFAULT_SUBNET),
+                                        sub_network,
+                                        network_attribute_table);
+            }
 
             final CyTable hidden_attribute_table = sub_network.getTable(CyNetwork.class, CyNetwork.HIDDEN_ATTRS);
             // TODO
@@ -229,7 +242,7 @@ public final class CxToCy {
                         for (final String applies_to_node : applies_to_nodes) {
                             _nodes_with_visual_properties.add(_cxid_to_cynode_map.get(applies_to_node));
                             _visual_element_collections.addNodeVisualPropertiesElement(view, _cxid_to_cynode_map
-                                                                                       .get(applies_to_node), vpe);
+                                    .get(applies_to_node), vpe);
                         }
                     }
                     else if (vpe.getPropertiesOf().equals(VisualPropertyType.EDGES.asString())) {
@@ -237,7 +250,7 @@ public final class CxToCy {
                         for (final String applies_to_edge : applies_to_edges) {
                             _edges_with_visual_properties.add(_cxid_to_cyedge_map.get(applies_to_edge));
                             _visual_element_collections.addEdgeVisualPropertiesElement(view, _cxid_to_cyedge_map
-                                                                                       .get(applies_to_edge), vpe);
+                                    .get(applies_to_edge), vpe);
                         }
                     }
                 }
@@ -341,10 +354,11 @@ public final class CxToCy {
 
     private void processNetworkAttributes(final List<AspectElement> network_attributes,
                                           final Map<String, List<NetworkAttributesElement>> network_attributes_map) {
+
         if (network_attributes != null) {
             for (final AspectElement e : network_attributes) {
                 final NetworkAttributesElement nae = (NetworkAttributesElement) e;
-                final String subnet = nae.getSubnetwork();
+                final String subnet = nae.getSubnetwork() != null ? nae.getSubnetwork() : DEFAULT_SUBNET;
                 if (!network_attributes_map.containsKey(subnet)) {
                     network_attributes_map.put(subnet, new ArrayList<NetworkAttributesElement>());
                 }
@@ -445,7 +459,7 @@ public final class CxToCy {
         }
         else {
             throw new IllegalArgumentException("don't know how to deal with type '" + type + "' for value '" + value
-                    + "'");
+                                               + "'");
         }
     }
 

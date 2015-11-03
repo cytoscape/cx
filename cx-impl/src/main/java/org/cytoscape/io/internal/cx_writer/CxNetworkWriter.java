@@ -17,6 +17,7 @@ import org.cytoscape.io.write.CyWriter;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.CyNetworkTableManager;
+import org.cytoscape.model.SUIDFactory;
 import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingManager;
@@ -65,26 +66,6 @@ public class CxNetworkWriter implements CyWriter {
         }
     }
 
-    public CxNetworkWriter(final OutputStream os, final CyNetwork network) {
-
-        _visual_mapping_manager = null;
-        _networkview_manager = null;
-        _lexicon = null;
-        _os = os;
-        _network = network;
-        _group_manager = null;
-
-        if (Charset.isSupported(ENCODING)) {
-            // UTF-8 is supported by system
-            _encoder = Charset.forName(ENCODING).newEncoder();
-        }
-        else {
-            // Use default.
-            logger.warn("UTF-8 is not supported by this system.  This can be a problem for non-English annotations.");
-            _encoder = Charset.defaultCharset().newEncoder();
-        }
-    }
-
     @Override
     public void run(final TaskMonitor taskMonitor) throws Exception {
         if (taskMonitor != null) {
@@ -117,6 +98,7 @@ public class CxNetworkWriter implements CyWriter {
         exporter.setNetworkViewManager(_networkview_manager);
         exporter.setGroupManager(_group_manager);
         exporter.setWritePreMetadata(true);
+        exporter.setNextSuid(SUIDFactory.getNextSUID());
 
         final long t0 = System.currentTimeMillis();
 
