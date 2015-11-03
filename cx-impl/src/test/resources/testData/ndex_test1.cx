@@ -1,0 +1,262 @@
+[ {
+  "metaData" : [ {
+    "consistencyGroup" : "1",
+    "elementCount" : "8",
+    "lastUpdate" : "1445640639135",
+    "name" : "nodes",
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : "1",
+    "elementCount" : "12",
+    "lastUpdate" : "1445640639135",
+    "name" : "edges",
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : "0",
+    "lastUpdate" : "1445640639135",
+    "name" : "ndexStatus",
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : "4",
+    "lastUpdate" : "1445640639135",
+    "name" : "provenanceHistory",
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : "2",
+    "lastUpdate" : "1445640639135",
+    "name" : "networkAttributes",
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : "1",
+    "lastUpdate" : "1445640639135",
+    "name" : "nodeAttributes",
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : "1",
+    "lastUpdate" : "1445640639135",
+    "name" : "edgeAttributes",
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : "1",
+    "lastUpdate" : "1445640639135",
+    "name" : "edgeCitations",
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : "1",
+    "lastUpdate" : "1445640639135",
+    "name" : "edgeSupports",
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : "1",
+    "lastUpdate" : "1445640639135",
+    "name" : "nodeCitations",
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : "1",
+    "lastUpdate" : "1445640639135",
+    "name" : "nodeSupports",
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : "3",
+    "lastUpdate" : "1445640639135",
+    "name" : "@context",
+    "version" : "1.0"
+  } ]
+}, {
+  "ndexStatus" : [ {
+    "externalId" : "6c4b9059-745d-11e5-b6f7-0251251672f9",
+    "creationTime" : 1445038030234,
+    "modificationTime" : 1445640639135,
+    "visibility" : "PUBLIC",
+    "published" : false,
+    "nodeCount" : 8,
+    "edgeCount" : 12,
+    "owner" : "ndex",
+    "ndexServerURI" : "http://dev2.ndexbio.org",
+    "readOnly" : false
+  } ]
+}, {
+  "provenanceHistory" : [ {
+    "entity" : {
+      "uri" : "http://dev2.ndexbio.org/network/6c4b9059-745d-11e5-b6f7-0251251672f9",
+      "creationEvent" : {
+        "inputs" : null,
+        "startedAtTime" : 1445038030234,
+        "endedAtTime" : 1445038030234,
+        "eventType" : "File Upload",
+        "properties" : [ {
+          "name" : "user",
+          "value" : "ndex test"
+        }, {
+          "name" : "account name",
+          "value" : "ndex"
+        }, {
+          "name" : "filename",
+          "value" : "pairwise-yd_150.sif"
+        } ]
+      },
+      "properties" : [ {
+        "name" : "edge count",
+        "value" : "12"
+      }, {
+        "name" : "node count",
+        "value" : "8"
+      }, {
+        "name" : "dc:title",
+        "value" : "pairwise-yd_150"
+      } ]
+    }
+  } ]
+}, {
+  "networkAttributes" : [ {
+    "n" : "name",
+    "v" : "pairwise-yd_150"
+  } ]
+}, {
+  "networkAttributes" : [ {
+    "n" : "description",
+    "v" : ""
+  } ]
+}, {
+  "networkAttributes" : [ {
+    "n" : "ndex:sourceFormat",
+    "v" : "SIF"
+  } ]
+}, {
+  "nodes" : [ {
+    "@id" : "293300",
+    "n" : "YMR201C|CG6358"
+  } ]
+}, {
+  "nodes" : [ {
+    "@id" : "293301",
+    "n" : "YML095C|CG10215"
+  } ]
+}, {
+  "nodes" : [ {
+    "@id" : "293304",
+    "n" : "YPR054W|CG5363"
+  } ]
+}, {
+  "nodes" : [ {
+    "@id" : "293307",
+    "n" : "YHR030C|CG5363"
+  } ]
+}, {
+  "nodes" : [ {
+    "@id" : "293310",
+    "n" : "YPL022W|CG3697"
+  } ]
+}, {
+  "nodes" : [ {
+    "@id" : "293313",
+    "n" : "YLL039C|CG5271"
+  } ]
+}, {
+  "nodes" : [ {
+    "@id" : "293317",
+    "n" : "YAR003W|CG31033"
+  } ]
+}, {
+  "nodes" : [ {
+    "@id" : "293322",
+    "n" : "YEL037C|CG1836"
+  } ]
+}, {
+  "edges" : [ {
+    "@id" : "293303",
+    "s" : "293300",
+    "t" : "293301",
+    "i" : "11"
+  } ]
+}, {
+  "edges" : [ {
+    "@id" : "293306",
+    "s" : "293304",
+    "t" : "293301",
+    "i" : "21"
+  } ]
+}, {
+  "edges" : [ {
+    "@id" : "293309",
+    "s" : "293304",
+    "t" : "293307",
+    "i" : "10"
+  } ]
+}, {
+  "edges" : [ {
+    "@id" : "293312",
+    "s" : "293310",
+    "t" : "293300",
+    "i" : "12"
+  } ]
+}, {
+  "edges" : [ {
+    "@id" : "293315",
+    "s" : "293310",
+    "t" : "293313",
+    "i" : "13"
+  } ]
+}, {
+  "edges" : [ {
+    "@id" : "293316",
+    "s" : "293310",
+    "t" : "293301",
+    "i" : "11"
+  } ]
+}, {
+  "edges" : [ {
+    "@id" : "293318",
+    "s" : "293317",
+    "t" : "293313",
+    "i" : "13"
+  } ]
+}, {
+  "edges" : [ {
+    "@id" : "293319",
+    "s" : "293317",
+    "t" : "293304",
+    "i" : "21"
+  } ]
+}, {
+  "edges" : [ {
+    "@id" : "293321",
+    "s" : "293317",
+    "t" : "293307",
+    "i" : "31"
+  } ]
+}, {
+  "edges" : [ {
+    "@id" : "293323",
+    "s" : "293322",
+    "t" : "293300",
+    "i" : "13"
+  } ]
+}, {
+  "edges" : [ {
+    "@id" : "293324",
+    "s" : "293322",
+    "t" : "293313",
+    "i" : "13"
+  } ]
+}, {
+  "edges" : [ {
+    "@id" : "293325",
+    "s" : "293307",
+    "t" : "293301",
+    "i" : "21"
+  } ]
+}, {
+  "metaData" : [ {
+    "idCounter" : "293322",
+    "name" : "nodes"
+  }, {
+    "idCounter" : "293325",
+    "name" : "edges"
+  } ]
+}, {
+  "status" : [ {
+    "error" : "",
+    "success" : "true"
+  } ]
+} ]

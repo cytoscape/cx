@@ -774,14 +774,14 @@ public final class CxExporter {
             final View<CyNode> node_view = view.getNodeView(cy_node);
             if (z_used) {
                 elements.add(new CartesianLayoutElement(Util.makeId(cy_node.getSUID()), String.valueOf(network
-                        .getSUID()), node_view.getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
-                        .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION), node_view
-                        .getVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION)));
+                                                                                                       .getSUID()), node_view.getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
+                                                                                                       .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION), node_view
+                                                                                                       .getVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION)));
             }
             else {
                 elements.add(new CartesianLayoutElement(Util.makeId(cy_node.getSUID()), String.valueOf(network
-                        .getSUID()), node_view.getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
-                        .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION)));
+                                                                                                       .getSUID()), node_view.getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
+                                                                                                       .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION)));
             }
 
         }
@@ -929,7 +929,7 @@ public final class CxExporter {
                                         _next_suid,
                                         counter,
                                         "",
-                    "");
+                                        "");
         }
         if (aspects.contains(Aspect.EDGES)) {
 
@@ -939,7 +939,7 @@ public final class CxExporter {
                                         _next_suid,
                                         (long) my_root.getEdgeList().size(),
                                         "",
-                    "");
+                                        "");
         }
         if (aspects.contains(Aspect.NETWORK_ATTRIBUTES)) {
             long counter = 0;
@@ -951,7 +951,7 @@ public final class CxExporter {
                                         consistency_group,
                                         counter,
                                         "",
-                    "");
+                                        "");
         }
         if (aspects.contains(Aspect.HIDDEN_ATTRIBUTES)) {
             long counter = 0;
@@ -963,7 +963,7 @@ public final class CxExporter {
                                         consistency_group,
                                         counter,
                                         "",
-                    "");
+                                        "");
         }
         if (aspects.contains(Aspect.NODE_ATTRIBUTES)) {
             long counter = 0;
@@ -975,7 +975,7 @@ public final class CxExporter {
                                         consistency_group,
                                         counter,
                                         "",
-                    "");
+                                        "");
         }
         if (aspects.contains(Aspect.EDGE_ATTRIBUTES)) {
             long counter = 0;
@@ -987,7 +987,7 @@ public final class CxExporter {
                                         consistency_group,
                                         counter,
                                         "",
-                    "");
+                                        "");
         }
 
         if (aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
@@ -996,7 +996,7 @@ public final class CxExporter {
                                         consistency_group,
                                         (long) my_root.getNodeList().size(),
                                         "",
-                    "");
+                                        "");
         }
 
         if (aspects.contains(Aspect.VISUAL_PROPERTIES)) {
@@ -1014,7 +1014,7 @@ public final class CxExporter {
 
                     counter += VisualPropertiesGatherer.gatherVisualPropertiesAsAspectElements(view,
 
-                    view.getModel(), _visual_mapping_manager, _lexicon, types).size();
+                                                                                               view.getModel(), _visual_mapping_manager, _lexicon, types).size();
                 }
             }
             addDataToMetaDataCollection(pre_meta_data,
@@ -1022,11 +1022,11 @@ public final class CxExporter {
                                         consistency_group,
                                         counter,
                                         "",
-                                        "");
+                    "");
         }
         if (aspects.contains(Aspect.SUBNETWORKS)) {
             addDataToMetaDataCollection(pre_meta_data, SubNetworkElement.ASPECT_NAME, consistency_group, (long) my_root
-                    .getSubNetworkList().size(), "", "");
+                                        .getSubNetworkList().size(), "", "");
         }
         if (aspects.contains(Aspect.GROUPS)) {
             long counter = 0;
@@ -1041,7 +1041,7 @@ public final class CxExporter {
                                         consistency_group,
                                         (long) 1,
                                         "",
-                    "");
+                                        "");
         }
 
         w.addPreMetaData(pre_meta_data);

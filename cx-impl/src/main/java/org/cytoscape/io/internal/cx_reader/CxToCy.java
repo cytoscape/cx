@@ -136,11 +136,21 @@ public final class CxToCy {
             subnetwork_ids = new ArrayList<String>();
         }
 
-        processNodeAttributes(node_attributes, node_attributes_map, perform_basic_integrity_checks, node_ids);
+        final boolean subnet_info_present = _network_relations != null;
 
-        processEdgeAttributes(edge_attributes, edge_attributes_map, perform_basic_integrity_checks, edge_ids);
+        processNodeAttributes(node_attributes,
+                              node_attributes_map,
+                              perform_basic_integrity_checks,
+                              node_ids,
+                              subnet_info_present);
 
-        processNetworkAttributes(network_attributes, network_attributes_map);
+        processEdgeAttributes(edge_attributes,
+                              edge_attributes_map,
+                              perform_basic_integrity_checks,
+                              edge_ids,
+                              subnet_info_present);
+
+        processNetworkAttributes(network_attributes, network_attributes_map, subnet_info_present);
 
         processHiddenAttributes(hidden_attributes, hidden_attributes_map);
 
@@ -191,7 +201,7 @@ public final class CxToCy {
 
             }
 
-            addNodes(sub_network, nodes, nodes_in_subnet, node_attributes_map, subnetwork_id);
+            addNodes(sub_network, nodes, nodes_in_subnet, node_attributes_map, subnetwork_id, subnet_info_present);
 
             addEdges(sub_network,
                      edges,
@@ -199,7 +209,8 @@ public final class CxToCy {
                      edge_attributes_map,
                      subnetwork_id,
                      node_ids,
-                     perform_basic_integrity_checks);
+                     perform_basic_integrity_checks,
+                     subnet_info_present);
 
             final CyTable network_attribute_table = sub_network.getTable(CyNetwork.class, CyNetwork.LOCAL_ATTRS);
 
@@ -300,13 +311,43 @@ public final class CxToCy {
         }
     }
 
+    private void processNetworkAttributes(final List<AspectElement> network_attributes,
+                                          final Map<String, List<NetworkAttributesElement>> network_attributes_map,
+                                          final boolean subnet_info_present) throws IOException {
+
+        if (network_attributes != null) {
+            for (final AspectElement e : network_attributes) {
+                final NetworkAttributesElement nae = (NetworkAttributesElement) e;
+                if (subnet_info_present && (nae.getSubnetwork() == null)) {
+                    throw new IOException("sub-network information is present, but network attribute lacking sub-network data found");
+                }
+                else if (!subnet_info_present && (nae.getSubnetwork() != null)) {
+                    throw new IOException("no sub-network information is present, but node attribute with sub-network data found");
+                }
+                final String subnet = nae.getSubnetwork() != null ? nae.getSubnetwork() : DEFAULT_SUBNET;
+                if (!network_attributes_map.containsKey(subnet)) {
+                    network_attributes_map.put(subnet, new ArrayList<NetworkAttributesElement>());
+                }
+                network_attributes_map.get(subnet).add(nae);
+
+            }
+        }
+    }
+
     private final static void processNodeAttributes(final List<AspectElement> node_attributes,
                                                     final Map<String, List<NodeAttributesElement>> node_attributes_map,
                                                     final boolean perform_basic_integrity_checks,
-                                                    final Set<String> node_ids) throws IOException {
+                                                    final Set<String> node_ids,
+                                                    final boolean subnet_info_present) throws IOException {
         if (node_attributes != null) {
             for (final AspectElement e : node_attributes) {
                 final NodeAttributesElement nae = (NodeAttributesElement) e;
+                if (subnet_info_present && (nae.getSubnetwork() == null)) {
+                    throw new IOException("sub-network information is present, but node attribute lacking sub-network data found");
+                }
+                else if (!subnet_info_present && (nae.getSubnetwork() != null)) {
+                    throw new IOException("no sub-network information is present, but node attribute with sub-network data found");
+                }
                 final List<String> pos = nae.getPropertyOf();
                 for (final String po : pos) {
                     if (perform_basic_integrity_checks) {
@@ -329,10 +370,17 @@ public final class CxToCy {
     private final static void processEdgeAttributes(final List<AspectElement> edge_attributes,
                                                     final Map<String, List<EdgeAttributesElement>> edge_attributes_map,
                                                     final boolean perform_basic_integrity_checks,
-                                                    final Set<String> edge_ids) throws IOException {
+                                                    final Set<String> edge_ids,
+                                                    final boolean subnet_info_present) throws IOException {
         if (edge_attributes != null) {
             for (final AspectElement e : edge_attributes) {
                 final EdgeAttributesElement eae = (EdgeAttributesElement) e;
+                if (subnet_info_present && (eae.getSubnetwork() == null)) {
+                    throw new IOException("sub-network information is present, but edge attribute lacking sub-network data found");
+                }
+                else if (!subnet_info_present && (eae.getSubnetwork() != null)) {
+                    throw new IOException("no sub-network information is present, but edge attribute with sub-network data found");
+                }
                 final List<String> pos = eae.getPropertyOf();
                 for (final String po : pos) {
                     if (!edge_attributes_map.containsKey(po)) {
@@ -348,22 +396,6 @@ public final class CxToCy {
                     }
                     edge_attributes_map.get(po).add(eae);
                 }
-            }
-        }
-    }
-
-    private void processNetworkAttributes(final List<AspectElement> network_attributes,
-                                          final Map<String, List<NetworkAttributesElement>> network_attributes_map) {
-
-        if (network_attributes != null) {
-            for (final AspectElement e : network_attributes) {
-                final NetworkAttributesElement nae = (NetworkAttributesElement) e;
-                final String subnet = nae.getSubnetwork() != null ? nae.getSubnetwork() : DEFAULT_SUBNET;
-                if (!network_attributes_map.containsKey(subnet)) {
-                    network_attributes_map.put(subnet, new ArrayList<NetworkAttributesElement>());
-                }
-                network_attributes_map.get(subnet).add(nae);
-
             }
         }
     }
@@ -481,7 +513,8 @@ public final class CxToCy {
                                         final CySubNetwork network,
                                         final CyTable table,
                                         final String cx_node_id,
-                                        final String subnetwork_id) {
+                                        final String subnetwork_id,
+                                        final boolean subnet_info_present) throws IOException {
         if (elements == null) {
             if (DEBUG) {
                 System.out.println("info: no node attributes for cx node " + cx_node_id);
@@ -492,7 +525,13 @@ public final class CxToCy {
         if (row != null) {
             for (final NodeAttributesElement e : elements) {
                 if (e != null) {
-                    if (subnetwork_id.equals(e.getSubnetwork())) {
+                    if (subnet_info_present && (e.getSubnetwork() == null)) {
+                        throw new IOException("sub-network information is present, but node attribute lacking sub-network data found");
+                    }
+                    else if (!subnet_info_present && (e.getSubnetwork() != null)) {
+                        throw new IOException("no sub-network information is present, but node attribute with sub-network data found");
+                    }
+                    if (!subnet_info_present || subnetwork_id.equals(e.getSubnetwork())) {
                         final String name = e.getName();
                         if (name != null) {
                             if (!(name.equals(CyIdentifiable.SUID))) {
@@ -522,7 +561,8 @@ public final class CxToCy {
                                         final CyNetwork network,
                                         final CyTable table,
                                         final String cx_edge_id,
-                                        final String subnetwork_id) {
+                                        final String subnetwork_id,
+                                        final boolean subnet_info_present) throws IOException {
         if (elements == null) {
             if (DEBUG) {
                 System.out.println("info: no edge attributes for cx edge " + cx_edge_id);
@@ -533,7 +573,13 @@ public final class CxToCy {
         if (row != null) {
             for (final EdgeAttributesElement e : elements) {
                 if (e != null) {
-                    if (subnetwork_id.equals(e.getSubnetwork())) {
+                    if (subnet_info_present && (e.getSubnetwork() == null)) {
+                        throw new IOException("sub-network information is present, but edge attribute lacking sub-network data found");
+                    }
+                    else if (!subnet_info_present && (e.getSubnetwork() != null)) {
+                        throw new IOException("no sub-network information is present, but edge attribute with sub-network data found");
+                    }
+                    if (!subnet_info_present || subnetwork_id.equals(e.getSubnetwork())) {
                         final String name = e.getName();
                         if (name != null) {
                             if (!(name.equals(CyIdentifiable.SUID))) {
@@ -618,7 +664,8 @@ public final class CxToCy {
                                 final List<AspectElement> nodes,
                                 final Set<String> nodes_in_subnet,
                                 final Map<String, List<NodeAttributesElement>> node_attributes_map,
-                                final String subnetwork_id) {
+                                final String subnetwork_id,
+                                final boolean subnet_info_present) throws IOException {
 
         final CyTable node_table = network.getTable(CyNode.class, CyNetwork.LOCAL_ATTRS);
         final CyTable node_table_default = network.getTable(CyNode.class, CyNetwork.DEFAULT_ATTRS);
@@ -653,7 +700,13 @@ public final class CxToCy {
                 network.addNode(cy_node);
             }
             if ((node_attributes_map != null) && !node_attributes_map.isEmpty()) {
-                addNodeTableData(node_attributes_map.get(node_id), cy_node, network, node_table, node_id, subnetwork_id);
+                addNodeTableData(node_attributes_map.get(node_id),
+                                 cy_node,
+                                 network,
+                                 node_table,
+                                 node_id,
+                                 subnetwork_id,
+                                 subnet_info_present);
             }
         }
     }
@@ -664,7 +717,8 @@ public final class CxToCy {
                                 final Map<String, List<EdgeAttributesElement>> edge_attributes_map,
                                 final String subnetwork_id,
                                 final Set<String> node_ids,
-                                final boolean perform_basic_integrity_checks) throws IOException {
+                                final boolean perform_basic_integrity_checks,
+                                final boolean subnet_info_present) throws IOException {
 
         final CyTable edge_table = network.getTable(CyEdge.class, CyNetwork.LOCAL_ATTRS);
         // final CyTable edge_table_default = network.getTable(CyEdge.class,
@@ -722,7 +776,13 @@ public final class CxToCy {
                 ((CySubNetwork) network).addEdge(cy_edge);
             }
             if ((edge_attributes_map != null) && !edge_attributes_map.isEmpty()) {
-                addEdgeTableData(edge_attributes_map.get(edge_id), cy_edge, network, edge_table, edge_id, subnetwork_id);
+                addEdgeTableData(edge_attributes_map.get(edge_id),
+                                 cy_edge,
+                                 network,
+                                 edge_table,
+                                 edge_id,
+                                 subnetwork_id,
+                                 subnet_info_present);
             }
         }
     }
