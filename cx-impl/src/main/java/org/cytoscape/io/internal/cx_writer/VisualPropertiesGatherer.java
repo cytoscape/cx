@@ -8,6 +8,7 @@ import java.util.Set;
 import org.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.cxio.core.interfaces.AspectElement;
 import org.cxio.util.CxioUtil;
+import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.VisualPropertyType;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
@@ -180,7 +181,7 @@ public final class VisualPropertiesGatherer {
                 sb.append(col);
                 sb.append(",T=");
                 sb.append(type);
-                cvp.putProperty("PASSTHROUGH_MAPPING_" + vp.getIdString(), sb.toString());
+                cvp.putProperty(CxUtil.PASSTHROUGH_MAPPING + vp.getIdString(), sb.toString());
             }
             else if (mapping instanceof DiscreteMapping<?, ?>) {
                 final DiscreteMapping<?, ?> dm = (DiscreteMapping<?, ?>) mapping;
@@ -216,7 +217,7 @@ public final class VisualPropertiesGatherer {
                     }
                     ++counter;
                 }
-                cvp.putProperty("DISCRETE_MAPPING_" + vp.getIdString(), sb.toString());
+                cvp.putProperty(CxUtil.DISCRETE_MAPPING + vp.getIdString(), sb.toString());
             }
             else if (mapping instanceof ContinuousMapping<?, ?>) {
                 final ContinuousMapping<?, ?> cm = (ContinuousMapping<?, ?>) mapping;
@@ -253,7 +254,7 @@ public final class VisualPropertiesGatherer {
                     
                     ++counter;
                 }
-                cvp.putProperty("CONTINUOUS_MAPPING_" + vp.getIdString(), sb.toString());
+                cvp.putProperty(CxUtil.CONTINUOUS_MAPPING + vp.getIdString(), sb.toString());
             }
         }
     }
@@ -285,7 +286,7 @@ public final class VisualPropertiesGatherer {
             final View<CyEdge> edge_view = view.getEdgeView(edge);
             final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.EDGES.asString(),
                                                                               String.valueOf(network.getSUID()));
-            e.addAppliesTo(org.cytoscape.io.internal.cxio.Util.makeId(edge.getSUID()));
+            e.addAppliesTo(org.cytoscape.io.internal.cxio.CxUtil.makeId(edge.getSUID()));
             for (final VisualProperty visual_property : all_visual_properties) {
                 if (visual_property.getTargetDataType() == CyEdge.class) {
                     addProperties(edge_view, visual_property, e);
@@ -346,7 +347,7 @@ public final class VisualPropertiesGatherer {
             final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.NODES.asString(),
                                                                               String.valueOf(network.getSUID()));
 
-            e.addAppliesTo(org.cytoscape.io.internal.cxio.Util.makeId(cy_node.getSUID()));
+            e.addAppliesTo(org.cytoscape.io.internal.cxio.CxUtil.makeId(cy_node.getSUID()));
 
             for (final VisualProperty visual_property : all_visual_properties) {
                 if (visual_property.getTargetDataType() == CyNode.class) {
@@ -362,20 +363,24 @@ public final class VisualPropertiesGatherer {
     }
 
     private final static String toAttributeType(final Class<?> attr_class) {
-        String type = "string";
-        if (attr_class == Boolean.class) {
-            type = "boolean";
+        if (attr_class == String.class) {
+            return "string";
         }
-        else if ((attr_class == Byte.class) || (attr_class == Short.class) || (attr_class == Integer.class)) {
-            type = "integer";
+        if (attr_class == Boolean.class) {
+            return "boolean";
+        }
+        else if (attr_class == Float.class || attr_class == Double.class) {
+            return "double";
+        }
+        else if ( attr_class == Integer.class) {
+            return "integer";
         }
         else if (attr_class == Long.class) {
-            type = "long";
+            return "long";
         }
-        else if (Number.class.isAssignableFrom(attr_class)) {
-            type = "float";
+        else {
+            throw new IllegalArgumentException("don't know how to deal with type '" + attr_class + "'");
         }
-        return type;
     }
 
 }

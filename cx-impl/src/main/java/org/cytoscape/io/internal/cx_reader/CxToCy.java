@@ -361,7 +361,7 @@ public final class CxToCy {
                     // String.class,
                     // false);
                     // }
-                    network.getRow(cy_edge).set(org.cytoscape.io.internal.cxio.Util.SHARED_INTERACTION,
+                    network.getRow(cy_edge).set(org.cytoscape.io.internal.cxio.CxUtil.SHARED_INTERACTION,
                                                 edge_element.getInteraction());
 
                 }
@@ -481,16 +481,16 @@ public final class CxToCy {
                 cy_node = network.addNode();
                 network.getRow(cy_node).set(CyNetwork.NAME, node_id);
                 if (node_element.getNodeRepresents() != null) {
-                    if (node_table_default.getColumn(org.cytoscape.io.internal.cxio.Util.REPRESENTS) == null) {
-                        node_table_default.createColumn(org.cytoscape.io.internal.cxio.Util.REPRESENTS,
+                    if (node_table_default.getColumn(org.cytoscape.io.internal.cxio.CxUtil.REPRESENTS) == null) {
+                        node_table_default.createColumn(org.cytoscape.io.internal.cxio.CxUtil.REPRESENTS,
                                                         String.class,
                                                         false);
                     }
-                    network.getRow(cy_node).set(org.cytoscape.io.internal.cxio.Util.REPRESENTS,
+                    network.getRow(cy_node).set(org.cytoscape.io.internal.cxio.CxUtil.REPRESENTS,
                                                 node_element.getNodeRepresents());
                 }
                 if (node_element.getNodeName() != null) {
-                    network.getRow(cy_node).set(org.cytoscape.io.internal.cxio.Util.SHARED_NAME,
+                    network.getRow(cy_node).set(org.cytoscape.io.internal.cxio.CxUtil.SHARED_NAME,
                                                 node_element.getNodeName());
                 }
 

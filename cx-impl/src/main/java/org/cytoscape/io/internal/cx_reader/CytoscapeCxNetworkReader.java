@@ -58,7 +58,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     private static final Pattern               DIRECT_NET_PROPS_PATTERN = Pattern
             .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
 
-    private static final boolean               DEBUG                    = false;
+    private static final boolean               DEBUG                    = true;
 
     private final List<CyNetwork>              _networks;
     private final String                       _network_collection_name;
@@ -447,22 +447,11 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                 }
 
                 if (is_mapping) {
-                    if (DEBUG) {
-                        System.out.println("      k=" + entry.getKey());
-                        System.out.println("   mkey=" + mapping_key);
-                    }
                     final VisualProperty vp = lexicon.lookup(my_class, mapping_key);
-                    if (DEBUG) {
-                        System.out.println("     mv=" + entry.getValue());
-                    }
                     final StringParser sp = new StringParser(entry.getValue());
                     final String col = sp.get("COL");
                     final String type = sp.get("T");
                     final Class<?> type_class = toClass(type);
-                    if (DEBUG) {
-                        System.out.println("   COL=" + col);
-                        System.out.println("     T=" + type);
-                    }
                     if (vp != null) {
                         if (mapping == 'p') {
                             addPasstroughMapping(style, vp, col, type_class);
@@ -471,7 +460,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                             addContinuousMapping(style, vp, sp, col, type, type_class);
                         }
                         else if (mapping == 'd') {
-                            addDiscreteMappingFunction(style, vp, sp, col, type,  type_class);
+                            addDiscreteMappingFunction(style, vp, sp, col, type, type_class);
                         }
                         else {
                             throw new IllegalStateException("unknown mapping type: " + mapping);
@@ -490,8 +479,8 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private final static void addDefaultVisualProperty(final VisualStyle style,
-                                                final Map.Entry<String, String> entry,
-                                                final VisualProperty vp) {
+                                                       final Map.Entry<String, String> entry,
+                                                       final VisualProperty vp) {
         final Object parsed_value = vp.parseSerializableString(entry.getValue());
         if (parsed_value != null) {
             style.setDefaultValue(vp, parsed_value);
@@ -511,26 +500,39 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         final ContinuousMapping cmf = (ContinuousMapping) _vmf_factory_c.createVisualMappingFunction(col,
                                                                                                      type_class,
                                                                                                      vp);
-        if (DEBUG) {
-            System.out.println("     cmf=" + cmf);
-        }
-        int counter = 0;
-        while (true) {
-            final String ov = sp.get("OV=" + counter);
-            if (ov == null) {
-                break;
-            }
-            final String l = sp.get("L=" + counter);
-            final String e = sp.get("E=" + counter);
-            final String g = sp.get("G=" + counter);
-            final BoundaryRangeValues brv = new BoundaryRangeValues(toType(l, type), toType(e, type), toType(g, type));
-            cmf.addPoint(toType(ov, type), brv);
-            
-            
 
-            counter++;
+        if (cmf != null) {
+            int counter = 0;
+            while (true) {
+                final String ov = sp.get("OV=" + counter);
+                if (ov == null) {
+                    break;
+                }
+                final String l = sp.get("L=" + counter);
+                final String e = sp.get("E=" + counter);
+                final String g = sp.get("G=" + counter);
+                if ((l != null) && (e != null) && (g != null)) {
+                    final Object lp = vp.parseSerializableString(l);
+                    final Object ep = vp.parseSerializableString(e);
+                    final Object gp = vp.parseSerializableString(g);
+                    if ((lp != null) && (ep != null) && (gp != null)) {
+                        final BoundaryRangeValues point = new BoundaryRangeValues(lp, ep, gp);
+                        cmf.addPoint(toTypeValue(ov, type), point);
+                    }
+                    else {
+                        System.out.println("could not parse from string in continuous mapping for col '" + col + "'");
+                    }
+                }
+                else {
+                    System.out.println("could not get expected values in continuous mapping for col '" + col + "'");
+                }
+                counter++;
+            }
+            style.addVisualMappingFunction(cmf);
         }
-        style.addVisualMappingFunction(cmf);
+        else {
+            System.out.println("could not create continuous mapping for col '" + col + "'");
+        }
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -568,7 +570,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                 if (v != null) {
                     final Object pv = vp.parseSerializableString(v);
                     if (pv != null) {
-                        dmf.putMapValue(toType(k, type), pv);
+                        dmf.putMapValue(toTypeValue(k, type), pv);
                     }
                     else {
                         System.out.println("could not parse serializable string from discrete mapping value '" + v
@@ -604,6 +606,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
     private class StringParser {
         final Map<String, String> _data = new HashMap<String, String>();
+
         StringParser(final String str) {
             final StringTokenizer t = new StringTokenizer(str, ",");
             while (t.hasMoreTokens()) {
@@ -632,29 +635,26 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         if (type.equals("string")) {
             return String.class;
         }
-        else if (type.equals("boolean")) {
-            return Boolean.class;
-        }
         else if (type.equals("integer")) {
             return Integer.class;
         }
         else if (type.equals("long")) {
             return Long.class;
         }
-        else if (type.equals("float")) {
-            return Float.class;
+        else if (type.equals("double") || type.equals("float") ) {
+            return Double.class;
+        }
+        else if (type.equals("boolean")) {
+            return Boolean.class;
         }
         else {
             throw new IllegalArgumentException("don't know how to deal with type '" + type + "'");
         }
     }
 
-    private final Object toType(final String s, final String type) {
+    private final Object toTypeValue(final String s, final String type) {
         if (type.equals("string")) {
             return s;
-        }
-        else if (type.equals("boolean")) {
-            return Boolean.valueOf(s);
         }
         else if (type.equals("integer")) {
             return Double.valueOf(s).intValue();
@@ -662,8 +662,11 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         else if (type.equals("long")) {
             return Double.valueOf(s).longValue();
         }
-        else if (type.equals("float")) {
-            return Float.valueOf(s);
+        else if (type.equals("double") || type.equals("float") ) {
+            return Double.valueOf(s);
+        }
+        else if (type.equals("boolean")) {
+            return Boolean.valueOf(s);
         }
         else {
             throw new IllegalArgumentException("don't know how to deal with type '" + type + "'");

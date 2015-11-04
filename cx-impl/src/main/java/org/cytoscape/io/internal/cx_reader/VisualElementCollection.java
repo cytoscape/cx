@@ -9,7 +9,7 @@ import org.cxio.aspects.datamodels.SubNetworkElement;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNode;
 
-class VisualElementCollection {
+public class VisualElementCollection {
 
     private final Map<CyEdge, CyVisualPropertiesElement> _edge_vpe_map;
     private CyVisualPropertiesElement                    _edges_default_vpe;
