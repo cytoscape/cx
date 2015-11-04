@@ -21,6 +21,7 @@ import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.presentation.RenderingEngineManager;
 import org.cytoscape.view.vizmap.VisualMappingManager;
+import org.cytoscape.view.vizmap.VisualStyleFactory;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -70,6 +71,8 @@ public class CyActivator extends AbstractCyActivator {
         final CyNetworkFactory network_factory = getService(bc, CyNetworkFactory.class);
         final CyRootNetworkManager root_network_manager = getService(bc, CyRootNetworkManager.class);
         final RenderingEngineManager rendering_engine_manager = getService(bc, RenderingEngineManager.class);
+        final VisualStyleFactory visual_style_factory = getService(bc, VisualStyleFactory.class);
+
         final BasicCyFileFilter basic_file_filter = new BasicCyFileFilter(new String[] { "cx" },
                                                                           new String[] { "application/json" },
                                                                           "CX JSON",
@@ -82,6 +85,7 @@ public class CyActivator extends AbstractCyActivator {
                                                                                                       network_manager,
                                                                                                       root_network_manager,
                                                                                                       visual_mapping_manager,
+                                                                                                      visual_style_factory,
                                                                                                       rendering_engine_manager,
                                                                                                       network_view_factory);
         final Properties reader_factory_properties = new Properties();

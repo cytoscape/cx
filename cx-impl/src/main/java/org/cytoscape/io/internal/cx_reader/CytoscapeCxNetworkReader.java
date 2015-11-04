@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,14 +40,16 @@ import org.cytoscape.view.model.VisualProperty;
 import org.cytoscape.view.presentation.RenderingEngineManager;
 import org.cytoscape.view.presentation.property.BasicVisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingManager;
+import org.cytoscape.view.vizmap.VisualPropertyDependency;
 import org.cytoscape.view.vizmap.VisualStyle;
+import org.cytoscape.view.vizmap.VisualStyleFactory;
 import org.cytoscape.work.TaskMonitor;
 import org.cytoscape.work.util.ListSingleSelection;
 
 public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
     private static final Pattern         DIRECT_NET_PROPS_PATTERN = Pattern
-                                                                          .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
+            .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
 
     private static final boolean         DEBUG                    = true;
 
@@ -60,6 +63,8 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
     private final boolean                _perform_basic_integrity_checks;
 
+    private final VisualStyleFactory     _visual_style_factory;
+
     public CytoscapeCxNetworkReader(final String network_collection_name,
                                     final InputStream input_stream,
                                     final CyApplicationManager application_manager,
@@ -67,6 +72,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                                     final CyNetworkManager network_manager,
                                     final CyRootNetworkManager root_network_manager,
                                     final VisualMappingManager visual_mapping_manager,
+                                    final VisualStyleFactory visual_style_factory,
                                     final RenderingEngineManager rendering_engine_manager,
                                     final CyNetworkViewFactory networkview_factory,
                                     final boolean perform_basic_integrity_checks) throws IOException {
@@ -83,6 +89,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         _networkview_factory = networkview_factory;
         _networks = new ArrayList<CyNetwork>();
         _perform_basic_integrity_checks = perform_basic_integrity_checks;
+        _visual_style_factory = visual_style_factory;
     }
 
     @Override
@@ -94,37 +101,56 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
         final VisualElementCollectionMap collection = _cx_to_cy.getVisualElementCollectionMap();
 
-        final String subnetwork_id = obtainNetworkId(network);
+        final String network_id = obtainNetworkId(network);
 
         if (collection != null) {
 
-            if (collection.getNetworkVisualPropertiesElement(subnetwork_id) != null) {
+            if (collection.getNetworkVisualPropertiesElement(network_id) != null) {
                 setProperties(lexicon,
-                              collection.getNetworkVisualPropertiesElement(subnetwork_id).getProperties(),
+                              collection.getNetworkVisualPropertiesElement(network_id).getProperties(),
                               view,
                               CyNetwork.class);
             }
+            VisualStyle new_visual_style = null;
 
-            final VisualStyle default_style = _visual_mapping_manager.getVisualStyle(view);
-            if (collection.getNodesDefaultVisualPropertiesElement(subnetwork_id) != null) {
-                setProperties(lexicon,
-                              collection.getNodesDefaultVisualPropertiesElement(subnetwork_id).getProperties(),
-                              default_style,
-                              CyNode.class);
+            if ((collection.getNodesDefaultVisualPropertiesElement(network_id) != null)
+                    || (collection.getEdgesDefaultVisualPropertiesElement(network_id) != null)) {
+                final VisualStyle default_visual_style = _visual_mapping_manager.getDefaultVisualStyle();
+                new_visual_style = _visual_style_factory.createVisualStyle(default_visual_style);
+
+                // Disable "Lock Node height and width"
+                for (final VisualPropertyDependency<?> dep : new_visual_style.getAllVisualPropertyDependencies()) {
+                    if (dep.getIdString().equals("nodeCustomGraphicsSizeSync")
+                            || dep.getIdString().equals("arrowColorMatchesEdge")) {
+                        dep.setDependency(true);
+                    }
+                    else if (dep.getIdString().equals("nodeSizeLocked")) {
+                        dep.setDependency(false);
+                    }
+                }
+
+                final String viz_style_title = createTitleForNewVisualStyle();
+
+                removeVisualStyle(viz_style_title);
+
+                new_visual_style.setTitle(viz_style_title);
+
+                if (collection.getNodesDefaultVisualPropertiesElement(network_id) != null) {
+                    setProperties(lexicon, collection.getNodesDefaultVisualPropertiesElement(network_id)
+                                  .getProperties(), new_visual_style, CyNode.class);
+                }
+                if (collection.getEdgesDefaultVisualPropertiesElement(network_id) != null) {
+                    setProperties(lexicon, collection.getEdgesDefaultVisualPropertiesElement(network_id)
+                                  .getProperties(), new_visual_style, CyEdge.class);
+                }
             }
-            if (collection.getEdgesDefaultVisualPropertiesElement(subnetwork_id) != null) {
-                setProperties(lexicon,
-                              collection.getEdgesDefaultVisualPropertiesElement(subnetwork_id).getProperties(),
-                              default_style,
-                              CyEdge.class);
-            }
 
-            setNodeVisualProperties(view, lexicon, collection, subnetwork_id);
+            setNodeVisualProperties(view, lexicon, collection, network_id);
 
-            setEdgeVisualProperties(view, lexicon, collection, subnetwork_id);
+            setEdgeVisualProperties(view, lexicon, collection, network_id);
 
             final Map<CyNode, CartesianLayoutElement> position_map_for_view = collection
-                    .getCartesianLayoutElements(subnetwork_id);
+                    .getCartesianLayoutElements(network_id);
 
             if ((position_map_for_view != null) && (view != null)) {
                 for (final CyNode node : position_map_for_view.keySet()) {
@@ -147,9 +173,41 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                 }
             }
 
+            if ((collection.getNodesDefaultVisualPropertiesElement(network_id) != null)
+                    || (collection.getEdgesDefaultVisualPropertiesElement(network_id) != null)) {
+                _visual_mapping_manager.addVisualStyle(new_visual_style);
+                new_visual_style.apply(view);
+                _visual_mapping_manager.setCurrentVisualStyle(new_visual_style);
+                view.updateView();
+            }
         }
 
         return view;
+    }
+
+    private void removeVisualStyle(final String viz_style_title) {
+        final Iterator<VisualStyle> it = _visual_mapping_manager.getAllVisualStyles().iterator();
+        while (it.hasNext()) {
+            final VisualStyle vs = it.next();
+            if (vs.getTitle().equalsIgnoreCase(viz_style_title)) {
+                _visual_mapping_manager.removeVisualStyle(vs);
+                break;
+            }
+        }
+    }
+
+    private String createTitleForNewVisualStyle() {
+        String viz_style_title = "new vizStyle";
+        if (_network_collection_name != null) {
+            if (_network_collection_name.toLowerCase().endsWith(".cx")) {
+                viz_style_title = String.format("%s vizStyle", _network_collection_name
+                                                .substring(0, _network_collection_name.length() - 3));
+            }
+            else {
+                viz_style_title = String.format("%s vizStyle", _network_collection_name);
+            }
+        }
+        return viz_style_title;
     }
 
     @Override
