@@ -5,11 +5,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,31 +41,39 @@ import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.model.VisualProperty;
 import org.cytoscape.view.presentation.RenderingEngineManager;
 import org.cytoscape.view.presentation.property.BasicVisualLexicon;
+import org.cytoscape.view.vizmap.VisualMappingFunctionFactory;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.view.vizmap.VisualPropertyDependency;
 import org.cytoscape.view.vizmap.VisualStyle;
 import org.cytoscape.view.vizmap.VisualStyleFactory;
+import org.cytoscape.view.vizmap.mappings.BoundaryRangeValues;
+import org.cytoscape.view.vizmap.mappings.ContinuousMapping;
+import org.cytoscape.view.vizmap.mappings.DiscreteMapping;
+import org.cytoscape.view.vizmap.mappings.PassthroughMapping;
 import org.cytoscape.work.TaskMonitor;
 import org.cytoscape.work.util.ListSingleSelection;
 
 public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
-    private static final Pattern         DIRECT_NET_PROPS_PATTERN = Pattern
+    private static final Pattern               DIRECT_NET_PROPS_PATTERN = Pattern
             .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
 
-    private static final boolean         DEBUG                    = true;
+    private static final boolean               DEBUG                    = false;
 
-    private final List<CyNetwork>        _networks;
-    private final String                 _network_collection_name;
-    private CxToCy                       _cx_to_cy;
-    private final InputStream            _in;
-    private final VisualMappingManager   _visual_mapping_manager;
-    private final RenderingEngineManager _rendering_engine_manager;
-    private final CyNetworkViewFactory   _networkview_factory;
+    private final List<CyNetwork>              _networks;
+    private final String                       _network_collection_name;
+    private CxToCy                             _cx_to_cy;
+    private final InputStream                  _in;
+    private final VisualMappingManager         _visual_mapping_manager;
+    private final RenderingEngineManager       _rendering_engine_manager;
+    private final CyNetworkViewFactory         _networkview_factory;
 
-    private final boolean                _perform_basic_integrity_checks;
+    private final boolean                      _perform_basic_integrity_checks;
 
-    private final VisualStyleFactory     _visual_style_factory;
+    private final VisualStyleFactory           _visual_style_factory;
+    private final VisualMappingFunctionFactory _vmf_factory_c;
+    private final VisualMappingFunctionFactory _vmf_factory_d;
+    private final VisualMappingFunctionFactory _vmf_factory_p;
 
     public CytoscapeCxNetworkReader(final String network_collection_name,
                                     final InputStream input_stream,
@@ -75,6 +85,10 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                                     final VisualStyleFactory visual_style_factory,
                                     final RenderingEngineManager rendering_engine_manager,
                                     final CyNetworkViewFactory networkview_factory,
+                                    final VisualMappingFunctionFactory vmf_factory_c,
+                                    final VisualMappingFunctionFactory vmf_factory_d,
+                                    final VisualMappingFunctionFactory vmf_factory_p,
+
                                     final boolean perform_basic_integrity_checks) throws IOException {
 
         super(input_stream, networkview_factory, network_factory, network_manager, root_network_manager);
@@ -90,6 +104,9 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         _networks = new ArrayList<CyNetwork>();
         _perform_basic_integrity_checks = perform_basic_integrity_checks;
         _visual_style_factory = visual_style_factory;
+        _vmf_factory_c = vmf_factory_c;
+        _vmf_factory_d = vmf_factory_d;
+        _vmf_factory_p = vmf_factory_p;
     }
 
     @Override
@@ -178,10 +195,10 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                 _visual_mapping_manager.addVisualStyle(new_visual_style);
                 new_visual_style.apply(view);
                 _visual_mapping_manager.setCurrentVisualStyle(new_visual_style);
-                view.updateView();
+
             }
         }
-
+        view.updateView();
         return view;
     }
 
@@ -336,7 +353,6 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                     if (vpe == null) {
                         System.out.println(">>>> edge vpe is null");
                     }
-
                 }
                 if (vpe != null) {
                     final SortedMap<String, String> props = vpe.getProperties();
@@ -400,22 +416,174 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         }
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    private final static void setProperties(final VisualLexicon lexicon,
-                                            final SortedMap<String, String> props,
-                                            final VisualStyle style,
-                                            final Class my_class) {
+    @SuppressWarnings({ "rawtypes" })
+    private final void setProperties(final VisualLexicon lexicon,
+                                     final SortedMap<String, String> props,
+                                     final VisualStyle style,
+                                     final Class my_class) {
         if (props != null) {
-            for (final Map.Entry<String, String> entry : props.entrySet()) {
-                final VisualProperty vp = lexicon.lookup(my_class, entry.getKey());
-                if (vp != null) {
-                    final Object parsed_value = vp.parseSerializableString(entry.getValue());
-                    if (parsed_value != null) {
-                        style.setDefaultValue(vp, parsed_value);
 
+            for (final Map.Entry<String, String> entry : props.entrySet()) {
+                final String key = entry.getKey();
+                boolean is_mapping = false;
+                char mapping = '?';
+                String mapping_key = null;
+                if (key.startsWith("PASSTHROUGH_MAPPING_")) {
+                    is_mapping = true;
+                    mapping = 'p';
+                    mapping_key = key.substring(20);
+                }
+                else if (key.startsWith("CONTINUOUS_MAPPING_")) {
+                    is_mapping = true;
+                    mapping = 'c';
+                    mapping_key = null;
+                    mapping_key = key.substring(19);
+                }
+                else if (key.startsWith("DISCRETE_MAPPING_")) {
+                    is_mapping = true;
+                    mapping = 'd';
+                    mapping_key = null;
+                    mapping_key = key.substring(17);
+                }
+
+                if (is_mapping) {
+                    if (DEBUG) {
+                        System.out.println("      k=" + entry.getKey());
+                        System.out.println("   mkey=" + mapping_key);
+                    }
+                    final VisualProperty vp = lexicon.lookup(my_class, mapping_key);
+                    if (DEBUG) {
+                        System.out.println("     mv=" + entry.getValue());
+                    }
+                    final StringParser sp = new StringParser(entry.getValue());
+                    final String col = sp.get("COL");
+                    final String type = sp.get("T");
+                    final Class<?> type_class = toClass(type);
+                    if (DEBUG) {
+                        System.out.println("   COL=" + col);
+                        System.out.println("     T=" + type);
+                    }
+                    if (vp != null) {
+                        if (mapping == 'p') {
+                            addPasstroughMapping(style, vp, col, type_class);
+                        }
+                        else if (mapping == 'c') {
+                            addContinuousMapping(style, vp, sp, col, type, type_class);
+                        }
+                        else if (mapping == 'd') {
+                            addDiscreteMappingFunction(style, vp, sp, col, type,  type_class);
+                        }
+                        else {
+                            throw new IllegalStateException("unknown mapping type: " + mapping);
+                        }
+                    }
+                }
+                else {
+                    final VisualProperty vp = lexicon.lookup(my_class, key);
+                    if (vp != null) {
+                        addDefaultVisualProperty(style, entry, vp);
                     }
                 }
             }
+        }
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private final static void addDefaultVisualProperty(final VisualStyle style,
+                                                final Map.Entry<String, String> entry,
+                                                final VisualProperty vp) {
+        final Object parsed_value = vp.parseSerializableString(entry.getValue());
+        if (parsed_value != null) {
+            style.setDefaultValue(vp, parsed_value);
+        }
+        else {
+            System.out.println("could not parse serializable string from '" + entry.getValue() + "'");
+        }
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private final void addContinuousMapping(final VisualStyle style,
+                                            final VisualProperty vp,
+                                            final StringParser sp,
+                                            final String col,
+                                            final String type,
+                                            final Class<?> type_class) {
+        final ContinuousMapping cmf = (ContinuousMapping) _vmf_factory_c.createVisualMappingFunction(col,
+                                                                                                     type_class,
+                                                                                                     vp);
+        if (DEBUG) {
+            System.out.println("     cmf=" + cmf);
+        }
+        int counter = 0;
+        while (true) {
+            final String ov = sp.get("OV=" + counter);
+            if (ov == null) {
+                break;
+            }
+            final String l = sp.get("L=" + counter);
+            final String e = sp.get("E=" + counter);
+            final String g = sp.get("G=" + counter);
+            final BoundaryRangeValues brv = new BoundaryRangeValues(toType(l, type), toType(e, type), toType(g, type));
+            cmf.addPoint(toType(ov, type), brv);
+            
+            
+
+            counter++;
+        }
+        style.addVisualMappingFunction(cmf);
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void addPasstroughMapping(final VisualStyle style,
+                                      final VisualProperty vp,
+                                      final String col,
+                                      final Class<?> type_class) {
+        final PassthroughMapping pmf = (PassthroughMapping) _vmf_factory_p.createVisualMappingFunction(col,
+                                                                                                       type_class,
+                                                                                                       vp);
+        if (pmf != null) {
+            style.addVisualMappingFunction(pmf);
+        }
+        else {
+            System.out.println("could not create passthrough mapping for col '" + col + "'");
+        }
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private final void addDiscreteMappingFunction(final VisualStyle style,
+                                                  final VisualProperty vp,
+                                                  final StringParser sp,
+                                                  final String col,
+                                                  final String type,
+                                                  final Class<?> type_class) {
+        final DiscreteMapping dmf = (DiscreteMapping) _vmf_factory_d.createVisualMappingFunction(col, type_class, vp);
+        if (dmf != null) {
+            int counter = 0;
+            while (true) {
+                final String k = sp.get("K=" + counter);
+                if (k == null) {
+                    break;
+                }
+                final String v = sp.get("V=" + counter);
+                if (v != null) {
+                    final Object pv = vp.parseSerializableString(v);
+                    if (pv != null) {
+                        dmf.putMapValue(toType(k, type), pv);
+                    }
+                    else {
+                        System.out.println("could not parse serializable string from discrete mapping value '" + v
+                                           + "'");
+                    }
+                }
+                else {
+                    System.out.println("error: discrete mapping function string is corrupt");
+                }
+                counter++;
+            }
+            style.addVisualMappingFunction(dmf);
+        }
+        else {
+            System.out.println("could not create discrete mapping for col '" + col + "'");
         }
     }
 
@@ -433,4 +601,73 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         }
         return true;
     }
+
+    private class StringParser {
+        final Map<String, String> _data = new HashMap<String, String>();
+        StringParser(final String str) {
+            final StringTokenizer t = new StringTokenizer(str, ",");
+            while (t.hasMoreTokens()) {
+                final String n = t.nextToken();
+                final String[] m = n.split("=");
+                if (m.length == 2) {
+                    if ((m[0] != null) && (m[1] != null)) {
+                        _data.put(m[0], m[1]);
+                    }
+                }
+                else if (m.length == 3) {
+                    if ((m[0] != null) && (m[1] != null) && (m[2] != null)) {
+                        _data.put(m[0] + "=" + m[1], m[2]);
+                    }
+                }
+            }
+        }
+
+        String get(final String key) {
+            return _data.get(key);
+        }
+
+    }
+
+    private final static Class<?> toClass(final String type) {
+        if (type.equals("string")) {
+            return String.class;
+        }
+        else if (type.equals("boolean")) {
+            return Boolean.class;
+        }
+        else if (type.equals("integer")) {
+            return Integer.class;
+        }
+        else if (type.equals("long")) {
+            return Long.class;
+        }
+        else if (type.equals("float")) {
+            return Float.class;
+        }
+        else {
+            throw new IllegalArgumentException("don't know how to deal with type '" + type + "'");
+        }
+    }
+
+    private final Object toType(final String s, final String type) {
+        if (type.equals("string")) {
+            return s;
+        }
+        else if (type.equals("boolean")) {
+            return Boolean.valueOf(s);
+        }
+        else if (type.equals("integer")) {
+            return Double.valueOf(s).intValue();
+        }
+        else if (type.equals("long")) {
+            return Double.valueOf(s).longValue();
+        }
+        else if (type.equals("float")) {
+            return Float.valueOf(s);
+        }
+        else {
+            throw new IllegalArgumentException("don't know how to deal with type '" + type + "'");
+        }
+    }
+
 }

@@ -188,54 +188,72 @@ public final class VisualPropertiesGatherer {
                 final String type = toAttributeType(dm.getMappingColumnType());
                 final String col = dm.getMappingColumnName();
                 final Map<?, ?> map = dm.getAll();
+                final StringBuilder sb = new StringBuilder();
+                sb.append("COL=");
+                sb.append(col);
+                sb.append(",T=");
+                sb.append(type);
+                int counter = 0;
                 for (final Map.Entry<?, ?> entry : map.entrySet()) {
                     final Object value = entry.getValue();
                     if (value == null) {
                         continue;
                     }
                     try {
-                        final StringBuilder sb = new StringBuilder();
-                        sb.append("COL=");
-                        sb.append(col);
                         sb.append(",K=");
+                        sb.append(counter);
+                        sb.append("=");
                         sb.append(entry.getKey().toString());
                         sb.append(",V=");
+                        sb.append(counter);
+                        sb.append("=");
                         sb.append(vp.toSerializableString(value));
-                        sb.append(",T=");
-                        sb.append(type);
-                        cvp.putProperty("DISCRETE_MAPPING_" + vp.getIdString(), sb.toString());
+                       
                     }
                     catch (final Exception e) {
                         System.out.println("could not add Discrete Mapping entry: " + value);
                         e.printStackTrace();
                     }
+                    ++counter;
                 }
+                cvp.putProperty("DISCRETE_MAPPING_" + vp.getIdString(), sb.toString());
             }
             else if (mapping instanceof ContinuousMapping<?, ?>) {
                 final ContinuousMapping<?, ?> cm = (ContinuousMapping<?, ?>) mapping;
                 final String type = toAttributeType(cm.getMappingColumnType());
                 final String col = cm.getMappingColumnName();
+                final StringBuilder sb = new StringBuilder();
+                sb.append("COL=");
+                sb.append(col);
+                sb.append(",T=");
+                sb.append(type);
                 final List<?> points = cm.getAllPoints();
+                int counter = 0;
                 for (final Object point : points) {
                     final ContinuousMappingPoint<?, ?> cp = (ContinuousMappingPoint<?, ?>) point;
                     final Object lesser = cp.getRange().lesserValue;
                     final Object equal = cp.getRange().equalValue;
                     final Object greater = cp.getRange().greaterValue;
-                    final StringBuilder sb = new StringBuilder();
-                    sb.append("COL=");
-                    sb.append(col);
                     sb.append(",L=");
+                    sb.append(counter);
+                    sb.append("=");
                     sb.append(vp.toSerializableString(lesser));
                     sb.append(",E=");
+                    sb.append(counter);
+                    sb.append("=");
                     sb.append(vp.toSerializableString(equal));
                     sb.append(",G=");
+                    sb.append(counter);
+                    sb.append("=");
                     sb.append(vp.toSerializableString(greater));
                     sb.append(",OV=");
+                    sb.append(counter);
+                    sb.append("=");
                     sb.append(cp.getValue());
-                    sb.append(",T=");
-                    sb.append(type);
-                    cvp.putProperty("CONTINUOUS_MAPPING_" + vp.getIdString(), sb.toString());
+                    
+                    ++counter;
                 }
+                cvp.putProperty("CONTINUOUS_MAPPING_" + vp.getIdString(), sb.toString());
             }
         }
     }
