@@ -25,6 +25,7 @@ import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.io.internal.cxio.Aspect;
 import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxImporter;
+import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.TimingUtil;
 import org.cytoscape.io.read.AbstractCyNetworkReader;
 import org.cytoscape.model.CyEdge;
@@ -56,7 +57,7 @@ import org.cytoscape.work.util.ListSingleSelection;
 public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
     private static final Pattern               DIRECT_NET_PROPS_PATTERN = Pattern
-            .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
+                                                                                .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
 
     private static final boolean               DEBUG                    = true;
 
@@ -154,11 +155,11 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
                 if (collection.getNodesDefaultVisualPropertiesElement(network_id) != null) {
                     setProperties(lexicon, collection.getNodesDefaultVisualPropertiesElement(network_id)
-                                  .getProperties(), new_visual_style, CyNode.class);
+                            .getProperties(), new_visual_style, CyNode.class);
                 }
                 if (collection.getEdgesDefaultVisualPropertiesElement(network_id) != null) {
                     setProperties(lexicon, collection.getEdgesDefaultVisualPropertiesElement(network_id)
-                                  .getProperties(), new_visual_style, CyEdge.class);
+                            .getProperties(), new_visual_style, CyEdge.class);
                 }
             }
 
@@ -194,7 +195,8 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                     || (collection.getEdgesDefaultVisualPropertiesElement(network_id) != null)) {
                 _visual_mapping_manager.addVisualStyle(new_visual_style);
                 new_visual_style.apply(view);
-                _visual_mapping_manager.setCurrentVisualStyle(new_visual_style);
+                // _visual_mapping_manager.setCurrentVisualStyle(new_visual_style);
+                _visual_mapping_manager.setVisualStyle(new_visual_style, view);
 
             }
         }
@@ -217,11 +219,12 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         String viz_style_title = "new vizStyle";
         if (_network_collection_name != null) {
             if (_network_collection_name.toLowerCase().endsWith(".cx")) {
-                viz_style_title = String.format("%s vizStyle", _network_collection_name
-                                                .substring(0, _network_collection_name.length() - 3));
+                viz_style_title = String.format("%s-Style", _network_collection_name.substring(0,
+                                                                                               _network_collection_name
+                                                                                                       .length() - 3));
             }
             else {
-                viz_style_title = String.format("%s vizStyle", _network_collection_name);
+                viz_style_title = String.format("%s-Style", _network_collection_name);
             }
         }
         return viz_style_title;
@@ -428,18 +431,18 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                 boolean is_mapping = false;
                 char mapping = '?';
                 String mapping_key = null;
-                if (key.startsWith("PASSTHROUGH_MAPPING_")) {
+                if (key.startsWith(CxUtil.PASSTHROUGH_MAPPING)) {
                     is_mapping = true;
                     mapping = 'p';
                     mapping_key = key.substring(20);
                 }
-                else if (key.startsWith("CONTINUOUS_MAPPING_")) {
+                else if (key.startsWith(CxUtil.CONTINUOUS_MAPPING)) {
                     is_mapping = true;
                     mapping = 'c';
                     mapping_key = null;
                     mapping_key = key.substring(19);
                 }
-                else if (key.startsWith("DISCRETE_MAPPING_")) {
+                else if (key.startsWith(CxUtil.DISCRETE_MAPPING)) {
                     is_mapping = true;
                     mapping = 'd';
                     mapping_key = null;
@@ -449,8 +452,8 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                 if (is_mapping) {
                     final VisualProperty vp = lexicon.lookup(my_class, mapping_key);
                     final StringParser sp = new StringParser(entry.getValue());
-                    final String col = sp.get("COL");
-                    final String type = sp.get("T");
+                    final String col = sp.get(CxUtil.VM_COL);
+                    final String type = sp.get(CxUtil.VM_TYPE);
                     final Class<?> type_class = toClass(type);
                     if (vp != null) {
                         if (mapping == 'p') {
@@ -574,7 +577,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                     }
                     else {
                         System.out.println("could not parse serializable string from discrete mapping value '" + v
-                                           + "'");
+                                + "'");
                     }
                 }
                 else {
@@ -641,7 +644,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         else if (type.equals("long")) {
             return Long.class;
         }
-        else if (type.equals("double") || type.equals("float") ) {
+        else if (type.equals("double") || type.equals("float")) {
             return Double.class;
         }
         else if (type.equals("boolean")) {
@@ -662,7 +665,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         else if (type.equals("long")) {
             return Double.valueOf(s).longValue();
         }
-        else if (type.equals("double") || type.equals("float") ) {
+        else if (type.equals("double") || type.equals("float")) {
             return Double.valueOf(s);
         }
         else if (type.equals("boolean")) {

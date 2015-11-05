@@ -177,9 +177,12 @@ public final class VisualPropertiesGatherer {
                 final String col = pm.getMappingColumnName();
                 final String type = toAttributeType(pm.getMappingColumnType());
                 final StringBuilder sb = new StringBuilder();
-                sb.append("COL=");
+                sb.append(CxUtil.VM_COL);
+                sb.append("=");
                 sb.append(col);
-                sb.append(",T=");
+                sb.append(",");
+                sb.append(CxUtil.VM_TYPE);
+                sb.append("=");
                 sb.append(type);
                 cvp.putProperty(CxUtil.PASSTHROUGH_MAPPING + vp.getIdString(), sb.toString());
             }
@@ -190,9 +193,12 @@ public final class VisualPropertiesGatherer {
                 final String col = dm.getMappingColumnName();
                 final Map<?, ?> map = dm.getAll();
                 final StringBuilder sb = new StringBuilder();
-                sb.append("COL=");
+                sb.append(CxUtil.VM_COL);
+                sb.append("=");
                 sb.append(col);
-                sb.append(",T=");
+                sb.append(",");
+                sb.append(CxUtil.VM_TYPE);
+                sb.append("=");
                 sb.append(type);
                 int counter = 0;
                 for (final Map.Entry<?, ?> entry : map.entrySet()) {
@@ -209,7 +215,7 @@ public final class VisualPropertiesGatherer {
                         sb.append(counter);
                         sb.append("=");
                         sb.append(vp.toSerializableString(value));
-                       
+
                     }
                     catch (final Exception e) {
                         System.out.println("could not add Discrete Mapping entry: " + value);
@@ -224,9 +230,12 @@ public final class VisualPropertiesGatherer {
                 final String type = toAttributeType(cm.getMappingColumnType());
                 final String col = cm.getMappingColumnName();
                 final StringBuilder sb = new StringBuilder();
-                sb.append("COL=");
+                sb.append(CxUtil.VM_COL);
+                sb.append("=");
                 sb.append(col);
-                sb.append(",T=");
+                sb.append(",");
+                sb.append(CxUtil.VM_TYPE);
+                sb.append("=");
                 sb.append(type);
                 final List<?> points = cm.getAllPoints();
                 int counter = 0;
@@ -251,7 +260,7 @@ public final class VisualPropertiesGatherer {
                     sb.append(counter);
                     sb.append("=");
                     sb.append(cp.getValue());
-                    
+
                     ++counter;
                 }
                 cvp.putProperty(CxUtil.CONTINUOUS_MAPPING + vp.getIdString(), sb.toString());
@@ -369,14 +378,17 @@ public final class VisualPropertiesGatherer {
         if (attr_class == Boolean.class) {
             return "boolean";
         }
-        else if (attr_class == Float.class || attr_class == Double.class) {
+        else if ((attr_class == Float.class) || (attr_class == Double.class)) {
             return "double";
         }
-        else if ( attr_class == Integer.class) {
+        else if (attr_class == Integer.class) {
             return "integer";
         }
         else if (attr_class == Long.class) {
             return "long";
+        }
+        else if (Number.class.isAssignableFrom(attr_class)) {
+            return "double";
         }
         else {
             throw new IllegalArgumentException("don't know how to deal with type '" + attr_class + "'");

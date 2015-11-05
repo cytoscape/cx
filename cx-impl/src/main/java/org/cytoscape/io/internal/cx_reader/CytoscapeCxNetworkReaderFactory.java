@@ -18,15 +18,15 @@ import org.cytoscape.work.TaskIterator;
 
 public class CytoscapeCxNetworkReaderFactory extends AbstractInputStreamTaskFactory {
 
-    private static final boolean         PERFORM_BASIC_INTEGRITY_CHECKS = true;
-    private final CyApplicationManager   _application_manager;
-    protected final CyNetworkFactory     _network_factory;
-    private final CyNetworkManager       _network_manager;
-    private final CyRootNetworkManager   _root_network_manager;
-    private final VisualMappingManager   _visual_mapping_manager;
-    private final RenderingEngineManager _rendering_engine_manager;
-    private final CyNetworkViewFactory   _networkview_factory;
-    private final VisualStyleFactory     _visual_style_factory;
+    private static final boolean               PERFORM_BASIC_INTEGRITY_CHECKS = true;
+    private final CyApplicationManager         _application_manager;
+    protected final CyNetworkFactory           _network_factory;
+    private final CyNetworkManager             _network_manager;
+    private final CyRootNetworkManager         _root_network_manager;
+    private final VisualMappingManager         _visual_mapping_manager;
+    private final RenderingEngineManager       _rendering_engine_manager;
+    private final CyNetworkViewFactory         _networkview_factory;
+    private final VisualStyleFactory           _visual_style_factory;
     private final VisualMappingFunctionFactory _vmf_factory_c;
     private final VisualMappingFunctionFactory _vmf_factory_d;
     private final VisualMappingFunctionFactory _vmf_factory_p;
@@ -41,10 +41,9 @@ public class CytoscapeCxNetworkReaderFactory extends AbstractInputStreamTaskFact
                                            final VisualStyleFactory visual_style_factory,
                                            final RenderingEngineManager rendering_engine_manager,
                                            final CyNetworkViewFactory networkview_factory,
-                                           VisualMappingFunctionFactory vmf_factory_c,
-                                           VisualMappingFunctionFactory vmf_factory_d,
-                                           VisualMappingFunctionFactory vmf_factory_p
-            ) {
+                                           final VisualMappingFunctionFactory vmf_factory_c,
+                                           final VisualMappingFunctionFactory vmf_factory_d,
+                                           final VisualMappingFunctionFactory vmf_factory_p) {
         super(filter);
         _application_manager = application_manager;
         _network_factory = network_factory;
