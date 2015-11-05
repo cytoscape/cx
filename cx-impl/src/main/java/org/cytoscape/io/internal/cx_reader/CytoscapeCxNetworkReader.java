@@ -439,13 +439,11 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                 else if (key.startsWith(CxUtil.CONTINUOUS_MAPPING)) {
                     is_mapping = true;
                     mapping = 'c';
-                    mapping_key = null;
                     mapping_key = key.substring(19);
                 }
                 else if (key.startsWith(CxUtil.DISCRETE_MAPPING)) {
                     is_mapping = true;
                     mapping = 'd';
-                    mapping_key = null;
                     mapping_key = key.substring(17);
                 }
 

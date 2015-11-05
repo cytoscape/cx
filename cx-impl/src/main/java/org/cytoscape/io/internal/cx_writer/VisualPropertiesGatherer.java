@@ -33,6 +33,8 @@ import org.cytoscape.view.vizmap.mappings.PassthroughMapping;
  */
 public final class VisualPropertiesGatherer {
 
+    private static final boolean ALLOW_NODE_CUSTOM_PROPERTIES = true;
+
     /**
      * This method is for gathering visual properties from a view and network
      * into aspect elements.
@@ -153,9 +155,13 @@ public final class VisualPropertiesGatherer {
             final String value_str = vp.toSerializableString(vp_value);
             if (!CxioUtil.isEmpty(value_str)) {
                 final String id_string = vp.getIdString();
-                if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")
-                        || id_string.startsWith("NODE_CUSTOM")) {
-                    // TODO
+                if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")) {
+                    // ignore
+                }
+                else if (id_string.startsWith("NODE_CUSTOM")) {
+                    if (ALLOW_NODE_CUSTOM_PROPERTIES) {
+                        cvp.putProperty(id_string, value_str);
+                    }
                 }
                 else {
                     cvp.putProperty(id_string, value_str);
@@ -215,10 +221,9 @@ public final class VisualPropertiesGatherer {
                         sb.append(counter);
                         sb.append("=");
                         sb.append(vp.toSerializableString(value));
-
                     }
                     catch (final Exception e) {
-                        System.out.println("could not add Discrete Mapping entry: " + value);
+                        System.out.println("could not add discrete mapping entry: " + value);
                         e.printStackTrace();
                     }
                     ++counter;
@@ -338,7 +343,6 @@ public final class VisualPropertiesGatherer {
         e.addAppliesTo(network_suid);
         for (final VisualProperty visual_property : all_visual_properties) {
             if (visual_property.getTargetDataType() == CyNode.class) {
-
                 addDefaultProperties(current_visual_style, visual_property, e);
                 addMappings(current_visual_style, visual_property, e);
             }
