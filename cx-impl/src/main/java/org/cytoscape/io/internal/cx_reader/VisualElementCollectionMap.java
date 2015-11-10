@@ -11,52 +11,52 @@ import org.cytoscape.model.CyNode;
 
 final public class VisualElementCollectionMap {
 
-    private final Map<String, VisualElementCollection> _data;
+    private final Map<Long, VisualElementCollection> _data;
 
     public VisualElementCollectionMap() {
-        _data = new HashMap<String, VisualElementCollection>();
+        _data = new HashMap<Long, VisualElementCollection>();
     }
 
-    public final void addCartesianLayoutElement(final String subnet,
+    public final void addCartesianLayoutElement(final Long subnet,
                                                 final CyNode node,
                                                 final CartesianLayoutElement layout) {
         checkForKey(subnet);
         _data.get(subnet).getCartesianLayoutElementsMap().put(node, layout);
     }
 
-    public final void addEdgesDefaultVisualPropertiesElement(final String subnet,
+    public final void addEdgesDefaultVisualPropertiesElement(final Long subnet,
                                                              final CyVisualPropertiesElement edges_default_visual_properties_element) {
         checkForKey(subnet);
         _data.get(subnet).setEdgesDefaultVisualPropertiesElement(edges_default_visual_properties_element);
     }
 
-    public final void addEdgeVisualPropertiesElement(final String subnet,
+    public final void addEdgeVisualPropertiesElement(final Long subnet,
                                                      final CyEdge edge,
                                                      final CyVisualPropertiesElement edges_visual_properties_element) {
         checkForKey(subnet);
         _data.get(subnet).getEdgeVisualPropertiesElementsMap().put(edge, edges_visual_properties_element);
     }
 
-    public final void addNetworkVisualPropertiesElement(final String subnet,
+    public final void addNetworkVisualPropertiesElement(final Long subnet,
                                                         final CyVisualPropertiesElement network_visual_properties_element) {
         checkForKey(subnet);
         _data.get(subnet).setNetworkVisualPropertiesElement(network_visual_properties_element);
     }
 
-    public final void addNodesDefaultVisualPropertiesElement(final String subnet,
+    public final void addNodesDefaultVisualPropertiesElement(final Long subnet,
                                                              final CyVisualPropertiesElement nodes_default_visual_properties_element) {
         checkForKey(subnet);
         _data.get(subnet).setNodesDefaultVisualPropertiesElement(nodes_default_visual_properties_element);
     }
 
-    public final void addNodeVisualPropertiesElement(final String subnet,
+    public final void addNodeVisualPropertiesElement(final Long subnet,
                                                      final CyNode node,
                                                      final CyVisualPropertiesElement nodes_visual_properties_element) {
         checkForKey(subnet);
         _data.get(subnet).getNodeVisualPropertiesElementsMap().put(node, nodes_visual_properties_element);
     }
 
-    private final void checkForKey(final String subnet) {
+    private final void checkForKey(final Long subnet) {
         if (subnet == null) {
             throw new IllegalArgumentException("subnetwork must not be null");
         }
@@ -65,64 +65,66 @@ final public class VisualElementCollectionMap {
         }
     }
 
-    public final Map<CyNode, CartesianLayoutElement> getCartesianLayoutElements(final String subnet) {
+    public final Map<CyNode, CartesianLayoutElement> getCartesianLayoutElements(final Long subnet) {
         if (!_data.containsKey(subnet)) {
             return null;
         }
         return _data.get(subnet).getCartesianLayoutElementsMap();
     }
 
-    public final CyVisualPropertiesElement getEdgesDefaultVisualPropertiesElement(final String subnet) {
+    public final CyVisualPropertiesElement getEdgesDefaultVisualPropertiesElement(final Long subnet) {
         if (!_data.containsKey(subnet)) {
             return null;
         }
         return _data.get(subnet).getEdgesDefaultVisualPropertiesElement();
     }
 
-    public final Map<CyEdge, CyVisualPropertiesElement> getEdgeVisualPropertiesElementsMap(final String subnet) {
+    public final Map<CyEdge, CyVisualPropertiesElement> getEdgeVisualPropertiesElementsMap(final Long subnet) {
         if (!_data.containsKey(subnet)) {
             return null;
         }
         return _data.get(subnet).getEdgeVisualPropertiesElementsMap();
     }
 
-    public final CyVisualPropertiesElement getNetworkVisualPropertiesElement(final String subnet) {
+    public final CyVisualPropertiesElement getNetworkVisualPropertiesElement(final Long subnet) {
         if (!_data.containsKey(subnet)) {
             return null;
         }
         return _data.get(subnet).getNetworkVisualPropertiesElement();
     }
 
-    public final CyVisualPropertiesElement getNodesDefaultVisualPropertiesElement(final String subnet) {
+    public final CyVisualPropertiesElement getNodesDefaultVisualPropertiesElement(final Long subnet) {
         if (!_data.containsKey(subnet)) {
             return null;
         }
         return _data.get(subnet).getNodesDefaultVisualPropertiesElement();
     }
 
-    public final Map<CyNode, CyVisualPropertiesElement> getNodeVisualPropertiesElementsMap(final String subnet) {
+    public final Map<CyNode, CyVisualPropertiesElement> getNodeVisualPropertiesElementsMap(final Long subnet) {
         if (!_data.containsKey(subnet)) {
             return null;
         }
         return _data.get(subnet).getNodeVisualPropertiesElementsMap();
     }
 
-    public final SubNetworkElement getSubNetworkElement(final String subnet) {
+    public final SubNetworkElement getSubNetworkElement(final Long subnet) {
         if (!_data.containsKey(subnet)) {
             return null;
         }
         return _data.get(subnet).getSubNetworkElement();
     }
 
-    public final void addSubNetworkElement(final String subnet, final SubNetworkElement subnetwork_element) {
+    public final void addSubNetworkElement(final Long subnet, final SubNetworkElement subnetwork_element) {
         checkForKey(subnet);
         _data.get(subnet).setSubNetworkElement(subnetwork_element);
     }
+    
+   
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        for (final Map.Entry<String, VisualElementCollection> entry : _data.entrySet()) {
+        for (final Map.Entry<Long, VisualElementCollection> entry : _data.entrySet()) {
             sb.append("KEY: ");
             sb.append(entry.getKey());
             sb.append("\n");

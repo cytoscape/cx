@@ -119,7 +119,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
         final VisualElementCollectionMap collection = _cx_to_cy.getVisualElementCollectionMap();
 
-        final String network_id = obtainNetworkId(network);
+        final Long network_id = obtainNetworkId(network);
 
         if (collection != null) {
 
@@ -239,7 +239,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         return results;
     }
 
-    private final String obtainNetworkId(final CyNetwork network) {
+    private final Long obtainNetworkId(final CyNetwork network) {
         return _cx_to_cy.getNetworkSuidToNetworkRelationsMap().get(network.getSUID());
     }
 
@@ -345,7 +345,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     private final void setEdgeVisualProperties(final CyNetworkView view,
                                                final VisualLexicon lexicon,
                                                final VisualElementCollectionMap collection,
-                                               final String subnetwork_id) {
+                                               final Long subnetwork_id) {
         final Set<CyEdge> edges_vpe = _cx_to_cy.getEdgesWithVisualProperties();
         if (edges_vpe != null) {
             for (final CyEdge edge : edges_vpe) {
@@ -371,7 +371,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     private final void setNodeVisualProperties(final CyNetworkView view,
                                                final VisualLexicon lexicon,
                                                final VisualElementCollectionMap collection,
-                                               final String subnetwork_id) {
+                                               final Long subnetwork_id) {
         final Set<CyNode> nodes_vpe = _cx_to_cy.getNodesWithVisualProperties();
         if (nodes_vpe != null) {
             for (final CyNode node : nodes_vpe) {

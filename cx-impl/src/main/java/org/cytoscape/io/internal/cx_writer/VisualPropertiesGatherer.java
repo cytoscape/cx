@@ -278,10 +278,10 @@ public final class VisualPropertiesGatherer {
                                                            final List<AspectElement> visual_properties,
                                                            final VisualStyle current_visual_style,
                                                            final Set<VisualProperty<?>> all_visual_properties) {
-        final String network_suid = String.valueOf(network.getSUID());
+       
         final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.EDGES_DEFAULT.asString(),
-                                                                          network_suid);
-        e.addAppliesTo(network_suid);
+                                                                          network.getSUID());
+        e.addAppliesTo(network.getSUID());
         for (final VisualProperty visual_property : all_visual_properties) {
             if (visual_property.getTargetDataType() == CyEdge.class) {
                 addDefaultProperties(current_visual_style, visual_property, e);
@@ -299,8 +299,8 @@ public final class VisualPropertiesGatherer {
         for (final CyEdge edge : network.getEdgeList()) {
             final View<CyEdge> edge_view = view.getEdgeView(edge);
             final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.EDGES.asString(),
-                                                                              String.valueOf(network.getSUID()));
-            e.addAppliesTo(org.cytoscape.io.internal.cxio.CxUtil.makeId(edge.getSUID()));
+                                                                              network.getSUID());
+            e.addAppliesTo(edge.getSUID());
             for (final VisualProperty visual_property : all_visual_properties) {
                 if (visual_property.getTargetDataType() == CyEdge.class) {
                     addProperties(edge_view, visual_property, e);
@@ -319,7 +319,7 @@ public final class VisualPropertiesGatherer {
                                                       final List<AspectElement> visual_properties,
                                                       final VisualStyle current_visual_style,
                                                       final Set<VisualProperty<?>> all_visual_properties) {
-        final String network_suid = String.valueOf(network.getSUID());
+        final Long network_suid = network.getSUID();
 
         final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.NETWORK.asString(),
                                                                           network_suid);
@@ -337,9 +337,9 @@ public final class VisualPropertiesGatherer {
                                                            final List<AspectElement> visual_properties,
                                                            final VisualStyle current_visual_style,
                                                            final Set<VisualProperty<?>> all_visual_properties) {
-        final String network_suid = String.valueOf(network.getSUID());
+        final Long network_suid = network.getSUID();
         final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.NODES_DEFAULT.asString(),
-                                                                          network_suid);
+                                                                          network_suid );
         e.addAppliesTo(network_suid);
         for (final VisualProperty visual_property : all_visual_properties) {
             if (visual_property.getTargetDataType() == CyNode.class) {
@@ -358,9 +358,9 @@ public final class VisualPropertiesGatherer {
         for (final CyNode cy_node : network.getNodeList()) {
             final View<CyNode> node_view = view.getNodeView(cy_node);
             final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.NODES.asString(),
-                                                                              String.valueOf(network.getSUID()));
+                                                                              network.getSUID());
 
-            e.addAppliesTo(org.cytoscape.io.internal.cxio.CxUtil.makeId(cy_node.getSUID()));
+            e.addAppliesTo(cy_node.getSUID());
 
             for (final VisualProperty visual_property : all_visual_properties) {
                 if (visual_property.getTargetDataType() == CyNode.class) {

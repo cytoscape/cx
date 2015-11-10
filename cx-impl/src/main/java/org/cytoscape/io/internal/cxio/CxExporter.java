@@ -131,7 +131,6 @@ public final class CxExporter {
 
     public void setGroupManager(final CyGroupManager group_manager) {
         _group_manager = group_manager;
-
     }
 
     public void setLexicon(final VisualLexicon lexicon) {
@@ -192,7 +191,7 @@ public final class CxExporter {
                             continue;
                         }
                         EdgeAttributesElement e = null;
-                        final String subnet = String.valueOf(my_network.getSUID());
+                        final long subnet = my_network.getSUID();
                         if (value instanceof List) {
                             final List<String> attr_values = new ArrayList<String>();
                             for (final Object v : (List) value) {
@@ -200,7 +199,7 @@ public final class CxExporter {
                             }
                             if (!attr_values.isEmpty()) {
                                 e = new EdgeAttributesElement(subnet,
-                                                              CxUtil.makeId(cy_edge.getSUID()),
+                                                              cy_edge.getSUID(),
                                                               column_name,
                                                               attr_values,
                                                               AttributesAspectUtils.determineDataType(value));
@@ -208,7 +207,7 @@ public final class CxExporter {
                         }
                         else {
                             e = new EdgeAttributesElement(subnet,
-                                                          CxUtil.makeId(cy_edge.getSUID()),
+                                                          cy_edge.getSUID(),
                                                           column_name,
                                                           String.valueOf(value),
                                                           AttributesAspectUtils.determineDataType(value));
@@ -369,7 +368,7 @@ public final class CxExporter {
                         continue;
                     }
                     HiddenAttributesElement e = null;
-                    final String subnet = String.valueOf(my_network.getSUID());
+                    final long subnet = my_network.getSUID();
                     if (value instanceof List) {
                         final List<String> attr_values = new ArrayList<String>();
                         for (final Object v : (List) value) {
@@ -562,7 +561,8 @@ public final class CxExporter {
 
             if ((values != null) && !values.isEmpty()) {
                 for (final String column_name : values.keySet()) {
-                    if (column_name.equals(SUID) || column_name.equals(CxUtil.SELECTED)) {
+                    if (column_name.equals(SUID) || column_name.equals(CxUtil.SELECTED) || column_name.equals(CxUtil.NAME_COL)
+                            || column_name.equals(CxUtil.SHARED_NAME_COL)) {
                         continue;
                     }
                     final Object value = values.get(column_name);
@@ -570,7 +570,7 @@ public final class CxExporter {
                         continue;
                     }
                     NetworkAttributesElement e = null;
-                    final String subnet = String.valueOf(my_network.getSUID());
+                    final long subnet = my_network.getSUID();
                     if (value instanceof List) {
                         final List<String> attr_values = new ArrayList<String>();
                         for (final Object v : (List) value) {
@@ -594,7 +594,6 @@ public final class CxExporter {
                     }
                 }
             }
-
         }
     }
 
@@ -621,7 +620,7 @@ public final class CxExporter {
     private final static String getSharedNameFromNodeTable(final CyNetwork network, final CyNode node) {
         final CyRow row = network.getTable(CyNode.class, CyNetwork.DEFAULT_ATTRS).getRow(node.getSUID());
         if (row != null) {
-            final Object o = row.getRaw(CxUtil.SHARED_NAME);
+            final Object o = row.getRaw(CxUtil.SHARED_NAME_COL);
             if ((o != null) && (o instanceof String)) {
                 return String.valueOf(o);
             }
@@ -665,7 +664,7 @@ public final class CxExporter {
                 if ((values != null) && !values.isEmpty()) {
                     for (final String column_name : values.keySet()) {
                         if (column_name.equals(SUID) || column_name.equals(CxUtil.SELECTED)
-                                || column_name.equals(CxUtil.SHARED_NAME) || column_name.equals(CxUtil.REPRESENTS)) {
+                                || column_name.equals(CxUtil.SHARED_NAME_COL) || column_name.equals(CxUtil.REPRESENTS)) {
                             continue;
                         }
                         final Object value = values.get(column_name);
@@ -673,7 +672,7 @@ public final class CxExporter {
                             continue;
                         }
                         NodeAttributesElement e = null;
-                        final String subnet = String.valueOf(my_network.getSUID());
+                        final long subnet = my_network.getSUID();
                         if (value instanceof List) {
                             final List<String> attr_values = new ArrayList<String>();
                             for (final Object v : (List) value) {
@@ -681,7 +680,7 @@ public final class CxExporter {
                             }
                             if (!attr_values.isEmpty()) {
                                 e = new NodeAttributesElement(subnet,
-                                                              CxUtil.makeId(cy_node.getSUID()),
+                                                              cy_node.getSUID(),
                                                               column_name,
                                                               attr_values,
                                                               AttributesAspectUtils.determineDataType(value));
@@ -689,7 +688,7 @@ public final class CxExporter {
                         }
                         else {
                             e = new NodeAttributesElement(subnet,
-                                                          CxUtil.makeId(cy_node.getSUID()),
+                                                          cy_node.getSUID(),
                                                           column_name,
                                                           String.valueOf(value),
                                                           AttributesAspectUtils.determineDataType(value));
@@ -708,7 +707,7 @@ public final class CxExporter {
         final CySubNetwork my_subnet = (CySubNetwork) network;
         final CyRootNetwork my_root = my_subnet.getRootNetwork();
         for (final CyNode cy_node : my_root.getNodeList()) {
-            elements.add(new NodesElement(CxUtil.makeId(cy_node.getSUID()),
+            elements.add(new NodesElement(cy_node.getSUID(),
                                           getSharedNameFromNodeTable(my_root, cy_node),
                                           getRepresentsFromNodeTable(network, cy_node)));
         }
@@ -741,12 +740,12 @@ public final class CxExporter {
         }
         final List<AspectElement> elements = new ArrayList<AspectElement>();
         for (final CySubNetwork subnet : subnets) {
-            final SubNetworkElement subnetwork_element = new SubNetworkElement(String.valueOf(subnet.getSUID()));
+            final SubNetworkElement subnetwork_element = new SubNetworkElement(subnet.getSUID());
             for (final CyEdge edgeview : subnet.getEdgeList()) {
-                subnetwork_element.addEdge(CxUtil.makeId(String.valueOf(edgeview.getSUID())));
+                subnetwork_element.addEdge(edgeview.getSUID());
             }
             for (final CyNode nodeview : subnet.getNodeList()) {
-                subnetwork_element.addNode(CxUtil.makeId(String.valueOf(nodeview.getSUID())));
+                subnetwork_element.addNode(nodeview.getSUID());
             }
             elements.add(subnetwork_element);
         }
@@ -773,15 +772,16 @@ public final class CxExporter {
         for (final CyNode cy_node : network.getNodeList()) {
             final View<CyNode> node_view = view.getNodeView(cy_node);
             if (z_used) {
-                elements.add(new CartesianLayoutElement(CxUtil.makeId(cy_node.getSUID()), String.valueOf(network
-                        .getSUID()), node_view.getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
-                        .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION), node_view
-                        .getVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION)));
+                elements.add(new CartesianLayoutElement(cy_node.getSUID(), network.getSUID(), node_view
+                        .getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
+                                                        .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION), node_view
+                                                        .getVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION)));
             }
             else {
-                elements.add(new CartesianLayoutElement(CxUtil.makeId(cy_node.getSUID()), String.valueOf(network
-                        .getSUID()), node_view.getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
-                        .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION)));
+
+                elements.add(new CartesianLayoutElement(cy_node.getSUID(), network.getSUID(), node_view
+                        .getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
+                                                        .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION)));
             }
 
         }
@@ -796,10 +796,8 @@ public final class CxExporter {
         final List<AspectElement> elements = new ArrayList<AspectElement>();
         final CyRootNetwork my_root = ((CySubNetwork) network).getRootNetwork();
         for (final CyEdge cy_edge : my_root.getEdgeList()) {
-            elements.add(new EdgesElement(CxUtil.makeId(cy_edge.getSUID()),
-                                          CxUtil.makeId(cy_edge.getSource().getSUID()),
-                                          CxUtil.makeId(cy_edge.getTarget().getSUID()),
-                                          getInteractionFromEdgeTable(network, cy_edge)));
+            elements.add(new EdgesElement(cy_edge.getSUID(), cy_edge.getSource().getSUID(), cy_edge.getTarget()
+                    .getSUID(), getInteractionFromEdgeTable(network, cy_edge)));
         }
         final long t0 = System.currentTimeMillis();
         w.writeAspectElements(elements);
@@ -813,7 +811,7 @@ public final class CxExporter {
         final CyRootNetwork root = as_subnet.getRootNetwork();
         final List<CySubNetwork> subnetworks = root.getSubNetworkList();
         final List<AspectElement> elements = new ArrayList<AspectElement>();
-        final String parent = String.valueOf(root.getSUID());
+        final long parent = root.getSUID();
         int counter = 0;
         for (final CySubNetwork subnetwork : subnetworks) {
 
@@ -834,9 +832,9 @@ public final class CxExporter {
                         }
                     }
                     if (name == null) {
-                        if (values.get(CxUtil.SHARED_NAME) != null) {
+                        if (values.get(CxUtil.SHARED_NAME_COL) != null) {
                             try {
-                                final String str = String.valueOf(values.get(CxUtil.SHARED_NAME));
+                                final String str = String.valueOf(values.get(CxUtil.SHARED_NAME_COL));
                                 if ((str != null) && (str.trim().length() > 0)) {
                                     name = str;
                                 }
@@ -853,7 +851,7 @@ public final class CxExporter {
             }
             counter++;
             final NetworkRelationsElement rel = new NetworkRelationsElement(parent,
-                                                                            String.valueOf(subnetwork.getSUID()),
+                                                                            subnetwork.getSUID(),
                                                                             "subnetwork",
                                                                             name);
             elements.add(rel);
@@ -912,7 +910,7 @@ public final class CxExporter {
         final Set<String> avoid_for_node_attributes = new HashSet<String>();
         avoid_for_node_attributes.add(SUID);
         avoid_for_node_attributes.add(CxUtil.SELECTED);
-        avoid_for_node_attributes.add(CxUtil.SHARED_NAME);
+        avoid_for_node_attributes.add(CxUtil.SHARED_NAME_COL);
         avoid_for_node_attributes.add(CxUtil.REPRESENTS);
 
         final Set<String> avoid_for_edge_attributes = new HashSet<String>();
@@ -929,7 +927,7 @@ public final class CxExporter {
                                         _next_suid,
                                         counter,
                                         "",
-                    "");
+                                        "");
         }
         if (aspects.contains(Aspect.EDGES)) {
 
@@ -939,7 +937,7 @@ public final class CxExporter {
                                         _next_suid,
                                         (long) my_root.getEdgeList().size(),
                                         "",
-                    "");
+                                        "");
         }
         if (aspects.contains(Aspect.NETWORK_ATTRIBUTES)) {
             long counter = 0;
@@ -951,7 +949,7 @@ public final class CxExporter {
                                         consistency_group,
                                         counter,
                                         "",
-                    "");
+                                        "");
         }
         if (aspects.contains(Aspect.HIDDEN_ATTRIBUTES)) {
             long counter = 0;
@@ -963,7 +961,7 @@ public final class CxExporter {
                                         consistency_group,
                                         counter,
                                         "",
-                    "");
+                                        "");
         }
         if (aspects.contains(Aspect.NODE_ATTRIBUTES)) {
             long counter = 0;
@@ -975,7 +973,7 @@ public final class CxExporter {
                                         consistency_group,
                                         counter,
                                         "",
-                    "");
+                                        "");
         }
         if (aspects.contains(Aspect.EDGE_ATTRIBUTES)) {
             long counter = 0;
@@ -987,7 +985,7 @@ public final class CxExporter {
                                         consistency_group,
                                         counter,
                                         "",
-                    "");
+                                        "");
         }
 
         if (aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
@@ -996,7 +994,7 @@ public final class CxExporter {
                                         consistency_group,
                                         (long) my_root.getNodeList().size(),
                                         "",
-                    "");
+                                        "");
         }
 
         if (aspects.contains(Aspect.VISUAL_PROPERTIES)) {
@@ -1014,7 +1012,7 @@ public final class CxExporter {
 
                     counter += VisualPropertiesGatherer.gatherVisualPropertiesAsAspectElements(view,
 
-                    view.getModel(), _visual_mapping_manager, _lexicon, types).size();
+                                                                                               view.getModel(), _visual_mapping_manager, _lexicon, types).size();
                 }
             }
             addDataToMetaDataCollection(pre_meta_data,
@@ -1022,11 +1020,11 @@ public final class CxExporter {
                                         consistency_group,
                                         counter,
                                         "",
-                                        "");
+                    "");
         }
         if (aspects.contains(Aspect.SUBNETWORKS)) {
             addDataToMetaDataCollection(pre_meta_data, SubNetworkElement.ASPECT_NAME, consistency_group, (long) my_root
-                    .getSubNetworkList().size(), "", "");
+                                        .getSubNetworkList().size(), "", "");
         }
         if (aspects.contains(Aspect.GROUPS)) {
             long counter = 0;
@@ -1041,7 +1039,7 @@ public final class CxExporter {
                                         consistency_group,
                                         (long) 1,
                                         "",
-                    "");
+                                        "");
         }
 
         w.addPreMetaData(pre_meta_data);
