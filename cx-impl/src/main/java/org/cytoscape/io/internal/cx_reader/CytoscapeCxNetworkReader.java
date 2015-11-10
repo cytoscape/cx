@@ -57,7 +57,7 @@ import org.cytoscape.work.util.ListSingleSelection;
 public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
     private static final Pattern               DIRECT_NET_PROPS_PATTERN = Pattern
-                                                                                .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
+            .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
 
     private static final boolean               DEBUG                    = true;
 
@@ -155,11 +155,11 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
                 if (collection.getNodesDefaultVisualPropertiesElement(network_id) != null) {
                     setProperties(lexicon, collection.getNodesDefaultVisualPropertiesElement(network_id)
-                            .getProperties(), new_visual_style, CyNode.class);
+                                  .getProperties(), new_visual_style, CyNode.class);
                 }
                 if (collection.getEdgesDefaultVisualPropertiesElement(network_id) != null) {
                     setProperties(lexicon, collection.getEdgesDefaultVisualPropertiesElement(network_id)
-                            .getProperties(), new_visual_style, CyEdge.class);
+                                  .getProperties(), new_visual_style, CyEdge.class);
                 }
             }
 
@@ -221,7 +221,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
             if (_network_collection_name.toLowerCase().endsWith(".cx")) {
                 viz_style_title = String.format("%s-Style", _network_collection_name.substring(0,
                                                                                                _network_collection_name
-                                                                                                       .length() - 3));
+                                                                                               .length() - 3));
             }
             else {
                 viz_style_title = String.format("%s-Style", _network_collection_name);
@@ -575,7 +575,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                     }
                     else {
                         System.out.println("could not parse serializable string from discrete mapping value '" + v
-                                + "'");
+                                           + "'");
                     }
                 }
                 else {

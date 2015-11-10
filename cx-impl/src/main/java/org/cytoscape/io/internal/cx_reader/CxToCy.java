@@ -39,15 +39,15 @@ public final class CxToCy {
 
     private final static boolean       DEBUG          = true;
     private final static boolean       STRICT         = false;
-    private static final long        DEFAULT_SUBNET = -Long.MAX_VALUE;
+    private static final long          DEFAULT_SUBNET = -Long.MAX_VALUE;
 
     private Set<CyNode>                _nodes_with_visual_properties;
     private Set<CyEdge>                _edges_with_visual_properties;
     private VisualElementCollectionMap _visual_element_collections;
     private NetworkRelationsElement    _network_relations;
-    private Map<Long, Long>          _network_suid_to_networkrelations_map;
-    private Map<Long, CyNode>        _cxid_to_cynode_map;
-    private Map<Long, CyEdge>        _cxid_to_cyedge_map;
+    private Map<Long, Long>            _network_suid_to_networkrelations_map;
+    private Map<Long, CyNode>          _cxid_to_cynode_map;
+    private Map<Long, CyEdge>          _cxid_to_cyedge_map;
 
     public final List<CyNetwork> createNetwork(final SortedMap<String, List<AspectElement>> aspect_collection,
                                                CyRootNetwork root_network,
@@ -178,8 +178,7 @@ public final class CxToCy {
 
             final CySubNetwork sub_network = subnetworks_ary[i];
 
-            final Long subnetwork_id = subnetwork_ids.size() > 0 ? subnetwork_ids.get(i) : sub_network
-                                                                                                            .getSUID();
+            final Long subnetwork_id = subnetwork_ids.size() > 0 ? subnetwork_ids.get(i) : sub_network.getSUID();
 
             if (DEBUG) {
                 System.out.println("subnetwork id: " + subnetwork_id);
@@ -192,10 +191,10 @@ public final class CxToCy {
 
             if (_visual_element_collections != null) {
                 if (_visual_element_collections.getSubNetworkElement(subnetwork_id) != null) {
-                    nodes_in_subnet = new HashSet<Long>(_visual_element_collections
-                            .getSubNetworkElement(subnetwork_id).getNodes());
-                    edges_in_subnet = new HashSet<Long>(_visual_element_collections
-                            .getSubNetworkElement(subnetwork_id).getEdges());
+                    nodes_in_subnet = new HashSet<Long>(_visual_element_collections.getSubNetworkElement(subnetwork_id)
+                            .getNodes());
+                    edges_in_subnet = new HashSet<Long>(_visual_element_collections.getSubNetworkElement(subnetwork_id)
+                            .getEdges());
                     if (DEBUG) {
                         System.out.println("nodes count in subnet: " + nodes_in_subnet.size());
                         System.out.println("edges count in subnet: " + edges_in_subnet.size());
@@ -256,7 +255,7 @@ public final class CxToCy {
                         for (final Long applies_to_node : applies_to_nodes) {
                             _nodes_with_visual_properties.add(_cxid_to_cynode_map.get(applies_to_node));
                             _visual_element_collections.addNodeVisualPropertiesElement(view, _cxid_to_cynode_map
-                                                                                       .get(applies_to_node), vpe);
+                                    .get(applies_to_node), vpe);
                         }
                     }
                     else if (vpe.getPropertiesOf().equals(VisualPropertyType.EDGES.asString())) {
@@ -264,7 +263,7 @@ public final class CxToCy {
                         for (final Long applies_to_edge : applies_to_edges) {
                             _edges_with_visual_properties.add(_cxid_to_cyedge_map.get(applies_to_edge));
                             _visual_element_collections.addEdgeVisualPropertiesElement(view, _cxid_to_cyedge_map
-                                                                                       .get(applies_to_edge), vpe);
+                                    .get(applies_to_edge), vpe);
                         }
                     }
                 }
@@ -322,7 +321,7 @@ public final class CxToCy {
 
             final EdgesElement edge_element = (EdgesElement) e;
             final Long edge_id = edge_element.getId();
-            if ((edge_id == null) ) {
+            if ((edge_id == null)) {
                 throw new IOException("edge identifiers must not be null or empty");
             }
 
@@ -336,10 +335,10 @@ public final class CxToCy {
                 final Long target_id = edge_element.getTarget();
 
                 if (perform_basic_integrity_checks) {
-                    if ((source_id == null) ) {
+                    if ((source_id == null)) {
                         throw new IOException("source node identifiers in edges must not be null");
                     }
-                    if ((target_id == null) ) {
+                    if ((target_id == null)) {
                         throw new IOException("target node identifiers in edges must not be null");
                     }
                     if (!node_ids.contains(source_id)) {
@@ -670,7 +669,7 @@ public final class CxToCy {
             throws IOException {
         for (final AspectElement edge : edges) {
             final Long edge_id = ((EdgesElement) edge).getId();
-            if ((edge_id == null) ) {
+            if ((edge_id == null)) {
                 throw new IOException("edge identifiers must not be null");
             }
             if (edge_ids.contains(edge_id)) {
@@ -684,7 +683,7 @@ public final class CxToCy {
             throws IOException {
         for (final AspectElement node : nodes) {
             final Long node_id = ((NodesElement) node).getId();
-            if ((node_id == null) ) {
+            if ((node_id == null)) {
                 throw new IOException("node identifiers must not be null ");
             }
             if (node_ids.contains(node_id)) {
@@ -731,7 +730,7 @@ public final class CxToCy {
         }
         else {
             throw new IllegalArgumentException("don't know how to deal with type '" + type + "' for value '" + value
-                    + "'");
+                                               + "'");
         }
     }
 
@@ -752,7 +751,7 @@ public final class CxToCy {
                 for (final Long po : pos) {
                     if (!edge_attributes_map.containsKey(po)) {
                         if (perform_basic_integrity_checks) {
-                            if ((po == null) ) {
+                            if ((po == null)) {
                                 throw new IOException("edge identifiers must not be null in edge attributes");
                             }
                             if (!edge_ids.contains(po)) {
@@ -783,7 +782,7 @@ public final class CxToCy {
                 final List<Long> pos = nae.getPropertyOf();
                 for (final Long po : pos) {
                     if (perform_basic_integrity_checks) {
-                        if ((po == null) ) {
+                        if ((po == null)) {
                             throw new IOException("node identifiers must not be null in node attributes");
                         }
                         if (!node_ids.contains(po)) {

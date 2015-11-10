@@ -98,6 +98,7 @@ public class CxNetworkWriter implements CyWriter {
         exporter.setNetworkViewManager(_networkview_manager);
         exporter.setGroupManager(_group_manager);
         exporter.setWritePreMetadata(true);
+        exporter.setWritePostMetadata(true);
         exporter.setNextSuid(SUIDFactory.getNextSUID());
 
         final long t0 = System.currentTimeMillis();

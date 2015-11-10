@@ -278,7 +278,7 @@ public final class VisualPropertiesGatherer {
                                                            final List<AspectElement> visual_properties,
                                                            final VisualStyle current_visual_style,
                                                            final Set<VisualProperty<?>> all_visual_properties) {
-       
+
         final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.EDGES_DEFAULT.asString(),
                                                                           network.getSUID());
         e.addAppliesTo(network.getSUID());
@@ -339,7 +339,7 @@ public final class VisualPropertiesGatherer {
                                                            final Set<VisualProperty<?>> all_visual_properties) {
         final Long network_suid = network.getSUID();
         final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.NODES_DEFAULT.asString(),
-                                                                          network_suid );
+                                                                          network_suid);
         e.addAppliesTo(network_suid);
         for (final VisualProperty visual_property : all_visual_properties) {
             if (visual_property.getTargetDataType() == CyNode.class) {

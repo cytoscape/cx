@@ -118,8 +118,6 @@ final public class VisualElementCollectionMap {
         checkForKey(subnet);
         _data.get(subnet).setSubNetworkElement(subnetwork_element);
     }
-    
-   
 
     @Override
     public String toString() {
