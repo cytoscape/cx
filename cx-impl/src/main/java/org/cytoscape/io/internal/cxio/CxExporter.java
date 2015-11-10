@@ -287,17 +287,17 @@ public final class CxExporter {
             final Set<CyGroup> groups = _group_manager.getGroupSet(subnet);
             for (final CyGroup group : groups) {
                 final String name = row.get("name", String.class);
-                final CyGroupsElement group_element = new CyGroupsElement(String.valueOf(group.getGroupNode().getSUID()),
-                                                                          name,
-                                                                          String.valueOf(subnet.getSUID()));
+                final CyGroupsElement group_element = new CyGroupsElement(group.getGroupNode().getSUID(),
+                                                                          subnet.getSUID(),
+                                                                          name );
                 for (final CyEdge e : group.getExternalEdgeList()) {
-                    group_element.addExternalEdge(String.valueOf(e.getSUID()));
+                    group_element.addExternalEdge(e.getSUID());
                 }
                 for (final CyEdge e : group.getInternalEdgeList()) {
-                    group_element.addInternalEdge(String.valueOf(e.getSUID()));
+                    group_element.addInternalEdge(e.getSUID());
                 }
                 for (final CyNode e : group.getNodeList()) {
-                    group_element.addNode(String.valueOf(e.getSUID()));
+                    group_element.addNode(e.getSUID());
                 }
                 elements.add(group_element);
             }
