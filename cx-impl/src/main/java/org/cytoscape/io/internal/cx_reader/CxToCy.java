@@ -8,10 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
 import org.cxio.aspects.datamodels.AbstractAttributesAspectElement;
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
+import org.cxio.aspects.datamodels.CyGroupsElement;
 import org.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.cxio.aspects.datamodels.EdgeAttributesElement;
 import org.cxio.aspects.datamodels.EdgesElement;
@@ -44,10 +46,45 @@ public final class CxToCy {
     private Set<CyNode>                _nodes_with_visual_properties;
     private Set<CyEdge>                _edges_with_visual_properties;
     private VisualElementCollectionMap _visual_element_collections;
-    private NetworkRelationsElement    _network_relations;
     private Map<Long, Long>            _network_suid_to_networkrelations_map;
     private Map<Long, CyNode>          _cxid_to_cynode_map;
     private Map<Long, CyEdge>          _cxid_to_cyedge_map;
+    private Map<Long, Long>            _view_to_subnet_map;
+    private Map<Long, List<Long>>      _subnet_to_views_map;
+
+    public final Map<Long, Long> getViewToSubNetworkMap() {
+        return _view_to_subnet_map;
+    }
+
+    public final Map<Long, List<Long>> getSubNetworkToViewsMap() {
+        return _subnet_to_views_map;
+    }
+
+    public final static Map<Long, Long> makeViewToSubNetworkMap(final List<AspectElement> network_relations) {
+        final Map<Long, Long> view_to_subnet_map = new TreeMap<Long, Long>();
+        for (final AspectElement e : network_relations) {
+            final NetworkRelationsElement nwe = (NetworkRelationsElement) e;
+            if (nwe.getRelationship() == NetworkRelationsElement.VIEW_TYPE) {
+                view_to_subnet_map.put(nwe.getChild(), nwe.getParent());
+            }
+        }
+        return view_to_subnet_map;
+    }
+
+    public final static Map<Long, List<Long>> makeSubNetworkToViewsMap(final List<AspectElement> network_relations) {
+        final Map<Long, List<Long>> subnet_to_views_map = new TreeMap<Long, List<Long>>();
+        for (final AspectElement e : network_relations) {
+            final NetworkRelationsElement nwe = (NetworkRelationsElement) e;
+            if (nwe.getRelationship() == NetworkRelationsElement.VIEW_TYPE) {
+
+                if (!subnet_to_views_map.containsKey(nwe.getParent())) {
+                    subnet_to_views_map.put(nwe.getParent(), new ArrayList<Long>());
+                }
+                subnet_to_views_map.get(nwe.getParent()).add(nwe.getChild());
+            }
+        }
+        return subnet_to_views_map;
+    }
 
     public final List<CyNetwork> createNetwork(final SortedMap<String, List<AspectElement>> aspect_collection,
                                                CyRootNetwork root_network,
@@ -65,6 +102,7 @@ public final class CxToCy {
         final List<AspectElement> visual_properties = aspect_collection.get(CyVisualPropertiesElement.ASPECT_NAME);
         final List<AspectElement> subnetworks = aspect_collection.get(SubNetworkElement.ASPECT_NAME);
         final List<AspectElement> network_relations = aspect_collection.get(NetworkRelationsElement.ASPECT_NAME);
+        final List<AspectElement> groups = aspect_collection.get(CyGroupsElement.ASPECT_NAME);
 
         final Map<Long, List<NodeAttributesElement>> node_attributes_map = new HashMap<Long, List<NodeAttributesElement>>();
         final Map<Long, List<EdgeAttributesElement>> edge_attributes_map = new HashMap<Long, List<EdgeAttributesElement>>();
@@ -102,20 +140,22 @@ public final class CxToCy {
         // Dealing with subnetwork relations:
         Long parent_network_id = null;
         List<Long> subnetwork_ids;
-        int number_of_subnetworks = 1;
+        int number_of_subnetworks;
+        boolean subnet_info_present;
 
+        _view_to_subnet_map = new HashMap<Long, Long>();
+        _subnet_to_views_map = new HashMap<Long, List<Long>>();
         if ((network_relations != null) && !network_relations.isEmpty()) {
-            _network_relations = (NetworkRelationsElement) network_relations.get(0);
-
-            final Set<Long> parent_ids = NetworkRelationsElement.getAllParentNetworkIds(network_relations);
-            if ((parent_ids == null) || parent_ids.isEmpty()) {
-                throw new IOException("no parent network id");
+            subnet_info_present = true;
+            final Set<Long> subnetwork_parent_ids = NetworkRelationsElement
+                    .getAllSubNetworkParentNetworkIds(network_relations);
+            if ((subnetwork_parent_ids == null) || (subnetwork_parent_ids.size() < 1)) {
+                throw new IOException("no subnetwork parent network id");
             }
-            else if (parent_ids.size() > 1) {
-                throw new IOException("multiple parent network ids: " + parent_ids);
+            else if (subnetwork_parent_ids.size() > 1) {
+                throw new IOException("multiple subnetwork parent network ids: " + subnetwork_parent_ids);
             }
-
-            for (final Long s : parent_ids) {
+            for (final Long s : subnetwork_parent_ids) {
                 parent_network_id = s;
             }
             subnetwork_ids = NetworkRelationsElement.getSubNetworkIds(parent_network_id, network_relations);
@@ -123,16 +163,23 @@ public final class CxToCy {
                 throw new IOException("no subnetwork ids for: " + parent_network_id);
             }
             number_of_subnetworks = subnetwork_ids.size();
+            _view_to_subnet_map = makeViewToSubNetworkMap(network_relations);
+            _subnet_to_views_map = makeSubNetworkToViewsMap(network_relations);
+            if (DEBUG) {
+                System.out.println("view to subnet:");
+                System.out.println(_view_to_subnet_map);
+                System.out.println("subnet to views:");
+                System.out.println(_subnet_to_views_map);
+            }
         }
         else {
             if (DEBUG) {
                 System.out.println("no network relations");
             }
-            _network_relations = null;
+            subnet_info_present = false;
+            number_of_subnetworks = 1;
             subnetwork_ids = new ArrayList<Long>();
         }
-
-        final boolean subnet_info_present = _network_relations != null;
 
         final CySubNetwork[] subnetworks_ary = new CySubNetwork[number_of_subnetworks];
         for (int i = 0; i < number_of_subnetworks; ++i) {
@@ -287,10 +334,6 @@ public final class CxToCy {
 
     public Set<CyEdge> getEdgesWithVisualProperties() {
         return _edges_with_visual_properties;
-    }
-
-    public final NetworkRelationsElement getNetworkRelations() {
-        return _network_relations;
     }
 
     public final Map<Long, Long> getNetworkSuidToNetworkRelationsMap() {
