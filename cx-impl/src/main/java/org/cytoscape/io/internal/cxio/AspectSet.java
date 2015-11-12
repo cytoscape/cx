@@ -19,6 +19,7 @@ import org.cxio.aspects.readers.NodesFragmentReader;
 import org.cxio.aspects.readers.SubNetworkFragmentReader;
 import org.cxio.aspects.writers.CartesianLayoutFragmentWriter;
 import org.cxio.aspects.writers.CyGroupsFragmentWriter;
+import org.cxio.aspects.writers.CyViewsFragmentWriter;
 import org.cxio.aspects.writers.EdgeAttributesFragmentWriter;
 import org.cxio.aspects.writers.EdgesFragmentWriter;
 import org.cxio.aspects.writers.HiddenAttributesFragmentWriter;
@@ -116,6 +117,9 @@ public final class AspectSet {
         }
         if (_aspects.contains(Aspect.GROUPS)) {
             writers.add(CyGroupsFragmentWriter.createInstance());
+        }
+        if (_aspects.contains(Aspect.VIEWS)) {
+            writers.add(CyViewsFragmentWriter.createInstance());
         }
         return writers;
     }

@@ -88,6 +88,7 @@ public class CxNetworkWriter implements CyWriter {
         aspects.addAspect(Aspect.CARTESIAN_LAYOUT);
         aspects.addAspect(Aspect.VISUAL_PROPERTIES);
         aspects.addAspect(Aspect.SUBNETWORKS);
+        aspects.addAspect(Aspect.VIEWS);
         aspects.addAspect(Aspect.NETWORK_RELATIONS);
         aspects.addAspect(Aspect.GROUPS);
 

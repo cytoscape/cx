@@ -2,6 +2,7 @@ package org.cytoscape.io.internal.cxio;
 
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.cxio.aspects.datamodels.CyGroupsElement;
+import org.cxio.aspects.datamodels.CyViewsElement;
 import org.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.cxio.aspects.datamodels.EdgeAttributesElement;
 import org.cxio.aspects.datamodels.EdgesElement;
@@ -31,6 +32,7 @@ public enum Aspect {
     VISUAL_PROPERTIES(CyVisualPropertiesElement.ASPECT_NAME),
     NETWORK_RELATIONS(NetworkRelationsElement.ASPECT_NAME),
     GROUPS(CyGroupsElement.ASPECT_NAME),
+    VIEWS(CyViewsElement.ASPECT_NAME),
     HIDDEN_ATTRIBUTES(HiddenAttributesElement.ASPECT_NAME);
 
     private final String _s;
