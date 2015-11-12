@@ -64,7 +64,7 @@ public final class CxToCy {
         final Map<Long, Long> view_to_subnet_map = new TreeMap<Long, Long>();
         for (final AspectElement e : network_relations) {
             final NetworkRelationsElement nwe = (NetworkRelationsElement) e;
-            if (nwe.getRelationship() == NetworkRelationsElement.VIEW_TYPE) {
+            if (nwe.getRelationship() == NetworkRelationsElement.TYPE_VIEW) {
                 view_to_subnet_map.put(nwe.getChild(), nwe.getParent());
             }
         }
@@ -75,7 +75,7 @@ public final class CxToCy {
         final Map<Long, List<Long>> subnet_to_views_map = new TreeMap<Long, List<Long>>();
         for (final AspectElement e : network_relations) {
             final NetworkRelationsElement nwe = (NetworkRelationsElement) e;
-            if (nwe.getRelationship() == NetworkRelationsElement.VIEW_TYPE) {
+            if (nwe.getRelationship() == NetworkRelationsElement.TYPE_VIEW) {
 
                 if (!subnet_to_views_map.containsKey(nwe.getParent())) {
                     subnet_to_views_map.put(nwe.getParent(), new ArrayList<Long>());
