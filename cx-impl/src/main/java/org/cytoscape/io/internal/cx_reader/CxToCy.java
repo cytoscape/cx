@@ -14,6 +14,7 @@ import org.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
 import org.cxio.aspects.datamodels.AbstractAttributesAspectElement;
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.cxio.aspects.datamodels.CyGroupsElement;
+import org.cxio.aspects.datamodels.CyViewsElement;
 import org.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.cxio.aspects.datamodels.EdgeAttributesElement;
 import org.cxio.aspects.datamodels.EdgesElement;
@@ -103,6 +104,7 @@ public final class CxToCy {
         final List<AspectElement> subnetworks = aspect_collection.get(SubNetworkElement.ASPECT_NAME);
         final List<AspectElement> network_relations = aspect_collection.get(NetworkRelationsElement.ASPECT_NAME);
         final List<AspectElement> groups = aspect_collection.get(CyGroupsElement.ASPECT_NAME);
+        final List<AspectElement> views = aspect_collection.get(CyViewsElement.ASPECT_NAME);
 
         final Map<Long, List<NodeAttributesElement>> node_attributes_map = new HashMap<Long, List<NodeAttributesElement>>();
         final Map<Long, List<EdgeAttributesElement>> edge_attributes_map = new HashMap<Long, List<EdgeAttributesElement>>();
@@ -232,6 +234,16 @@ public final class CxToCy {
             }
 
             _network_suid_to_networkrelations_map.put(sub_network.getSUID(), subnetwork_id);
+            if ( DEBUG) {
+                System.out.println("added "+ sub_network.getSUID() + "->" + subnetwork_id + " to network suid to networkrelations map" );
+            }
+            
+            if ( !subnet_info_present) {
+            _view_to_subnet_map.put(subnetwork_id,subnetwork_id);
+            final List<Long> l = new ArrayList<Long>();
+            l.add(subnetwork_id);
+            _subnet_to_views_map.put(subnetwork_id, l);
+            }
 
             Set<Long> nodes_in_subnet = null;
             Set<Long> edges_in_subnet = null;
