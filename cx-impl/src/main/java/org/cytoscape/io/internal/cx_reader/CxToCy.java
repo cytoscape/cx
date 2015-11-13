@@ -234,15 +234,16 @@ public final class CxToCy {
             }
 
             _network_suid_to_networkrelations_map.put(sub_network.getSUID(), subnetwork_id);
-            if ( DEBUG) {
-                System.out.println("added "+ sub_network.getSUID() + "->" + subnetwork_id + " to network suid to networkrelations map" );
+            if (DEBUG) {
+                System.out.println("added " + sub_network.getSUID() + "->" + subnetwork_id
+                        + " to network suid to networkrelations map");
             }
-            
-            if ( !subnet_info_present) {
-            _view_to_subnet_map.put(subnetwork_id,subnetwork_id);
-            final List<Long> l = new ArrayList<Long>();
-            l.add(subnetwork_id);
-            _subnet_to_views_map.put(subnetwork_id, l);
+
+            if (!subnet_info_present) {
+                _view_to_subnet_map.put(subnetwork_id, subnetwork_id);
+                final List<Long> l = new ArrayList<Long>();
+                l.add(subnetwork_id);
+                _subnet_to_views_map.put(subnetwork_id, l);
             }
 
             Set<Long> nodes_in_subnet = null;
@@ -298,7 +299,7 @@ public final class CxToCy {
                 for (final AspectElement element : visual_properties) {
                     final CyVisualPropertiesElement vpe = (CyVisualPropertiesElement) element;
 
-                    final Long view = vpe.getView();
+                    final Long view = vpe.getView() != null ? vpe.getView() : subnetwork_id;
 
                     if (vpe.getPropertiesOf().equals(VisualPropertyType.NETWORK.asString())) {
                         _visual_element_collections.addNetworkVisualPropertiesElement(view, vpe);
@@ -314,7 +315,7 @@ public final class CxToCy {
                         for (final Long applies_to_node : applies_to_nodes) {
                             _nodes_with_visual_properties.add(_cxid_to_cynode_map.get(applies_to_node));
                             _visual_element_collections.addNodeVisualPropertiesElement(view, _cxid_to_cynode_map
-                                                                                       .get(applies_to_node), vpe);
+                                    .get(applies_to_node), vpe);
                         }
                     }
                     else if (vpe.getPropertiesOf().equals(VisualPropertyType.EDGES.asString())) {
@@ -322,7 +323,7 @@ public final class CxToCy {
                         for (final Long applies_to_edge : applies_to_edges) {
                             _edges_with_visual_properties.add(_cxid_to_cyedge_map.get(applies_to_edge));
                             _visual_element_collections.addEdgeVisualPropertiesElement(view, _cxid_to_cyedge_map
-                                                                                       .get(applies_to_edge), vpe);
+                                    .get(applies_to_edge), vpe);
                         }
                     }
                 }
@@ -785,7 +786,7 @@ public final class CxToCy {
         }
         else {
             throw new IllegalArgumentException("don't know how to deal with type '" + type + "' for value '" + value
-                    + "'");
+                                               + "'");
         }
     }
 

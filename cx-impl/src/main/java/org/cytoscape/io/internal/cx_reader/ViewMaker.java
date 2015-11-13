@@ -48,7 +48,7 @@ public final class ViewMaker {
                                                final VisualMappingFunctionFactory vmf_factory_p) {
         final CyNetworkView view = networkview_factory.createNetworkView(network);
         final VisualElementCollectionMap collection = cx_to_cy.getVisualElementCollectionMap();
-        if (collection != null ) {
+        if (collection != null) {
 
             final Long network_id = cx_to_cy.getNetworkSuidToNetworkRelationsMap().get(network.getSUID());
 
@@ -63,11 +63,10 @@ public final class ViewMaker {
             // might change, which means instead of "get(0)" we will need a
             // loop.
             // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            if ( !cx_to_cy.getSubNetworkToViewsMap().containsKey(network_id) ) {
-                throw new IllegalStateException("no view for sub-network " + network_id  + " found");
+            if (!cx_to_cy.getSubNetworkToViewsMap().containsKey(network_id)) {
+                throw new IllegalStateException("no view for sub-network " + network_id + " found");
             }
-            
-            
+
             final Long subnetwork_id = cx_to_cy.getSubNetworkToViewsMap().get(network_id).get(0);
             if (DEBUG) {
                 System.out.println("subnetwork_id=" + subnetwork_id);
@@ -87,7 +86,7 @@ public final class ViewMaker {
                 new_visual_style.setTitle(viz_style_title);
             }
             final VisualLexicon lexicon = rendering_engine_manager.getDefaultVisualLexicon();
-            
+
             if (collection.getNetworkVisualPropertiesElement(subnetwork_id) != null) {
                 ViewMaker
                         .setDefaultVisualPropertiesAndMappings(lexicon,
