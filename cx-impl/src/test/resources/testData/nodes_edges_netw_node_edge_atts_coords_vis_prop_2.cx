@@ -166,5 +166,29 @@
                 "y": -100
             }
         ]
+    },
+    {
+        "visualProperties": [
+            {
+                "properties_of": "nodes",
+                "applies_to": 1,
+                "properties": {
+                    "NODE_CUSTOMGRAPHICS_1": "org.cytoscape.LinearGradient:{\"cy_angle\":225.0,\"cy_gradientFractions\":[0.0,0.47588426,1.0],\"cy_gradientColors\":[\"#0033FF\",\"#FFFFFF\",\"#FFFF00\"]}"
+                }
+            },
+            {
+                "properties_of": "edges",
+                "applies_to": 100000001,
+                "properties": {
+                    "EDGE_PAINT": "#FF0000"
+                }
+            },
+            {
+                "properties_of" : "network",
+                "properties" : {
+                    "NETWORK_BACKGROUND_PAINT" : "#0000EE"
+                }    
+            }
+        ]
     }
 ]

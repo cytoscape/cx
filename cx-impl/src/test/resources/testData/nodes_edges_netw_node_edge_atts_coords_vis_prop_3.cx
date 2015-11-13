@@ -166,5 +166,70 @@
                 "y": -100
             }
         ]
+    },
+    {
+        "visualProperties": [
+            {
+                "properties_of": "nodes",
+                "applies_to": 1,
+                "properties": {
+                    "NODE_CUSTOMGRAPHICS_1": "org.cytoscape.LinearGradient:{\"cy_angle\":45.0,\"cy_gradientFractions\":[0.0,0.47588426,1.0],\"cy_gradientColors\":[\"#0033FF\",\"#FFFFFF\",\"#FFFF00\"]}"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 2,
+                "properties": {
+                    "NODE_CUSTOMGRAPHICS_1": "org.cytoscape.LinearGradient:{\"cy_angle\":90.0,\"cy_gradientFractions\":[0.0,0.47588426,1.0],\"cy_gradientColors\":[\"#0033FF\",\"#FFFFFF\",\"#FFFF00\"]}"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3,
+                "properties": {
+                    "NODE_CUSTOMGRAPHICS_1": "org.cytoscape.LinearGradient:{\"cy_angle\":135.0,\"cy_gradientFractions\":[0.0,0.47588426,1.0],\"cy_gradientColors\":[\"#0033FF\",\"#FFFFFF\",\"#FFFF00\"]}"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 4,
+                "properties": {
+                    "NODE_CUSTOMGRAPHICS_1": "org.cytoscape.LinearGradient:{\"cy_angle\":225.0,\"cy_gradientFractions\":[0.0,0.47588426,1.0],\"cy_gradientColors\":[\"#0033FF\",\"#FFFFFF\",\"#FFFF00\"]}"
+                }
+            },
+            {
+                "properties_of": "edges",
+                "applies_to": 100000001,
+                "properties": {
+                    "EDGE_PAINT": "#FF0000"
+                }
+            },
+            {
+                "properties_of": "edges",
+                "applies_to": 100000003,
+                "properties": {
+                    "EDGE_PAINT": "#00FF00"
+                }
+            },
+            {
+                "properties_of" : "network",
+                "properties" : {
+                    "NETWORK_BACKGROUND_PAINT" : "#0000EE"
+                }    
+            },
+            {
+                "properties_of" : "nodes:default",
+                "properties" : {
+                    "NODE_SHAPE" : "OCTAGON"
+                }    
+            },
+            {
+                "properties_of" : "edges:default",
+                "properties" : {
+                    "EDGE_TARGET_ARROW_SHAPE" : "DELTA_SHORT_1",
+                    "EDGE_WIDTH" : "4.0"
+                }    
+            }
+        ]
     }
 ]
