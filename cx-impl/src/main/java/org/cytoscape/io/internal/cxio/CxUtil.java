@@ -12,5 +12,6 @@ public final class CxUtil {
     public final static String PASSTHROUGH_MAPPING = "PASSTHROUGH_MAPPING_";
     public final static String VM_COL              = "COL";
     public final static String VM_TYPE             = "T";
+    static final String        SUID                = "SUID";
 
 }

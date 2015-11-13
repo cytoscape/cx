@@ -19,6 +19,7 @@ import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.model.VisualProperty;
 import org.cytoscape.view.vizmap.VisualMappingFunction;
 import org.cytoscape.view.vizmap.VisualMappingManager;
+import org.cytoscape.view.vizmap.VisualPropertyDependency;
 import org.cytoscape.view.vizmap.VisualStyle;
 import org.cytoscape.view.vizmap.mappings.ContinuousMapping;
 import org.cytoscape.view.vizmap.mappings.ContinuousMappingPoint;
@@ -150,6 +151,26 @@ public final class VisualPropertiesGatherer {
     private final static void addDefaultProperties(final VisualStyle style,
                                                    final VisualProperty vp,
                                                    final CyVisualPropertiesElement cvp) {
+
+        final Set<VisualPropertyDependency<?>> x = style.getAllVisualPropertyDependencies();
+        for (final VisualPropertyDependency<?> xx : x) {
+            // System.out.println(xx.getDisplayName());
+            // System.out.println(xx.getIdString());
+            // System.out.println(xx.getVisualProperties());
+            // "arrowColorMatchesEdge" -- edge
+            // "nodeCustomGraphicsSizeSync" -- node
+            // "nodeSizeLocked" -- node
+            // FIXME
+            // if (xx.getIdString().equals("arrowColorMatchesEdge")) {
+            // Set<VisualProperty<?>> vpppp = xx.getVisualProperties();
+            // for (VisualProperty<?> visualProperty : vpppp) {
+            // System.out.println(visualProperty.toString());
+            // System.out.println(visualProperty.getIdString());
+            // }
+            // }
+
+        }
+
         final Object vp_value = style.getDefaultValue(vp);
         if (vp_value != null) {
             final String value_str = vp.toSerializableString(vp_value);
@@ -288,6 +309,23 @@ public final class VisualPropertiesGatherer {
                 addMappings(current_visual_style, visual_property, e);
             }
         }
+        //
+
+        final Set<VisualPropertyDependency<?>> x = current_visual_style.getAllVisualPropertyDependencies();
+        for (final VisualPropertyDependency<?> xx : x) {
+
+            // System.out.println(xx.getDisplayName());
+            // System.out.println(xx.getIdString());
+            // System.out.println(xx.getVisualProperties());
+
+            // "arrowColorMatchesEdge" -- edge
+            // "nodeCustomGraphicsSizeSync" -- node
+            // "nodeSizeLocked" -- node
+            // FIXME
+
+        }
+
+        //
         visual_properties.add(e);
     }
 
