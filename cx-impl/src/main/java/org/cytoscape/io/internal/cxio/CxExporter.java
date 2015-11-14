@@ -82,6 +82,8 @@ import org.cytoscape.view.vizmap.VisualMappingManager;
  */
 public final class CxExporter {
 
+    private static final String  NETWORK_COLLECTION_NAME             = "network collection name";
+
     private final static boolean DEFAULT_USE_DEFAULT_PRETTY_PRINTING = true;
 
     private VisualLexicon        _lexicon;
@@ -902,9 +904,12 @@ public final class CxExporter {
 
         final CySubNetwork my_subnet = (CySubNetwork) network;
         final CyRootNetwork my_root = my_subnet.getRootNetwork();
+
+        final String collection_name = obtainNetworkCollectionName(my_root);
+
         final List<CySubNetwork> subnets = makeSubNetworkList(write_siblings, my_subnet, my_root);
         for (final CySubNetwork subnet : subnets) {
-            writeNetworkAttributesHelper(namespace, subnet, elements);
+            writeNetworkAttributesHelper(namespace, subnet, elements, collection_name);
         }
 
         final long t0 = System.currentTimeMillis();
@@ -914,12 +919,38 @@ public final class CxExporter {
         }
     }
 
+    private final static String obtainNetworkCollectionName(final CyRootNetwork my_root) {
+        String collection_name = null;
+        if (my_root != null) {
+            final CyRow row = my_root.getRow(my_root, CyNetwork.DEFAULT_ATTRS);
+            if (row != null) {
+                try {
+                    collection_name = String.valueOf(row.getRaw("name"));
+                }
+                catch (final Exception e) {
+                    collection_name = null;
+                }
+            }
+        }
+        return collection_name;
+    }
+
     @SuppressWarnings("rawtypes")
     private void writeNetworkAttributesHelper(final String namespace,
                                               final CyNetwork my_network,
-                                              final List<AspectElement> elements) {
+                                              final List<AspectElement> elements,
+                                              final String collection_name) {
 
         final CyRow row = my_network.getRow(my_network, namespace);
+
+        if ((collection_name != null) && (collection_name.length() > 0)) {
+            final NetworkAttributesElement e = new NetworkAttributesElement(my_network.getSUID(),
+                                                                            NETWORK_COLLECTION_NAME,
+                                                                            collection_name,
+                                                                            org.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE.STRING);
+            elements.add(e);
+        }
+
         if (row != null) {
             final Map<String, Object> values = row.getAllValues();
 
@@ -971,7 +1002,7 @@ public final class CxExporter {
         final CySubNetwork my_subnet = (CySubNetwork) network;
         final CyRootNetwork my_root = my_subnet.getRootNetwork();
         final List<CySubNetwork> subnets = makeSubNetworkList(write_siblings, my_subnet, my_root);
-        
+
         for (final CySubNetwork subnet : subnets) {
             writeNodeAttributesHelper(namespace, subnet, subnet.getNodeList(), elements);
         }

@@ -27,9 +27,10 @@ import org.slf4j.LoggerFactory;
 
 public class CxNetworkWriter implements CyWriter {
 
-    private final static Logger        logger   = LoggerFactory.getLogger(CxNetworkWriter.class);
-    private final static String        ENCODING = "UTF-8";
-    private static final boolean       DEBUG    = true;
+    private final static Logger        logger         = LoggerFactory.getLogger(CxNetworkWriter.class);
+    private static final boolean       WRITE_SIBLINGS = true;
+    private final static String        ENCODING       = "UTF-8";
+    private static final boolean       DEBUG          = true;
 
     private final OutputStream         _os;
     private final CyNetwork            _network;
@@ -105,13 +106,13 @@ public class CxNetworkWriter implements CyWriter {
         final long t0 = System.currentTimeMillis();
 
         if (TimingUtil.WRITE_TO_DEV_NULL) {
-            exporter.writeNetwork(_network, true, aspects, new FileOutputStream(new File("/dev/null")));
+            exporter.writeNetwork(_network, WRITE_SIBLINGS, aspects, new FileOutputStream(new File("/dev/null")));
         }
         else if (TimingUtil.WRITE_TO_BYTE_ARRAY_OUTPUTSTREAM) {
-            exporter.writeNetwork(_network, true, aspects, new ByteArrayOutputStream());
+            exporter.writeNetwork(_network, WRITE_SIBLINGS, aspects, new ByteArrayOutputStream());
         }
         else {
-            exporter.writeNetwork(_network, false, aspects, _os);
+            exporter.writeNetwork(_network, WRITE_SIBLINGS, aspects, _os);
             _os.close();
         }
 
