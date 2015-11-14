@@ -971,10 +971,7 @@ public final class CxExporter {
         final CySubNetwork my_subnet = (CySubNetwork) network;
         final CyRootNetwork my_root = my_subnet.getRootNetwork();
         final List<CySubNetwork> subnets = makeSubNetworkList(write_siblings, my_subnet, my_root);
-        for (final CySubNetwork subnet : subnets) {
-            writeNetworkAttributesHelper(namespace, subnet, elements);
-        }
-
+        
         for (final CySubNetwork subnet : subnets) {
             writeNodeAttributesHelper(namespace, subnet, subnet.getNodeList(), elements);
         }
