@@ -69,15 +69,15 @@
 }, {
   "networkAttributes" : [ {
     "s" : 52,
-    "n" : "network collection name",
+    "n" : "name",
     "v" : "CollectionABC"
   }, {
     "s" : 70,
-    "n" : "network collection name",
+    "n" : "name",
     "v" : "CollectionABC"
   }, {
     "s" : 94,
-    "n" : "network collection name",
+    "n" : "name",
     "v" : "CollectionABC"
   } ]
 }, {

@@ -82,7 +82,7 @@ import org.cytoscape.view.vizmap.VisualMappingManager;
  */
 public final class CxExporter {
 
-    private static final String  NETWORK_COLLECTION_NAME             = "network collection name";
+    private static final String  NETWORK_COLLECTION_NAME             = "name";
 
     private final static boolean DEFAULT_USE_DEFAULT_PRETTY_PRINTING = true;
 
