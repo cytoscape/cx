@@ -905,11 +905,10 @@ public final class CxExporter {
         final CySubNetwork my_subnet = (CySubNetwork) network;
         final CyRootNetwork my_root = my_subnet.getRootNetwork();
 
-        final String collection_name = obtainNetworkCollectionName(my_root);
-
+      
         final List<CySubNetwork> subnets = makeSubNetworkList(write_siblings, my_subnet, my_root);
         for (final CySubNetwork subnet : subnets) {
-            writeNetworkAttributesHelper(namespace, subnet, elements, collection_name);
+            writeNetworkAttributesHelper(namespace, subnet, elements);
         }
 
         final long t0 = System.currentTimeMillis();
@@ -919,10 +918,10 @@ public final class CxExporter {
         }
     }
 
-    private final static String obtainNetworkCollectionName(final CyRootNetwork my_root) {
+    public final static String obtainNetworkCollectionName(final CyRootNetwork root_network) {
         String collection_name = null;
-        if (my_root != null) {
-            final CyRow row = my_root.getRow(my_root, CyNetwork.DEFAULT_ATTRS);
+        if (root_network != null) {
+            final CyRow row = root_network.getRow(root_network, CyNetwork.DEFAULT_ATTRS);
             if (row != null) {
                 try {
                     collection_name = String.valueOf(row.getRaw("name"));
@@ -938,18 +937,11 @@ public final class CxExporter {
     @SuppressWarnings("rawtypes")
     private void writeNetworkAttributesHelper(final String namespace,
                                               final CyNetwork my_network,
-                                              final List<AspectElement> elements,
-                                              final String collection_name) {
+                                              final List<AspectElement> elements) {
 
         final CyRow row = my_network.getRow(my_network, namespace);
 
-        if ((collection_name != null) && (collection_name.length() > 0)) {
-            final NetworkAttributesElement e = new NetworkAttributesElement(my_network.getSUID(),
-                                                                            NETWORK_COLLECTION_NAME,
-                                                                            collection_name,
-                                                                            org.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE.STRING);
-            elements.add(e);
-        }
+       
 
         if (row != null) {
             final Map<String, Object> values = row.getAllValues();
