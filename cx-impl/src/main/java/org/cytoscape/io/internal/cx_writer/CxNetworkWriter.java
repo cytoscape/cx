@@ -25,12 +25,18 @@ import org.cytoscape.work.TaskMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This class is an example on how to use CxExporter in a Cytoscape task.
+ *
+ * @author cmzmasek
+ *
+ */
 public class CxNetworkWriter implements CyWriter {
 
-    private final static Logger        logger         = LoggerFactory.getLogger(CxNetworkWriter.class);
-    private static final boolean       WRITE_SIBLINGS = true;
-    private final static String        ENCODING       = "UTF-8";
-    private static final boolean       DEBUG          = true;
+    private final static Logger        logger                 = LoggerFactory.getLogger(CxNetworkWriter.class);
+    private static final boolean       WRITE_SIBLINGS_DEFAULT = true;
+    private final static String        ENCODING               = "UTF-8";
+    private static final boolean       DEBUG                  = true;
 
     private final OutputStream         _os;
     private final CyNetwork            _network;
@@ -39,6 +45,7 @@ public class CxNetworkWriter implements CyWriter {
     private final VisualLexicon        _lexicon;
     private final CyNetworkViewManager _networkview_manager;
     private final CyGroupManager       _group_manager;
+    private boolean                    _write_siblings;
 
     public CxNetworkWriter(final OutputStream os,
                            final CyNetwork network,
@@ -55,6 +62,7 @@ public class CxNetworkWriter implements CyWriter {
         _os = os;
         _network = network;
         _group_manager = group_manager;
+        _write_siblings = WRITE_SIBLINGS_DEFAULT;
 
         if (Charset.isSupported(ENCODING)) {
             // UTF-8 is supported by system
@@ -66,6 +74,8 @@ public class CxNetworkWriter implements CyWriter {
             _encoder = Charset.defaultCharset().newEncoder();
         }
     }
+    
+   
 
     @Override
     public void run(final TaskMonitor taskMonitor) throws Exception {
@@ -106,13 +116,13 @@ public class CxNetworkWriter implements CyWriter {
         final long t0 = System.currentTimeMillis();
 
         if (TimingUtil.WRITE_TO_DEV_NULL) {
-            exporter.writeNetwork(_network, WRITE_SIBLINGS, aspects, new FileOutputStream(new File("/dev/null")));
+            exporter.writeNetwork(_network, _write_siblings, aspects, new FileOutputStream(new File("/dev/null")));
         }
         else if (TimingUtil.WRITE_TO_BYTE_ARRAY_OUTPUTSTREAM) {
-            exporter.writeNetwork(_network, WRITE_SIBLINGS, aspects, new ByteArrayOutputStream());
+            exporter.writeNetwork(_network, _write_siblings, aspects, new ByteArrayOutputStream());
         }
         else {
-            exporter.writeNetwork(_network, WRITE_SIBLINGS, aspects, _os);
+            exporter.writeNetwork(_network, _write_siblings, aspects, _os);
             _os.close();
         }
 
@@ -133,6 +143,10 @@ public class CxNetworkWriter implements CyWriter {
         catch (final IOException e) {
             logger.error("Could not close Outputstream for CxNetworkWriter.", e);
         }
+    }
+
+    public void setWriteSiblings(final boolean write_siblings) {
+        _write_siblings = write_siblings;
     }
 
 }
