@@ -1,0 +1,1785 @@
+[ {
+  "numberVerification" : [ {
+    "longNumber" : 9223372036854775807
+  } ]
+}, {
+  "metaData" : [ {
+    "consistencyGroup" : 1,
+    "elementCount" : 19,
+    "idCounter" : 1883,
+    "name" : "nodes",
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : 1,
+    "elementCount" : 45,
+    "idCounter" : 1883,
+    "name" : "edges",
+    "version" : "1.0"
+  } ]
+}, {
+  "nodes" : [ {
+    "@id" : 1825,
+    "n" : "Node 21"
+  }, {
+    "@id" : 1823,
+    "n" : "Node 20"
+  }, {
+    "@id" : 1821,
+    "n" : "Node 19"
+  }, {
+    "@id" : 1819,
+    "n" : "Node 18"
+  }, {
+    "@id" : 1785,
+    "n" : "Node 17"
+  }, {
+    "@id" : 1783,
+    "n" : "Node 16"
+  }, {
+    "@id" : 1781,
+    "n" : "Node 15"
+  }, {
+    "@id" : 1777,
+    "n" : "Node 14"
+  }, {
+    "@id" : 1775,
+    "n" : "Node 13"
+  }, {
+    "@id" : 1773,
+    "n" : "Node 12"
+  }, {
+    "@id" : 1771,
+    "n" : "Node 11"
+  }, {
+    "@id" : 1769,
+    "n" : "Node 10"
+  }, {
+    "@id" : 1767,
+    "n" : "Node 9"
+  }, {
+    "@id" : 1765,
+    "n" : "Node 8"
+  }, {
+    "@id" : 1763,
+    "n" : "Node 7"
+  }, {
+    "@id" : 1761,
+    "n" : "Node 6"
+  }, {
+    "@id" : 1759,
+    "n" : "Node 5"
+  }, {
+    "@id" : 1757,
+    "n" : "Node 4"
+  }, {
+    "@id" : 1719,
+    "n" : "Node 3"
+  } ]
+}, {
+  "edges" : [ {
+    "@id" : 1848,
+    "s" : 1825,
+    "t" : 1765,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1847,
+    "s" : 1825,
+    "t" : 1763,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1846,
+    "s" : 1825,
+    "t" : 1761,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1845,
+    "s" : 1825,
+    "t" : 1759,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1844,
+    "s" : 1823,
+    "t" : 1765,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1843,
+    "s" : 1823,
+    "t" : 1763,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1842,
+    "s" : 1823,
+    "t" : 1761,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1841,
+    "s" : 1823,
+    "t" : 1759,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1840,
+    "s" : 1823,
+    "t" : 1825,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1839,
+    "s" : 1821,
+    "t" : 1765,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1838,
+    "s" : 1821,
+    "t" : 1763,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1837,
+    "s" : 1821,
+    "t" : 1761,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1836,
+    "s" : 1821,
+    "t" : 1759,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1835,
+    "s" : 1821,
+    "t" : 1825,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1834,
+    "s" : 1821,
+    "t" : 1823,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1833,
+    "s" : 1819,
+    "t" : 1765,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1832,
+    "s" : 1819,
+    "t" : 1763,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1831,
+    "s" : 1819,
+    "t" : 1761,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1830,
+    "s" : 1819,
+    "t" : 1759,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1829,
+    "s" : 1819,
+    "t" : 1825,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1828,
+    "s" : 1819,
+    "t" : 1823,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1827,
+    "s" : 1819,
+    "t" : 1821,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1792,
+    "s" : 1783,
+    "t" : 1785,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1791,
+    "s" : 1781,
+    "t" : 1785,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1790,
+    "s" : 1781,
+    "t" : 1783,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1808,
+    "s" : 1773,
+    "t" : 1775,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1807,
+    "s" : 1771,
+    "t" : 1775,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1806,
+    "s" : 1771,
+    "t" : 1773,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1805,
+    "s" : 1769,
+    "t" : 1775,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1804,
+    "s" : 1769,
+    "t" : 1773,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1803,
+    "s" : 1769,
+    "t" : 1771,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1802,
+    "s" : 1767,
+    "t" : 1775,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1801,
+    "s" : 1767,
+    "t" : 1773,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1800,
+    "s" : 1767,
+    "t" : 1771,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1799,
+    "s" : 1767,
+    "t" : 1769,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1854,
+    "s" : 1763,
+    "t" : 1765,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1853,
+    "s" : 1761,
+    "t" : 1765,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1852,
+    "s" : 1761,
+    "t" : 1763,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1851,
+    "s" : 1759,
+    "t" : 1765,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1850,
+    "s" : 1759,
+    "t" : 1763,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1849,
+    "s" : 1759,
+    "t" : 1761,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1789,
+    "s" : 1757,
+    "t" : 1785,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1788,
+    "s" : 1757,
+    "t" : 1783,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1787,
+    "s" : 1757,
+    "t" : 1781,
+    "i" : "interacts with"
+  }, {
+    "@id" : 1779,
+    "s" : 1719,
+    "t" : 1777,
+    "i" : "interacts with"
+  } ]
+}, {
+  "nodeAttributes" : [ {
+    "s" : 1707,
+    "po" : 1777,
+    "n" : "name",
+    "v" : "Node 14"
+  }, {
+    "s" : 1707,
+    "po" : 1719,
+    "n" : "name",
+    "v" : "Node 3"
+  }, {
+    "s" : 1721,
+    "po" : 1775,
+    "n" : "name",
+    "v" : "Node 13"
+  }, {
+    "s" : 1721,
+    "po" : 1773,
+    "n" : "name",
+    "v" : "Node 12"
+  }, {
+    "s" : 1721,
+    "po" : 1771,
+    "n" : "name",
+    "v" : "Node 11"
+  }, {
+    "s" : 1721,
+    "po" : 1769,
+    "n" : "name",
+    "v" : "Node 10"
+  }, {
+    "s" : 1721,
+    "po" : 1767,
+    "n" : "name",
+    "v" : "Node 9"
+  }, {
+    "s" : 1733,
+    "po" : 1825,
+    "n" : "name",
+    "v" : "Node 21"
+  }, {
+    "s" : 1733,
+    "po" : 1823,
+    "n" : "name",
+    "v" : "Node 20"
+  }, {
+    "s" : 1733,
+    "po" : 1821,
+    "n" : "name",
+    "v" : "Node 19"
+  }, {
+    "s" : 1733,
+    "po" : 1819,
+    "n" : "name",
+    "v" : "Node 18"
+  }, {
+    "s" : 1733,
+    "po" : 1765,
+    "n" : "name",
+    "v" : "Node 8"
+  }, {
+    "s" : 1733,
+    "po" : 1763,
+    "n" : "name",
+    "v" : "Node 7"
+  }, {
+    "s" : 1733,
+    "po" : 1761,
+    "n" : "name",
+    "v" : "Node 6"
+  }, {
+    "s" : 1733,
+    "po" : 1759,
+    "n" : "name",
+    "v" : "Node 5"
+  }, {
+    "s" : 1745,
+    "po" : 1785,
+    "n" : "name",
+    "v" : "Node 17"
+  }, {
+    "s" : 1745,
+    "po" : 1783,
+    "n" : "name",
+    "v" : "Node 16"
+  }, {
+    "s" : 1745,
+    "po" : 1781,
+    "n" : "name",
+    "v" : "Node 15"
+  }, {
+    "s" : 1745,
+    "po" : 1757,
+    "n" : "name",
+    "v" : "Node 4"
+  } ]
+}, {
+  "edgeAttributes" : [ {
+    "s" : 1707,
+    "po" : 1779,
+    "n" : "shared name",
+    "v" : "Node 3 (interacts with) Node 14"
+  }, {
+    "s" : 1707,
+    "po" : 1779,
+    "n" : "name",
+    "v" : "Node 3 (interacts with) Node 14"
+  }, {
+    "s" : 1707,
+    "po" : 1779,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1721,
+    "po" : 1808,
+    "n" : "shared name",
+    "v" : "Node 12 (interacts with) Node 13"
+  }, {
+    "s" : 1721,
+    "po" : 1808,
+    "n" : "name",
+    "v" : "Node 12 (interacts with) Node 13"
+  }, {
+    "s" : 1721,
+    "po" : 1808,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1721,
+    "po" : 1807,
+    "n" : "shared name",
+    "v" : "Node 11 (interacts with) Node 13"
+  }, {
+    "s" : 1721,
+    "po" : 1807,
+    "n" : "name",
+    "v" : "Node 11 (interacts with) Node 13"
+  }, {
+    "s" : 1721,
+    "po" : 1807,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1721,
+    "po" : 1806,
+    "n" : "shared name",
+    "v" : "Node 11 (interacts with) Node 12"
+  }, {
+    "s" : 1721,
+    "po" : 1806,
+    "n" : "name",
+    "v" : "Node 11 (interacts with) Node 12"
+  }, {
+    "s" : 1721,
+    "po" : 1806,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1721,
+    "po" : 1805,
+    "n" : "shared name",
+    "v" : "Node 10 (interacts with) Node 13"
+  }, {
+    "s" : 1721,
+    "po" : 1805,
+    "n" : "name",
+    "v" : "Node 10 (interacts with) Node 13"
+  }, {
+    "s" : 1721,
+    "po" : 1805,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1721,
+    "po" : 1804,
+    "n" : "shared name",
+    "v" : "Node 10 (interacts with) Node 12"
+  }, {
+    "s" : 1721,
+    "po" : 1804,
+    "n" : "name",
+    "v" : "Node 10 (interacts with) Node 12"
+  }, {
+    "s" : 1721,
+    "po" : 1804,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1721,
+    "po" : 1803,
+    "n" : "shared name",
+    "v" : "Node 10 (interacts with) Node 11"
+  }, {
+    "s" : 1721,
+    "po" : 1803,
+    "n" : "name",
+    "v" : "Node 10 (interacts with) Node 11"
+  }, {
+    "s" : 1721,
+    "po" : 1803,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1721,
+    "po" : 1802,
+    "n" : "shared name",
+    "v" : "Node 9 (interacts with) Node 13"
+  }, {
+    "s" : 1721,
+    "po" : 1802,
+    "n" : "name",
+    "v" : "Node 9 (interacts with) Node 13"
+  }, {
+    "s" : 1721,
+    "po" : 1802,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1721,
+    "po" : 1801,
+    "n" : "shared name",
+    "v" : "Node 9 (interacts with) Node 12"
+  }, {
+    "s" : 1721,
+    "po" : 1801,
+    "n" : "name",
+    "v" : "Node 9 (interacts with) Node 12"
+  }, {
+    "s" : 1721,
+    "po" : 1801,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1721,
+    "po" : 1800,
+    "n" : "shared name",
+    "v" : "Node 9 (interacts with) Node 11"
+  }, {
+    "s" : 1721,
+    "po" : 1800,
+    "n" : "name",
+    "v" : "Node 9 (interacts with) Node 11"
+  }, {
+    "s" : 1721,
+    "po" : 1800,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1721,
+    "po" : 1799,
+    "n" : "shared name",
+    "v" : "Node 9 (interacts with) Node 10"
+  }, {
+    "s" : 1721,
+    "po" : 1799,
+    "n" : "name",
+    "v" : "Node 9 (interacts with) Node 10"
+  }, {
+    "s" : 1721,
+    "po" : 1799,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1848,
+    "n" : "shared name",
+    "v" : "Node 21 (interacts with) Node 8"
+  }, {
+    "s" : 1733,
+    "po" : 1848,
+    "n" : "name",
+    "v" : "Node 21 (interacts with) Node 8"
+  }, {
+    "s" : 1733,
+    "po" : 1848,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1847,
+    "n" : "shared name",
+    "v" : "Node 21 (interacts with) Node 7"
+  }, {
+    "s" : 1733,
+    "po" : 1847,
+    "n" : "name",
+    "v" : "Node 21 (interacts with) Node 7"
+  }, {
+    "s" : 1733,
+    "po" : 1847,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1846,
+    "n" : "shared name",
+    "v" : "Node 21 (interacts with) Node 6"
+  }, {
+    "s" : 1733,
+    "po" : 1846,
+    "n" : "name",
+    "v" : "Node 21 (interacts with) Node 6"
+  }, {
+    "s" : 1733,
+    "po" : 1846,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1845,
+    "n" : "shared name",
+    "v" : "Node 21 (interacts with) Node 5"
+  }, {
+    "s" : 1733,
+    "po" : 1845,
+    "n" : "name",
+    "v" : "Node 21 (interacts with) Node 5"
+  }, {
+    "s" : 1733,
+    "po" : 1845,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1844,
+    "n" : "shared name",
+    "v" : "Node 20 (interacts with) Node 8"
+  }, {
+    "s" : 1733,
+    "po" : 1844,
+    "n" : "name",
+    "v" : "Node 20 (interacts with) Node 8"
+  }, {
+    "s" : 1733,
+    "po" : 1844,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1843,
+    "n" : "shared name",
+    "v" : "Node 20 (interacts with) Node 7"
+  }, {
+    "s" : 1733,
+    "po" : 1843,
+    "n" : "name",
+    "v" : "Node 20 (interacts with) Node 7"
+  }, {
+    "s" : 1733,
+    "po" : 1843,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1842,
+    "n" : "shared name",
+    "v" : "Node 20 (interacts with) Node 6"
+  }, {
+    "s" : 1733,
+    "po" : 1842,
+    "n" : "name",
+    "v" : "Node 20 (interacts with) Node 6"
+  }, {
+    "s" : 1733,
+    "po" : 1842,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1841,
+    "n" : "shared name",
+    "v" : "Node 20 (interacts with) Node 5"
+  }, {
+    "s" : 1733,
+    "po" : 1841,
+    "n" : "name",
+    "v" : "Node 20 (interacts with) Node 5"
+  }, {
+    "s" : 1733,
+    "po" : 1841,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1840,
+    "n" : "shared name",
+    "v" : "Node 20 (interacts with) Node 21"
+  }, {
+    "s" : 1733,
+    "po" : 1840,
+    "n" : "name",
+    "v" : "Node 20 (interacts with) Node 21"
+  }, {
+    "s" : 1733,
+    "po" : 1840,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1839,
+    "n" : "shared name",
+    "v" : "Node 19 (interacts with) Node 8"
+  }, {
+    "s" : 1733,
+    "po" : 1839,
+    "n" : "name",
+    "v" : "Node 19 (interacts with) Node 8"
+  }, {
+    "s" : 1733,
+    "po" : 1839,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1838,
+    "n" : "shared name",
+    "v" : "Node 19 (interacts with) Node 7"
+  }, {
+    "s" : 1733,
+    "po" : 1838,
+    "n" : "name",
+    "v" : "Node 19 (interacts with) Node 7"
+  }, {
+    "s" : 1733,
+    "po" : 1838,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1837,
+    "n" : "shared name",
+    "v" : "Node 19 (interacts with) Node 6"
+  }, {
+    "s" : 1733,
+    "po" : 1837,
+    "n" : "name",
+    "v" : "Node 19 (interacts with) Node 6"
+  }, {
+    "s" : 1733,
+    "po" : 1837,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1836,
+    "n" : "shared name",
+    "v" : "Node 19 (interacts with) Node 5"
+  }, {
+    "s" : 1733,
+    "po" : 1836,
+    "n" : "name",
+    "v" : "Node 19 (interacts with) Node 5"
+  }, {
+    "s" : 1733,
+    "po" : 1836,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1835,
+    "n" : "shared name",
+    "v" : "Node 19 (interacts with) Node 21"
+  }, {
+    "s" : 1733,
+    "po" : 1835,
+    "n" : "name",
+    "v" : "Node 19 (interacts with) Node 21"
+  }, {
+    "s" : 1733,
+    "po" : 1835,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1834,
+    "n" : "shared name",
+    "v" : "Node 19 (interacts with) Node 20"
+  }, {
+    "s" : 1733,
+    "po" : 1834,
+    "n" : "name",
+    "v" : "Node 19 (interacts with) Node 20"
+  }, {
+    "s" : 1733,
+    "po" : 1834,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1833,
+    "n" : "shared name",
+    "v" : "Node 18 (interacts with) Node 8"
+  }, {
+    "s" : 1733,
+    "po" : 1833,
+    "n" : "name",
+    "v" : "Node 18 (interacts with) Node 8"
+  }, {
+    "s" : 1733,
+    "po" : 1833,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1832,
+    "n" : "shared name",
+    "v" : "Node 18 (interacts with) Node 7"
+  }, {
+    "s" : 1733,
+    "po" : 1832,
+    "n" : "name",
+    "v" : "Node 18 (interacts with) Node 7"
+  }, {
+    "s" : 1733,
+    "po" : 1832,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1831,
+    "n" : "shared name",
+    "v" : "Node 18 (interacts with) Node 6"
+  }, {
+    "s" : 1733,
+    "po" : 1831,
+    "n" : "name",
+    "v" : "Node 18 (interacts with) Node 6"
+  }, {
+    "s" : 1733,
+    "po" : 1831,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1830,
+    "n" : "shared name",
+    "v" : "Node 18 (interacts with) Node 5"
+  }, {
+    "s" : 1733,
+    "po" : 1830,
+    "n" : "name",
+    "v" : "Node 18 (interacts with) Node 5"
+  }, {
+    "s" : 1733,
+    "po" : 1830,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1829,
+    "n" : "shared name",
+    "v" : "Node 18 (interacts with) Node 21"
+  }, {
+    "s" : 1733,
+    "po" : 1829,
+    "n" : "name",
+    "v" : "Node 18 (interacts with) Node 21"
+  }, {
+    "s" : 1733,
+    "po" : 1829,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1828,
+    "n" : "shared name",
+    "v" : "Node 18 (interacts with) Node 20"
+  }, {
+    "s" : 1733,
+    "po" : 1828,
+    "n" : "name",
+    "v" : "Node 18 (interacts with) Node 20"
+  }, {
+    "s" : 1733,
+    "po" : 1828,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1827,
+    "n" : "shared name",
+    "v" : "Node 18 (interacts with) Node 19"
+  }, {
+    "s" : 1733,
+    "po" : 1827,
+    "n" : "name",
+    "v" : "Node 18 (interacts with) Node 19"
+  }, {
+    "s" : 1733,
+    "po" : 1827,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1854,
+    "n" : "shared name",
+    "v" : "Node 7 (interacts with) Node 8"
+  }, {
+    "s" : 1733,
+    "po" : 1854,
+    "n" : "name",
+    "v" : "Node 7 (interacts with) Node 8"
+  }, {
+    "s" : 1733,
+    "po" : 1854,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1853,
+    "n" : "shared name",
+    "v" : "Node 6 (interacts with) Node 8"
+  }, {
+    "s" : 1733,
+    "po" : 1853,
+    "n" : "name",
+    "v" : "Node 6 (interacts with) Node 8"
+  }, {
+    "s" : 1733,
+    "po" : 1853,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1852,
+    "n" : "shared name",
+    "v" : "Node 6 (interacts with) Node 7"
+  }, {
+    "s" : 1733,
+    "po" : 1852,
+    "n" : "name",
+    "v" : "Node 6 (interacts with) Node 7"
+  }, {
+    "s" : 1733,
+    "po" : 1852,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1851,
+    "n" : "shared name",
+    "v" : "Node 5 (interacts with) Node 8"
+  }, {
+    "s" : 1733,
+    "po" : 1851,
+    "n" : "name",
+    "v" : "Node 5 (interacts with) Node 8"
+  }, {
+    "s" : 1733,
+    "po" : 1851,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1850,
+    "n" : "shared name",
+    "v" : "Node 5 (interacts with) Node 7"
+  }, {
+    "s" : 1733,
+    "po" : 1850,
+    "n" : "name",
+    "v" : "Node 5 (interacts with) Node 7"
+  }, {
+    "s" : 1733,
+    "po" : 1850,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1733,
+    "po" : 1849,
+    "n" : "shared name",
+    "v" : "Node 5 (interacts with) Node 6"
+  }, {
+    "s" : 1733,
+    "po" : 1849,
+    "n" : "name",
+    "v" : "Node 5 (interacts with) Node 6"
+  }, {
+    "s" : 1733,
+    "po" : 1849,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1745,
+    "po" : 1792,
+    "n" : "shared name",
+    "v" : "Node 16 (interacts with) Node 17"
+  }, {
+    "s" : 1745,
+    "po" : 1792,
+    "n" : "name",
+    "v" : "Node 16 (interacts with) Node 17"
+  }, {
+    "s" : 1745,
+    "po" : 1792,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1745,
+    "po" : 1791,
+    "n" : "shared name",
+    "v" : "Node 15 (interacts with) Node 17"
+  }, {
+    "s" : 1745,
+    "po" : 1791,
+    "n" : "name",
+    "v" : "Node 15 (interacts with) Node 17"
+  }, {
+    "s" : 1745,
+    "po" : 1791,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1745,
+    "po" : 1790,
+    "n" : "shared name",
+    "v" : "Node 15 (interacts with) Node 16"
+  }, {
+    "s" : 1745,
+    "po" : 1790,
+    "n" : "name",
+    "v" : "Node 15 (interacts with) Node 16"
+  }, {
+    "s" : 1745,
+    "po" : 1790,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1745,
+    "po" : 1789,
+    "n" : "shared name",
+    "v" : "Node 4 (interacts with) Node 17"
+  }, {
+    "s" : 1745,
+    "po" : 1789,
+    "n" : "name",
+    "v" : "Node 4 (interacts with) Node 17"
+  }, {
+    "s" : 1745,
+    "po" : 1789,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1745,
+    "po" : 1788,
+    "n" : "shared name",
+    "v" : "Node 4 (interacts with) Node 16"
+  }, {
+    "s" : 1745,
+    "po" : 1788,
+    "n" : "name",
+    "v" : "Node 4 (interacts with) Node 16"
+  }, {
+    "s" : 1745,
+    "po" : 1788,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 1745,
+    "po" : 1787,
+    "n" : "shared name",
+    "v" : "Node 4 (interacts with) Node 15"
+  }, {
+    "s" : 1745,
+    "po" : 1787,
+    "n" : "name",
+    "v" : "Node 4 (interacts with) Node 15"
+  }, {
+    "s" : 1745,
+    "po" : 1787,
+    "n" : "interaction",
+    "v" : "interacts with"
+  } ]
+}, {
+  "cartesianLayout" : [ {
+    "node" : 1777,
+    "view" : 1707,
+    "x" : -154.0,
+    "y" : -109.0
+  }, {
+    "node" : 1719,
+    "view" : 1707,
+    "x" : -35.0,
+    "y" : -89.0
+  } ]
+}, {
+  "visualProperties" : [ {
+    "properties_of" : "network",
+    "applies_to" : 1707,
+    "view" : 1707,
+    "properties" : {
+      "NETWORK_BACKGROUND_PAINT" : "#FFFFFF",
+      "NETWORK_CENTER_X_LOCATION" : "0.0",
+      "NETWORK_CENTER_Y_LOCATION" : "0.0",
+      "NETWORK_CENTER_Z_LOCATION" : "0.0",
+      "NETWORK_DEPTH" : "0.0",
+      "NETWORK_EDGE_SELECTION" : "true",
+      "NETWORK_HEIGHT" : "400.0",
+      "NETWORK_NODE_SELECTION" : "true",
+      "NETWORK_SCALE_FACTOR" : "1.0",
+      "NETWORK_SIZE" : "550.0",
+      "NETWORK_WIDTH" : "550.0"
+    }
+  }, {
+    "properties_of" : "nodes:default",
+    "applies_to" : 1707,
+    "view" : 1707,
+    "properties" : {
+      "COMPOUND_NODE_PADDING" : "10.0",
+      "COMPOUND_NODE_SHAPE" : "ROUND_RECTANGLE",
+      "NODE_BORDER_PAINT" : "#919191",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_TRANSPARENCY" : "255",
+      "NODE_BORDER_WIDTH" : "5.0",
+      "NODE_CUSTOMGRAPHICS_1" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_2" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_3" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_4" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_5" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_6" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_7" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_8" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_9" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_POSITION_1" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_2" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_3" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_4" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_5" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_6" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_7" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_8" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_9" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_SIZE_1" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_2" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_3" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_4" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_5" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_6" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_7" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_8" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_9" : "50.0",
+      "NODE_CUSTOMPAINT_1" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_1, name=Node Custom Paint 1)",
+      "NODE_CUSTOMPAINT_2" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_2, name=Node Custom Paint 2)",
+      "NODE_CUSTOMPAINT_3" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_3, name=Node Custom Paint 3)",
+      "NODE_CUSTOMPAINT_4" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_4, name=Node Custom Paint 4)",
+      "NODE_CUSTOMPAINT_5" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_5, name=Node Custom Paint 5)",
+      "NODE_CUSTOMPAINT_6" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_6, name=Node Custom Paint 6)",
+      "NODE_CUSTOMPAINT_7" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_7, name=Node Custom Paint 7)",
+      "NODE_CUSTOMPAINT_8" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_8, name=Node Custom Paint 8)",
+      "NODE_CUSTOMPAINT_9" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_9, name=Node Custom Paint 9)",
+      "NODE_DEPTH" : "0.0",
+      "NODE_FILL_COLOR" : "#FFFFFF",
+      "NODE_HEIGHT" : "50.0",
+      "NODE_LABEL_COLOR" : "#3399FF",
+      "NODE_LABEL_FONT_FACE" : "SansSerif,plain,12",
+      "NODE_LABEL_FONT_SIZE" : "8",
+      "NODE_LABEL_POSITION" : "C,C,c,0.00,0.00",
+      "NODE_LABEL_TRANSPARENCY" : "255",
+      "NODE_LABEL_WIDTH" : "200.0",
+      "NODE_NESTED_NETWORK_IMAGE_VISIBLE" : "true",
+      "NODE_PAINT" : "#787878",
+      "NODE_SELECTED" : "false",
+      "NODE_SELECTED_PAINT" : "#FF0066",
+      "NODE_SHAPE" : "ELLIPSE",
+      "NODE_SIZE" : "45.0",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_VISIBLE" : "true",
+      "NODE_WIDTH" : "50.0",
+      "NODE_X_LOCATION" : "0.0",
+      "NODE_Y_LOCATION" : "0.0",
+      "NODE_Z_LOCATION" : "0.0",
+      "PASSTHROUGH_MAPPING_NODE_LABEL" : "COL=name,T=string"
+    }
+  }, {
+    "properties_of" : "edges:default",
+    "applies_to" : 1707,
+    "view" : 1707,
+    "properties" : {
+      "EDGE_CURVED" : "true",
+      "EDGE_LABEL_COLOR" : "#3399FF",
+      "EDGE_LABEL_FONT_FACE" : "SansSerif,plain,12",
+      "EDGE_LABEL_FONT_SIZE" : "12",
+      "EDGE_LABEL_TRANSPARENCY" : "255",
+      "EDGE_LABEL_WIDTH" : "200.0",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_PAINT" : "#808080",
+      "EDGE_SELECTED" : "false",
+      "EDGE_SELECTED_PAINT" : "#FF0000",
+      "EDGE_SOURCE_ARROW_SELECTED_PAINT" : "#FFFF00",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_SELECTED_PAINT" : "#FF0000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#969696",
+      "EDGE_TARGET_ARROW_SELECTED_PAINT" : "#FFFF00",
+      "EDGE_TARGET_ARROW_SHAPE" : "ARROW",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#333333",
+      "EDGE_TRANSPARENCY" : "255",
+      "EDGE_UNSELECTED_PAINT" : "#CCCCCC",
+      "EDGE_VISIBLE" : "true",
+      "EDGE_WIDTH" : "5.0",
+      "PASSTHROUGH_MAPPING_EDGE_LABEL" : "COL=interaction,T=string"
+    }
+  } ]
+}, {
+  "cartesianLayout" : [ {
+    "node" : 1775,
+    "view" : 1721,
+    "x" : -144.0,
+    "y" : -11.0
+  }, {
+    "node" : 1773,
+    "view" : 1721,
+    "x" : -67.0,
+    "y" : -38.0
+  }, {
+    "node" : 1771,
+    "view" : 1721,
+    "x" : 23.0,
+    "y" : -91.0
+  }, {
+    "node" : 1769,
+    "view" : 1721,
+    "x" : -69.0,
+    "y" : -120.0
+  }, {
+    "node" : 1767,
+    "view" : 1721,
+    "x" : -180.0,
+    "y" : -92.0
+  } ]
+}, {
+  "visualProperties" : [ {
+    "properties_of" : "network",
+    "applies_to" : 1721,
+    "view" : 1721,
+    "properties" : {
+      "NETWORK_BACKGROUND_PAINT" : "#FFFFFF",
+      "NETWORK_CENTER_X_LOCATION" : "0.0",
+      "NETWORK_CENTER_Y_LOCATION" : "0.0",
+      "NETWORK_CENTER_Z_LOCATION" : "0.0",
+      "NETWORK_DEPTH" : "0.0",
+      "NETWORK_EDGE_SELECTION" : "true",
+      "NETWORK_HEIGHT" : "400.0",
+      "NETWORK_NODE_SELECTION" : "true",
+      "NETWORK_SCALE_FACTOR" : "1.0",
+      "NETWORK_SIZE" : "550.0",
+      "NETWORK_WIDTH" : "550.0"
+    }
+  }, {
+    "properties_of" : "nodes:default",
+    "applies_to" : 1721,
+    "view" : 1721,
+    "properties" : {
+      "COMPOUND_NODE_PADDING" : "10.0",
+      "COMPOUND_NODE_SHAPE" : "ROUND_RECTANGLE",
+      "NODE_BORDER_PAINT" : "#919191",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_TRANSPARENCY" : "255",
+      "NODE_BORDER_WIDTH" : "5.0",
+      "NODE_CUSTOMGRAPHICS_1" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_2" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_3" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_4" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_5" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_6" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_7" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_8" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_9" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_POSITION_1" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_2" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_3" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_4" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_5" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_6" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_7" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_8" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_9" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_SIZE_1" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_2" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_3" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_4" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_5" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_6" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_7" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_8" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_9" : "50.0",
+      "NODE_CUSTOMPAINT_1" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_1, name=Node Custom Paint 1)",
+      "NODE_CUSTOMPAINT_2" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_2, name=Node Custom Paint 2)",
+      "NODE_CUSTOMPAINT_3" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_3, name=Node Custom Paint 3)",
+      "NODE_CUSTOMPAINT_4" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_4, name=Node Custom Paint 4)",
+      "NODE_CUSTOMPAINT_5" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_5, name=Node Custom Paint 5)",
+      "NODE_CUSTOMPAINT_6" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_6, name=Node Custom Paint 6)",
+      "NODE_CUSTOMPAINT_7" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_7, name=Node Custom Paint 7)",
+      "NODE_CUSTOMPAINT_8" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_8, name=Node Custom Paint 8)",
+      "NODE_CUSTOMPAINT_9" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_9, name=Node Custom Paint 9)",
+      "NODE_DEPTH" : "0.0",
+      "NODE_FILL_COLOR" : "#FFFFFF",
+      "NODE_HEIGHT" : "50.0",
+      "NODE_LABEL_COLOR" : "#3399FF",
+      "NODE_LABEL_FONT_FACE" : "SansSerif,plain,12",
+      "NODE_LABEL_FONT_SIZE" : "8",
+      "NODE_LABEL_POSITION" : "C,C,c,0.00,0.00",
+      "NODE_LABEL_TRANSPARENCY" : "255",
+      "NODE_LABEL_WIDTH" : "200.0",
+      "NODE_NESTED_NETWORK_IMAGE_VISIBLE" : "true",
+      "NODE_PAINT" : "#787878",
+      "NODE_SELECTED" : "false",
+      "NODE_SELECTED_PAINT" : "#FF0066",
+      "NODE_SHAPE" : "ELLIPSE",
+      "NODE_SIZE" : "45.0",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_VISIBLE" : "true",
+      "NODE_WIDTH" : "50.0",
+      "NODE_X_LOCATION" : "0.0",
+      "NODE_Y_LOCATION" : "0.0",
+      "NODE_Z_LOCATION" : "0.0",
+      "PASSTHROUGH_MAPPING_NODE_LABEL" : "COL=name,T=string"
+    }
+  }, {
+    "properties_of" : "edges:default",
+    "applies_to" : 1721,
+    "view" : 1721,
+    "properties" : {
+      "EDGE_CURVED" : "true",
+      "EDGE_LABEL_COLOR" : "#3399FF",
+      "EDGE_LABEL_FONT_FACE" : "SansSerif,plain,12",
+      "EDGE_LABEL_FONT_SIZE" : "12",
+      "EDGE_LABEL_TRANSPARENCY" : "255",
+      "EDGE_LABEL_WIDTH" : "200.0",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_PAINT" : "#808080",
+      "EDGE_SELECTED" : "false",
+      "EDGE_SELECTED_PAINT" : "#FF0000",
+      "EDGE_SOURCE_ARROW_SELECTED_PAINT" : "#FFFF00",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_SELECTED_PAINT" : "#FF0000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#969696",
+      "EDGE_TARGET_ARROW_SELECTED_PAINT" : "#FFFF00",
+      "EDGE_TARGET_ARROW_SHAPE" : "ARROW",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#333333",
+      "EDGE_TRANSPARENCY" : "255",
+      "EDGE_UNSELECTED_PAINT" : "#CCCCCC",
+      "EDGE_VISIBLE" : "true",
+      "EDGE_WIDTH" : "5.0",
+      "PASSTHROUGH_MAPPING_EDGE_LABEL" : "COL=interaction,T=string"
+    }
+  } ]
+}, {
+  "cartesianLayout" : [ {
+    "node" : 1825,
+    "view" : 1733,
+    "x" : 142.0,
+    "y" : 71.0
+  }, {
+    "node" : 1823,
+    "view" : 1733,
+    "x" : 86.0,
+    "y" : -36.0
+  }, {
+    "node" : 1821,
+    "view" : 1733,
+    "x" : 42.0,
+    "y" : -41.0
+  }, {
+    "node" : 1819,
+    "view" : 1733,
+    "x" : -170.0,
+    "y" : -64.0
+  }, {
+    "node" : 1765,
+    "view" : 1733,
+    "x" : -85.0,
+    "y" : -3.0
+  }, {
+    "node" : 1763,
+    "view" : 1733,
+    "x" : 36.0,
+    "y" : -136.0
+  }, {
+    "node" : 1761,
+    "view" : 1733,
+    "x" : -71.0,
+    "y" : -113.0
+  }, {
+    "node" : 1759,
+    "view" : 1733,
+    "x" : -118.0,
+    "y" : -93.0
+  } ]
+}, {
+  "visualProperties" : [ {
+    "properties_of" : "network",
+    "applies_to" : 1733,
+    "view" : 1733,
+    "properties" : {
+      "NETWORK_BACKGROUND_PAINT" : "#FFFFFF",
+      "NETWORK_CENTER_X_LOCATION" : "0.0",
+      "NETWORK_CENTER_Y_LOCATION" : "0.0",
+      "NETWORK_CENTER_Z_LOCATION" : "0.0",
+      "NETWORK_DEPTH" : "0.0",
+      "NETWORK_EDGE_SELECTION" : "true",
+      "NETWORK_HEIGHT" : "400.0",
+      "NETWORK_NODE_SELECTION" : "true",
+      "NETWORK_SCALE_FACTOR" : "1.0",
+      "NETWORK_SIZE" : "550.0",
+      "NETWORK_WIDTH" : "550.0"
+    }
+  }, {
+    "properties_of" : "nodes:default",
+    "applies_to" : 1733,
+    "view" : 1733,
+    "properties" : {
+      "COMPOUND_NODE_PADDING" : "10.0",
+      "COMPOUND_NODE_SHAPE" : "ROUND_RECTANGLE",
+      "NODE_BORDER_PAINT" : "#919191",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_TRANSPARENCY" : "255",
+      "NODE_BORDER_WIDTH" : "5.0",
+      "NODE_CUSTOMGRAPHICS_1" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_2" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_3" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_4" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_5" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_6" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_7" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_8" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_9" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_POSITION_1" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_2" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_3" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_4" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_5" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_6" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_7" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_8" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_9" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_SIZE_1" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_2" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_3" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_4" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_5" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_6" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_7" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_8" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_9" : "50.0",
+      "NODE_CUSTOMPAINT_1" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_1, name=Node Custom Paint 1)",
+      "NODE_CUSTOMPAINT_2" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_2, name=Node Custom Paint 2)",
+      "NODE_CUSTOMPAINT_3" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_3, name=Node Custom Paint 3)",
+      "NODE_CUSTOMPAINT_4" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_4, name=Node Custom Paint 4)",
+      "NODE_CUSTOMPAINT_5" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_5, name=Node Custom Paint 5)",
+      "NODE_CUSTOMPAINT_6" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_6, name=Node Custom Paint 6)",
+      "NODE_CUSTOMPAINT_7" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_7, name=Node Custom Paint 7)",
+      "NODE_CUSTOMPAINT_8" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_8, name=Node Custom Paint 8)",
+      "NODE_CUSTOMPAINT_9" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_9, name=Node Custom Paint 9)",
+      "NODE_DEPTH" : "0.0",
+      "NODE_FILL_COLOR" : "#FFFFFF",
+      "NODE_HEIGHT" : "50.0",
+      "NODE_LABEL_COLOR" : "#3399FF",
+      "NODE_LABEL_FONT_FACE" : "SansSerif,plain,12",
+      "NODE_LABEL_FONT_SIZE" : "8",
+      "NODE_LABEL_POSITION" : "C,C,c,0.00,0.00",
+      "NODE_LABEL_TRANSPARENCY" : "255",
+      "NODE_LABEL_WIDTH" : "200.0",
+      "NODE_NESTED_NETWORK_IMAGE_VISIBLE" : "true",
+      "NODE_PAINT" : "#787878",
+      "NODE_SELECTED" : "false",
+      "NODE_SELECTED_PAINT" : "#FF0066",
+      "NODE_SHAPE" : "ELLIPSE",
+      "NODE_SIZE" : "45.0",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_VISIBLE" : "true",
+      "NODE_WIDTH" : "50.0",
+      "NODE_X_LOCATION" : "0.0",
+      "NODE_Y_LOCATION" : "0.0",
+      "NODE_Z_LOCATION" : "0.0",
+      "PASSTHROUGH_MAPPING_NODE_LABEL" : "COL=name,T=string"
+    }
+  }, {
+    "properties_of" : "edges:default",
+    "applies_to" : 1733,
+    "view" : 1733,
+    "properties" : {
+      "EDGE_CURVED" : "true",
+      "EDGE_LABEL_COLOR" : "#3399FF",
+      "EDGE_LABEL_FONT_FACE" : "SansSerif,plain,12",
+      "EDGE_LABEL_FONT_SIZE" : "12",
+      "EDGE_LABEL_TRANSPARENCY" : "255",
+      "EDGE_LABEL_WIDTH" : "200.0",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_PAINT" : "#808080",
+      "EDGE_SELECTED" : "false",
+      "EDGE_SELECTED_PAINT" : "#FF0000",
+      "EDGE_SOURCE_ARROW_SELECTED_PAINT" : "#FFFF00",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_SELECTED_PAINT" : "#FF0000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#969696",
+      "EDGE_TARGET_ARROW_SELECTED_PAINT" : "#FFFF00",
+      "EDGE_TARGET_ARROW_SHAPE" : "ARROW",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#333333",
+      "EDGE_TRANSPARENCY" : "255",
+      "EDGE_UNSELECTED_PAINT" : "#CCCCCC",
+      "EDGE_VISIBLE" : "true",
+      "EDGE_WIDTH" : "5.0",
+      "PASSTHROUGH_MAPPING_EDGE_LABEL" : "COL=interaction,T=string"
+    }
+  } ]
+}, {
+  "cartesianLayout" : [ {
+    "node" : 1785,
+    "view" : 1745,
+    "x" : 3.0,
+    "y" : -126.0
+  }, {
+    "node" : 1783,
+    "view" : 1745,
+    "x" : -143.0,
+    "y" : -119.0
+  }, {
+    "node" : 1781,
+    "view" : 1745,
+    "x" : -253.0,
+    "y" : -66.0
+  }, {
+    "node" : 1757,
+    "view" : 1745,
+    "x" : -103.0,
+    "y" : -41.0
+  } ]
+}, {
+  "visualProperties" : [ {
+    "properties_of" : "network",
+    "applies_to" : 1745,
+    "view" : 1745,
+    "properties" : {
+      "NETWORK_BACKGROUND_PAINT" : "#FFFFFF",
+      "NETWORK_CENTER_X_LOCATION" : "0.0",
+      "NETWORK_CENTER_Y_LOCATION" : "0.0",
+      "NETWORK_CENTER_Z_LOCATION" : "0.0",
+      "NETWORK_DEPTH" : "0.0",
+      "NETWORK_EDGE_SELECTION" : "true",
+      "NETWORK_HEIGHT" : "400.0",
+      "NETWORK_NODE_SELECTION" : "true",
+      "NETWORK_SCALE_FACTOR" : "1.0",
+      "NETWORK_SIZE" : "550.0",
+      "NETWORK_WIDTH" : "550.0"
+    }
+  }, {
+    "properties_of" : "nodes:default",
+    "applies_to" : 1745,
+    "view" : 1745,
+    "properties" : {
+      "COMPOUND_NODE_PADDING" : "10.0",
+      "COMPOUND_NODE_SHAPE" : "ROUND_RECTANGLE",
+      "NODE_BORDER_PAINT" : "#919191",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_TRANSPARENCY" : "255",
+      "NODE_BORDER_WIDTH" : "5.0",
+      "NODE_CUSTOMGRAPHICS_1" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_2" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_3" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_4" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_5" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_6" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_7" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_8" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_9" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_POSITION_1" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_2" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_3" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_4" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_5" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_6" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_7" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_8" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_9" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_SIZE_1" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_2" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_3" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_4" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_5" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_6" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_7" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_8" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_9" : "50.0",
+      "NODE_CUSTOMPAINT_1" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_1, name=Node Custom Paint 1)",
+      "NODE_CUSTOMPAINT_2" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_2, name=Node Custom Paint 2)",
+      "NODE_CUSTOMPAINT_3" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_3, name=Node Custom Paint 3)",
+      "NODE_CUSTOMPAINT_4" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_4, name=Node Custom Paint 4)",
+      "NODE_CUSTOMPAINT_5" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_5, name=Node Custom Paint 5)",
+      "NODE_CUSTOMPAINT_6" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_6, name=Node Custom Paint 6)",
+      "NODE_CUSTOMPAINT_7" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_7, name=Node Custom Paint 7)",
+      "NODE_CUSTOMPAINT_8" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_8, name=Node Custom Paint 8)",
+      "NODE_CUSTOMPAINT_9" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_9, name=Node Custom Paint 9)",
+      "NODE_DEPTH" : "0.0",
+      "NODE_FILL_COLOR" : "#FFFFFF",
+      "NODE_HEIGHT" : "50.0",
+      "NODE_LABEL_COLOR" : "#3399FF",
+      "NODE_LABEL_FONT_FACE" : "SansSerif,plain,12",
+      "NODE_LABEL_FONT_SIZE" : "8",
+      "NODE_LABEL_POSITION" : "C,C,c,0.00,0.00",
+      "NODE_LABEL_TRANSPARENCY" : "255",
+      "NODE_LABEL_WIDTH" : "200.0",
+      "NODE_NESTED_NETWORK_IMAGE_VISIBLE" : "true",
+      "NODE_PAINT" : "#787878",
+      "NODE_SELECTED" : "false",
+      "NODE_SELECTED_PAINT" : "#FF0066",
+      "NODE_SHAPE" : "ELLIPSE",
+      "NODE_SIZE" : "45.0",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_VISIBLE" : "true",
+      "NODE_WIDTH" : "50.0",
+      "NODE_X_LOCATION" : "0.0",
+      "NODE_Y_LOCATION" : "0.0",
+      "NODE_Z_LOCATION" : "0.0",
+      "PASSTHROUGH_MAPPING_NODE_LABEL" : "COL=name,T=string"
+    }
+  }, {
+    "properties_of" : "edges:default",
+    "applies_to" : 1745,
+    "view" : 1745,
+    "properties" : {
+      "EDGE_CURVED" : "true",
+      "EDGE_LABEL_COLOR" : "#3399FF",
+      "EDGE_LABEL_FONT_FACE" : "SansSerif,plain,12",
+      "EDGE_LABEL_FONT_SIZE" : "12",
+      "EDGE_LABEL_TRANSPARENCY" : "255",
+      "EDGE_LABEL_WIDTH" : "200.0",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_PAINT" : "#808080",
+      "EDGE_SELECTED" : "false",
+      "EDGE_SELECTED_PAINT" : "#FF0000",
+      "EDGE_SOURCE_ARROW_SELECTED_PAINT" : "#FFFF00",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_SELECTED_PAINT" : "#FF0000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#969696",
+      "EDGE_TARGET_ARROW_SELECTED_PAINT" : "#FFFF00",
+      "EDGE_TARGET_ARROW_SHAPE" : "ARROW",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#333333",
+      "EDGE_TRANSPARENCY" : "255",
+      "EDGE_UNSELECTED_PAINT" : "#CCCCCC",
+      "EDGE_VISIBLE" : "true",
+      "EDGE_WIDTH" : "5.0",
+      "PASSTHROUGH_MAPPING_EDGE_LABEL" : "COL=interaction,T=string"
+    }
+  } ]
+}, {
+  "subNetworks" : [ {
+    "@id" : 1707,
+    "nodes" : [ 1777, 1719 ],
+    "edges" : [ 1779 ]
+  }, {
+    "@id" : 1721,
+    "nodes" : [ 1775, 1773, 1771, 1769, 1767 ],
+    "edges" : [ 1808, 1807, 1806, 1805, 1804, 1803, 1802, 1801, 1800, 1799 ]
+  }, {
+    "@id" : 1733,
+    "nodes" : [ 1825, 1823, 1821, 1819, 1765, 1763, 1761, 1759 ],
+    "edges" : [ 1848, 1847, 1846, 1845, 1844, 1843, 1842, 1841, 1840, 1839, 1838, 1837, 1836, 1835, 1834, 1833, 1832, 1831, 1830, 1829, 1828, 1827, 1854, 1853, 1852, 1851, 1850, 1849 ]
+  }, {
+    "@id" : 1745,
+    "nodes" : [ 1785, 1783, 1781, 1757 ],
+    "edges" : [ 1792, 1791, 1790, 1789, 1788, 1787 ]
+  } ]
+}, {
+  "cyViews" : [ {
+    "@id" : 1707,
+    "s" : 1707
+  }, {
+    "@id" : 1721,
+    "s" : 1721
+  }, {
+    "@id" : 1733,
+    "s" : 1733
+  }, {
+    "@id" : 1745,
+    "s" : 1745
+  } ]
+}, {
+  "networkRelations" : [ {
+    "p" : 1691,
+    "c" : 1707,
+    "r" : "subnetwork",
+    "name" : "NetworkAA"
+  }, {
+    "p" : 1707,
+    "c" : 1707,
+    "r" : "view",
+    "name" : "NetworkAA view"
+  }, {
+    "p" : 1691,
+    "c" : 1721,
+    "r" : "subnetwork",
+    "name" : "NetworkBB"
+  }, {
+    "p" : 1721,
+    "c" : 1721,
+    "r" : "view",
+    "name" : "NetworkBB view"
+  }, {
+    "p" : 1691,
+    "c" : 1733,
+    "r" : "subnetwork",
+    "name" : "NetworkCC"
+  }, {
+    "p" : 1733,
+    "c" : 1733,
+    "r" : "view",
+    "name" : "NetworkCC view"
+  }, {
+    "p" : 1691,
+    "c" : 1745,
+    "r" : "subnetwork",
+    "name" : "NetworkDD"
+  }, {
+    "p" : 1745,
+    "c" : 1745,
+    "r" : "view",
+    "name" : "NetworkDD view"
+  } ]
+}, {
+  "metaData" : [ {
+    "consistencyGroup" : 1,
+    "elementCount" : 0,
+    "name" : "networkAttributes",
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : 1,
+    "elementCount" : 0,
+    "name" : "hiddenAttributes",
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : 1,
+    "elementCount" : 19,
+    "name" : "nodeAttributes",
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : 1,
+    "elementCount" : 135,
+    "name" : "edgeAttributes",
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : 1,
+    "elementCount" : 19,
+    "name" : "cartesianLayout",
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : 1,
+    "elementCount" : 12,
+    "name" : "visualProperties",
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : 1,
+    "elementCount" : 4,
+    "name" : "subNetworks",
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : 1,
+    "elementCount" : 4,
+    "name" : "cyViews",
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : 1,
+    "elementCount" : 0,
+    "name" : "cyGroups",
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : 1,
+    "elementCount" : 8,
+    "name" : "networkRelations",
+    "version" : "1.0"
+  } ]
+}, {
+  "status" : [ {
+    "error" : "",
+    "success" : true
+  } ]
+} ]
