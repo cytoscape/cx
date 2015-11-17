@@ -62,8 +62,12 @@
   } ]
 }, {
   "cyGroups" : [ {
-
-
+    "@id" : 1501,
+    "view" : 1000,
+    "name" : "Group One",
+    "nodes" : [ 167, 165 ],
+    "external_edges" : [ 172 ],
+    "internal_edges" : [ 171, 170 ]
   } ]
 }, {
   "nodeAttributes" : [ {
@@ -172,35 +176,35 @@
 }, {
   "cartesianLayout" : [ {
     "node" : 167,
-    "view" : 147,
+    "view" : 1000,
     "x" : 83.0,
     "y" : 42.0
   }, {
     "node" : 165,
-    "view" : 147,
+    "view" : 1000,
     "x" : 80.0,
     "y" : -37.0
   }, {
     "node" : 163,
-    "view" : 147,
+    "view" : 1000,
     "x" : -143.0,
     "y" : -105.0
   }, {
     "node" : 161,
-    "view" : 147,
+    "view" : 1000,
     "x" : 78.0,
     "y" : -112.0
   }, {
     "node" : 159,
-    "view" : 147,
+    "view" : 1000,
     "x" : -142.0,
     "y" : -12.0
   } ]
 }, {
   "visualProperties" : [ {
     "properties_of" : "network",
-    "applies_to" : 147,
-    "view" : 147,
+    "applies_to" : 1000,
+    "view" : 1000,
     "properties" : {
       "NETWORK_BACKGROUND_PAINT" : "#FFFFFF",
       "NETWORK_CENTER_X_LOCATION" : "0.0",
@@ -216,8 +220,8 @@
     }
   }, {
     "properties_of" : "nodes:default",
-    "applies_to" : 147,
-    "view" : 147,
+    "applies_to" : 1000,
+    "view" : 1000,
     "properties" : {
       "COMPOUND_NODE_PADDING" : "10.0",
       "COMPOUND_NODE_SHAPE" : "ROUND_RECTANGLE",
@@ -286,8 +290,8 @@
     }
   }, {
     "properties_of" : "edges:default",
-    "applies_to" : 147,
-    "view" : 147,
+    "applies_to" : 1000,
+    "view" : 1000,
     "properties" : {
       "EDGE_CURVED" : "true",
       "EDGE_LABEL_COLOR" : "#000000",
@@ -321,7 +325,7 @@
   } ]
 }, {
   "cyViews" : [ {
-    "@id" : 147,
+    "@id" : 1000,
     "s" : 147
   } ]
 }, {
@@ -332,7 +336,7 @@
     "name" : "Network"
   }, {
     "p" : 147,
-    "c" : 147,
+    "c" : 1000,
     "r" : "view",
     "name" : "Network view"
   } ]

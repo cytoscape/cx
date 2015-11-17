@@ -26,6 +26,8 @@ import org.cxio.aspects.datamodels.NodesElement;
 import org.cxio.aspects.datamodels.SubNetworkElement;
 import org.cxio.core.interfaces.AspectElement;
 import org.cxio.util.CxioUtil;
+import org.cytoscape.group.CyGroup;
+import org.cytoscape.group.CyGroupFactory;
 import org.cytoscape.io.internal.cxio.VisualPropertyType;
 import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyEdge;
@@ -99,8 +101,24 @@ public final class CxToCy {
     }
 
     public final List<CyNetwork> createNetwork(final SortedMap<String, List<AspectElement>> aspect_collection,
+                                               final CyRootNetwork root_network,
+                                               final CyNetworkFactory network_factory,
+                                               final String collection_name,
+                                               final boolean perform_basic_integrity_checks) throws IOException {
+
+        return createNetwork(aspect_collection,
+                             root_network,
+                             network_factory,
+                             null,
+                             collection_name,
+                             perform_basic_integrity_checks);
+
+    }
+
+    public final List<CyNetwork> createNetwork(final SortedMap<String, List<AspectElement>> aspect_collection,
                                                CyRootNetwork root_network,
                                                final CyNetworkFactory network_factory,
+                                               final CyGroupFactory group_factory,
                                                final String collection_name,
                                                final boolean perform_basic_integrity_checks) throws IOException {
 
@@ -121,6 +139,7 @@ public final class CxToCy {
         final Map<Long, List<EdgeAttributesElement>> edge_attributes_map = new HashMap<Long, List<EdgeAttributesElement>>();
         final Map<Long, List<NetworkAttributesElement>> network_attributes_map = new HashMap<Long, List<NetworkAttributesElement>>();
         final Map<Long, List<HiddenAttributesElement>> hidden_attributes_map = new HashMap<Long, List<HiddenAttributesElement>>();
+        final Map<Long, List<CyGroupsElement>> view_to_groups_map = new HashMap<Long, List<CyGroupsElement>>();
 
         if ((nodes == null) || nodes.isEmpty()) {
             throw new IOException("no nodes in input");
@@ -234,6 +253,8 @@ public final class CxToCy {
         processNetworkAttributes(network_attributes, network_attributes_map, subnet_info_present, subnetwork_ids);
 
         processHiddenAttributes(hidden_attributes, hidden_attributes_map);
+
+        processGroups(groups, view_to_groups_map, subnet_info_present);
 
         final List<CyNetwork> new_networks = new ArrayList<CyNetwork>();
 
@@ -360,11 +381,57 @@ public final class CxToCy {
                 }
             }
 
+            if ((group_factory != null) && (view_to_groups_map != null) && !view_to_groups_map.isEmpty()) {
+                addGroups(group_factory, view_to_groups_map, sub_network, subnetwork_id);
+            }
+
             new_networks.add(sub_network);
 
         }
 
         return new_networks;
+    }
+
+    public void addGroups(final CyGroupFactory group_factory,
+                          final Map<Long, List<CyGroupsElement>> view_to_groups_map,
+                          final CySubNetwork sub_network,
+                          final Long subnetwork_id) {
+        if (DEBUG) {
+            System.out.println(view_to_groups_map);
+            System.out.println("subnetwork_id" + subnetwork_id);
+            System.out.println(_subnet_to_views_map);
+        }
+        if (_subnet_to_views_map.containsKey(subnetwork_id)) {
+            final List<Long> vs = _subnet_to_views_map.get(subnetwork_id);
+            for (final Long v : vs) {
+                if (DEBUG) {
+                    System.out.println("______ v=" + v);
+                }
+                final List<CyGroupsElement> g = view_to_groups_map.get(v);
+                for (final CyGroupsElement ge : g) {
+                    final List<CyNode> nodes_for_group = new ArrayList<CyNode>();
+                    for (final Long nod : ge.getNodes()) {
+                        nodes_for_group.add(_cxid_to_cynode_map.get(nod));
+                    }
+                    final List<CyEdge> edges_for_group = new ArrayList<CyEdge>();
+                    for (final Long ed : ge.getInternalEdges()) {
+                        edges_for_group.add(_cxid_to_cyedge_map.get(ed));
+                    }
+                    for (final Long ed : ge.getExternalEdges()) {
+                        edges_for_group.add(_cxid_to_cyedge_map.get(ed));
+                    }
+                    CyNode group_node = sub_network.addNode();
+                    final CyGroup gr = group_factory.createGroup(sub_network,
+                                                                 group_node,
+                                                                 nodes_for_group,
+                                                                 edges_for_group,
+                                                                 true);
+                    
+                   
+                  
+                }
+            }
+        }
     }
 
     public Set<CyEdge> getEdgesWithVisualProperties() {
@@ -888,6 +955,21 @@ public final class CxToCy {
                     }
                     node_attributes_map.get(po).add(nae);
                 }
+            }
+        }
+    }
+
+    private final static void processGroups(final List<AspectElement> groups_elements,
+                                            final Map<Long, List<CyGroupsElement>> view_to_groups_map,
+                                            final boolean subnet_info_present) throws IOException {
+        if (groups_elements != null) {
+            for (final AspectElement e : groups_elements) {
+                final CyGroupsElement ge = (CyGroupsElement) e;
+                final long view = ge.getView();
+                if (!view_to_groups_map.containsKey(view)) {
+                    view_to_groups_map.put(view, new ArrayList<CyGroupsElement>());
+                }
+                view_to_groups_map.get(view).add(ge);
             }
         }
     }

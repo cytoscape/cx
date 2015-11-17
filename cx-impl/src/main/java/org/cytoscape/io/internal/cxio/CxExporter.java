@@ -114,6 +114,7 @@ public final class CxExporter {
 
     public void setNetworkViewManager(final CyNetworkViewManager networkview_manager) {
         _networkview_manager = networkview_manager;
+
     }
 
     public final void setNextSuid(final long next_suid) {
@@ -218,14 +219,13 @@ public final class CxExporter {
             if (aspects.contains(Aspect.SUBNETWORKS)) {
                 writeSubNetworks(network, write_siblings, w, aspects);
             }
-            if (aspects.contains(Aspect.GROUPS)) {
-                writeGroups(network, write_siblings, w);
-            }
             if (aspects.contains(Aspect.VIEWS) || aspects.contains(Aspect.NETWORK_RELATIONS)) {
                 writeNetworkViews(network, write_siblings, w);
                 writeNetworkRelations(network, write_siblings, w);
             }
-
+            if (aspects.contains(Aspect.GROUPS)) {
+                writeGroups(network, write_siblings, w);
+            }
             if (_write_post_metdata) {
                 final AspectElementCounts aspects_counts = w.getAspectElementCounts();
                 addPostMetadata(aspects, network, w, 1L, aspects_counts);
@@ -316,7 +316,7 @@ public final class CxExporter {
     private final static String getInteractionFromEdgeTable(final CyNetwork network, final CyEdge edge) {
         final CyRow row = network.getTable(CyEdge.class, CyNetwork.DEFAULT_ATTRS).getRow(edge.getSUID());
         if (row != null) {
-            final Object o = row.getRaw("shared interaction");
+            final Object o = row.getRaw(CxUtil.SHARED_INTERACTION);
             if ((o != null) && (o instanceof String)) {
                 return String.valueOf(o);
             }
@@ -376,14 +376,13 @@ public final class CxExporter {
         for (final CyNode cy_node : network.getNodeList()) {
             final View<CyNode> node_view = view.getNodeView(cy_node);
             if (z_used) {
-                elements.add(new CartesianLayoutElement(cy_node.getSUID(), network.getSUID(), node_view
+                elements.add(new CartesianLayoutElement(cy_node.getSUID(), view.getSUID(), node_view
                         .getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
                                                         .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION), node_view
                                                         .getVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION)));
             }
             else {
-
-                elements.add(new CartesianLayoutElement(cy_node.getSUID(), network.getSUID(), node_view
+                elements.add(new CartesianLayoutElement(cy_node.getSUID(), view.getSUID(), node_view
                         .getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
                                                         .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION)));
             }
@@ -419,9 +418,8 @@ public final class CxExporter {
         }
     }
 
-    private final static void writeNetworkRelations(final CyNetwork network,
-                                                    final boolean write_siblings,
-                                                    final CxWriter w) throws IOException {
+    private final void writeNetworkRelations(final CyNetwork network, final boolean write_siblings, final CxWriter w)
+            throws IOException {
         final CySubNetwork as_subnet = (CySubNetwork) network;
         final CyRootNetwork root = as_subnet.getRootNetwork();
         final List<CySubNetwork> subnetworks = makeSubNetworkList(write_siblings, as_subnet, root);
@@ -459,12 +457,16 @@ public final class CxExporter {
                                                                                    name);
             // PLEASE NOTE:
             // Cytoscape currently has only one view per sub-network.
-            final NetworkRelationsElement rel_view = new NetworkRelationsElement(subnetwork.getSUID(),
-                                                                                 subnetwork.getSUID(),
-                                                                                 NetworkRelationsElement.TYPE_VIEW,
-                                                                                 name + " view");
+            final Collection<CyNetworkView> views = _networkview_manager.getNetworkViews(subnetwork);
+            for (final CyNetworkView view : views) {
+                final NetworkRelationsElement rel_view = new NetworkRelationsElement(subnetwork.getSUID(),
+                                                                                     view.getSUID(),
+                                                                                     NetworkRelationsElement.TYPE_VIEW,
+                                                                                     name + " view");
+                elements.add(rel_view);
+            }
             elements.add(rel_subnet);
-            elements.add(rel_view);
+
         }
         final long t0 = System.currentTimeMillis();
         w.writeAspectElements(elements);
@@ -474,7 +476,7 @@ public final class CxExporter {
 
     }
 
-    private final static void writeNetworkViews(final CyNetwork network, final boolean write_siblings, final CxWriter w)
+    private final void writeNetworkViews(final CyNetwork network, final boolean write_siblings, final CxWriter w)
             throws IOException {
         final CySubNetwork my_subnet = (CySubNetwork) network;
         final CyRootNetwork root = my_subnet.getRootNetwork();
@@ -485,8 +487,14 @@ public final class CxExporter {
         for (final CySubNetwork subnetwork : subnetworks) {
             // PLEASE NOTE:
             // Cytoscape currently has only one view per sub-network.
-            final CyViewsElement view = new CyViewsElement(subnetwork.getSUID(), subnetwork.getSUID());
-            elements.add(view);
+            final Collection<CyNetworkView> views = _networkview_manager.getNetworkViews(subnetwork);
+            for (final CyNetworkView view : views) {
+                final CyViewsElement view_element = new CyViewsElement(view.getSUID(), subnetwork.getSUID());
+                elements.add(view_element);
+            }
+            // final CyViewsElement view = new
+            // CyViewsElement(subnetwork.getSUID(), subnetwork.getSUID());
+
         }
         final long t0 = System.currentTimeMillis();
         w.writeAspectElements(elements);
@@ -798,12 +806,31 @@ public final class CxExporter {
 
         final List<AspectElement> elements = new ArrayList<AspectElement>();
         for (final CySubNetwork subnet : subnets) {
-            final CyRow row = subnet.getRow(subnet);
+            final Collection<CyNetworkView> views = _networkview_manager.getNetworkViews(subnet);
+            if ( views == null || views.size() < 1 ) {
+                throw new IllegalStateException("no views for sub-network " +subnet );
+            }
+            if ( views.size() > 1 ) {
+                System.out.println("multiple views for sub-network " +subnet + ", problem with attaching groups" );
+            }
+            Long view_id= 0L;
+            for (CyNetworkView view : views) {
+                view_id = view.getSUID();
+            }
+            
+            
             final Set<CyGroup> groups = _group_manager.getGroupSet(subnet);
             for (final CyGroup group : groups) {
-                final String name = row.get("name", String.class);
+                String name = null;
+                final CyRow row = my_root.getRow(group.getGroupNode(), CyNetwork.DEFAULT_ATTRS);
+                if ( row != null ) {
+                    name = row.get(CxUtil.SHARED_NAME_COL, String.class);
+                }
+                if (name == null || name.length() < 1 ) {
+                    name = "group " + group.getGroupNode().getSUID();
+                }
                 final CyGroupsElement group_element = new CyGroupsElement(group.getGroupNode().getSUID(),
-                                                                          subnet.getSUID(),
+                                                                          view_id,
                                                                           name);
                 for (final CyEdge e : group.getExternalEdgeList()) {
                     group_element.addExternalEdge(e.getSUID());

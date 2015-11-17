@@ -167,12 +167,6 @@
 			<version>${cytoscape.api.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
 		<!-- 3rd party libraries -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -189,5 +183,43 @@
 			<artifactId>cxio</artifactId>
 			<version>0.0.1</version>
 		</dependency>
+		
+		<!-- Testing -->
+
+		<dependency>
+			<groupId>org.cytoscape</groupId>
+			<artifactId>model-impl</artifactId>
+			<version>${cytoscape.api.version}</version>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.cytoscape</groupId>
+			<artifactId>model-impl</artifactId>
+			<scope>test</scope>
+			<type>test-jar</type>
+			<version>${cytoscape.api.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cytoscape</groupId>
+			<artifactId>model-impl</artifactId>
+			<scope>test</scope>
+			<version>${cytoscape.api.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.cytoscape</groupId>
+			<artifactId>event-api</artifactId>
+			<scope>test</scope>
+			<version>${cytoscape.api.version}</version>
+			<type>test-jar</type>
+		</dependency>
+		<dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.10.19</version>
+            <scope>test</scope>
+        </dependency>
+		
 	</dependencies>
 </project>

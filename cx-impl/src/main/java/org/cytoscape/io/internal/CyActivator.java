@@ -5,6 +5,7 @@ import static org.cytoscape.work.ServiceProperties.ID;
 import java.util.Properties;
 
 import org.cytoscape.application.CyApplicationManager;
+import org.cytoscape.group.CyGroupFactory;
 import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.BasicCyFileFilter;
 import org.cytoscape.io.DataCategory;
@@ -73,7 +74,7 @@ public class CyActivator extends AbstractCyActivator {
         final CyRootNetworkManager root_network_manager = getService(bc, CyRootNetworkManager.class);
         final RenderingEngineManager rendering_engine_manager = getService(bc, RenderingEngineManager.class);
         final VisualStyleFactory visual_style_factory = getService(bc, VisualStyleFactory.class);
-
+        final CyGroupFactory group_factory = getService(bc, CyGroupFactory.class);
         final BasicCyFileFilter basic_file_filter = new BasicCyFileFilter(new String[] { "cx" },
                                                                           new String[] { "application/json" },
                                                                           "CX JSON",
@@ -82,13 +83,13 @@ public class CyActivator extends AbstractCyActivator {
 
         final VisualMappingFunctionFactory vmfFactoryC = getService(bc,
                                                                     VisualMappingFunctionFactory.class,
-                "(mapping.type=continuous)");
+                                                                    "(mapping.type=continuous)");
         final VisualMappingFunctionFactory vmfFactoryD = getService(bc,
                                                                     VisualMappingFunctionFactory.class,
-                "(mapping.type=discrete)");
+                                                                    "(mapping.type=discrete)");
         final VisualMappingFunctionFactory vmfFactoryP = getService(bc,
                                                                     VisualMappingFunctionFactory.class,
-                "(mapping.type=passthrough)");
+                                                                    "(mapping.type=passthrough)");
 
         final CytoscapeCxNetworkReaderFactory cx_reader_factory = new CytoscapeCxNetworkReaderFactory(basic_file_filter,
                                                                                                       application_manager,
@@ -97,13 +98,14 @@ public class CyActivator extends AbstractCyActivator {
                                                                                                       root_network_manager,
                                                                                                       visual_mapping_manager,
                                                                                                       visual_style_factory,
+                                                                                                      group_factory,
                                                                                                       rendering_engine_manager,
                                                                                                       network_view_factory,
                                                                                                       vmfFactoryC,
                                                                                                       vmfFactoryD,
                                                                                                       vmfFactoryP
 
-                );
+        );
         final Properties reader_factory_properties = new Properties();
 
         // This is the unique identifier for this reader. 3rd party developer

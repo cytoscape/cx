@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.cytoscape.application.CyApplicationManager;
+import org.cytoscape.group.CyGroupFactory;
 import org.cytoscape.io.CyFileFilter;
 import org.cytoscape.io.read.AbstractInputStreamTaskFactory;
 import org.cytoscape.model.CyNetworkFactory;
@@ -26,6 +27,7 @@ public class CytoscapeCxNetworkReaderFactory extends AbstractInputStreamTaskFact
     private final VisualMappingManager         _visual_mapping_manager;
     private final RenderingEngineManager       _rendering_engine_manager;
     private final CyNetworkViewFactory         _networkview_factory;
+    private final CyGroupFactory               _group_factory;
     private final VisualStyleFactory           _visual_style_factory;
     private final VisualMappingFunctionFactory _vmf_factory_c;
     private final VisualMappingFunctionFactory _vmf_factory_d;
@@ -37,8 +39,8 @@ public class CytoscapeCxNetworkReaderFactory extends AbstractInputStreamTaskFact
                                            final CyNetworkManager network_manager,
                                            final CyRootNetworkManager root_network_manager,
                                            final VisualMappingManager visual_mapping_manager,
-
                                            final VisualStyleFactory visual_style_factory,
+                                           final CyGroupFactory group_factory,
                                            final RenderingEngineManager rendering_engine_manager,
                                            final CyNetworkViewFactory networkview_factory,
                                            final VisualMappingFunctionFactory vmf_factory_c,
@@ -51,6 +53,7 @@ public class CytoscapeCxNetworkReaderFactory extends AbstractInputStreamTaskFact
         _root_network_manager = root_network_manager;
         _visual_mapping_manager = visual_mapping_manager;
         _visual_style_factory = visual_style_factory;
+        _group_factory = group_factory;
         _rendering_engine_manager = rendering_engine_manager;
         _networkview_factory = networkview_factory;
         _vmf_factory_c = vmf_factory_c;
@@ -67,6 +70,7 @@ public class CytoscapeCxNetworkReaderFactory extends AbstractInputStreamTaskFact
                                                                  _network_factory,
                                                                  _network_manager,
                                                                  _root_network_manager,
+                                                                 _group_factory,
                                                                  _visual_mapping_manager,
                                                                  _visual_style_factory,
                                                                  _rendering_engine_manager,
