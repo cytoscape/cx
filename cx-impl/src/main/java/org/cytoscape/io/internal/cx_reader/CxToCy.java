@@ -175,6 +175,9 @@ public final class CxToCy {
                 parent_network_id = s;
             }
             subnetwork_ids = NetworkRelationsElement.getSubNetworkIds(parent_network_id, network_relations);
+            if (DEBUG) {
+            System.out.println("subnetwork_ids: " + subnetwork_ids);
+            }
             if ((subnetwork_ids == null) || subnetwork_ids.isEmpty()) {
                 throw new IOException("no subnetwork ids for: " + parent_network_id);
             }

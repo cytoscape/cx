@@ -112,6 +112,7 @@ public class CxNetworkWriter implements CyWriter {
         exporter.setWritePreMetadata(true);
         exporter.setWritePostMetadata(true);
         exporter.setNextSuid(SUIDFactory.getNextSUID());
+       
 
         final long t0 = System.currentTimeMillis();
 
