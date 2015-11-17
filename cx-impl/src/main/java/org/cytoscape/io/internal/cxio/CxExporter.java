@@ -377,15 +377,15 @@ public final class CxExporter {
             final View<CyNode> node_view = view.getNodeView(cy_node);
             if (z_used) {
                 elements.add(new CartesianLayoutElement(cy_node.getSUID(), network.getSUID(), node_view
-                                                        .getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
-                        .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION), node_view
-                        .getVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION)));
+                        .getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
+                                                        .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION), node_view
+                                                        .getVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION)));
             }
             else {
 
                 elements.add(new CartesianLayoutElement(cy_node.getSUID(), network.getSUID(), node_view
-                                                        .getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
-                        .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION)));
+                        .getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION), node_view
+                                                        .getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION)));
             }
 
         }
@@ -403,13 +403,13 @@ public final class CxExporter {
         if (write_siblings) {
             for (final CyEdge cy_edge : my_root.getEdgeList()) {
                 elements.add(new EdgesElement(cy_edge.getSUID(), cy_edge.getSource().getSUID(), cy_edge.getTarget()
-                        .getSUID(), getInteractionFromEdgeTable(network, cy_edge)));
+                                              .getSUID(), getInteractionFromEdgeTable(network, cy_edge)));
             }
         }
         else {
             for (final CyEdge cy_edge : ((CySubNetwork) network).getEdgeList()) {
                 elements.add(new EdgesElement(cy_edge.getSUID(), cy_edge.getSource().getSUID(), cy_edge.getTarget()
-                        .getSUID(), getInteractionFromEdgeTable(network, cy_edge)));
+                                              .getSUID(), getInteractionFromEdgeTable(network, cy_edge)));
             }
         }
         final long t0 = System.currentTimeMillis();
@@ -578,18 +578,18 @@ public final class CxExporter {
                                         NetworkAttributesElement.ASPECT_NAME,
                                         consistency_group,
                                         (long) aspects_counts
-                                        .getAspectElementCount(NetworkAttributesElement.ASPECT_NAME),
+                                                .getAspectElementCount(NetworkAttributesElement.ASPECT_NAME),
                                         "",
-                    "");
+                                        "");
         }
         if (aspects.contains(Aspect.HIDDEN_ATTRIBUTES)) {
             addDataToMetaDataCollection(post_meta_data,
                                         HiddenAttributesElement.ASPECT_NAME,
                                         consistency_group,
                                         (long) aspects_counts
-                                        .getAspectElementCount(HiddenAttributesElement.ASPECT_NAME),
+                                                .getAspectElementCount(HiddenAttributesElement.ASPECT_NAME),
                                         "",
-                    "");
+                                        "");
         }
         if (aspects.contains(Aspect.NODE_ATTRIBUTES)) {
             addDataToMetaDataCollection(post_meta_data,
@@ -597,7 +597,7 @@ public final class CxExporter {
                                         consistency_group,
                                         (long) aspects_counts.getAspectElementCount(NodeAttributesElement.ASPECT_NAME),
                                         "",
-                    "");
+                                        "");
         }
         if (aspects.contains(Aspect.EDGE_ATTRIBUTES)) {
             addDataToMetaDataCollection(post_meta_data,
@@ -605,7 +605,7 @@ public final class CxExporter {
                                         consistency_group,
                                         (long) aspects_counts.getAspectElementCount(EdgeAttributesElement.ASPECT_NAME),
                                         "",
-                    "");
+                                        "");
         }
 
         if (aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
@@ -614,7 +614,7 @@ public final class CxExporter {
                                         consistency_group,
                                         (long) aspects_counts.getAspectElementCount(CartesianLayoutElement.ASPECT_NAME),
                                         "",
-                    "");
+                                        "");
         }
 
         if (aspects.contains(Aspect.VISUAL_PROPERTIES)) {
@@ -622,9 +622,9 @@ public final class CxExporter {
                                         CyVisualPropertiesElement.ASPECT_NAME,
                                         consistency_group,
                                         (long) aspects_counts
-                                        .getAspectElementCount(CyVisualPropertiesElement.ASPECT_NAME),
+                                                .getAspectElementCount(CyVisualPropertiesElement.ASPECT_NAME),
                                         "",
-                                        "");
+                    "");
         }
         if (aspects.contains(Aspect.SUBNETWORKS)) {
             addDataToMetaDataCollection(post_meta_data,
@@ -632,7 +632,7 @@ public final class CxExporter {
                                         consistency_group,
                                         (long) aspects_counts.getAspectElementCount(SubNetworkElement.ASPECT_NAME),
                                         "",
-                                        "");
+                    "");
         }
         if (aspects.contains(Aspect.VIEWS)) {
             addDataToMetaDataCollection(post_meta_data,
@@ -640,7 +640,7 @@ public final class CxExporter {
                                         consistency_group,
                                         (long) aspects_counts.getAspectElementCount(CyViewsElement.ASPECT_NAME),
                                         "",
-                                        "");
+                    "");
         }
         if (aspects.contains(Aspect.GROUPS)) {
             addDataToMetaDataCollection(post_meta_data,
@@ -648,16 +648,16 @@ public final class CxExporter {
                                         consistency_group,
                                         (long) aspects_counts.getAspectElementCount(CyGroupsElement.ASPECT_NAME),
                                         "",
-                                        "");
+                    "");
         }
         if (aspects.contains(Aspect.NETWORK_RELATIONS)) {
             addDataToMetaDataCollection(post_meta_data,
                                         NetworkRelationsElement.ASPECT_NAME,
                                         consistency_group,
                                         (long) aspects_counts
-                                        .getAspectElementCount(NetworkRelationsElement.ASPECT_NAME),
+                                                .getAspectElementCount(NetworkRelationsElement.ASPECT_NAME),
                                         "",
-                    "");
+                                        "");
         }
 
         w.addPostMetaData(post_meta_data);
@@ -694,7 +694,7 @@ public final class CxExporter {
                                         _next_suid,
                                         (long) my_network.getNodeList().size(),
                                         "",
-                    "");
+                                        "");
         }
         if (aspects.contains(Aspect.EDGES)) {
 
@@ -704,7 +704,7 @@ public final class CxExporter {
                                         _next_suid,
                                         (long) my_network.getEdgeList().size(),
                                         "",
-                    "");
+                                        "");
         }
 
         w.addPreMetaData(pre_meta_data);

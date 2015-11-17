@@ -79,9 +79,17 @@ public final class ViewMaker {
 
             VisualStyle new_visual_style = null;
             if (have_default_visual_properties) {
+                int counter = 1;
                 final VisualStyle default_visual_style = visual_mapping_manager.getDefaultVisualStyle();
                 new_visual_style = visual_style_factory.createVisualStyle(default_visual_style);
-                final String viz_style_title = ViewMaker.createTitleForNewVisualStyle(network_collection_name);
+                final String viz_style_title_base = ViewMaker.createTitleForNewVisualStyle(network_collection_name);
+                String viz_style_title = viz_style_title_base;
+                while (counter < 101) {
+                    if (ViewMaker.containsVisualStyle(viz_style_title, visual_mapping_manager)) {
+                        viz_style_title = viz_style_title_base + "-" + counter;
+                    }
+                    counter++;
+                }
                 ViewMaker.removeVisualStyle(viz_style_title, visual_mapping_manager);
                 new_visual_style.setTitle(viz_style_title);
             }
@@ -185,7 +193,7 @@ public final class ViewMaker {
             if (have_default_visual_properties) {
                 visual_mapping_manager.addVisualStyle(new_visual_style);
                 new_visual_style.apply(view);
-                // _visual_mapping_manager.setCurrentVisualStyle(new_visual_style);
+                visual_mapping_manager.setCurrentVisualStyle(new_visual_style);
                 visual_mapping_manager.setVisualStyle(new_visual_style, view);
             }
         }
@@ -318,6 +326,18 @@ public final class ViewMaker {
                 break;
             }
         }
+    }
+
+    public final static boolean containsVisualStyle(final String viz_style_title,
+                                                    final VisualMappingManager visual_mapping_manager) {
+        final Iterator<VisualStyle> it = visual_mapping_manager.getAllVisualStyles().iterator();
+        while (it.hasNext()) {
+            final VisualStyle vs = it.next();
+            if (vs.getTitle().equalsIgnoreCase(viz_style_title)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
