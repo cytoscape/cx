@@ -87,6 +87,17 @@ public final class CxToCy {
         return subnet_to_views_map;
     }
 
+    public final static Map<Long, String> makeSubNetworkToNameMap(final List<AspectElement> network_relations) {
+        final Map<Long, String> m = new HashMap<Long, String>();
+        for (final AspectElement e : network_relations) {
+            final NetworkRelationsElement nwe = (NetworkRelationsElement) e;
+            if (nwe.getRelationship() == NetworkRelationsElement.TYPE_SUBNETWORK) {
+                m.put(nwe.getChild(), nwe.getChildName());
+            }
+        }
+        return m;
+    }
+
     public final List<CyNetwork> createNetwork(final SortedMap<String, List<AspectElement>> aspect_collection,
                                                CyRootNetwork root_network,
                                                final CyNetworkFactory network_factory,
@@ -111,19 +122,21 @@ public final class CxToCy {
         final Map<Long, List<NetworkAttributesElement>> network_attributes_map = new HashMap<Long, List<NetworkAttributesElement>>();
         final Map<Long, List<HiddenAttributesElement>> hidden_attributes_map = new HashMap<Long, List<HiddenAttributesElement>>();
 
+        
+       
         if ((nodes == null) || nodes.isEmpty()) {
             throw new IOException("no nodes in input");
         }
 
         final Set<Long> node_ids = new HashSet<Long>();
 
-        if (perform_basic_integrity_checks) {
+        if ( perform_basic_integrity_checks) {
             checkNodeIds(nodes, node_ids);
         }
 
         final Set<Long> edge_ids = new HashSet<Long>();
 
-        if (perform_basic_integrity_checks) {
+        if ((edges != null) && perform_basic_integrity_checks) {
             checkEdgeIds(edges, edge_ids);
         }
 
@@ -147,6 +160,7 @@ public final class CxToCy {
 
         _view_to_subnet_map = new HashMap<Long, Long>();
         _subnet_to_views_map = new HashMap<Long, List<Long>>();
+        Map<Long, String> subnet_to_subnet_name_map = new HashMap<Long, String>();
         if ((network_relations != null) && !network_relations.isEmpty()) {
             subnet_info_present = true;
             final Set<Long> subnetwork_parent_ids = NetworkRelationsElement
@@ -167,11 +181,14 @@ public final class CxToCy {
             number_of_subnetworks = subnetwork_ids.size();
             _view_to_subnet_map = makeViewToSubNetworkMap(network_relations);
             _subnet_to_views_map = makeSubNetworkToViewsMap(network_relations);
+            subnet_to_subnet_name_map = makeSubNetworkToNameMap(network_relations);
             if (DEBUG) {
                 System.out.println("view to subnet:");
                 System.out.println(_view_to_subnet_map);
                 System.out.println("subnet to views:");
                 System.out.println(_subnet_to_views_map);
+                System.out.println("subnet to names:");
+                System.out.println(subnet_to_subnet_name_map);
             }
         }
         else {
@@ -265,14 +282,16 @@ public final class CxToCy {
 
             addNodes(sub_network, nodes, nodes_in_subnet, node_attributes_map, subnetwork_id, subnet_info_present);
 
-            addEdges(sub_network,
-                     edges,
-                     edges_in_subnet,
-                     edge_attributes_map,
-                     subnetwork_id,
-                     node_ids,
-                     perform_basic_integrity_checks,
-                     subnet_info_present);
+            if (edges != null) {
+                addEdges(sub_network,
+                         edges,
+                         edges_in_subnet,
+                         edge_attributes_map,
+                         subnetwork_id,
+                         node_ids,
+                         perform_basic_integrity_checks,
+                         subnet_info_present);
+            }
 
             final CyTable network_attribute_table = sub_network.getTable(CyNetwork.class, CyNetwork.LOCAL_ATTRS);
 
@@ -287,6 +306,8 @@ public final class CxToCy {
                                         sub_network,
                                         network_attribute_table);
             }
+
+            addNetworkNames(sub_network, subnet_to_subnet_name_map, subnetwork_id, network_attribute_table);
 
             final CyTable hidden_attribute_table = sub_network.getTable(CyNetwork.class, CyNetwork.HIDDEN_ATTRS);
             // TODO
@@ -512,6 +533,22 @@ public final class CxToCy {
             for (final AbstractAttributesAspectElement e : elements) {
                 addToColumn(table, row, e);
             }
+        }
+    }
+
+    private void addNetworkNames(final CySubNetwork sub_network,
+                                 final Map<Long, String> subnet_to_subnet_name_map,
+                                 final Long subnet_id,
+                                 final CyTable table) {
+        if (table == null) {
+            throw new IllegalArgumentException("table (network) must not be null");
+        }
+        final CyRow row = sub_network.getRow(sub_network);
+        if (row != null) {
+            if (table.getColumn("name") == null) {
+                table.createColumn("name", String.class, false);
+            }
+            row.set("name", subnet_to_subnet_name_map.get(subnet_id));
         }
     }
 
