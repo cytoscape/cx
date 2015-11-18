@@ -422,13 +422,10 @@ public final class CxToCy {
                     }
                     CyNode group_node = sub_network.addNode();
                     final CyGroup gr = group_factory.createGroup(sub_network,
-                                                                 group_node,
+                                                                /* group_node,*/
                                                                  nodes_for_group,
                                                                  edges_for_group,
                                                                  true);
-                    
-                   
-                  
                 }
             }
         }

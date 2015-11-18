@@ -82,8 +82,7 @@ import org.cytoscape.view.vizmap.VisualMappingManager;
  */
 public final class CxExporter {
 
-    private static final String  NETWORK_COLLECTION_NAME             = "name";
-
+   
     private final static boolean DEFAULT_USE_DEFAULT_PRETTY_PRINTING = true;
 
     private VisualLexicon        _lexicon;
@@ -221,7 +220,7 @@ public final class CxExporter {
             }
             if (aspects.contains(Aspect.VIEWS) || aspects.contains(Aspect.NETWORK_RELATIONS)) {
                 writeNetworkViews(network, write_siblings, w);
-                writeNetworkRelations(network, write_siblings, w);
+                writeNetworkRelations(network, write_siblings, w, true);
             }
             if (aspects.contains(Aspect.GROUPS)) {
                 writeGroups(network, write_siblings, w);
@@ -230,7 +229,6 @@ public final class CxExporter {
                 final AspectElementCounts aspects_counts = w.getAspectElementCounts();
                 addPostMetadata(aspects, network, w, 1L, aspects_counts);
             }
-
         }
         catch (final Exception e) {
             e.printStackTrace();
@@ -347,15 +345,23 @@ public final class CxExporter {
     }
 
     private final static List<CySubNetwork> makeSubNetworkList(final boolean write_siblings,
-                                                               final CySubNetwork subnet,
-                                                               final CyRootNetwork root) {
-        List<CySubNetwork> subnets;
+                                                               final CySubNetwork sub_network,
+                                                               final CyRootNetwork root,
+                                                               final boolean ignore_nameless_sub_networks) {
+        List<CySubNetwork> subnets = new ArrayList<CySubNetwork>();
+
         if (write_siblings) {
-            subnets = root.getSubNetworkList();
+            for (final CySubNetwork s : root.getSubNetworkList()) {
+                if (!ignore_nameless_sub_networks || (getSubNetworkName(s) != null)) {
+                    subnets.add(s);
+                }
+            }
         }
         else {
             subnets = new ArrayList<CySubNetwork>();
-            subnets.add(subnet);
+            if (!ignore_nameless_sub_networks || (getSubNetworkName(sub_network) != null)) {
+                subnets.add(sub_network);
+            }
         }
         return subnets;
     }
@@ -418,39 +424,23 @@ public final class CxExporter {
         }
     }
 
-    private final void writeNetworkRelations(final CyNetwork network, final boolean write_siblings, final CxWriter w)
-            throws IOException {
+    private final void writeNetworkRelations(final CyNetwork network,
+                                             final boolean write_siblings,
+                                             final CxWriter w,
+                                             final boolean ignore_nameless_sub_networks) throws IOException {
         final CySubNetwork as_subnet = (CySubNetwork) network;
         final CyRootNetwork root = as_subnet.getRootNetwork();
-        final List<CySubNetwork> subnetworks = makeSubNetworkList(write_siblings, as_subnet, root);
+        final List<CySubNetwork> subnetworks = makeSubNetworkList(write_siblings, as_subnet, root, true);
 
         final List<AspectElement> elements = new ArrayList<AspectElement>();
         final long parent = root.getSUID();
-        int counter = 0;
+
         for (final CySubNetwork subnetwork : subnetworks) {
 
-            final CyRow row = subnetwork.getRow(subnetwork, CyNetwork.DEFAULT_ATTRS);
-            String name = null;
-            if (row != null) {
-                final Map<String, Object> values = row.getAllValues();
-                if ((values != null) && !values.isEmpty()) {
-                    if (values.get("name") != null) {
-                        try {
-                            final String str = String.valueOf(values.get("name"));
-                            if ((str != null) && (str.trim().length() > 0)) {
-                                name = str;
-                            }
-                        }
-                        catch (final Exception e) {
-                            name = null;
-                        }
-                    }
-                }
+            final String name = getSubNetworkName(subnetwork);
+            if (ignore_nameless_sub_networks && (name == null)) {
+                continue;
             }
-            if ((name == null) || (name.trim().length() < 1)) {
-                name = "subnetwork " + counter;
-            }
-            counter++;
             final NetworkRelationsElement rel_subnet = new NetworkRelationsElement(parent,
                                                                                    subnetwork.getSUID(),
                                                                                    NetworkRelationsElement.TYPE_SUBNETWORK,
@@ -476,11 +466,26 @@ public final class CxExporter {
 
     }
 
+    public static String getSubNetworkName(final CySubNetwork subnetwork) {
+        final CyRow row = subnetwork.getRow(subnetwork, CyNetwork.DEFAULT_ATTRS);
+        String name = null;
+        final Map<String, Object> values = row.getAllValues();
+        if ((values != null) && !values.isEmpty()) {
+            if (values.get(CxUtil.NAME_COL) != null) {
+                final String str = String.valueOf(values.get(CxUtil.NAME_COL));
+                if ((str != null) && (str.trim().length() > 0)) {
+                    name = str;
+                }
+            }
+        }
+        return name;
+    }
+
     private final void writeNetworkViews(final CyNetwork network, final boolean write_siblings, final CxWriter w)
             throws IOException {
         final CySubNetwork my_subnet = (CySubNetwork) network;
         final CyRootNetwork root = my_subnet.getRootNetwork();
-        final List<CySubNetwork> subnetworks = makeSubNetworkList(write_siblings, my_subnet, root);
+        final List<CySubNetwork> subnetworks = makeSubNetworkList(write_siblings, my_subnet, root, true);
 
         final List<AspectElement> elements = new ArrayList<AspectElement>();
 
@@ -732,7 +737,7 @@ public final class CxExporter {
 
         final CySubNetwork my_subnet = (CySubNetwork) network;
         final CyRootNetwork my_root = my_subnet.getRootNetwork();
-        final List<CySubNetwork> subnets = makeSubNetworkList(write_siblings, my_subnet, my_root);
+        final List<CySubNetwork> subnets = makeSubNetworkList(write_siblings, my_subnet, my_root, true);
 
         for (final CySubNetwork subnet : subnets) {
             writeEdgeAttributesHelper(namespace, subnet, subnet.getEdgeList(), elements);
@@ -802,36 +807,34 @@ public final class CxExporter {
         final CySubNetwork my_subnet = (CySubNetwork) network;
         final CyRootNetwork my_root = my_subnet.getRootNetwork();
 
-        final List<CySubNetwork> subnets = makeSubNetworkList(write_siblings, my_subnet, my_root);
+        final List<CySubNetwork> subnets = makeSubNetworkList(write_siblings, my_subnet, my_root, true);
 
         final List<AspectElement> elements = new ArrayList<AspectElement>();
         for (final CySubNetwork subnet : subnets) {
             final Collection<CyNetworkView> views = _networkview_manager.getNetworkViews(subnet);
-            if ( views == null || views.size() < 1 ) {
-                throw new IllegalStateException("no views for sub-network " +subnet );
+            if ((views == null) || (views.size() < 1)) {
+                continue;
             }
-            if ( views.size() > 1 ) {
-                System.out.println("multiple views for sub-network " +subnet + ", problem with attaching groups" );
+            if (views.size() > 1) {
+                System.out.println("multiple views for sub-network " + subnet + ", problem with attaching groups");
+                continue;
             }
-            Long view_id= 0L;
-            for (CyNetworkView view : views) {
+            Long view_id = 0L;
+            for (final CyNetworkView view : views) {
                 view_id = view.getSUID();
             }
-            
-            
+
             final Set<CyGroup> groups = _group_manager.getGroupSet(subnet);
             for (final CyGroup group : groups) {
                 String name = null;
                 final CyRow row = my_root.getRow(group.getGroupNode(), CyNetwork.DEFAULT_ATTRS);
-                if ( row != null ) {
+                if (row != null) {
                     name = row.get(CxUtil.SHARED_NAME_COL, String.class);
                 }
-                if (name == null || name.length() < 1 ) {
+                if ((name == null) || (name.length() < 1)) {
                     name = "group " + group.getGroupNode().getSUID();
                 }
-                final CyGroupsElement group_element = new CyGroupsElement(group.getGroupNode().getSUID(),
-                                                                          view_id,
-                                                                          name);
+                final CyGroupsElement group_element = new CyGroupsElement(group.getGroupNode().getSUID(), view_id, name);
                 for (final CyEdge e : group.getExternalEdgeList()) {
                     group_element.addExternalEdge(e.getSUID());
                 }
@@ -862,7 +865,7 @@ public final class CxExporter {
 
         final CySubNetwork my_subnet = (CySubNetwork) network;
         final CyRootNetwork my_root = my_subnet.getRootNetwork();
-        final List<CySubNetwork> subnets = makeSubNetworkList(write_siblings, my_subnet, my_root);
+        final List<CySubNetwork> subnets = makeSubNetworkList(write_siblings, my_subnet, my_root, true);
 
         for (final CySubNetwork subnet : subnets) {
             writeHiddenAttributesHelper(namespace, subnet, elements);
@@ -932,7 +935,7 @@ public final class CxExporter {
         final CySubNetwork my_subnet = (CySubNetwork) network;
         final CyRootNetwork my_root = my_subnet.getRootNetwork();
 
-        final List<CySubNetwork> subnets = makeSubNetworkList(write_siblings, my_subnet, my_root);
+        final List<CySubNetwork> subnets = makeSubNetworkList(write_siblings, my_subnet, my_root, true);
         for (final CySubNetwork subnet : subnets) {
             writeNetworkAttributesHelper(namespace, subnet, elements);
         }
@@ -1017,7 +1020,7 @@ public final class CxExporter {
 
         final CySubNetwork my_subnet = (CySubNetwork) network;
         final CyRootNetwork my_root = my_subnet.getRootNetwork();
-        final List<CySubNetwork> subnets = makeSubNetworkList(write_siblings, my_subnet, my_root);
+        final List<CySubNetwork> subnets = makeSubNetworkList(write_siblings, my_subnet, my_root, true);
 
         for (final CySubNetwork subnet : subnets) {
             writeNodeAttributesHelper(namespace, subnet, subnet.getNodeList(), elements);
@@ -1089,7 +1092,7 @@ public final class CxExporter {
 
         final CySubNetwork my_subnet = (CySubNetwork) network;
         final CyRootNetwork my_root = my_subnet.getRootNetwork();
-        final List<CySubNetwork> subnets = makeSubNetworkList(write_siblings, my_subnet, my_root);
+        final List<CySubNetwork> subnets = makeSubNetworkList(write_siblings, my_subnet, my_root, true);
 
         for (final CySubNetwork subnet : subnets) {
             final Collection<CyNetworkView> views = _networkview_manager.getNetworkViews(subnet);

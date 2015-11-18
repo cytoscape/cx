@@ -64,7 +64,9 @@ public final class ViewMaker {
             // loop.
             // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             if (!cx_to_cy.getSubNetworkToViewsMap().containsKey(network_id)) {
-                throw new IllegalStateException("no view for sub-network " + network_id + " found");
+                if (DEBUG) {
+                    System.out.println("no view for sub-network " + network_id + " found");
+                }
             }
 
             final Long subnetwork_id = cx_to_cy.getSubNetworkToViewsMap().get(network_id).get(0);
