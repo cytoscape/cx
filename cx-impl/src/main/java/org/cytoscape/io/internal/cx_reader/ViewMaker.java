@@ -3,12 +3,14 @@ package org.cytoscape.io.internal.cx_reader;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.cxio.aspects.datamodels.CyVisualPropertiesElement;
+import org.cxio.aspects.datamodels.Mapping;
 import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
@@ -101,8 +103,7 @@ public final class ViewMaker {
                 ViewMaker
                 .setDefaultVisualPropertiesAndMappings(lexicon,
                                                        collection
-                                                       .getNetworkVisualPropertiesElement(subnetwork_id)
-                                                       .getProperties(),
+                                                       .getNetworkVisualPropertiesElement(subnetwork_id),
                                                        new_visual_style,
                                                        CyNetwork.class,
                                                        vmf_factory_c,
@@ -119,8 +120,7 @@ public final class ViewMaker {
                 ViewMaker
                 .setDefaultVisualPropertiesAndMappings(lexicon,
                                                        collection
-                                                       .getNodesDefaultVisualPropertiesElement(subnetwork_id)
-                                                       .getProperties(),
+                                                       .getNodesDefaultVisualPropertiesElement(subnetwork_id),
                                                        new_visual_style,
                                                        CyNode.class,
                                                        vmf_factory_c,
@@ -137,8 +137,7 @@ public final class ViewMaker {
                 ViewMaker
                 .setDefaultVisualPropertiesAndMappings(lexicon,
                                                        collection
-                                                       .getEdgesDefaultVisualPropertiesElement(subnetwork_id)
-                                                       .getProperties(),
+                                                       .getEdgesDefaultVisualPropertiesElement(subnetwork_id),
                                                        new_visual_style,
                                                        CyEdge.class,
                                                        vmf_factory_c,
@@ -344,12 +343,17 @@ public final class ViewMaker {
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public final static void setDefaultVisualPropertiesAndMappings(final VisualLexicon lexicon,
-                                                                   final SortedMap<String, String> props,
+                                                                   final CyVisualPropertiesElement cyVisualPropertiesElement,
                                                                    final VisualStyle style,
                                                                    final Class my_class,
                                                                    final VisualMappingFunctionFactory vmf_factory_c,
                                                                    final VisualMappingFunctionFactory vmf_factory_d,
+
                                                                    final VisualMappingFunctionFactory vmf_factory_p) {
+
+        final SortedMap<String, String> props = cyVisualPropertiesElement.getProperties();
+        final SortedMap<String, Mapping> maps = cyVisualPropertiesElement.getMappings();
+
         if (props != null) {
 
             for (final Map.Entry<String, String> entry : props.entrySet()) {
@@ -404,6 +408,33 @@ public final class ViewMaker {
                         else {
                             System.out.println("could not parse serializable string from '" + entry.getValue() + "'");
                         }
+                    }
+                }
+            }
+        }
+
+        if (maps != null) {
+            for (final Entry<String, Mapping> entry : maps.entrySet()) {
+                final String mapping_target = entry.getKey();
+                final Mapping mapping = entry.getValue();
+                final String mapping_type = mapping.getType();
+                final VisualProperty vp = lexicon.lookup(my_class, mapping_target);
+                final StringParser sp = new StringParser(mapping.getDefintion());
+                final String col = sp.get(CxUtil.VM_COL);
+                final String type = sp.get(CxUtil.VM_TYPE);
+                final Class<?> type_class = ViewMaker.toClass(type);
+                if (vp != null) {
+                    if (mapping_type.equals(CxUtil.PASSTHROUGH)) {
+                        addPasstroughMapping(style, vp, col, type_class, vmf_factory_p);
+                    }
+                    else if (mapping_type.equals(CxUtil.CONTINUOUS)) {
+                        addContinuousMapping(style, vp, sp, col, type, type_class, vmf_factory_c);
+                    }
+                    else if (mapping_type.equals(CxUtil.DISCRETE)) {
+                        addDiscreteMapping(style, vp, sp, col, type, type_class, vmf_factory_d);
+                    }
+                    else {
+                        throw new IllegalStateException("unknown mapping type: " + mapping_type);
                     }
                 }
             }

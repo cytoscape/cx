@@ -202,6 +202,10 @@ public class CxNetworkWriterTest {
         assertTrue(n3.getNodeCount() == 2);
         assertTrue(n3.getEdgeCount() == 1);
 
+        final ByteArrayOutputStream out = writeNetwork(n1);
+        final ByteArrayInputStream in = new ByteArrayInputStream(out.toString().getBytes(StandardCharsets.UTF_8));
+        final List<CyNetwork> networks_2 = loadNetwork(in, true);
+
     }
 
     @Test
@@ -333,7 +337,7 @@ public class CxNetworkWriterTest {
         final CyNetwork n = networks.get(0);
         assertTrue(n.getNodeCount() == 5);
         assertTrue(n.getEdgeCount() == 5);
-        
+
         final ByteArrayOutputStream out = writeNetwork(n);
         final ByteArrayInputStream in = new ByteArrayInputStream(out.toString().getBytes(StandardCharsets.UTF_8));
         final List<CyNetwork> networks_2 = loadNetwork(in, true);

@@ -275,7 +275,7 @@ public final class CxToCy {
             _network_suid_to_networkrelations_map.put(sub_network.getSUID(), subnetwork_id);
             if (DEBUG) {
                 System.out.println("added " + sub_network.getSUID() + "->" + subnetwork_id
-                                   + " to network suid to networkrelations map");
+                        + " to network suid to networkrelations map");
             }
 
             if (!subnet_info_present) {
@@ -358,7 +358,7 @@ public final class CxToCy {
                         for (final Long applies_to_node : applies_to_nodes) {
                             _nodes_with_visual_properties.add(_cxid_to_cynode_map.get(applies_to_node));
                             _visual_element_collections.addNodeVisualPropertiesElement(view, _cxid_to_cynode_map
-                                                                                       .get(applies_to_node), vpe);
+                                    .get(applies_to_node), vpe);
                         }
                     }
                     else if (vpe.getPropertiesOf().equals(VisualPropertyType.EDGES.asString())) {
@@ -366,7 +366,7 @@ public final class CxToCy {
                         for (final Long applies_to_edge : applies_to_edges) {
                             _edges_with_visual_properties.add(_cxid_to_cyedge_map.get(applies_to_edge));
                             _visual_element_collections.addEdgeVisualPropertiesElement(view, _cxid_to_cyedge_map
-                                                                                       .get(applies_to_edge), vpe);
+                                    .get(applies_to_edge), vpe);
                         }
                     }
                 }
@@ -420,12 +420,10 @@ public final class CxToCy {
                     for (final Long ed : ge.getExternalEdges()) {
                         edges_for_group.add(_cxid_to_cyedge_map.get(ed));
                     }
-                    CyNode group_node = sub_network.addNode();
+                    final CyNode group_node = sub_network.addNode();
                     final CyGroup gr = group_factory.createGroup(sub_network,
-                                                                /* group_node,*/
-                                                                 nodes_for_group,
-                                                                 edges_for_group,
-                                                                 true);
+                    /* group_node, */
+                    nodes_for_group, edges_for_group, true);
                 }
             }
         }
@@ -888,7 +886,7 @@ public final class CxToCy {
         }
         else {
             throw new IllegalArgumentException("don't know how to deal with type '" + type + "' for value '" + value
-                    + "'");
+                                               + "'");
         }
     }
 
