@@ -59,16 +59,6 @@
                 "v": "Node 3"
             },
             {
-                "po": [
-                    1,
-                    2,
-                    3
-                ],
-                "n": "Has Name",
-                "v": "true",
-                "d": "boolean"
-            },
-            {
                 "po": 4,
                 "n": "Has Name",
                 "v": "false",
