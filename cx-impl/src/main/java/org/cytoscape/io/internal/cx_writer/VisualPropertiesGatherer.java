@@ -153,26 +153,6 @@ public final class VisualPropertiesGatherer {
     private final static void addDefaultProperties(final VisualStyle style,
                                                    final VisualProperty vp,
                                                    final CyVisualPropertiesElement cvp) {
-
-        final Set<VisualPropertyDependency<?>> x = style.getAllVisualPropertyDependencies();
-        for (final VisualPropertyDependency<?> xx : x) {
-            // System.out.println(xx.getDisplayName());
-            // System.out.println(xx.getIdString());
-            // System.out.println(xx.getVisualProperties());
-            // "arrowColorMatchesEdge" -- edge
-            // "nodeCustomGraphicsSizeSync" -- node
-            // "nodeSizeLocked" -- node
-            // FIXME
-            // if (xx.getIdString().equals("arrowColorMatchesEdge")) {
-            // Set<VisualProperty<?>> vpppp = xx.getVisualProperties();
-            // for (VisualProperty<?> visualProperty : vpppp) {
-            // System.out.println(visualProperty.toString());
-            // System.out.println(visualProperty.getIdString());
-            // }
-            // }
-
-        }
-
         final Object vp_value = style.getDefaultValue(vp);
         if (vp_value != null) {
             final String value_str = vp.toSerializableString(vp_value);
@@ -294,61 +274,6 @@ public final class VisualPropertiesGatherer {
         }
     }
 
-    /*
-     * @SuppressWarnings({ "unchecked", "rawtypes" }) private final static void
-     * addMappingsOLD(final VisualStyle style, final VisualProperty vp, final
-     * CyVisualPropertiesElement cvp) { final VisualMappingFunction<?, ?>
-     * mapping = style.getVisualMappingFunction(vp);
-     *
-     * if (mapping != null) { if (mapping instanceof PassthroughMapping<?, ?>) {
-     *
-     * final PassthroughMapping<?, ?> pm = (PassthroughMapping<?, ?>) mapping;
-     * final String col = pm.getMappingColumnName(); final String type =
-     * toAttributeType(pm.getMappingColumnType()); final StringBuilder sb = new
-     * StringBuilder(); sb.append(CxUtil.VM_COL); sb.append("=");
-     * sb.append(col); sb.append(","); sb.append(CxUtil.VM_TYPE);
-     * sb.append("="); sb.append(type);
-     * cvp.putProperty(CxUtil.PASSTHROUGH_MAPPING + vp.getIdString(),
-     * sb.toString()); } else if (mapping instanceof DiscreteMapping<?, ?>) {
-     * final DiscreteMapping<?, ?> dm = (DiscreteMapping<?, ?>) mapping;
-     *
-     * final String type = toAttributeType(dm.getMappingColumnType()); final
-     * String col = dm.getMappingColumnName(); final Map<?, ?> map =
-     * dm.getAll(); final StringBuilder sb = new StringBuilder();
-     * sb.append(CxUtil.VM_COL); sb.append("="); sb.append(col); sb.append(",");
-     * sb.append(CxUtil.VM_TYPE); sb.append("="); sb.append(type); int counter =
-     * 0; for (final Map.Entry<?, ?> entry : map.entrySet()) { final Object
-     * value = entry.getValue(); if (value == null) { continue; } try {
-     * sb.append(",K="); sb.append(counter); sb.append("=");
-     * sb.append(entry.getKey().toString()); sb.append(",V=");
-     * sb.append(counter); sb.append("=");
-     * sb.append(vp.toSerializableString(value)); } catch (final Exception e) {
-     * System.out.println("could not add discrete mapping entry: " + value);
-     * e.printStackTrace(); } ++counter; }
-     * cvp.putProperty(CxUtil.DISCRETE_MAPPING + vp.getIdString(),
-     * sb.toString()); } else if (mapping instanceof ContinuousMapping<?, ?>) {
-     * final ContinuousMapping<?, ?> cm = (ContinuousMapping<?, ?>) mapping;
-     * final String type = toAttributeType(cm.getMappingColumnType()); final
-     * String col = cm.getMappingColumnName(); final StringBuilder sb = new
-     * StringBuilder(); sb.append(CxUtil.VM_COL); sb.append("=");
-     * sb.append(col); sb.append(","); sb.append(CxUtil.VM_TYPE);
-     * sb.append("="); sb.append(type); final List<?> points =
-     * cm.getAllPoints(); int counter = 0; for (final Object point : points) {
-     * final ContinuousMappingPoint<?, ?> cp = (ContinuousMappingPoint<?, ?>)
-     * point; final Object lesser = cp.getRange().lesserValue; final Object
-     * equal = cp.getRange().equalValue; final Object greater =
-     * cp.getRange().greaterValue; sb.append(",L="); sb.append(counter);
-     * sb.append("="); sb.append(vp.toSerializableString(lesser));
-     * sb.append(",E="); sb.append(counter); sb.append("=");
-     * sb.append(vp.toSerializableString(equal)); sb.append(",G=");
-     * sb.append(counter); sb.append("=");
-     * sb.append(vp.toSerializableString(greater)); sb.append(",OV=");
-     * sb.append(counter); sb.append("="); sb.append(cp.getValue());
-     *
-     * ++counter; } cvp.putProperty(CxUtil.CONTINUOUS_MAPPING +
-     * vp.getIdString(), sb.toString()); } } }
-     */
-
     @SuppressWarnings("rawtypes")
     private static void gatherEdgesDefaultVisualProperties(final CyNetworkView view,
                                                            final CyNetwork network,
@@ -366,23 +291,7 @@ public final class VisualPropertiesGatherer {
                 addMappings(current_visual_style, visual_property, e, table);
             }
         }
-        //
-
-        final Set<VisualPropertyDependency<?>> x = current_visual_style.getAllVisualPropertyDependencies();
-        for (final VisualPropertyDependency<?> xx : x) {
-
-            // System.out.println(xx.getDisplayName());
-            // System.out.println(xx.getIdString());
-            // System.out.println(xx.getVisualProperties());
-
-            // "arrowColorMatchesEdge" -- edge
-            // "nodeCustomGraphicsSizeSync" -- node
-            // "nodeSizeLocked" -- node
-            // FIXME
-
-        }
-
-        //
+        addDependency(CxUtil.ARROW_COLOR_MATCHES_EDGE, current_visual_style, e);
         visual_properties.add(e);
     }
 
@@ -414,8 +323,6 @@ public final class VisualPropertiesGatherer {
                                                       final List<AspectElement> visual_properties,
                                                       final VisualStyle current_visual_style,
                                                       final Set<VisualProperty<?>> all_visual_properties) {
-        final Long network_suid = network.getSUID();
-
         final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.NETWORK.asString(),
                                                                           view.getSUID());
         e.addAppliesTo(view.getSUID());
@@ -433,7 +340,6 @@ public final class VisualPropertiesGatherer {
                                                            final List<AspectElement> visual_properties,
                                                            final VisualStyle current_visual_style,
                                                            final Set<VisualProperty<?>> all_visual_properties) {
-        final Long network_suid = network.getSUID();
         final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.NODES_DEFAULT.asString(),
                                                                           view.getSUID());
         e.addAppliesTo(view.getSUID());
@@ -444,7 +350,20 @@ public final class VisualPropertiesGatherer {
                 addMappings(current_visual_style, visual_property, e, table);
             }
         }
+        addDependency(CxUtil.NODE_CUSTOM_GRAPHICS_SIZE_SYNC, current_visual_style, e);
+        addDependency(CxUtil.NODE_SIZE_LOCKED, current_visual_style, e);
         visual_properties.add(e);
+    }
+
+    private final static void addDependency(final String id_string,
+                                            final VisualStyle style,
+                                            final CyVisualPropertiesElement vpe) {
+        for (final VisualPropertyDependency<?> d : style.getAllVisualPropertyDependencies()) {
+            if (d.getIdString().equals(id_string)) {
+                vpe.putProperty(id_string, String.valueOf(d.isDependencyEnabled()));
+                return;
+            }
+        }
     }
 
     @SuppressWarnings("rawtypes")
@@ -456,19 +375,15 @@ public final class VisualPropertiesGatherer {
             final View<CyNode> node_view = view.getNodeView(cy_node);
             final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.NODES.asString(),
                                                                               view.getSUID());
-
             e.addAppliesTo(cy_node.getSUID());
-
             for (final VisualProperty visual_property : all_visual_properties) {
                 if (visual_property.getTargetDataType() == CyNode.class) {
                     addProperties(node_view, visual_property, e);
                 }
-
             }
             if ((e.getProperties() != null) && !e.getProperties().isEmpty()) {
                 visual_properties.add(e);
             }
-
         }
     }
 
@@ -501,7 +416,7 @@ public final class VisualPropertiesGatherer {
             }
             if (col_type != null) {
                 System.out.println("mapping type is '" + attr_class + "' will use (from table column) '" + col_type
-                        + "' instead");
+                                   + "' instead");
                 if ((col_type == Float.class) || (col_type == Double.class)) {
                     return "double";
                 }
@@ -513,7 +428,7 @@ public final class VisualPropertiesGatherer {
                 }
                 else {
                     throw new IllegalArgumentException("don't know how to deal with type '" + col_type
-                            + "' (from table column)");
+                                                       + "' (from table column)");
                 }
             }
             else {

@@ -16,5 +16,8 @@ public final class CxUtil {
     public final static String DISCRETE            = "DISCRETE";
     public final static String CONTINUOUS          = "CONTINUOUS";
     public final static String PASSTHROUGH         = "PASSTHROUGH";
+    public  static final String NODE_SIZE_LOCKED = "nodeSizeLocked";
+    public static final String NODE_CUSTOM_GRAPHICS_SIZE_SYNC = "nodeCustomGraphicsSizeSync";
+    public static final String ARROW_COLOR_MATCHES_EDGE = "arrowColorMatchesEdge";
 
 }

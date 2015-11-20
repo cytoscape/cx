@@ -25,6 +25,7 @@ import org.cytoscape.view.presentation.RenderingEngineManager;
 import org.cytoscape.view.presentation.property.BasicVisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingFunctionFactory;
 import org.cytoscape.view.vizmap.VisualMappingManager;
+import org.cytoscape.view.vizmap.VisualPropertyDependency;
 import org.cytoscape.view.vizmap.VisualStyle;
 import org.cytoscape.view.vizmap.VisualStyleFactory;
 import org.cytoscape.view.vizmap.mappings.BoundaryRangeValues;
@@ -351,19 +352,17 @@ public final class ViewMaker {
                                                                    final Class my_class,
                                                                    final VisualMappingFunctionFactory vmf_factory_c,
                                                                    final VisualMappingFunctionFactory vmf_factory_d,
-
                                                                    final VisualMappingFunctionFactory vmf_factory_p)
             throws IOException {
-
-        System.out.println(cy_visual_properties_element.toString());
 
         final SortedMap<String, String> props = cy_visual_properties_element.getProperties();
         final SortedMap<String, Mapping> maps = cy_visual_properties_element.getMappings();
 
         if (props != null) {
-
             for (final Map.Entry<String, String> entry : props.entrySet()) {
+
                 final String key = entry.getKey();
+                // vvvvvvvvvvvvvvvvvvvvvvvvvvv remove me
                 boolean is_mapping = false;
                 char mapping = '?';
                 String mapping_key = null;
@@ -382,7 +381,6 @@ public final class ViewMaker {
                     mapping = 'd';
                     mapping_key = key.substring(17);
                 }
-
                 if (is_mapping) {
                     final VisualProperty vp = lexicon.lookup(my_class, mapping_key);
                     final StringParser sp = new StringParser(entry.getValue());
@@ -403,22 +401,36 @@ public final class ViewMaker {
                             throw new IllegalStateException("unknown mapping type: " + mapping);
                         }
                     }
+                    // TODO
+                    // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ remove me
                 }
                 else {
-                    final VisualProperty vp = lexicon.lookup(my_class, key);
-                    if (vp != null) {
-                        Object parsed_value = null;
-                        try {
-                            parsed_value = vp.parseSerializableString(entry.getValue());
+                    if (key.equals(CxUtil.ARROW_COLOR_MATCHES_EDGE)
+                            || key.equals(CxUtil.NODE_CUSTOM_GRAPHICS_SIZE_SYNC) || key.equals(CxUtil.NODE_SIZE_LOCKED)) {
+                        for (final VisualPropertyDependency<?> d : style.getAllVisualPropertyDependencies()) {
+                            if (d.getIdString().equals(key)) {
+                                d.setDependency(Boolean.parseBoolean(entry.getValue()));
+                                if (DEBUG) {
+                                    System.out.println(d.getIdString() + ": " + entry.getValue());
+                                }
+                            }
                         }
-                        catch (final Exception e) {
-                            throw new IOException("could not parse serializable string from '" + entry.getValue()
-                                    + "' for '" + key + "'");
+                    }
+                    else {
+                        final VisualProperty vp = lexicon.lookup(my_class, key);
+                        if (vp != null) {
+                            Object parsed_value = null;
+                            try {
+                                parsed_value = vp.parseSerializableString(entry.getValue());
+                            }
+                            catch (final Exception e) {
+                                throw new IOException("could not parse serializable string from '" + entry.getValue()
+                                                      + "' for '" + key + "'");
+                            }
+                            if (parsed_value != null) {
+                                style.setDefaultValue(vp, parsed_value);
+                            }
                         }
-                        if (parsed_value != null) {
-                            style.setDefaultValue(vp, parsed_value);
-                        }
-
                     }
                 }
             }
