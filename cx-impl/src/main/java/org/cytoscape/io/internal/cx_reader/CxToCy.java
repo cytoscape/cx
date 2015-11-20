@@ -277,6 +277,7 @@ public final class CxToCy {
                               subnet_info_present);
 
         processNetworkAttributes(network_attributes, network_attributes_map, subnet_info_present, subnetwork_ids);
+        System.out.println(network_attributes_map);
 
         processHiddenAttributes(hidden_attributes, hidden_attributes_map);
 
@@ -354,10 +355,12 @@ public final class CxToCy {
                                         sub_network,
                                         sub_network.getTable(CyNetwork.class, CyNetwork.DEFAULT_ATTRS));
             }
+            if (subnet_to_subnet_name_map!=null && !subnet_to_subnet_name_map.isEmpty() ) {
             addNetworkNames(sub_network,
                             subnet_to_subnet_name_map,
                             subnetwork_id,
                             sub_network.getTable(CyNetwork.class, CyNetwork.LOCAL_ATTRS));
+            }
 
             final CyTable hidden_attribute_table = sub_network.getTable(CyNetwork.class, CyNetwork.HIDDEN_ATTRS);
             // TODO
