@@ -1,5 +1,6 @@
 package org.cytoscape.io.internal.cx_reader;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
@@ -34,7 +35,7 @@ import org.cytoscape.view.vizmap.mappings.PassthroughMapping;
 public final class ViewMaker {
 
     public static final Pattern  DIRECT_NET_PROPS_PATTERN = Pattern
-            .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
+                                                                  .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
 
     private static final boolean DEBUG                    = true;
 
@@ -47,7 +48,7 @@ public final class ViewMaker {
                                                final VisualStyleFactory visual_style_factory,
                                                final VisualMappingFunctionFactory vmf_factory_c,
                                                final VisualMappingFunctionFactory vmf_factory_d,
-                                               final VisualMappingFunctionFactory vmf_factory_p) {
+                                               final VisualMappingFunctionFactory vmf_factory_p) throws IOException {
         final CyNetworkView view = networkview_factory.createNetworkView(network);
         final VisualElementCollectionMap collection = cx_to_cy.getVisualElementCollectionMap();
         if (collection != null) {
@@ -69,6 +70,7 @@ public final class ViewMaker {
                 if (DEBUG) {
                     System.out.println("no view for sub-network " + network_id + " found");
                 }
+                return view;
             }
 
             final Long subnetwork_id = cx_to_cy.getSubNetworkToViewsMap().get(network_id).get(0);
@@ -79,7 +81,7 @@ public final class ViewMaker {
             final boolean have_default_visual_properties = ((collection
                     .getNetworkVisualPropertiesElement(subnetwork_id) != null)
                     || (collection.getNodesDefaultVisualPropertiesElement(subnetwork_id) != null) || (collection
-                    .getEdgesDefaultVisualPropertiesElement(subnetwork_id) != null));
+                            .getEdgesDefaultVisualPropertiesElement(subnetwork_id) != null));
 
             VisualStyle new_visual_style = null;
             if (have_default_visual_properties) {
@@ -101,14 +103,14 @@ public final class ViewMaker {
 
             if (collection.getNetworkVisualPropertiesElement(subnetwork_id) != null) {
                 ViewMaker
-                .setDefaultVisualPropertiesAndMappings(lexicon,
-                                                       collection
-                                                       .getNetworkVisualPropertiesElement(subnetwork_id),
-                                                       new_visual_style,
-                                                       CyNetwork.class,
-                                                       vmf_factory_c,
-                                                       vmf_factory_d,
-                                                       vmf_factory_p);
+                        .setDefaultVisualPropertiesAndMappings(lexicon,
+                                                               collection
+                                                                       .getNetworkVisualPropertiesElement(subnetwork_id),
+                                                               new_visual_style,
+                                                               CyNetwork.class,
+                                                               vmf_factory_c,
+                                                               vmf_factory_d,
+                                                               vmf_factory_p);
             }
             else {
                 if (DEBUG) {
@@ -118,14 +120,14 @@ public final class ViewMaker {
 
             if (collection.getNodesDefaultVisualPropertiesElement(subnetwork_id) != null) {
                 ViewMaker
-                .setDefaultVisualPropertiesAndMappings(lexicon,
-                                                       collection
-                                                       .getNodesDefaultVisualPropertiesElement(subnetwork_id),
-                                                       new_visual_style,
-                                                       CyNode.class,
-                                                       vmf_factory_c,
-                                                       vmf_factory_d,
-                                                       vmf_factory_p);
+                        .setDefaultVisualPropertiesAndMappings(lexicon,
+                                                               collection
+                                                                       .getNodesDefaultVisualPropertiesElement(subnetwork_id),
+                                                               new_visual_style,
+                                                               CyNode.class,
+                                                               vmf_factory_c,
+                                                               vmf_factory_d,
+                                                               vmf_factory_p);
             }
             else {
                 if (DEBUG) {
@@ -135,14 +137,14 @@ public final class ViewMaker {
 
             if (collection.getEdgesDefaultVisualPropertiesElement(subnetwork_id) != null) {
                 ViewMaker
-                .setDefaultVisualPropertiesAndMappings(lexicon,
-                                                       collection
-                                                       .getEdgesDefaultVisualPropertiesElement(subnetwork_id),
-                                                       new_visual_style,
-                                                       CyEdge.class,
-                                                       vmf_factory_c,
-                                                       vmf_factory_d,
-                                                       vmf_factory_p);
+                        .setDefaultVisualPropertiesAndMappings(lexicon,
+                                                               collection
+                                                                       .getEdgesDefaultVisualPropertiesElement(subnetwork_id),
+                                                               new_visual_style,
+                                                               CyEdge.class,
+                                                               vmf_factory_c,
+                                                               vmf_factory_d,
+                                                               vmf_factory_p);
             }
             else {
                 if (DEBUG) {
@@ -270,7 +272,7 @@ public final class ViewMaker {
                     }
                     else {
                         System.out.println("could not parse serializable string from discrete mapping value '" + v
-                                + "'");
+                                           + "'");
                     }
                 }
                 else {
@@ -290,7 +292,7 @@ public final class ViewMaker {
                                                   final VisualProperty vp,
                                                   final String col,
                                                   final Class<?> type_class,
-                                                  final VisualMappingFunctionFactory vmf_factory_p) {
+                                                  final VisualMappingFunctionFactory vmf_factory_p) throws IOException {
         final PassthroughMapping pmf = (PassthroughMapping) vmf_factory_p.createVisualMappingFunction(col,
                                                                                                       type_class,
                                                                                                       vp);
@@ -298,7 +300,8 @@ public final class ViewMaker {
             style.addVisualMappingFunction(pmf);
         }
         else {
-            System.out.println("could not create passthrough mapping for col '" + col + "'");
+            throw new IOException("could not create passthrough mapping for col '" + col + "'");
+
         }
     }
 
@@ -308,7 +311,7 @@ public final class ViewMaker {
             if (network_collection_name.toLowerCase().endsWith(".cx")) {
                 viz_style_title = String.format("%s-Style", network_collection_name.substring(0,
                                                                                               network_collection_name
-                                                                                                      .length() - 3));
+                                                                                              .length() - 3));
             }
             else {
                 viz_style_title = String.format("%s-Style", network_collection_name);
@@ -343,16 +346,19 @@ public final class ViewMaker {
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public final static void setDefaultVisualPropertiesAndMappings(final VisualLexicon lexicon,
-                                                                   final CyVisualPropertiesElement cyVisualPropertiesElement,
+                                                                   final CyVisualPropertiesElement cy_visual_properties_element,
                                                                    final VisualStyle style,
                                                                    final Class my_class,
                                                                    final VisualMappingFunctionFactory vmf_factory_c,
                                                                    final VisualMappingFunctionFactory vmf_factory_d,
 
-                                                                   final VisualMappingFunctionFactory vmf_factory_p) {
+                                                                   final VisualMappingFunctionFactory vmf_factory_p)
+            throws IOException {
 
-        final SortedMap<String, String> props = cyVisualPropertiesElement.getProperties();
-        final SortedMap<String, Mapping> maps = cyVisualPropertiesElement.getMappings();
+        System.out.println(cy_visual_properties_element.toString());
+
+        final SortedMap<String, String> props = cy_visual_properties_element.getProperties();
+        final SortedMap<String, Mapping> maps = cy_visual_properties_element.getMappings();
 
         if (props != null) {
 
@@ -401,13 +407,18 @@ public final class ViewMaker {
                 else {
                     final VisualProperty vp = lexicon.lookup(my_class, key);
                     if (vp != null) {
-                        final Object parsed_value = vp.parseSerializableString(entry.getValue());
+                        Object parsed_value = null;
+                        try {
+                            parsed_value = vp.parseSerializableString(entry.getValue());
+                        }
+                        catch (final Exception e) {
+                            throw new IOException("could not parse serializable string from '" + entry.getValue()
+                                    + "' for '" + key + "'");
+                        }
                         if (parsed_value != null) {
                             style.setDefaultValue(vp, parsed_value);
                         }
-                        else {
-                            System.out.println("could not parse serializable string from '" + entry.getValue() + "'");
-                        }
+
                     }
                 }
             }
@@ -434,7 +445,7 @@ public final class ViewMaker {
                         addDiscreteMapping(style, vp, sp, col, type, type_class, vmf_factory_d);
                     }
                     else {
-                        throw new IllegalStateException("unknown mapping type: " + mapping_type);
+                        throw new IOException("unknown mapping type: " + mapping_type);
                     }
                 }
             }
@@ -463,7 +474,7 @@ public final class ViewMaker {
                 else {
                     if (DEBUG) {
                         System.out.println("edges visual properties element for edge " + edge.getSUID()
-                                + " in sub-network " + subnetwork_id + " is null");
+                                           + " in sub-network " + subnetwork_id + " is null");
                     }
                 }
             }
@@ -492,7 +503,7 @@ public final class ViewMaker {
                 else {
                     if (DEBUG) {
                         System.out.println("nodes visual properties element for node " + node.getSUID()
-                                + " in sub-network " + subnetwork_id + " is null");
+                                           + " in sub-network " + subnetwork_id + " is null");
                     }
                 }
             }

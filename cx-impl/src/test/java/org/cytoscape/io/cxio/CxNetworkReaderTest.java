@@ -209,4 +209,14 @@ public class CxNetworkReaderTest {
         assertTrue(n.getEdgeCount() == 5);
     }
 
+    @Test
+    public void test14() throws Exception {
+        final File test_file = new File("src/test/resources/testData/mapping_types.cx");
+        final List<CyNetwork> networks = loadNetwork(test_file, false);
+        assertTrue((networks.size() == 1));
+        final CyNetwork n = networks.get(0);
+        assertTrue(n.getNodeCount() == 2);
+        assertTrue(n.getEdgeCount() == 0);
+    }
+
 }

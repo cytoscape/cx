@@ -347,4 +347,22 @@ public class CxNetworkWriterTest {
         assertTrue(n2.getEdgeCount() == 5);
     }
 
+    @Test
+    public void test14() throws Exception {
+        final File test_file = new File("src/test/resources/testData/mapping_types.cx");
+        final List<CyNetwork> networks = loadNetwork(test_file, false);
+        assertTrue((networks.size() == 1));
+        final CyNetwork n = networks.get(0);
+        assertTrue(n.getNodeCount() == 2);
+        assertTrue(n.getEdgeCount() == 0);
+
+        final ByteArrayOutputStream out = writeNetwork(n);
+        final ByteArrayInputStream in = new ByteArrayInputStream(out.toString().getBytes(StandardCharsets.UTF_8));
+        final List<CyNetwork> networks_2 = loadNetwork(in, true);
+        assertTrue((networks_2.size() == 1));
+        final CyNetwork n2 = networks_2.get(0);
+        assertTrue(n2.getNodeCount() == 2);
+        assertTrue(n2.getEdgeCount() == 0);
+    }
+
 }

@@ -10,9 +10,11 @@ import org.cxio.core.interfaces.AspectElement;
 import org.cxio.util.CxioUtil;
 import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.VisualPropertyType;
+import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
+import org.cytoscape.model.CyTable;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.View;
 import org.cytoscape.view.model.VisualLexicon;
@@ -194,14 +196,15 @@ public final class VisualPropertiesGatherer {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private final static void addMappings(final VisualStyle style,
                                           final VisualProperty vp,
-                                          final CyVisualPropertiesElement cvp) {
+                                          final CyVisualPropertiesElement cvp,
+                                          final CyTable table) {
         final VisualMappingFunction<?, ?> mapping = style.getVisualMappingFunction(vp);
 
         if (mapping != null) {
             if (mapping instanceof PassthroughMapping<?, ?>) {
                 final PassthroughMapping<?, ?> pm = (PassthroughMapping<?, ?>) mapping;
                 final String col = pm.getMappingColumnName();
-                final String type = toAttributeType(pm.getMappingColumnType());
+                final String type = toAttributeType(pm.getMappingColumnType(), table, col);
                 final StringBuilder sb = new StringBuilder();
                 sb.append(CxUtil.VM_COL);
                 sb.append("=");
@@ -214,9 +217,8 @@ public final class VisualPropertiesGatherer {
             }
             else if (mapping instanceof DiscreteMapping<?, ?>) {
                 final DiscreteMapping<?, ?> dm = (DiscreteMapping<?, ?>) mapping;
-
-                final String type = toAttributeType(dm.getMappingColumnType());
                 final String col = dm.getMappingColumnName();
+                final String type = toAttributeType(dm.getMappingColumnType(), table, col);
                 final Map<?, ?> map = dm.getAll();
                 final StringBuilder sb = new StringBuilder();
                 sb.append(CxUtil.VM_COL);
@@ -252,8 +254,8 @@ public final class VisualPropertiesGatherer {
             }
             else if (mapping instanceof ContinuousMapping<?, ?>) {
                 final ContinuousMapping<?, ?> cm = (ContinuousMapping<?, ?>) mapping;
-                final String type = toAttributeType(cm.getMappingColumnType());
                 final String col = cm.getMappingColumnName();
+                final String type = toAttributeType(cm.getMappingColumnType(), table, col);
                 final StringBuilder sb = new StringBuilder();
                 sb.append(CxUtil.VM_COL);
                 sb.append("=");
@@ -292,108 +294,60 @@ public final class VisualPropertiesGatherer {
         }
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    private final static void addMappingsOLD(final VisualStyle style,
-                                             final VisualProperty vp,
-                                             final CyVisualPropertiesElement cvp) {
-        final VisualMappingFunction<?, ?> mapping = style.getVisualMappingFunction(vp);
-
-        if (mapping != null) {
-            if (mapping instanceof PassthroughMapping<?, ?>) {
-
-                final PassthroughMapping<?, ?> pm = (PassthroughMapping<?, ?>) mapping;
-                final String col = pm.getMappingColumnName();
-                final String type = toAttributeType(pm.getMappingColumnType());
-                final StringBuilder sb = new StringBuilder();
-                sb.append(CxUtil.VM_COL);
-                sb.append("=");
-                sb.append(col);
-                sb.append(",");
-                sb.append(CxUtil.VM_TYPE);
-                sb.append("=");
-                sb.append(type);
-                cvp.putProperty(CxUtil.PASSTHROUGH_MAPPING + vp.getIdString(), sb.toString());
-            }
-            else if (mapping instanceof DiscreteMapping<?, ?>) {
-                final DiscreteMapping<?, ?> dm = (DiscreteMapping<?, ?>) mapping;
-
-                final String type = toAttributeType(dm.getMappingColumnType());
-                final String col = dm.getMappingColumnName();
-                final Map<?, ?> map = dm.getAll();
-                final StringBuilder sb = new StringBuilder();
-                sb.append(CxUtil.VM_COL);
-                sb.append("=");
-                sb.append(col);
-                sb.append(",");
-                sb.append(CxUtil.VM_TYPE);
-                sb.append("=");
-                sb.append(type);
-                int counter = 0;
-                for (final Map.Entry<?, ?> entry : map.entrySet()) {
-                    final Object value = entry.getValue();
-                    if (value == null) {
-                        continue;
-                    }
-                    try {
-                        sb.append(",K=");
-                        sb.append(counter);
-                        sb.append("=");
-                        sb.append(entry.getKey().toString());
-                        sb.append(",V=");
-                        sb.append(counter);
-                        sb.append("=");
-                        sb.append(vp.toSerializableString(value));
-                    }
-                    catch (final Exception e) {
-                        System.out.println("could not add discrete mapping entry: " + value);
-                        e.printStackTrace();
-                    }
-                    ++counter;
-                }
-                cvp.putProperty(CxUtil.DISCRETE_MAPPING + vp.getIdString(), sb.toString());
-            }
-            else if (mapping instanceof ContinuousMapping<?, ?>) {
-                final ContinuousMapping<?, ?> cm = (ContinuousMapping<?, ?>) mapping;
-                final String type = toAttributeType(cm.getMappingColumnType());
-                final String col = cm.getMappingColumnName();
-                final StringBuilder sb = new StringBuilder();
-                sb.append(CxUtil.VM_COL);
-                sb.append("=");
-                sb.append(col);
-                sb.append(",");
-                sb.append(CxUtil.VM_TYPE);
-                sb.append("=");
-                sb.append(type);
-                final List<?> points = cm.getAllPoints();
-                int counter = 0;
-                for (final Object point : points) {
-                    final ContinuousMappingPoint<?, ?> cp = (ContinuousMappingPoint<?, ?>) point;
-                    final Object lesser = cp.getRange().lesserValue;
-                    final Object equal = cp.getRange().equalValue;
-                    final Object greater = cp.getRange().greaterValue;
-                    sb.append(",L=");
-                    sb.append(counter);
-                    sb.append("=");
-                    sb.append(vp.toSerializableString(lesser));
-                    sb.append(",E=");
-                    sb.append(counter);
-                    sb.append("=");
-                    sb.append(vp.toSerializableString(equal));
-                    sb.append(",G=");
-                    sb.append(counter);
-                    sb.append("=");
-                    sb.append(vp.toSerializableString(greater));
-                    sb.append(",OV=");
-                    sb.append(counter);
-                    sb.append("=");
-                    sb.append(cp.getValue());
-
-                    ++counter;
-                }
-                cvp.putProperty(CxUtil.CONTINUOUS_MAPPING + vp.getIdString(), sb.toString());
-            }
-        }
-    }
+    /*
+     * @SuppressWarnings({ "unchecked", "rawtypes" }) private final static void
+     * addMappingsOLD(final VisualStyle style, final VisualProperty vp, final
+     * CyVisualPropertiesElement cvp) { final VisualMappingFunction<?, ?>
+     * mapping = style.getVisualMappingFunction(vp);
+     *
+     * if (mapping != null) { if (mapping instanceof PassthroughMapping<?, ?>) {
+     *
+     * final PassthroughMapping<?, ?> pm = (PassthroughMapping<?, ?>) mapping;
+     * final String col = pm.getMappingColumnName(); final String type =
+     * toAttributeType(pm.getMappingColumnType()); final StringBuilder sb = new
+     * StringBuilder(); sb.append(CxUtil.VM_COL); sb.append("=");
+     * sb.append(col); sb.append(","); sb.append(CxUtil.VM_TYPE);
+     * sb.append("="); sb.append(type);
+     * cvp.putProperty(CxUtil.PASSTHROUGH_MAPPING + vp.getIdString(),
+     * sb.toString()); } else if (mapping instanceof DiscreteMapping<?, ?>) {
+     * final DiscreteMapping<?, ?> dm = (DiscreteMapping<?, ?>) mapping;
+     *
+     * final String type = toAttributeType(dm.getMappingColumnType()); final
+     * String col = dm.getMappingColumnName(); final Map<?, ?> map =
+     * dm.getAll(); final StringBuilder sb = new StringBuilder();
+     * sb.append(CxUtil.VM_COL); sb.append("="); sb.append(col); sb.append(",");
+     * sb.append(CxUtil.VM_TYPE); sb.append("="); sb.append(type); int counter =
+     * 0; for (final Map.Entry<?, ?> entry : map.entrySet()) { final Object
+     * value = entry.getValue(); if (value == null) { continue; } try {
+     * sb.append(",K="); sb.append(counter); sb.append("=");
+     * sb.append(entry.getKey().toString()); sb.append(",V=");
+     * sb.append(counter); sb.append("=");
+     * sb.append(vp.toSerializableString(value)); } catch (final Exception e) {
+     * System.out.println("could not add discrete mapping entry: " + value);
+     * e.printStackTrace(); } ++counter; }
+     * cvp.putProperty(CxUtil.DISCRETE_MAPPING + vp.getIdString(),
+     * sb.toString()); } else if (mapping instanceof ContinuousMapping<?, ?>) {
+     * final ContinuousMapping<?, ?> cm = (ContinuousMapping<?, ?>) mapping;
+     * final String type = toAttributeType(cm.getMappingColumnType()); final
+     * String col = cm.getMappingColumnName(); final StringBuilder sb = new
+     * StringBuilder(); sb.append(CxUtil.VM_COL); sb.append("=");
+     * sb.append(col); sb.append(","); sb.append(CxUtil.VM_TYPE);
+     * sb.append("="); sb.append(type); final List<?> points =
+     * cm.getAllPoints(); int counter = 0; for (final Object point : points) {
+     * final ContinuousMappingPoint<?, ?> cp = (ContinuousMappingPoint<?, ?>)
+     * point; final Object lesser = cp.getRange().lesserValue; final Object
+     * equal = cp.getRange().equalValue; final Object greater =
+     * cp.getRange().greaterValue; sb.append(",L="); sb.append(counter);
+     * sb.append("="); sb.append(vp.toSerializableString(lesser));
+     * sb.append(",E="); sb.append(counter); sb.append("=");
+     * sb.append(vp.toSerializableString(equal)); sb.append(",G=");
+     * sb.append(counter); sb.append("=");
+     * sb.append(vp.toSerializableString(greater)); sb.append(",OV=");
+     * sb.append(counter); sb.append("="); sb.append(cp.getValue());
+     *
+     * ++counter; } cvp.putProperty(CxUtil.CONTINUOUS_MAPPING +
+     * vp.getIdString(), sb.toString()); } } }
+     */
 
     @SuppressWarnings("rawtypes")
     private static void gatherEdgesDefaultVisualProperties(final CyNetworkView view,
@@ -408,7 +362,8 @@ public final class VisualPropertiesGatherer {
         for (final VisualProperty visual_property : all_visual_properties) {
             if (visual_property.getTargetDataType() == CyEdge.class) {
                 addDefaultProperties(current_visual_style, visual_property, e);
-                addMappings(current_visual_style, visual_property, e);
+                final CyTable table = network.getTable(CyEdge.class, CyNetwork.DEFAULT_ATTRS);
+                addMappings(current_visual_style, visual_property, e, table);
             }
         }
         //
@@ -485,7 +440,8 @@ public final class VisualPropertiesGatherer {
         for (final VisualProperty visual_property : all_visual_properties) {
             if (visual_property.getTargetDataType() == CyNode.class) {
                 addDefaultProperties(current_visual_style, visual_property, e);
-                addMappings(current_visual_style, visual_property, e);
+                final CyTable table = network.getTable(CyNode.class, CyNetwork.DEFAULT_ATTRS);
+                addMappings(current_visual_style, visual_property, e, table);
             }
         }
         visual_properties.add(e);
@@ -516,24 +472,53 @@ public final class VisualPropertiesGatherer {
         }
     }
 
-    private final static String toAttributeType(final Class<?> attr_class) {
+    private final static String toAttributeType(final Class<?> attr_class, final CyTable table, final String col_name) {
         if (attr_class == String.class) {
             return "string";
-        }
-        if (attr_class == Boolean.class) {
-            return "boolean";
         }
         else if ((attr_class == Float.class) || (attr_class == Double.class)) {
             return "double";
         }
-        else if (attr_class == Integer.class) {
+        else if ((attr_class == Integer.class) || (attr_class == Short.class)) {
             return "integer";
         }
         else if (attr_class == Long.class) {
             return "long";
         }
+        else if (attr_class == Boolean.class) {
+            return "boolean";
+        }
         else if (Number.class.isAssignableFrom(attr_class)) {
-            return "double";
+            Class<?> col_type = null;
+            if ((table != null) && (col_name != null)) {
+                final CyColumn col = table.getColumn(col_name);
+                if (col != null) {
+                    col_type = table.getColumn(col_name).getType();
+                }
+                else {
+                    throw new IllegalStateException("failed to obtain column '" + col_name + "'");
+                }
+            }
+            if (col_type != null) {
+                System.out.println("mapping type is '" + attr_class + "' will use (from table column) '" + col_type
+                        + "' instead");
+                if ((col_type == Float.class) || (col_type == Double.class)) {
+                    return "double";
+                }
+                else if ((col_type == Integer.class) || (col_type == Short.class)) {
+                    return "integer";
+                }
+                else if (col_type == Long.class) {
+                    return "long";
+                }
+                else {
+                    throw new IllegalArgumentException("don't know how to deal with type '" + col_type
+                            + "' (from table column)");
+                }
+            }
+            else {
+                throw new IllegalStateException("failed to obtain type for mapping from table");
+            }
         }
         else {
             throw new IllegalArgumentException("don't know how to deal with type '" + attr_class + "'");

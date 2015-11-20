@@ -100,6 +100,29 @@ public final class CxToCy {
         return m;
     }
 
+    public final static Set<Long> getAllSubNetworkParentNetworkIds(final List<AspectElement> networks_relations) {
+        final Set<Long> parents = new HashSet<Long>();
+        for (final AspectElement e : networks_relations) {
+            final NetworkRelationsElement nwe = (NetworkRelationsElement) e;
+            if (nwe.getRelationship() == NetworkRelationsElement.TYPE_SUBNETWORK) {
+                parents.add(nwe.getParent());
+            }
+        }
+        return parents;
+    }
+
+    public final static List<Long> getSubNetworkIds(final Long parent_id, final List<AspectElement> networks_relations) {
+        final List<Long> subnets = new ArrayList<Long>();
+        for (final AspectElement e : networks_relations) {
+            final NetworkRelationsElement nwe = (NetworkRelationsElement) e;
+            if ((nwe.getRelationship() == NetworkRelationsElement.TYPE_SUBNETWORK)
+                    && (nwe.getParent().equals(parent_id))) {
+                subnets.add(nwe.getChild());
+            }
+        }
+        return subnets;
+    }
+
     public final List<CyNetwork> createNetwork(final SortedMap<String, List<AspectElement>> aspect_collection,
                                                final CyRootNetwork root_network,
                                                final CyNetworkFactory network_factory,
@@ -180,8 +203,7 @@ public final class CxToCy {
         Map<Long, String> subnet_to_subnet_name_map = new HashMap<Long, String>();
         if ((network_relations != null) && !network_relations.isEmpty()) {
             subnet_info_present = true;
-            final Set<Long> subnetwork_parent_ids = NetworkRelationsElement
-                    .getAllSubNetworkParentNetworkIds(network_relations);
+            final Set<Long> subnetwork_parent_ids = getAllSubNetworkParentNetworkIds(network_relations);
             if ((subnetwork_parent_ids == null) || (subnetwork_parent_ids.size() < 1)) {
                 throw new IOException("no subnetwork parent network id");
             }
@@ -191,7 +213,11 @@ public final class CxToCy {
             for (final Long s : subnetwork_parent_ids) {
                 parent_network_id = s;
             }
-            subnetwork_ids = NetworkRelationsElement.getSubNetworkIds(parent_network_id, network_relations);
+            if (DEBUG) {
+                System.out.println("parent_network_id: " + parent_network_id);
+            }
+
+            subnetwork_ids = getSubNetworkIds(parent_network_id, network_relations);
             if (DEBUG) {
                 System.out.println("subnetwork_ids: " + subnetwork_ids);
             }
@@ -315,10 +341,10 @@ public final class CxToCy {
                          subnet_info_present);
             }
 
-            final CyTable network_attribute_table = sub_network.getTable(CyNetwork.class, CyNetwork.LOCAL_ATTRS);
-
             if (network_attributes_map.containsKey(subnetwork_id)) {
-                addNetworkAttributeData(network_attributes_map.get(subnetwork_id), sub_network, network_attribute_table);
+                addNetworkAttributeData(network_attributes_map.get(subnetwork_id),
+                                        sub_network,
+                                        sub_network.getTable(CyNetwork.class, CyNetwork.LOCAL_ATTRS));
             }
             else if (network_attributes_map.containsKey(DEFAULT_SUBNET)) {
                 if (DEBUG) {
@@ -326,10 +352,12 @@ public final class CxToCy {
                 }
                 addNetworkAttributeData(network_attributes_map.get(DEFAULT_SUBNET),
                                         sub_network,
-                                        network_attribute_table);
+                                        sub_network.getTable(CyNetwork.class, CyNetwork.DEFAULT_ATTRS));
             }
-
-            addNetworkNames(sub_network, subnet_to_subnet_name_map, subnetwork_id, network_attribute_table);
+            addNetworkNames(sub_network,
+                            subnet_to_subnet_name_map,
+                            subnetwork_id,
+                            sub_network.getTable(CyNetwork.class, CyNetwork.LOCAL_ATTRS));
 
             final CyTable hidden_attribute_table = sub_network.getTable(CyNetwork.class, CyNetwork.HIDDEN_ATTRS);
             // TODO
@@ -454,9 +482,6 @@ public final class CxToCy {
                                 final boolean perform_basic_integrity_checks,
                                 final boolean subnet_info_present) throws IOException {
 
-        final CyTable edge_table = network.getTable(CyEdge.class, CyNetwork.LOCAL_ATTRS);
-        // final CyTable edge_table_default = network.getTable(CyEdge.class,
-        // CyNetwork.DEFAULT_ATTRS);
         for (final AspectElement e : edges) {
 
             final EdgesElement edge_element = (EdgesElement) e;
@@ -513,7 +538,6 @@ public final class CxToCy {
                 addEdgeTableData(edge_attributes_map.get(edge_id),
                                  cy_edge,
                                  network,
-                                 edge_table,
                                  edge_id,
                                  subnetwork_id,
                                  subnet_info_present);
@@ -524,7 +548,6 @@ public final class CxToCy {
     private final void addEdgeTableData(final List<EdgeAttributesElement> elements,
                                         final CyIdentifiable graph_object,
                                         final CyNetwork network,
-                                        final CyTable table,
                                         final Long cx_edge_id,
                                         final Long subnetwork_id,
                                         final boolean subnet_info_present) throws IOException {
@@ -534,28 +557,35 @@ public final class CxToCy {
             }
             return;
         }
+        final CyTable table_default = network.getTable(CyEdge.class, CyNetwork.DEFAULT_ATTRS);
+        final CyTable table_local = network.getTable(CyEdge.class, CyNetwork.LOCAL_ATTRS);
         final CyRow row = network.getRow(graph_object);
         if (row != null) {
             for (final EdgeAttributesElement e : elements) {
                 if (e != null) {
-
+                    CyTable my_table;
                     if (!subnet_info_present || (e.getSubnetwork() == null) || subnetwork_id.equals(e.getSubnetwork())) {
-
+                        if (!subnet_info_present || (e.getSubnetwork() == null)) {
+                            my_table = table_default;
+                        }
+                        else {
+                            my_table = table_local;
+                        }
                         final String name = e.getName();
                         if (name != null) {
                             if (!(name.equals(CyIdentifiable.SUID))) {
                                 // New column creation:
-                                if (table.getColumn(name) == null) {
+                                if (my_table.getColumn(name) == null) {
                                     final Class<?> data_type = getDataType(e.getDataType());
 
                                     if (e.isSingleValue()) {
-                                        table.createColumn(name, data_type, false);
+                                        my_table.createColumn(name, data_type, false);
                                     }
                                     else {
-                                        table.createListColumn(name, data_type, false);
+                                        my_table.createListColumn(name, data_type, false);
                                     }
                                 }
-                                final CyColumn col = table.getColumn(name);
+                                final CyColumn col = my_table.getColumn(name);
                                 row.set(name, getValue(e, col));
                             }
                         }
@@ -622,7 +652,6 @@ public final class CxToCy {
                                 final Long subnetwork_id,
                                 final boolean subnet_info_present) throws IOException {
 
-        final CyTable node_table = network.getTable(CyNode.class, CyNetwork.LOCAL_ATTRS);
         final CyTable node_table_default = network.getTable(CyNode.class, CyNetwork.DEFAULT_ATTRS);
         for (final AspectElement e : nodes) {
             final NodesElement node_element = (NodesElement) e;
@@ -658,7 +687,6 @@ public final class CxToCy {
                 addNodeTableData(node_attributes_map.get(node_id),
                                  cy_node,
                                  network,
-                                 node_table,
                                  node_id,
                                  subnetwork_id,
                                  subnet_info_present);
@@ -669,7 +697,6 @@ public final class CxToCy {
     private final void addNodeTableData(final List<NodeAttributesElement> elements,
                                         final CyIdentifiable graph_object,
                                         final CySubNetwork network,
-                                        final CyTable table,
                                         final Long cx_node_id,
                                         final Long subnetwork_id,
                                         final boolean subnet_info_present) throws IOException {
@@ -679,27 +706,36 @@ public final class CxToCy {
             }
             return;
         }
+        final CyTable table_default = network.getTable(CyNode.class, CyNetwork.DEFAULT_ATTRS);
+        final CyTable table_local = network.getTable(CyNode.class, CyNetwork.LOCAL_ATTRS);
         final CyRow row = network.getRow(graph_object);
         if (row != null) {
             for (final NodeAttributesElement e : elements) {
                 if (e != null) {
-
+                    CyTable my_table;
                     if (!subnet_info_present || (e.getSubnetwork() == null) || subnetwork_id.equals(e.getSubnetwork())) {
+                        if (!subnet_info_present || (e.getSubnetwork() == null)) {
+                            my_table = table_default;
+                        }
+                        else {
+                            my_table = table_local;
+                        }
                         final String name = e.getName();
                         if (name != null) {
                             if (!(name.equals(CyIdentifiable.SUID))) {
                                 // New column creation:
-                                if (table.getColumn(name) == null) {
+                                if (my_table.getColumn(name) == null) {
                                     final Class<?> data_type = getDataType(e.getDataType());
 
                                     if (e.isSingleValue()) {
-                                        table.createColumn(name, data_type, false);
+                                        my_table.createColumn(name, data_type, false);
+
                                     }
                                     else {
-                                        table.createListColumn(name, data_type, false);
+                                        my_table.createListColumn(name, data_type, false);
                                     }
                                 }
-                                final CyColumn col = table.getColumn(name);
+                                final CyColumn col = my_table.getColumn(name);
                                 row.set(name, getValue(e, col));
                             }
                         }

@@ -91,17 +91,26 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     @Override
     public CyNetworkView buildCyNetworkView(final CyNetwork network) {
 
-        final CyNetworkView view = ViewMaker.makeView(network,
-                                                      _cx_to_cy,
-                                                      _network_collection_name,
-                                                      _networkview_factory,
-                                                      _rendering_engine_manager,
-                                                      _visual_mapping_manager,
-                                                      _visual_style_factory,
-                                                      _vmf_factory_c,
-                                                      _vmf_factory_d,
-                                                      _vmf_factory_p);
-        view.updateView();
+        CyNetworkView view = null;
+        try {
+            view = ViewMaker.makeView(network,
+                                      _cx_to_cy,
+                                      _network_collection_name,
+                                      _networkview_factory,
+                                      _rendering_engine_manager,
+                                      _visual_mapping_manager,
+                                      _visual_style_factory,
+                                      _vmf_factory_c,
+                                      _vmf_factory_d,
+                                      _vmf_factory_p);
+        }
+        catch (final IOException e) {
+
+            e.printStackTrace();
+        }
+        if (view != null) {
+            view.updateView();
+        }
         return view;
 
     }
