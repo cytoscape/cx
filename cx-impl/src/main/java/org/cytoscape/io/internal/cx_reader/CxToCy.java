@@ -277,7 +277,7 @@ public final class CxToCy {
                               subnet_info_present);
 
         processNetworkAttributes(network_attributes, network_attributes_map, subnet_info_present, subnetwork_ids);
-        System.out.println(network_attributes_map);
+        //System.out.println(network_attributes_map);
 
         processHiddenAttributes(hidden_attributes, hidden_attributes_map);
 
@@ -678,6 +678,8 @@ public final class CxToCy {
                 }
                 if (node_element.getNodeName() != null) {
                     network.getRow(cy_node).set(org.cytoscape.io.internal.cxio.CxUtil.SHARED_NAME_COL,
+                                                node_element.getNodeName());
+                    network.getRow(cy_node).set(org.cytoscape.io.internal.cxio.CxUtil.NAME_COL,
                                                 node_element.getNodeName());
                 }
 

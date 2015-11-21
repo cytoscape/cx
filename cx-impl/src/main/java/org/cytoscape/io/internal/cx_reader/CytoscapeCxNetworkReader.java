@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
 
+import org.cxio.aspects.datamodels.NetworkAttributesElement;
 import org.cxio.aux.AspectElementCounts;
 import org.cxio.core.CxReader;
 import org.cxio.core.interfaces.AspectElement;
@@ -191,7 +192,19 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                 root_list.setSelectedValue(_network_collection_name);
             }
         }
-
+    
+        //final List<AspectElement> network_attributes = res.get(NetworkAttributesElement.ASPECT_NAME);
+        
+       /* if (network_attributes != null) {
+            for (final AspectElement e : network_attributes) {
+                final NetworkAttributesElement nae = (NetworkAttributesElement) e;
+                if ( nae.getSubnetwork() == null && nae.getName() != null  && nae.getPropertyOf() != null &&   nae.getPropertyOf().size() ==1 ) {
+                    System.out.println("__collection: " + nae.getValue());
+                }
+            }
+        }*/
+        
+    
         final CyRootNetwork root_network = getRootNetwork();
 
         // Select Network Collection
