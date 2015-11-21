@@ -6,211 +6,214 @@
   "metaData" : [ {
     "consistencyGroup" : 1,
     "elementCount" : 7,
-    "idCounter" : 112,
+    "idCounter" : 573,
     "name" : "nodes",
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 5,
-    "idCounter" : 112,
+    "idCounter" : 573,
     "name" : "edges",
     "version" : "1.0"
   } ]
 }, {
   "nodes" : [ {
-    "@id" : 108,
-    "n" : "Node 7"
-  }, {
-    "@id" : 106,
+    "@id" : 553,
     "n" : "Node 6"
   }, {
-    "@id" : 86,
-    "n" : "Node 5"
+    "@id" : 552,
+    "n" : "Node 7"
   }, {
-    "@id" : 84,
-    "n" : "Node 4"
-  }, {
-    "@id" : 82,
+    "@id" : 548,
     "n" : "Node 3"
   }, {
-    "@id" : 66,
-    "n" : "Node 2"
+    "@id" : 547,
+    "n" : "Node 4"
   }, {
-    "@id" : 64,
+    "@id" : 546,
+    "n" : "Node 5"
+  }, {
+    "@id" : 544,
     "n" : "Node 1"
+  }, {
+    "@id" : 543,
+    "n" : "Node 2"
   } ]
 }, {
   "edges" : [ {
-    "@id" : 110,
-    "s" : 106,
-    "t" : 108,
+    "@id" : 554,
+    "s" : 553,
+    "t" : 552,
     "i" : "interacts with"
   }, {
-    "@id" : 90,
-    "s" : 84,
-    "t" : 86,
+    "@id" : 551,
+    "s" : 548,
+    "t" : 547,
     "i" : "interacts with"
   }, {
-    "@id" : 89,
-    "s" : 82,
-    "t" : 86,
+    "@id" : 550,
+    "s" : 548,
+    "t" : 546,
     "i" : "interacts with"
   }, {
-    "@id" : 88,
-    "s" : 82,
-    "t" : 84,
+    "@id" : 549,
+    "s" : 547,
+    "t" : 546,
     "i" : "interacts with"
   }, {
-    "@id" : 68,
-    "s" : 64,
-    "t" : 66,
+    "@id" : 545,
+    "s" : 544,
+    "t" : 543,
     "i" : "interacts with"
   } ]
 }, {
   "networkAttributes" : [ {
-    "s" : 52,
     "n" : "name",
-    "v" : "CollectionABC"
+    "v" : "collection_1.cx"
   }, {
-    "s" : 70,
+    "s" : 513,
     "n" : "name",
-    "v" : "CollectionABC"
+    "v" : "NetworkA"
   }, {
-    "s" : 94,
+    "s" : 523,
     "n" : "name",
-    "v" : "CollectionABC"
+    "v" : "NetworkB"
+  }, {
+    "s" : 533,
+    "n" : "name",
+    "v" : "NetworkC"
   } ]
 }, {
   "nodeAttributes" : [ {
-    "s" : 52,
-    "po" : 66,
-    "n" : "name",
-    "v" : "Node 2"
-  }, {
-    "s" : 52,
-    "po" : 64,
+    "s" : 513,
+    "po" : 544,
     "n" : "name",
     "v" : "Node 1"
   }, {
-    "s" : 70,
-    "po" : 86,
+    "s" : 513,
+    "po" : 543,
     "n" : "name",
-    "v" : "Node 5"
+    "v" : "Node 2"
   }, {
-    "s" : 70,
-    "po" : 84,
-    "n" : "name",
-    "v" : "Node 4"
-  }, {
-    "s" : 70,
-    "po" : 82,
+    "s" : 523,
+    "po" : 548,
     "n" : "name",
     "v" : "Node 3"
   }, {
-    "s" : 94,
-    "po" : 108,
+    "s" : 523,
+    "po" : 547,
     "n" : "name",
-    "v" : "Node 7"
+    "v" : "Node 4"
   }, {
-    "s" : 94,
-    "po" : 106,
+    "s" : 523,
+    "po" : 546,
+    "n" : "name",
+    "v" : "Node 5"
+  }, {
+    "s" : 533,
+    "po" : 553,
     "n" : "name",
     "v" : "Node 6"
+  }, {
+    "s" : 533,
+    "po" : 552,
+    "n" : "name",
+    "v" : "Node 7"
   } ]
 }, {
   "edgeAttributes" : [ {
-    "s" : 52,
-    "po" : 68,
+    "s" : 513,
+    "po" : 545,
     "n" : "shared name",
     "v" : "Node 1 (interacts with) Node 2"
   }, {
-    "s" : 52,
-    "po" : 68,
+    "s" : 513,
+    "po" : 545,
     "n" : "name",
     "v" : "Node 1 (interacts with) Node 2"
   }, {
-    "s" : 52,
-    "po" : 68,
+    "s" : 513,
+    "po" : 545,
     "n" : "interaction",
     "v" : "interacts with"
   }, {
-    "s" : 70,
-    "po" : 90,
-    "n" : "shared name",
-    "v" : "Node 4 (interacts with) Node 5"
-  }, {
-    "s" : 70,
-    "po" : 90,
-    "n" : "name",
-    "v" : "Node 4 (interacts with) Node 5"
-  }, {
-    "s" : 70,
-    "po" : 90,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 70,
-    "po" : 89,
-    "n" : "shared name",
-    "v" : "Node 3 (interacts with) Node 5"
-  }, {
-    "s" : 70,
-    "po" : 89,
-    "n" : "name",
-    "v" : "Node 3 (interacts with) Node 5"
-  }, {
-    "s" : 70,
-    "po" : 89,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 70,
-    "po" : 88,
+    "s" : 523,
+    "po" : 551,
     "n" : "shared name",
     "v" : "Node 3 (interacts with) Node 4"
   }, {
-    "s" : 70,
-    "po" : 88,
+    "s" : 523,
+    "po" : 551,
     "n" : "name",
     "v" : "Node 3 (interacts with) Node 4"
   }, {
-    "s" : 70,
-    "po" : 88,
+    "s" : 523,
+    "po" : 551,
     "n" : "interaction",
     "v" : "interacts with"
   }, {
-    "s" : 94,
-    "po" : 110,
+    "s" : 523,
+    "po" : 550,
+    "n" : "shared name",
+    "v" : "Node 3 (interacts with) Node 5"
+  }, {
+    "s" : 523,
+    "po" : 550,
+    "n" : "name",
+    "v" : "Node 3 (interacts with) Node 5"
+  }, {
+    "s" : 523,
+    "po" : 550,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 523,
+    "po" : 549,
+    "n" : "shared name",
+    "v" : "Node 4 (interacts with) Node 5"
+  }, {
+    "s" : 523,
+    "po" : 549,
+    "n" : "name",
+    "v" : "Node 4 (interacts with) Node 5"
+  }, {
+    "s" : 523,
+    "po" : 549,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 533,
+    "po" : 554,
     "n" : "shared name",
     "v" : "Node 6 (interacts with) Node 7"
   }, {
-    "s" : 94,
-    "po" : 110,
+    "s" : 533,
+    "po" : 554,
     "n" : "name",
     "v" : "Node 6 (interacts with) Node 7"
   }, {
-    "s" : 94,
-    "po" : 110,
+    "s" : 533,
+    "po" : 554,
     "n" : "interaction",
     "v" : "interacts with"
   } ]
 }, {
   "cartesianLayout" : [ {
-    "node" : 66,
-    "view" : 52,
-    "x" : -71.0,
-    "y" : -28.0
-  }, {
-    "node" : 64,
-    "view" : 52,
+    "node" : 544,
+    "view" : 555,
     "x" : -234.0,
     "y" : -71.0
+  }, {
+    "node" : 543,
+    "view" : 555,
+    "x" : -71.0,
+    "y" : -28.0
   } ]
 }, {
   "visualProperties" : [ {
     "properties_of" : "network",
-    "applies_to" : 52,
-    "view" : 52,
+    "applies_to" : 555,
+    "view" : 555,
     "properties" : {
       "NETWORK_BACKGROUND_PAINT" : "#FFFFFF",
       "NETWORK_CENTER_X_LOCATION" : "0.0",
@@ -226,8 +229,8 @@
     }
   }, {
     "properties_of" : "nodes:default",
-    "applies_to" : 52,
-    "view" : 52,
+    "applies_to" : 555,
+    "view" : 555,
     "properties" : {
       "COMPOUND_NODE_PADDING" : "10.0",
       "COMPOUND_NODE_SHAPE" : "ROUND_RECTANGLE",
@@ -292,12 +295,19 @@
       "NODE_X_LOCATION" : "0.0",
       "NODE_Y_LOCATION" : "0.0",
       "NODE_Z_LOCATION" : "0.0",
-      "PASSTHROUGH_MAPPING_NODE_LABEL" : "COL=name,T=string"
+      "nodeCustomGraphicsSizeSync" : "true",
+      "nodeSizeLocked" : "false"
+    },
+    "mappings" : {
+      "NODE_LABEL" : {
+        "type" : "PASSTHROUGH",
+        "definition" : "COL=name,T=string"
+      }
     }
   }, {
     "properties_of" : "edges:default",
-    "applies_to" : 52,
-    "view" : 52,
+    "applies_to" : 555,
+    "view" : 555,
     "properties" : {
       "EDGE_CURVED" : "true",
       "EDGE_LABEL_COLOR" : "#000000",
@@ -320,45 +330,46 @@
       "EDGE_TRANSPARENCY" : "255",
       "EDGE_UNSELECTED_PAINT" : "#404040",
       "EDGE_VISIBLE" : "true",
-      "EDGE_WIDTH" : "2.0"
+      "EDGE_WIDTH" : "2.0",
+      "arrowColorMatchesEdge" : "false"
     }
   }, {
     "properties_of" : "nodes",
-    "applies_to" : 66,
-    "view" : 52,
-    "properties" : {
-      "NODE_FILL_COLOR" : "#CCFF66"
-    }
-  }, {
-    "properties_of" : "nodes",
-    "applies_to" : 64,
-    "view" : 52,
+    "applies_to" : 544,
+    "view" : 555,
     "properties" : {
       "NODE_FILL_COLOR" : "#9933FF"
     }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 543,
+    "view" : 555,
+    "properties" : {
+      "NODE_FILL_COLOR" : "#CCFF66"
+    }
   } ]
 }, {
   "cartesianLayout" : [ {
-    "node" : 86,
-    "view" : 70,
-    "x" : 2.0,
-    "y" : -64.0
+    "node" : 548,
+    "view" : 560,
+    "x" : -158.0,
+    "y" : -126.0
   }, {
-    "node" : 84,
-    "view" : 70,
+    "node" : 547,
+    "view" : 560,
     "x" : -115.0,
     "y" : 7.0
   }, {
-    "node" : 82,
-    "view" : 70,
-    "x" : -158.0,
-    "y" : -126.0
+    "node" : 546,
+    "view" : 560,
+    "x" : 2.0,
+    "y" : -64.0
   } ]
 }, {
   "visualProperties" : [ {
     "properties_of" : "network",
-    "applies_to" : 70,
-    "view" : 70,
+    "applies_to" : 560,
+    "view" : 560,
     "properties" : {
       "NETWORK_BACKGROUND_PAINT" : "#FFFFFF",
       "NETWORK_CENTER_X_LOCATION" : "0.0",
@@ -374,8 +385,8 @@
     }
   }, {
     "properties_of" : "nodes:default",
-    "applies_to" : 70,
-    "view" : 70,
+    "applies_to" : 560,
+    "view" : 560,
     "properties" : {
       "COMPOUND_NODE_PADDING" : "10.0",
       "COMPOUND_NODE_SHAPE" : "ROUND_RECTANGLE",
@@ -440,12 +451,19 @@
       "NODE_X_LOCATION" : "0.0",
       "NODE_Y_LOCATION" : "0.0",
       "NODE_Z_LOCATION" : "0.0",
-      "PASSTHROUGH_MAPPING_NODE_LABEL" : "COL=name,T=string"
+      "nodeCustomGraphicsSizeSync" : "true",
+      "nodeSizeLocked" : "false"
+    },
+    "mappings" : {
+      "NODE_LABEL" : {
+        "type" : "PASSTHROUGH",
+        "definition" : "COL=name,T=string"
+      }
     }
   }, {
     "properties_of" : "edges:default",
-    "applies_to" : 70,
-    "view" : 70,
+    "applies_to" : 560,
+    "view" : 560,
     "properties" : {
       "EDGE_CURVED" : "true",
       "EDGE_LABEL_COLOR" : "#000000",
@@ -468,26 +486,27 @@
       "EDGE_TRANSPARENCY" : "255",
       "EDGE_UNSELECTED_PAINT" : "#404040",
       "EDGE_VISIBLE" : "true",
-      "EDGE_WIDTH" : "2.0"
+      "EDGE_WIDTH" : "2.0",
+      "arrowColorMatchesEdge" : "false"
     }
   } ]
 }, {
   "cartesianLayout" : [ {
-    "node" : 108,
-    "view" : 94,
-    "x" : -58.0,
-    "y" : -29.0
-  }, {
-    "node" : 106,
-    "view" : 94,
+    "node" : 553,
+    "view" : 568,
     "x" : 73.0,
     "y" : -30.0
+  }, {
+    "node" : 552,
+    "view" : 568,
+    "x" : -58.0,
+    "y" : -29.0
   } ]
 }, {
   "visualProperties" : [ {
     "properties_of" : "network",
-    "applies_to" : 94,
-    "view" : 94,
+    "applies_to" : 568,
+    "view" : 568,
     "properties" : {
       "NETWORK_BACKGROUND_PAINT" : "#FFFFFF",
       "NETWORK_CENTER_X_LOCATION" : "0.0",
@@ -503,8 +522,8 @@
     }
   }, {
     "properties_of" : "nodes:default",
-    "applies_to" : 94,
-    "view" : 94,
+    "applies_to" : 568,
+    "view" : 568,
     "properties" : {
       "COMPOUND_NODE_PADDING" : "10.0",
       "COMPOUND_NODE_SHAPE" : "ROUND_RECTANGLE",
@@ -569,12 +588,19 @@
       "NODE_X_LOCATION" : "0.0",
       "NODE_Y_LOCATION" : "0.0",
       "NODE_Z_LOCATION" : "0.0",
-      "PASSTHROUGH_MAPPING_NODE_LABEL" : "COL=name,T=string"
+      "nodeCustomGraphicsSizeSync" : "true",
+      "nodeSizeLocked" : "false"
+    },
+    "mappings" : {
+      "NODE_LABEL" : {
+        "type" : "PASSTHROUGH",
+        "definition" : "COL=name,T=string"
+      }
     }
   }, {
     "properties_of" : "edges:default",
-    "applies_to" : 94,
-    "view" : 94,
+    "applies_to" : 568,
+    "view" : 568,
     "properties" : {
       "EDGE_CURVED" : "true",
       "EDGE_LABEL_COLOR" : "#000000",
@@ -597,70 +623,71 @@
       "EDGE_TRANSPARENCY" : "255",
       "EDGE_UNSELECTED_PAINT" : "#404040",
       "EDGE_VISIBLE" : "true",
-      "EDGE_WIDTH" : "2.0"
+      "EDGE_WIDTH" : "2.0",
+      "arrowColorMatchesEdge" : "false"
     }
   } ]
 }, {
   "subNetworks" : [ {
-    "@id" : 52,
-    "nodes" : [ 66, 64 ],
-    "edges" : [ 68 ]
+    "@id" : 513,
+    "nodes" : [ 544, 543 ],
+    "edges" : [ 545 ]
   }, {
-    "@id" : 70,
-    "nodes" : [ 86, 84, 82 ],
-    "edges" : [ 90, 89, 88 ]
+    "@id" : 523,
+    "nodes" : [ 548, 547, 546 ],
+    "edges" : [ 551, 550, 549 ]
   }, {
-    "@id" : 94,
-    "nodes" : [ 108, 106 ],
-    "edges" : [ 110 ]
+    "@id" : 533,
+    "nodes" : [ 553, 552 ],
+    "edges" : [ 554 ]
   } ]
 }, {
   "cyViews" : [ {
-    "@id" : 52,
-    "s" : 52
+    "@id" : 555,
+    "s" : 513
   }, {
-    "@id" : 70,
-    "s" : 70
+    "@id" : 560,
+    "s" : 523
   }, {
-    "@id" : 94,
-    "s" : 94
+    "@id" : 568,
+    "s" : 533
   } ]
 }, {
   "networkRelations" : [ {
-    "p" : 36,
-    "c" : 52,
-    "r" : "subnetwork",
-    "name" : "NetworkA"
-  }, {
-    "p" : 52,
-    "c" : 52,
+    "p" : 513,
+    "c" : 555,
     "r" : "view",
     "name" : "NetworkA view"
   }, {
-    "p" : 36,
-    "c" : 70,
+    "p" : 497,
+    "c" : 513,
     "r" : "subnetwork",
-    "name" : "NetworkB"
+    "name" : "NetworkA"
   }, {
-    "p" : 70,
-    "c" : 70,
+    "p" : 523,
+    "c" : 560,
     "r" : "view",
     "name" : "NetworkB view"
   }, {
-    "p" : 36,
-    "c" : 94,
+    "p" : 497,
+    "c" : 523,
     "r" : "subnetwork",
-    "name" : "NetworkC"
+    "name" : "NetworkB"
   }, {
-    "p" : 94,
-    "c" : 94,
+    "p" : 533,
+    "c" : 568,
     "r" : "view",
     "name" : "NetworkC view"
+  }, {
+    "p" : 497,
+    "c" : 533,
+    "r" : "subnetwork",
+    "name" : "NetworkC"
   } ]
 }, {
   "metaData" : [ {
     "consistencyGroup" : 1,
-    "elementCount" : 3,
+    "elementCount" : 4,
     "name" : "networkAttributes",
     "version" : "1.0"
   }, {

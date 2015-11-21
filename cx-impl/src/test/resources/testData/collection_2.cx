@@ -6,1093 +6,1114 @@
   "metaData" : [ {
     "consistencyGroup" : 1,
     "elementCount" : 19,
-    "idCounter" : 1883,
+    "idCounter" : 304,
     "name" : "nodes",
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 45,
-    "idCounter" : 1883,
+    "idCounter" : 304,
     "name" : "edges",
     "version" : "1.0"
   } ]
 }, {
   "nodes" : [ {
-    "@id" : 1825,
-    "n" : "Node 21"
-  }, {
-    "@id" : 1823,
-    "n" : "Node 20"
-  }, {
-    "@id" : 1821,
-    "n" : "Node 19"
-  }, {
-    "@id" : 1819,
-    "n" : "Node 18"
-  }, {
-    "@id" : 1785,
-    "n" : "Node 17"
-  }, {
-    "@id" : 1783,
-    "n" : "Node 16"
-  }, {
-    "@id" : 1781,
-    "n" : "Node 15"
-  }, {
-    "@id" : 1777,
-    "n" : "Node 14"
-  }, {
-    "@id" : 1775,
-    "n" : "Node 13"
-  }, {
-    "@id" : 1773,
-    "n" : "Node 12"
-  }, {
-    "@id" : 1771,
-    "n" : "Node 11"
-  }, {
-    "@id" : 1769,
-    "n" : "Node 10"
-  }, {
-    "@id" : 1767,
-    "n" : "Node 9"
-  }, {
-    "@id" : 1765,
-    "n" : "Node 8"
-  }, {
-    "@id" : 1763,
-    "n" : "Node 7"
-  }, {
-    "@id" : 1761,
-    "n" : "Node 6"
-  }, {
-    "@id" : 1759,
-    "n" : "Node 5"
-  }, {
-    "@id" : 1757,
+    "@id" : 225,
     "n" : "Node 4"
   }, {
-    "@id" : 1719,
+    "@id" : 224,
+    "n" : "Node 15"
+  }, {
+    "@id" : 223,
+    "n" : "Node 16"
+  }, {
+    "@id" : 222,
+    "n" : "Node 17"
+  }, {
+    "@id" : 193,
+    "n" : "Node 5"
+  }, {
+    "@id" : 192,
+    "n" : "Node 6"
+  }, {
+    "@id" : 191,
+    "n" : "Node 7"
+  }, {
+    "@id" : 190,
+    "n" : "Node 8"
+  }, {
+    "@id" : 189,
+    "n" : "Node 18"
+  }, {
+    "@id" : 188,
+    "n" : "Node 19"
+  }, {
+    "@id" : 187,
+    "n" : "Node 20"
+  }, {
+    "@id" : 186,
+    "n" : "Node 21"
+  }, {
+    "@id" : 175,
+    "n" : "Node 9"
+  }, {
+    "@id" : 174,
+    "n" : "Node 10"
+  }, {
+    "@id" : 173,
+    "n" : "Node 11"
+  }, {
+    "@id" : 172,
+    "n" : "Node 12"
+  }, {
+    "@id" : 171,
+    "n" : "Node 13"
+  }, {
+    "@id" : 169,
     "n" : "Node 3"
+  }, {
+    "@id" : 168,
+    "n" : "Node 14"
   } ]
 }, {
   "edges" : [ {
-    "@id" : 1848,
-    "s" : 1825,
-    "t" : 1765,
+    "@id" : 231,
+    "s" : 225,
+    "t" : 224,
     "i" : "interacts with"
   }, {
-    "@id" : 1847,
-    "s" : 1825,
-    "t" : 1763,
+    "@id" : 230,
+    "s" : 225,
+    "t" : 223,
     "i" : "interacts with"
   }, {
-    "@id" : 1846,
-    "s" : 1825,
-    "t" : 1761,
+    "@id" : 229,
+    "s" : 225,
+    "t" : 222,
     "i" : "interacts with"
   }, {
-    "@id" : 1845,
-    "s" : 1825,
-    "t" : 1759,
+    "@id" : 228,
+    "s" : 224,
+    "t" : 223,
     "i" : "interacts with"
   }, {
-    "@id" : 1844,
-    "s" : 1823,
-    "t" : 1765,
+    "@id" : 227,
+    "s" : 224,
+    "t" : 222,
     "i" : "interacts with"
   }, {
-    "@id" : 1843,
-    "s" : 1823,
-    "t" : 1763,
+    "@id" : 226,
+    "s" : 223,
+    "t" : 222,
     "i" : "interacts with"
   }, {
-    "@id" : 1842,
-    "s" : 1823,
-    "t" : 1761,
+    "@id" : 221,
+    "s" : 193,
+    "t" : 192,
     "i" : "interacts with"
   }, {
-    "@id" : 1841,
-    "s" : 1823,
-    "t" : 1759,
+    "@id" : 220,
+    "s" : 193,
+    "t" : 191,
     "i" : "interacts with"
   }, {
-    "@id" : 1840,
-    "s" : 1823,
-    "t" : 1825,
+    "@id" : 219,
+    "s" : 193,
+    "t" : 190,
     "i" : "interacts with"
   }, {
-    "@id" : 1839,
-    "s" : 1821,
-    "t" : 1765,
+    "@id" : 218,
+    "s" : 192,
+    "t" : 191,
     "i" : "interacts with"
   }, {
-    "@id" : 1838,
-    "s" : 1821,
-    "t" : 1763,
+    "@id" : 217,
+    "s" : 192,
+    "t" : 190,
     "i" : "interacts with"
   }, {
-    "@id" : 1837,
-    "s" : 1821,
-    "t" : 1761,
+    "@id" : 216,
+    "s" : 191,
+    "t" : 190,
     "i" : "interacts with"
   }, {
-    "@id" : 1836,
-    "s" : 1821,
-    "t" : 1759,
+    "@id" : 215,
+    "s" : 189,
+    "t" : 188,
     "i" : "interacts with"
   }, {
-    "@id" : 1835,
-    "s" : 1821,
-    "t" : 1825,
+    "@id" : 214,
+    "s" : 189,
+    "t" : 187,
     "i" : "interacts with"
   }, {
-    "@id" : 1834,
-    "s" : 1821,
-    "t" : 1823,
+    "@id" : 213,
+    "s" : 189,
+    "t" : 186,
     "i" : "interacts with"
   }, {
-    "@id" : 1833,
-    "s" : 1819,
-    "t" : 1765,
+    "@id" : 212,
+    "s" : 189,
+    "t" : 193,
     "i" : "interacts with"
   }, {
-    "@id" : 1832,
-    "s" : 1819,
-    "t" : 1763,
+    "@id" : 211,
+    "s" : 189,
+    "t" : 192,
     "i" : "interacts with"
   }, {
-    "@id" : 1831,
-    "s" : 1819,
-    "t" : 1761,
+    "@id" : 210,
+    "s" : 189,
+    "t" : 191,
     "i" : "interacts with"
   }, {
-    "@id" : 1830,
-    "s" : 1819,
-    "t" : 1759,
+    "@id" : 209,
+    "s" : 189,
+    "t" : 190,
     "i" : "interacts with"
   }, {
-    "@id" : 1829,
-    "s" : 1819,
-    "t" : 1825,
+    "@id" : 208,
+    "s" : 188,
+    "t" : 187,
     "i" : "interacts with"
   }, {
-    "@id" : 1828,
-    "s" : 1819,
-    "t" : 1823,
+    "@id" : 207,
+    "s" : 188,
+    "t" : 186,
     "i" : "interacts with"
   }, {
-    "@id" : 1827,
-    "s" : 1819,
-    "t" : 1821,
+    "@id" : 206,
+    "s" : 188,
+    "t" : 193,
     "i" : "interacts with"
   }, {
-    "@id" : 1792,
-    "s" : 1783,
-    "t" : 1785,
+    "@id" : 205,
+    "s" : 188,
+    "t" : 192,
     "i" : "interacts with"
   }, {
-    "@id" : 1791,
-    "s" : 1781,
-    "t" : 1785,
+    "@id" : 204,
+    "s" : 188,
+    "t" : 191,
     "i" : "interacts with"
   }, {
-    "@id" : 1790,
-    "s" : 1781,
-    "t" : 1783,
+    "@id" : 203,
+    "s" : 188,
+    "t" : 190,
     "i" : "interacts with"
   }, {
-    "@id" : 1808,
-    "s" : 1773,
-    "t" : 1775,
+    "@id" : 202,
+    "s" : 187,
+    "t" : 186,
     "i" : "interacts with"
   }, {
-    "@id" : 1807,
-    "s" : 1771,
-    "t" : 1775,
+    "@id" : 201,
+    "s" : 187,
+    "t" : 193,
     "i" : "interacts with"
   }, {
-    "@id" : 1806,
-    "s" : 1771,
-    "t" : 1773,
+    "@id" : 200,
+    "s" : 187,
+    "t" : 192,
     "i" : "interacts with"
   }, {
-    "@id" : 1805,
-    "s" : 1769,
-    "t" : 1775,
+    "@id" : 199,
+    "s" : 187,
+    "t" : 191,
     "i" : "interacts with"
   }, {
-    "@id" : 1804,
-    "s" : 1769,
-    "t" : 1773,
+    "@id" : 198,
+    "s" : 187,
+    "t" : 190,
     "i" : "interacts with"
   }, {
-    "@id" : 1803,
-    "s" : 1769,
-    "t" : 1771,
+    "@id" : 197,
+    "s" : 186,
+    "t" : 193,
     "i" : "interacts with"
   }, {
-    "@id" : 1802,
-    "s" : 1767,
-    "t" : 1775,
+    "@id" : 196,
+    "s" : 186,
+    "t" : 192,
     "i" : "interacts with"
   }, {
-    "@id" : 1801,
-    "s" : 1767,
-    "t" : 1773,
+    "@id" : 195,
+    "s" : 186,
+    "t" : 191,
     "i" : "interacts with"
   }, {
-    "@id" : 1800,
-    "s" : 1767,
-    "t" : 1771,
+    "@id" : 194,
+    "s" : 186,
+    "t" : 190,
     "i" : "interacts with"
   }, {
-    "@id" : 1799,
-    "s" : 1767,
-    "t" : 1769,
+    "@id" : 185,
+    "s" : 175,
+    "t" : 174,
     "i" : "interacts with"
   }, {
-    "@id" : 1854,
-    "s" : 1763,
-    "t" : 1765,
+    "@id" : 184,
+    "s" : 175,
+    "t" : 173,
     "i" : "interacts with"
   }, {
-    "@id" : 1853,
-    "s" : 1761,
-    "t" : 1765,
+    "@id" : 183,
+    "s" : 175,
+    "t" : 172,
     "i" : "interacts with"
   }, {
-    "@id" : 1852,
-    "s" : 1761,
-    "t" : 1763,
+    "@id" : 182,
+    "s" : 175,
+    "t" : 171,
     "i" : "interacts with"
   }, {
-    "@id" : 1851,
-    "s" : 1759,
-    "t" : 1765,
+    "@id" : 181,
+    "s" : 174,
+    "t" : 173,
     "i" : "interacts with"
   }, {
-    "@id" : 1850,
-    "s" : 1759,
-    "t" : 1763,
+    "@id" : 180,
+    "s" : 174,
+    "t" : 172,
     "i" : "interacts with"
   }, {
-    "@id" : 1849,
-    "s" : 1759,
-    "t" : 1761,
+    "@id" : 179,
+    "s" : 174,
+    "t" : 171,
     "i" : "interacts with"
   }, {
-    "@id" : 1789,
-    "s" : 1757,
-    "t" : 1785,
+    "@id" : 178,
+    "s" : 173,
+    "t" : 172,
     "i" : "interacts with"
   }, {
-    "@id" : 1788,
-    "s" : 1757,
-    "t" : 1783,
+    "@id" : 177,
+    "s" : 173,
+    "t" : 171,
     "i" : "interacts with"
   }, {
-    "@id" : 1787,
-    "s" : 1757,
-    "t" : 1781,
+    "@id" : 176,
+    "s" : 172,
+    "t" : 171,
     "i" : "interacts with"
   }, {
-    "@id" : 1779,
-    "s" : 1719,
-    "t" : 1777,
+    "@id" : 170,
+    "s" : 169,
+    "t" : 168,
     "i" : "interacts with"
+  } ]
+}, {
+  "networkAttributes" : [ {
+    "n" : "name",
+    "v" : "collection_2.cx"
+  }, {
+    "s" : 128,
+    "n" : "name",
+    "v" : "NetworkAA"
+  }, {
+    "s" : 138,
+    "n" : "name",
+    "v" : "NetworkBB"
+  }, {
+    "s" : 148,
+    "n" : "name",
+    "v" : "NetworkCC"
+  }, {
+    "s" : 158,
+    "n" : "name",
+    "v" : "NetworkDD"
   } ]
 }, {
   "nodeAttributes" : [ {
-    "s" : 1707,
-    "po" : 1777,
-    "n" : "name",
-    "v" : "Node 14"
-  }, {
-    "s" : 1707,
-    "po" : 1719,
+    "s" : 128,
+    "po" : 169,
     "n" : "name",
     "v" : "Node 3"
   }, {
-    "s" : 1721,
-    "po" : 1775,
+    "s" : 128,
+    "po" : 168,
     "n" : "name",
-    "v" : "Node 13"
+    "v" : "Node 14"
   }, {
-    "s" : 1721,
-    "po" : 1773,
-    "n" : "name",
-    "v" : "Node 12"
-  }, {
-    "s" : 1721,
-    "po" : 1771,
-    "n" : "name",
-    "v" : "Node 11"
-  }, {
-    "s" : 1721,
-    "po" : 1769,
-    "n" : "name",
-    "v" : "Node 10"
-  }, {
-    "s" : 1721,
-    "po" : 1767,
+    "s" : 138,
+    "po" : 175,
     "n" : "name",
     "v" : "Node 9"
   }, {
-    "s" : 1733,
-    "po" : 1825,
+    "s" : 138,
+    "po" : 174,
     "n" : "name",
-    "v" : "Node 21"
+    "v" : "Node 10"
   }, {
-    "s" : 1733,
-    "po" : 1823,
+    "s" : 138,
+    "po" : 173,
     "n" : "name",
-    "v" : "Node 20"
+    "v" : "Node 11"
   }, {
-    "s" : 1733,
-    "po" : 1821,
+    "s" : 138,
+    "po" : 172,
     "n" : "name",
-    "v" : "Node 19"
+    "v" : "Node 12"
   }, {
-    "s" : 1733,
-    "po" : 1819,
+    "s" : 138,
+    "po" : 171,
     "n" : "name",
-    "v" : "Node 18"
+    "v" : "Node 13"
   }, {
-    "s" : 1733,
-    "po" : 1765,
-    "n" : "name",
-    "v" : "Node 8"
-  }, {
-    "s" : 1733,
-    "po" : 1763,
-    "n" : "name",
-    "v" : "Node 7"
-  }, {
-    "s" : 1733,
-    "po" : 1761,
-    "n" : "name",
-    "v" : "Node 6"
-  }, {
-    "s" : 1733,
-    "po" : 1759,
+    "s" : 148,
+    "po" : 193,
     "n" : "name",
     "v" : "Node 5"
   }, {
-    "s" : 1745,
-    "po" : 1785,
+    "s" : 148,
+    "po" : 192,
     "n" : "name",
-    "v" : "Node 17"
+    "v" : "Node 6"
   }, {
-    "s" : 1745,
-    "po" : 1783,
+    "s" : 148,
+    "po" : 191,
     "n" : "name",
-    "v" : "Node 16"
+    "v" : "Node 7"
   }, {
-    "s" : 1745,
-    "po" : 1781,
+    "s" : 148,
+    "po" : 190,
+    "n" : "name",
+    "v" : "Node 8"
+  }, {
+    "s" : 148,
+    "po" : 189,
+    "n" : "name",
+    "v" : "Node 18"
+  }, {
+    "s" : 148,
+    "po" : 188,
+    "n" : "name",
+    "v" : "Node 19"
+  }, {
+    "s" : 148,
+    "po" : 187,
+    "n" : "name",
+    "v" : "Node 20"
+  }, {
+    "s" : 148,
+    "po" : 186,
+    "n" : "name",
+    "v" : "Node 21"
+  }, {
+    "s" : 158,
+    "po" : 225,
+    "n" : "name",
+    "v" : "Node 4"
+  }, {
+    "s" : 158,
+    "po" : 224,
     "n" : "name",
     "v" : "Node 15"
   }, {
-    "s" : 1745,
-    "po" : 1757,
+    "s" : 158,
+    "po" : 223,
     "n" : "name",
-    "v" : "Node 4"
+    "v" : "Node 16"
+  }, {
+    "s" : 158,
+    "po" : 222,
+    "n" : "name",
+    "v" : "Node 17"
   } ]
 }, {
   "edgeAttributes" : [ {
-    "s" : 1707,
-    "po" : 1779,
+    "s" : 128,
+    "po" : 170,
     "n" : "shared name",
     "v" : "Node 3 (interacts with) Node 14"
   }, {
-    "s" : 1707,
-    "po" : 1779,
+    "s" : 128,
+    "po" : 170,
     "n" : "name",
     "v" : "Node 3 (interacts with) Node 14"
   }, {
-    "s" : 1707,
-    "po" : 1779,
+    "s" : 128,
+    "po" : 170,
     "n" : "interaction",
     "v" : "interacts with"
   }, {
-    "s" : 1721,
-    "po" : 1808,
-    "n" : "shared name",
-    "v" : "Node 12 (interacts with) Node 13"
-  }, {
-    "s" : 1721,
-    "po" : 1808,
-    "n" : "name",
-    "v" : "Node 12 (interacts with) Node 13"
-  }, {
-    "s" : 1721,
-    "po" : 1808,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 1721,
-    "po" : 1807,
-    "n" : "shared name",
-    "v" : "Node 11 (interacts with) Node 13"
-  }, {
-    "s" : 1721,
-    "po" : 1807,
-    "n" : "name",
-    "v" : "Node 11 (interacts with) Node 13"
-  }, {
-    "s" : 1721,
-    "po" : 1807,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 1721,
-    "po" : 1806,
-    "n" : "shared name",
-    "v" : "Node 11 (interacts with) Node 12"
-  }, {
-    "s" : 1721,
-    "po" : 1806,
-    "n" : "name",
-    "v" : "Node 11 (interacts with) Node 12"
-  }, {
-    "s" : 1721,
-    "po" : 1806,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 1721,
-    "po" : 1805,
-    "n" : "shared name",
-    "v" : "Node 10 (interacts with) Node 13"
-  }, {
-    "s" : 1721,
-    "po" : 1805,
-    "n" : "name",
-    "v" : "Node 10 (interacts with) Node 13"
-  }, {
-    "s" : 1721,
-    "po" : 1805,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 1721,
-    "po" : 1804,
-    "n" : "shared name",
-    "v" : "Node 10 (interacts with) Node 12"
-  }, {
-    "s" : 1721,
-    "po" : 1804,
-    "n" : "name",
-    "v" : "Node 10 (interacts with) Node 12"
-  }, {
-    "s" : 1721,
-    "po" : 1804,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 1721,
-    "po" : 1803,
-    "n" : "shared name",
-    "v" : "Node 10 (interacts with) Node 11"
-  }, {
-    "s" : 1721,
-    "po" : 1803,
-    "n" : "name",
-    "v" : "Node 10 (interacts with) Node 11"
-  }, {
-    "s" : 1721,
-    "po" : 1803,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 1721,
-    "po" : 1802,
-    "n" : "shared name",
-    "v" : "Node 9 (interacts with) Node 13"
-  }, {
-    "s" : 1721,
-    "po" : 1802,
-    "n" : "name",
-    "v" : "Node 9 (interacts with) Node 13"
-  }, {
-    "s" : 1721,
-    "po" : 1802,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 1721,
-    "po" : 1801,
-    "n" : "shared name",
-    "v" : "Node 9 (interacts with) Node 12"
-  }, {
-    "s" : 1721,
-    "po" : 1801,
-    "n" : "name",
-    "v" : "Node 9 (interacts with) Node 12"
-  }, {
-    "s" : 1721,
-    "po" : 1801,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 1721,
-    "po" : 1800,
-    "n" : "shared name",
-    "v" : "Node 9 (interacts with) Node 11"
-  }, {
-    "s" : 1721,
-    "po" : 1800,
-    "n" : "name",
-    "v" : "Node 9 (interacts with) Node 11"
-  }, {
-    "s" : 1721,
-    "po" : 1800,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 1721,
-    "po" : 1799,
+    "s" : 138,
+    "po" : 185,
     "n" : "shared name",
     "v" : "Node 9 (interacts with) Node 10"
   }, {
-    "s" : 1721,
-    "po" : 1799,
+    "s" : 138,
+    "po" : 185,
     "n" : "name",
     "v" : "Node 9 (interacts with) Node 10"
   }, {
-    "s" : 1721,
-    "po" : 1799,
+    "s" : 138,
+    "po" : 185,
     "n" : "interaction",
     "v" : "interacts with"
   }, {
-    "s" : 1733,
-    "po" : 1848,
+    "s" : 138,
+    "po" : 184,
     "n" : "shared name",
-    "v" : "Node 21 (interacts with) Node 8"
+    "v" : "Node 9 (interacts with) Node 11"
   }, {
-    "s" : 1733,
-    "po" : 1848,
+    "s" : 138,
+    "po" : 184,
     "n" : "name",
-    "v" : "Node 21 (interacts with) Node 8"
+    "v" : "Node 9 (interacts with) Node 11"
   }, {
-    "s" : 1733,
-    "po" : 1848,
+    "s" : 138,
+    "po" : 184,
     "n" : "interaction",
     "v" : "interacts with"
   }, {
-    "s" : 1733,
-    "po" : 1847,
+    "s" : 138,
+    "po" : 183,
     "n" : "shared name",
-    "v" : "Node 21 (interacts with) Node 7"
+    "v" : "Node 9 (interacts with) Node 12"
   }, {
-    "s" : 1733,
-    "po" : 1847,
+    "s" : 138,
+    "po" : 183,
     "n" : "name",
-    "v" : "Node 21 (interacts with) Node 7"
+    "v" : "Node 9 (interacts with) Node 12"
   }, {
-    "s" : 1733,
-    "po" : 1847,
+    "s" : 138,
+    "po" : 183,
     "n" : "interaction",
     "v" : "interacts with"
   }, {
-    "s" : 1733,
-    "po" : 1846,
+    "s" : 138,
+    "po" : 182,
     "n" : "shared name",
-    "v" : "Node 21 (interacts with) Node 6"
+    "v" : "Node 9 (interacts with) Node 13"
   }, {
-    "s" : 1733,
-    "po" : 1846,
+    "s" : 138,
+    "po" : 182,
     "n" : "name",
-    "v" : "Node 21 (interacts with) Node 6"
+    "v" : "Node 9 (interacts with) Node 13"
   }, {
-    "s" : 1733,
-    "po" : 1846,
+    "s" : 138,
+    "po" : 182,
     "n" : "interaction",
     "v" : "interacts with"
   }, {
-    "s" : 1733,
-    "po" : 1845,
+    "s" : 138,
+    "po" : 181,
     "n" : "shared name",
-    "v" : "Node 21 (interacts with) Node 5"
+    "v" : "Node 10 (interacts with) Node 11"
   }, {
-    "s" : 1733,
-    "po" : 1845,
+    "s" : 138,
+    "po" : 181,
     "n" : "name",
-    "v" : "Node 21 (interacts with) Node 5"
+    "v" : "Node 10 (interacts with) Node 11"
   }, {
-    "s" : 1733,
-    "po" : 1845,
+    "s" : 138,
+    "po" : 181,
     "n" : "interaction",
     "v" : "interacts with"
   }, {
-    "s" : 1733,
-    "po" : 1844,
+    "s" : 138,
+    "po" : 180,
     "n" : "shared name",
-    "v" : "Node 20 (interacts with) Node 8"
+    "v" : "Node 10 (interacts with) Node 12"
   }, {
-    "s" : 1733,
-    "po" : 1844,
+    "s" : 138,
+    "po" : 180,
     "n" : "name",
-    "v" : "Node 20 (interacts with) Node 8"
+    "v" : "Node 10 (interacts with) Node 12"
   }, {
-    "s" : 1733,
-    "po" : 1844,
+    "s" : 138,
+    "po" : 180,
     "n" : "interaction",
     "v" : "interacts with"
   }, {
-    "s" : 1733,
-    "po" : 1843,
+    "s" : 138,
+    "po" : 179,
     "n" : "shared name",
-    "v" : "Node 20 (interacts with) Node 7"
+    "v" : "Node 10 (interacts with) Node 13"
   }, {
-    "s" : 1733,
-    "po" : 1843,
+    "s" : 138,
+    "po" : 179,
     "n" : "name",
-    "v" : "Node 20 (interacts with) Node 7"
+    "v" : "Node 10 (interacts with) Node 13"
   }, {
-    "s" : 1733,
-    "po" : 1843,
+    "s" : 138,
+    "po" : 179,
     "n" : "interaction",
     "v" : "interacts with"
   }, {
-    "s" : 1733,
-    "po" : 1842,
+    "s" : 138,
+    "po" : 178,
     "n" : "shared name",
-    "v" : "Node 20 (interacts with) Node 6"
+    "v" : "Node 11 (interacts with) Node 12"
   }, {
-    "s" : 1733,
-    "po" : 1842,
+    "s" : 138,
+    "po" : 178,
     "n" : "name",
-    "v" : "Node 20 (interacts with) Node 6"
+    "v" : "Node 11 (interacts with) Node 12"
   }, {
-    "s" : 1733,
-    "po" : 1842,
+    "s" : 138,
+    "po" : 178,
     "n" : "interaction",
     "v" : "interacts with"
   }, {
-    "s" : 1733,
-    "po" : 1841,
+    "s" : 138,
+    "po" : 177,
     "n" : "shared name",
-    "v" : "Node 20 (interacts with) Node 5"
+    "v" : "Node 11 (interacts with) Node 13"
   }, {
-    "s" : 1733,
-    "po" : 1841,
+    "s" : 138,
+    "po" : 177,
     "n" : "name",
-    "v" : "Node 20 (interacts with) Node 5"
+    "v" : "Node 11 (interacts with) Node 13"
   }, {
-    "s" : 1733,
-    "po" : 1841,
+    "s" : 138,
+    "po" : 177,
     "n" : "interaction",
     "v" : "interacts with"
   }, {
-    "s" : 1733,
-    "po" : 1840,
+    "s" : 138,
+    "po" : 176,
     "n" : "shared name",
-    "v" : "Node 20 (interacts with) Node 21"
+    "v" : "Node 12 (interacts with) Node 13"
   }, {
-    "s" : 1733,
-    "po" : 1840,
+    "s" : 138,
+    "po" : 176,
     "n" : "name",
-    "v" : "Node 20 (interacts with) Node 21"
+    "v" : "Node 12 (interacts with) Node 13"
   }, {
-    "s" : 1733,
-    "po" : 1840,
+    "s" : 138,
+    "po" : 176,
     "n" : "interaction",
     "v" : "interacts with"
   }, {
-    "s" : 1733,
-    "po" : 1839,
-    "n" : "shared name",
-    "v" : "Node 19 (interacts with) Node 8"
-  }, {
-    "s" : 1733,
-    "po" : 1839,
-    "n" : "name",
-    "v" : "Node 19 (interacts with) Node 8"
-  }, {
-    "s" : 1733,
-    "po" : 1839,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 1733,
-    "po" : 1838,
-    "n" : "shared name",
-    "v" : "Node 19 (interacts with) Node 7"
-  }, {
-    "s" : 1733,
-    "po" : 1838,
-    "n" : "name",
-    "v" : "Node 19 (interacts with) Node 7"
-  }, {
-    "s" : 1733,
-    "po" : 1838,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 1733,
-    "po" : 1837,
-    "n" : "shared name",
-    "v" : "Node 19 (interacts with) Node 6"
-  }, {
-    "s" : 1733,
-    "po" : 1837,
-    "n" : "name",
-    "v" : "Node 19 (interacts with) Node 6"
-  }, {
-    "s" : 1733,
-    "po" : 1837,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 1733,
-    "po" : 1836,
-    "n" : "shared name",
-    "v" : "Node 19 (interacts with) Node 5"
-  }, {
-    "s" : 1733,
-    "po" : 1836,
-    "n" : "name",
-    "v" : "Node 19 (interacts with) Node 5"
-  }, {
-    "s" : 1733,
-    "po" : 1836,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 1733,
-    "po" : 1835,
-    "n" : "shared name",
-    "v" : "Node 19 (interacts with) Node 21"
-  }, {
-    "s" : 1733,
-    "po" : 1835,
-    "n" : "name",
-    "v" : "Node 19 (interacts with) Node 21"
-  }, {
-    "s" : 1733,
-    "po" : 1835,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 1733,
-    "po" : 1834,
-    "n" : "shared name",
-    "v" : "Node 19 (interacts with) Node 20"
-  }, {
-    "s" : 1733,
-    "po" : 1834,
-    "n" : "name",
-    "v" : "Node 19 (interacts with) Node 20"
-  }, {
-    "s" : 1733,
-    "po" : 1834,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 1733,
-    "po" : 1833,
-    "n" : "shared name",
-    "v" : "Node 18 (interacts with) Node 8"
-  }, {
-    "s" : 1733,
-    "po" : 1833,
-    "n" : "name",
-    "v" : "Node 18 (interacts with) Node 8"
-  }, {
-    "s" : 1733,
-    "po" : 1833,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 1733,
-    "po" : 1832,
-    "n" : "shared name",
-    "v" : "Node 18 (interacts with) Node 7"
-  }, {
-    "s" : 1733,
-    "po" : 1832,
-    "n" : "name",
-    "v" : "Node 18 (interacts with) Node 7"
-  }, {
-    "s" : 1733,
-    "po" : 1832,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 1733,
-    "po" : 1831,
-    "n" : "shared name",
-    "v" : "Node 18 (interacts with) Node 6"
-  }, {
-    "s" : 1733,
-    "po" : 1831,
-    "n" : "name",
-    "v" : "Node 18 (interacts with) Node 6"
-  }, {
-    "s" : 1733,
-    "po" : 1831,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 1733,
-    "po" : 1830,
-    "n" : "shared name",
-    "v" : "Node 18 (interacts with) Node 5"
-  }, {
-    "s" : 1733,
-    "po" : 1830,
-    "n" : "name",
-    "v" : "Node 18 (interacts with) Node 5"
-  }, {
-    "s" : 1733,
-    "po" : 1830,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 1733,
-    "po" : 1829,
-    "n" : "shared name",
-    "v" : "Node 18 (interacts with) Node 21"
-  }, {
-    "s" : 1733,
-    "po" : 1829,
-    "n" : "name",
-    "v" : "Node 18 (interacts with) Node 21"
-  }, {
-    "s" : 1733,
-    "po" : 1829,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 1733,
-    "po" : 1828,
-    "n" : "shared name",
-    "v" : "Node 18 (interacts with) Node 20"
-  }, {
-    "s" : 1733,
-    "po" : 1828,
-    "n" : "name",
-    "v" : "Node 18 (interacts with) Node 20"
-  }, {
-    "s" : 1733,
-    "po" : 1828,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 1733,
-    "po" : 1827,
-    "n" : "shared name",
-    "v" : "Node 18 (interacts with) Node 19"
-  }, {
-    "s" : 1733,
-    "po" : 1827,
-    "n" : "name",
-    "v" : "Node 18 (interacts with) Node 19"
-  }, {
-    "s" : 1733,
-    "po" : 1827,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 1733,
-    "po" : 1854,
-    "n" : "shared name",
-    "v" : "Node 7 (interacts with) Node 8"
-  }, {
-    "s" : 1733,
-    "po" : 1854,
-    "n" : "name",
-    "v" : "Node 7 (interacts with) Node 8"
-  }, {
-    "s" : 1733,
-    "po" : 1854,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 1733,
-    "po" : 1853,
-    "n" : "shared name",
-    "v" : "Node 6 (interacts with) Node 8"
-  }, {
-    "s" : 1733,
-    "po" : 1853,
-    "n" : "name",
-    "v" : "Node 6 (interacts with) Node 8"
-  }, {
-    "s" : 1733,
-    "po" : 1853,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 1733,
-    "po" : 1852,
-    "n" : "shared name",
-    "v" : "Node 6 (interacts with) Node 7"
-  }, {
-    "s" : 1733,
-    "po" : 1852,
-    "n" : "name",
-    "v" : "Node 6 (interacts with) Node 7"
-  }, {
-    "s" : 1733,
-    "po" : 1852,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 1733,
-    "po" : 1851,
-    "n" : "shared name",
-    "v" : "Node 5 (interacts with) Node 8"
-  }, {
-    "s" : 1733,
-    "po" : 1851,
-    "n" : "name",
-    "v" : "Node 5 (interacts with) Node 8"
-  }, {
-    "s" : 1733,
-    "po" : 1851,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 1733,
-    "po" : 1850,
-    "n" : "shared name",
-    "v" : "Node 5 (interacts with) Node 7"
-  }, {
-    "s" : 1733,
-    "po" : 1850,
-    "n" : "name",
-    "v" : "Node 5 (interacts with) Node 7"
-  }, {
-    "s" : 1733,
-    "po" : 1850,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 1733,
-    "po" : 1849,
+    "s" : 148,
+    "po" : 221,
     "n" : "shared name",
     "v" : "Node 5 (interacts with) Node 6"
   }, {
-    "s" : 1733,
-    "po" : 1849,
+    "s" : 148,
+    "po" : 221,
     "n" : "name",
     "v" : "Node 5 (interacts with) Node 6"
   }, {
-    "s" : 1733,
-    "po" : 1849,
+    "s" : 148,
+    "po" : 221,
     "n" : "interaction",
     "v" : "interacts with"
   }, {
-    "s" : 1745,
-    "po" : 1792,
+    "s" : 148,
+    "po" : 220,
     "n" : "shared name",
-    "v" : "Node 16 (interacts with) Node 17"
+    "v" : "Node 5 (interacts with) Node 7"
   }, {
-    "s" : 1745,
-    "po" : 1792,
+    "s" : 148,
+    "po" : 220,
     "n" : "name",
-    "v" : "Node 16 (interacts with) Node 17"
+    "v" : "Node 5 (interacts with) Node 7"
   }, {
-    "s" : 1745,
-    "po" : 1792,
+    "s" : 148,
+    "po" : 220,
     "n" : "interaction",
     "v" : "interacts with"
   }, {
-    "s" : 1745,
-    "po" : 1791,
+    "s" : 148,
+    "po" : 219,
     "n" : "shared name",
-    "v" : "Node 15 (interacts with) Node 17"
+    "v" : "Node 5 (interacts with) Node 8"
   }, {
-    "s" : 1745,
-    "po" : 1791,
+    "s" : 148,
+    "po" : 219,
     "n" : "name",
-    "v" : "Node 15 (interacts with) Node 17"
+    "v" : "Node 5 (interacts with) Node 8"
   }, {
-    "s" : 1745,
-    "po" : 1791,
+    "s" : 148,
+    "po" : 219,
     "n" : "interaction",
     "v" : "interacts with"
   }, {
-    "s" : 1745,
-    "po" : 1790,
+    "s" : 148,
+    "po" : 218,
     "n" : "shared name",
-    "v" : "Node 15 (interacts with) Node 16"
+    "v" : "Node 6 (interacts with) Node 7"
   }, {
-    "s" : 1745,
-    "po" : 1790,
+    "s" : 148,
+    "po" : 218,
     "n" : "name",
-    "v" : "Node 15 (interacts with) Node 16"
+    "v" : "Node 6 (interacts with) Node 7"
   }, {
-    "s" : 1745,
-    "po" : 1790,
+    "s" : 148,
+    "po" : 218,
     "n" : "interaction",
     "v" : "interacts with"
   }, {
-    "s" : 1745,
-    "po" : 1789,
+    "s" : 148,
+    "po" : 217,
     "n" : "shared name",
-    "v" : "Node 4 (interacts with) Node 17"
+    "v" : "Node 6 (interacts with) Node 8"
   }, {
-    "s" : 1745,
-    "po" : 1789,
+    "s" : 148,
+    "po" : 217,
     "n" : "name",
-    "v" : "Node 4 (interacts with) Node 17"
+    "v" : "Node 6 (interacts with) Node 8"
   }, {
-    "s" : 1745,
-    "po" : 1789,
+    "s" : 148,
+    "po" : 217,
     "n" : "interaction",
     "v" : "interacts with"
   }, {
-    "s" : 1745,
-    "po" : 1788,
+    "s" : 148,
+    "po" : 216,
     "n" : "shared name",
-    "v" : "Node 4 (interacts with) Node 16"
+    "v" : "Node 7 (interacts with) Node 8"
   }, {
-    "s" : 1745,
-    "po" : 1788,
+    "s" : 148,
+    "po" : 216,
     "n" : "name",
-    "v" : "Node 4 (interacts with) Node 16"
+    "v" : "Node 7 (interacts with) Node 8"
   }, {
-    "s" : 1745,
-    "po" : 1788,
+    "s" : 148,
+    "po" : 216,
     "n" : "interaction",
     "v" : "interacts with"
   }, {
-    "s" : 1745,
-    "po" : 1787,
+    "s" : 148,
+    "po" : 215,
+    "n" : "shared name",
+    "v" : "Node 18 (interacts with) Node 19"
+  }, {
+    "s" : 148,
+    "po" : 215,
+    "n" : "name",
+    "v" : "Node 18 (interacts with) Node 19"
+  }, {
+    "s" : 148,
+    "po" : 215,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 148,
+    "po" : 214,
+    "n" : "shared name",
+    "v" : "Node 18 (interacts with) Node 20"
+  }, {
+    "s" : 148,
+    "po" : 214,
+    "n" : "name",
+    "v" : "Node 18 (interacts with) Node 20"
+  }, {
+    "s" : 148,
+    "po" : 214,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 148,
+    "po" : 213,
+    "n" : "shared name",
+    "v" : "Node 18 (interacts with) Node 21"
+  }, {
+    "s" : 148,
+    "po" : 213,
+    "n" : "name",
+    "v" : "Node 18 (interacts with) Node 21"
+  }, {
+    "s" : 148,
+    "po" : 213,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 148,
+    "po" : 212,
+    "n" : "shared name",
+    "v" : "Node 18 (interacts with) Node 5"
+  }, {
+    "s" : 148,
+    "po" : 212,
+    "n" : "name",
+    "v" : "Node 18 (interacts with) Node 5"
+  }, {
+    "s" : 148,
+    "po" : 212,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 148,
+    "po" : 211,
+    "n" : "shared name",
+    "v" : "Node 18 (interacts with) Node 6"
+  }, {
+    "s" : 148,
+    "po" : 211,
+    "n" : "name",
+    "v" : "Node 18 (interacts with) Node 6"
+  }, {
+    "s" : 148,
+    "po" : 211,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 148,
+    "po" : 210,
+    "n" : "shared name",
+    "v" : "Node 18 (interacts with) Node 7"
+  }, {
+    "s" : 148,
+    "po" : 210,
+    "n" : "name",
+    "v" : "Node 18 (interacts with) Node 7"
+  }, {
+    "s" : 148,
+    "po" : 210,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 148,
+    "po" : 209,
+    "n" : "shared name",
+    "v" : "Node 18 (interacts with) Node 8"
+  }, {
+    "s" : 148,
+    "po" : 209,
+    "n" : "name",
+    "v" : "Node 18 (interacts with) Node 8"
+  }, {
+    "s" : 148,
+    "po" : 209,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 148,
+    "po" : 208,
+    "n" : "shared name",
+    "v" : "Node 19 (interacts with) Node 20"
+  }, {
+    "s" : 148,
+    "po" : 208,
+    "n" : "name",
+    "v" : "Node 19 (interacts with) Node 20"
+  }, {
+    "s" : 148,
+    "po" : 208,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 148,
+    "po" : 207,
+    "n" : "shared name",
+    "v" : "Node 19 (interacts with) Node 21"
+  }, {
+    "s" : 148,
+    "po" : 207,
+    "n" : "name",
+    "v" : "Node 19 (interacts with) Node 21"
+  }, {
+    "s" : 148,
+    "po" : 207,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 148,
+    "po" : 206,
+    "n" : "shared name",
+    "v" : "Node 19 (interacts with) Node 5"
+  }, {
+    "s" : 148,
+    "po" : 206,
+    "n" : "name",
+    "v" : "Node 19 (interacts with) Node 5"
+  }, {
+    "s" : 148,
+    "po" : 206,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 148,
+    "po" : 205,
+    "n" : "shared name",
+    "v" : "Node 19 (interacts with) Node 6"
+  }, {
+    "s" : 148,
+    "po" : 205,
+    "n" : "name",
+    "v" : "Node 19 (interacts with) Node 6"
+  }, {
+    "s" : 148,
+    "po" : 205,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 148,
+    "po" : 204,
+    "n" : "shared name",
+    "v" : "Node 19 (interacts with) Node 7"
+  }, {
+    "s" : 148,
+    "po" : 204,
+    "n" : "name",
+    "v" : "Node 19 (interacts with) Node 7"
+  }, {
+    "s" : 148,
+    "po" : 204,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 148,
+    "po" : 203,
+    "n" : "shared name",
+    "v" : "Node 19 (interacts with) Node 8"
+  }, {
+    "s" : 148,
+    "po" : 203,
+    "n" : "name",
+    "v" : "Node 19 (interacts with) Node 8"
+  }, {
+    "s" : 148,
+    "po" : 203,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 148,
+    "po" : 202,
+    "n" : "shared name",
+    "v" : "Node 20 (interacts with) Node 21"
+  }, {
+    "s" : 148,
+    "po" : 202,
+    "n" : "name",
+    "v" : "Node 20 (interacts with) Node 21"
+  }, {
+    "s" : 148,
+    "po" : 202,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 148,
+    "po" : 201,
+    "n" : "shared name",
+    "v" : "Node 20 (interacts with) Node 5"
+  }, {
+    "s" : 148,
+    "po" : 201,
+    "n" : "name",
+    "v" : "Node 20 (interacts with) Node 5"
+  }, {
+    "s" : 148,
+    "po" : 201,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 148,
+    "po" : 200,
+    "n" : "shared name",
+    "v" : "Node 20 (interacts with) Node 6"
+  }, {
+    "s" : 148,
+    "po" : 200,
+    "n" : "name",
+    "v" : "Node 20 (interacts with) Node 6"
+  }, {
+    "s" : 148,
+    "po" : 200,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 148,
+    "po" : 199,
+    "n" : "shared name",
+    "v" : "Node 20 (interacts with) Node 7"
+  }, {
+    "s" : 148,
+    "po" : 199,
+    "n" : "name",
+    "v" : "Node 20 (interacts with) Node 7"
+  }, {
+    "s" : 148,
+    "po" : 199,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 148,
+    "po" : 198,
+    "n" : "shared name",
+    "v" : "Node 20 (interacts with) Node 8"
+  }, {
+    "s" : 148,
+    "po" : 198,
+    "n" : "name",
+    "v" : "Node 20 (interacts with) Node 8"
+  }, {
+    "s" : 148,
+    "po" : 198,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 148,
+    "po" : 197,
+    "n" : "shared name",
+    "v" : "Node 21 (interacts with) Node 5"
+  }, {
+    "s" : 148,
+    "po" : 197,
+    "n" : "name",
+    "v" : "Node 21 (interacts with) Node 5"
+  }, {
+    "s" : 148,
+    "po" : 197,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 148,
+    "po" : 196,
+    "n" : "shared name",
+    "v" : "Node 21 (interacts with) Node 6"
+  }, {
+    "s" : 148,
+    "po" : 196,
+    "n" : "name",
+    "v" : "Node 21 (interacts with) Node 6"
+  }, {
+    "s" : 148,
+    "po" : 196,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 148,
+    "po" : 195,
+    "n" : "shared name",
+    "v" : "Node 21 (interacts with) Node 7"
+  }, {
+    "s" : 148,
+    "po" : 195,
+    "n" : "name",
+    "v" : "Node 21 (interacts with) Node 7"
+  }, {
+    "s" : 148,
+    "po" : 195,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 148,
+    "po" : 194,
+    "n" : "shared name",
+    "v" : "Node 21 (interacts with) Node 8"
+  }, {
+    "s" : 148,
+    "po" : 194,
+    "n" : "name",
+    "v" : "Node 21 (interacts with) Node 8"
+  }, {
+    "s" : 148,
+    "po" : 194,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 158,
+    "po" : 231,
     "n" : "shared name",
     "v" : "Node 4 (interacts with) Node 15"
   }, {
-    "s" : 1745,
-    "po" : 1787,
+    "s" : 158,
+    "po" : 231,
     "n" : "name",
     "v" : "Node 4 (interacts with) Node 15"
   }, {
-    "s" : 1745,
-    "po" : 1787,
+    "s" : 158,
+    "po" : 231,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 158,
+    "po" : 230,
+    "n" : "shared name",
+    "v" : "Node 4 (interacts with) Node 16"
+  }, {
+    "s" : 158,
+    "po" : 230,
+    "n" : "name",
+    "v" : "Node 4 (interacts with) Node 16"
+  }, {
+    "s" : 158,
+    "po" : 230,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 158,
+    "po" : 229,
+    "n" : "shared name",
+    "v" : "Node 4 (interacts with) Node 17"
+  }, {
+    "s" : 158,
+    "po" : 229,
+    "n" : "name",
+    "v" : "Node 4 (interacts with) Node 17"
+  }, {
+    "s" : 158,
+    "po" : 229,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 158,
+    "po" : 228,
+    "n" : "shared name",
+    "v" : "Node 15 (interacts with) Node 16"
+  }, {
+    "s" : 158,
+    "po" : 228,
+    "n" : "name",
+    "v" : "Node 15 (interacts with) Node 16"
+  }, {
+    "s" : 158,
+    "po" : 228,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 158,
+    "po" : 227,
+    "n" : "shared name",
+    "v" : "Node 15 (interacts with) Node 17"
+  }, {
+    "s" : 158,
+    "po" : 227,
+    "n" : "name",
+    "v" : "Node 15 (interacts with) Node 17"
+  }, {
+    "s" : 158,
+    "po" : 227,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 158,
+    "po" : 226,
+    "n" : "shared name",
+    "v" : "Node 16 (interacts with) Node 17"
+  }, {
+    "s" : 158,
+    "po" : 226,
+    "n" : "name",
+    "v" : "Node 16 (interacts with) Node 17"
+  }, {
+    "s" : 158,
+    "po" : 226,
     "n" : "interaction",
     "v" : "interacts with"
   } ]
 }, {
   "cartesianLayout" : [ {
-    "node" : 1777,
-    "view" : 1707,
-    "x" : -154.0,
-    "y" : -109.0
-  }, {
-    "node" : 1719,
-    "view" : 1707,
+    "node" : 169,
+    "view" : 232,
     "x" : -35.0,
     "y" : -89.0
+  }, {
+    "node" : 168,
+    "view" : 232,
+    "x" : -154.0,
+    "y" : -109.0
   } ]
 }, {
   "visualProperties" : [ {
     "properties_of" : "network",
-    "applies_to" : 1707,
-    "view" : 1707,
+    "applies_to" : 232,
+    "view" : 232,
     "properties" : {
       "NETWORK_BACKGROUND_PAINT" : "#FFFFFF",
       "NETWORK_CENTER_X_LOCATION" : "0.0",
@@ -1108,8 +1129,8 @@
     }
   }, {
     "properties_of" : "nodes:default",
-    "applies_to" : 1707,
-    "view" : 1707,
+    "applies_to" : 232,
+    "view" : 232,
     "properties" : {
       "COMPOUND_NODE_PADDING" : "10.0",
       "COMPOUND_NODE_SHAPE" : "ROUND_RECTANGLE",
@@ -1174,12 +1195,19 @@
       "NODE_X_LOCATION" : "0.0",
       "NODE_Y_LOCATION" : "0.0",
       "NODE_Z_LOCATION" : "0.0",
-      "PASSTHROUGH_MAPPING_NODE_LABEL" : "COL=name,T=string"
+      "nodeCustomGraphicsSizeSync" : "true",
+      "nodeSizeLocked" : "false"
+    },
+    "mappings" : {
+      "NODE_LABEL" : {
+        "type" : "PASSTHROUGH",
+        "definition" : "COL=name,T=string"
+      }
     }
   }, {
     "properties_of" : "edges:default",
-    "applies_to" : 1707,
-    "view" : 1707,
+    "applies_to" : 232,
+    "view" : 232,
     "properties" : {
       "EDGE_CURVED" : "true",
       "EDGE_LABEL_COLOR" : "#3399FF",
@@ -1203,41 +1231,47 @@
       "EDGE_UNSELECTED_PAINT" : "#CCCCCC",
       "EDGE_VISIBLE" : "true",
       "EDGE_WIDTH" : "5.0",
-      "PASSTHROUGH_MAPPING_EDGE_LABEL" : "COL=interaction,T=string"
+      "arrowColorMatchesEdge" : "false"
+    },
+    "mappings" : {
+      "EDGE_LABEL" : {
+        "type" : "PASSTHROUGH",
+        "definition" : "COL=interaction,T=string"
+      }
     }
   } ]
 }, {
   "cartesianLayout" : [ {
-    "node" : 1775,
-    "view" : 1721,
-    "x" : -144.0,
-    "y" : -11.0
+    "node" : 175,
+    "view" : 237,
+    "x" : -180.0,
+    "y" : -92.0
   }, {
-    "node" : 1773,
-    "view" : 1721,
-    "x" : -67.0,
-    "y" : -38.0
-  }, {
-    "node" : 1771,
-    "view" : 1721,
-    "x" : 23.0,
-    "y" : -91.0
-  }, {
-    "node" : 1769,
-    "view" : 1721,
+    "node" : 174,
+    "view" : 237,
     "x" : -69.0,
     "y" : -120.0
   }, {
-    "node" : 1767,
-    "view" : 1721,
-    "x" : -180.0,
-    "y" : -92.0
+    "node" : 173,
+    "view" : 237,
+    "x" : 23.0,
+    "y" : -91.0
+  }, {
+    "node" : 172,
+    "view" : 237,
+    "x" : -67.0,
+    "y" : -38.0
+  }, {
+    "node" : 171,
+    "view" : 237,
+    "x" : -144.0,
+    "y" : -11.0
   } ]
 }, {
   "visualProperties" : [ {
     "properties_of" : "network",
-    "applies_to" : 1721,
-    "view" : 1721,
+    "applies_to" : 237,
+    "view" : 237,
     "properties" : {
       "NETWORK_BACKGROUND_PAINT" : "#FFFFFF",
       "NETWORK_CENTER_X_LOCATION" : "0.0",
@@ -1253,8 +1287,8 @@
     }
   }, {
     "properties_of" : "nodes:default",
-    "applies_to" : 1721,
-    "view" : 1721,
+    "applies_to" : 237,
+    "view" : 237,
     "properties" : {
       "COMPOUND_NODE_PADDING" : "10.0",
       "COMPOUND_NODE_SHAPE" : "ROUND_RECTANGLE",
@@ -1319,12 +1353,19 @@
       "NODE_X_LOCATION" : "0.0",
       "NODE_Y_LOCATION" : "0.0",
       "NODE_Z_LOCATION" : "0.0",
-      "PASSTHROUGH_MAPPING_NODE_LABEL" : "COL=name,T=string"
+      "nodeCustomGraphicsSizeSync" : "true",
+      "nodeSizeLocked" : "false"
+    },
+    "mappings" : {
+      "NODE_LABEL" : {
+        "type" : "PASSTHROUGH",
+        "definition" : "COL=name,T=string"
+      }
     }
   }, {
     "properties_of" : "edges:default",
-    "applies_to" : 1721,
-    "view" : 1721,
+    "applies_to" : 237,
+    "view" : 237,
     "properties" : {
       "EDGE_CURVED" : "true",
       "EDGE_LABEL_COLOR" : "#3399FF",
@@ -1348,56 +1389,62 @@
       "EDGE_UNSELECTED_PAINT" : "#CCCCCC",
       "EDGE_VISIBLE" : "true",
       "EDGE_WIDTH" : "5.0",
-      "PASSTHROUGH_MAPPING_EDGE_LABEL" : "COL=interaction,T=string"
+      "arrowColorMatchesEdge" : "false"
+    },
+    "mappings" : {
+      "EDGE_LABEL" : {
+        "type" : "PASSTHROUGH",
+        "definition" : "COL=interaction,T=string"
+      }
     }
   } ]
 }, {
   "cartesianLayout" : [ {
-    "node" : 1825,
-    "view" : 1733,
-    "x" : 142.0,
-    "y" : 71.0
+    "node" : 193,
+    "view" : 254,
+    "x" : -118.0,
+    "y" : -93.0
   }, {
-    "node" : 1823,
-    "view" : 1733,
-    "x" : 86.0,
-    "y" : -36.0
-  }, {
-    "node" : 1821,
-    "view" : 1733,
-    "x" : 42.0,
-    "y" : -41.0
-  }, {
-    "node" : 1819,
-    "view" : 1733,
-    "x" : -170.0,
-    "y" : -64.0
-  }, {
-    "node" : 1765,
-    "view" : 1733,
-    "x" : -85.0,
-    "y" : -3.0
-  }, {
-    "node" : 1763,
-    "view" : 1733,
-    "x" : 36.0,
-    "y" : -136.0
-  }, {
-    "node" : 1761,
-    "view" : 1733,
+    "node" : 192,
+    "view" : 254,
     "x" : -71.0,
     "y" : -113.0
   }, {
-    "node" : 1759,
-    "view" : 1733,
-    "x" : -118.0,
-    "y" : -93.0
+    "node" : 191,
+    "view" : 254,
+    "x" : 36.0,
+    "y" : -136.0
+  }, {
+    "node" : 190,
+    "view" : 254,
+    "x" : -85.0,
+    "y" : -3.0
+  }, {
+    "node" : 189,
+    "view" : 254,
+    "x" : -170.0,
+    "y" : -64.0
+  }, {
+    "node" : 188,
+    "view" : 254,
+    "x" : 42.0,
+    "y" : -41.0
+  }, {
+    "node" : 187,
+    "view" : 254,
+    "x" : 86.0,
+    "y" : -36.0
+  }, {
+    "node" : 186,
+    "view" : 254,
+    "x" : 142.0,
+    "y" : 71.0
   } ]
 }, {
   "visualProperties" : [ {
     "properties_of" : "network",
-    "applies_to" : 1733,
-    "view" : 1733,
+    "applies_to" : 254,
+    "view" : 254,
     "properties" : {
       "NETWORK_BACKGROUND_PAINT" : "#FFFFFF",
       "NETWORK_CENTER_X_LOCATION" : "0.0",
@@ -1413,8 +1460,8 @@
     }
   }, {
     "properties_of" : "nodes:default",
-    "applies_to" : 1733,
-    "view" : 1733,
+    "applies_to" : 254,
+    "view" : 254,
     "properties" : {
       "COMPOUND_NODE_PADDING" : "10.0",
       "COMPOUND_NODE_SHAPE" : "ROUND_RECTANGLE",
@@ -1479,12 +1526,19 @@
       "NODE_X_LOCATION" : "0.0",
       "NODE_Y_LOCATION" : "0.0",
       "NODE_Z_LOCATION" : "0.0",
-      "PASSTHROUGH_MAPPING_NODE_LABEL" : "COL=name,T=string"
+      "nodeCustomGraphicsSizeSync" : "true",
+      "nodeSizeLocked" : "false"
+    },
+    "mappings" : {
+      "NODE_LABEL" : {
+        "type" : "PASSTHROUGH",
+        "definition" : "COL=name,T=string"
+      }
     }
   }, {
     "properties_of" : "edges:default",
-    "applies_to" : 1733,
-    "view" : 1733,
+    "applies_to" : 254,
+    "view" : 254,
     "properties" : {
       "EDGE_CURVED" : "true",
       "EDGE_LABEL_COLOR" : "#3399FF",
@@ -1508,36 +1562,42 @@
       "EDGE_UNSELECTED_PAINT" : "#CCCCCC",
       "EDGE_VISIBLE" : "true",
       "EDGE_WIDTH" : "5.0",
-      "PASSTHROUGH_MAPPING_EDGE_LABEL" : "COL=interaction,T=string"
+      "arrowColorMatchesEdge" : "false"
+    },
+    "mappings" : {
+      "EDGE_LABEL" : {
+        "type" : "PASSTHROUGH",
+        "definition" : "COL=interaction,T=string"
+      }
     }
   } ]
 }, {
   "cartesianLayout" : [ {
-    "node" : 1785,
-    "view" : 1745,
-    "x" : 3.0,
-    "y" : -126.0
+    "node" : 225,
+    "view" : 292,
+    "x" : -103.0,
+    "y" : -41.0
   }, {
-    "node" : 1783,
-    "view" : 1745,
-    "x" : -143.0,
-    "y" : -119.0
-  }, {
-    "node" : 1781,
-    "view" : 1745,
+    "node" : 224,
+    "view" : 292,
     "x" : -253.0,
     "y" : -66.0
   }, {
-    "node" : 1757,
-    "view" : 1745,
-    "x" : -103.0,
-    "y" : -41.0
+    "node" : 223,
+    "view" : 292,
+    "x" : -143.0,
+    "y" : -119.0
+  }, {
+    "node" : 222,
+    "view" : 292,
+    "x" : 3.0,
+    "y" : -126.0
   } ]
 }, {
   "visualProperties" : [ {
     "properties_of" : "network",
-    "applies_to" : 1745,
-    "view" : 1745,
+    "applies_to" : 292,
+    "view" : 292,
     "properties" : {
       "NETWORK_BACKGROUND_PAINT" : "#FFFFFF",
       "NETWORK_CENTER_X_LOCATION" : "0.0",
@@ -1553,8 +1613,8 @@
     }
   }, {
     "properties_of" : "nodes:default",
-    "applies_to" : 1745,
-    "view" : 1745,
+    "applies_to" : 292,
+    "view" : 292,
     "properties" : {
       "COMPOUND_NODE_PADDING" : "10.0",
       "COMPOUND_NODE_SHAPE" : "ROUND_RECTANGLE",
@@ -1619,12 +1679,19 @@
       "NODE_X_LOCATION" : "0.0",
       "NODE_Y_LOCATION" : "0.0",
       "NODE_Z_LOCATION" : "0.0",
-      "PASSTHROUGH_MAPPING_NODE_LABEL" : "COL=name,T=string"
+      "nodeCustomGraphicsSizeSync" : "true",
+      "nodeSizeLocked" : "false"
+    },
+    "mappings" : {
+      "NODE_LABEL" : {
+        "type" : "PASSTHROUGH",
+        "definition" : "COL=name,T=string"
+      }
     }
   }, {
     "properties_of" : "edges:default",
-    "applies_to" : 1745,
-    "view" : 1745,
+    "applies_to" : 292,
+    "view" : 292,
     "properties" : {
       "EDGE_CURVED" : "true",
       "EDGE_LABEL_COLOR" : "#3399FF",
@@ -1648,87 +1715,93 @@
       "EDGE_UNSELECTED_PAINT" : "#CCCCCC",
       "EDGE_VISIBLE" : "true",
       "EDGE_WIDTH" : "5.0",
-      "PASSTHROUGH_MAPPING_EDGE_LABEL" : "COL=interaction,T=string"
+      "arrowColorMatchesEdge" : "false"
+    },
+    "mappings" : {
+      "EDGE_LABEL" : {
+        "type" : "PASSTHROUGH",
+        "definition" : "COL=interaction,T=string"
+      }
     }
   } ]
 }, {
   "subNetworks" : [ {
-    "@id" : 1707,
-    "nodes" : [ 1777, 1719 ],
-    "edges" : [ 1779 ]
+    "@id" : 128,
+    "nodes" : [ 169, 168 ],
+    "edges" : [ 170 ]
   }, {
-    "@id" : 1721,
-    "nodes" : [ 1775, 1773, 1771, 1769, 1767 ],
-    "edges" : [ 1808, 1807, 1806, 1805, 1804, 1803, 1802, 1801, 1800, 1799 ]
+    "@id" : 138,
+    "nodes" : [ 175, 174, 173, 172, 171 ],
+    "edges" : [ 185, 184, 183, 182, 181, 180, 179, 178, 177, 176 ]
   }, {
-    "@id" : 1733,
-    "nodes" : [ 1825, 1823, 1821, 1819, 1765, 1763, 1761, 1759 ],
-    "edges" : [ 1848, 1847, 1846, 1845, 1844, 1843, 1842, 1841, 1840, 1839, 1838, 1837, 1836, 1835, 1834, 1833, 1832, 1831, 1830, 1829, 1828, 1827, 1854, 1853, 1852, 1851, 1850, 1849 ]
+    "@id" : 148,
+    "nodes" : [ 193, 192, 191, 190, 189, 188, 187, 186 ],
+    "edges" : [ 221, 220, 219, 218, 217, 216, 215, 214, 213, 212, 211, 210, 209, 208, 207, 206, 205, 204, 203, 202, 201, 200, 199, 198, 197, 196, 195, 194 ]
   }, {
-    "@id" : 1745,
-    "nodes" : [ 1785, 1783, 1781, 1757 ],
-    "edges" : [ 1792, 1791, 1790, 1789, 1788, 1787 ]
+    "@id" : 158,
+    "nodes" : [ 225, 224, 223, 222 ],
+    "edges" : [ 231, 230, 229, 228, 227, 226 ]
   } ]
 }, {
   "cyViews" : [ {
-    "@id" : 1707,
-    "s" : 1707
+    "@id" : 232,
+    "s" : 128
   }, {
-    "@id" : 1721,
-    "s" : 1721
+    "@id" : 237,
+    "s" : 138
   }, {
-    "@id" : 1733,
-    "s" : 1733
+    "@id" : 254,
+    "s" : 148
   }, {
-    "@id" : 1745,
-    "s" : 1745
+    "@id" : 292,
+    "s" : 158
   } ]
 }, {
   "networkRelations" : [ {
-    "p" : 1691,
-    "c" : 1707,
-    "r" : "subnetwork",
-    "name" : "NetworkAA"
-  }, {
-    "p" : 1707,
-    "c" : 1707,
+    "p" : 128,
+    "c" : 232,
     "r" : "view",
     "name" : "NetworkAA view"
   }, {
-    "p" : 1691,
-    "c" : 1721,
+    "p" : 112,
+    "c" : 128,
     "r" : "subnetwork",
-    "name" : "NetworkBB"
+    "name" : "NetworkAA"
   }, {
-    "p" : 1721,
-    "c" : 1721,
+    "p" : 138,
+    "c" : 237,
     "r" : "view",
     "name" : "NetworkBB view"
   }, {
-    "p" : 1691,
-    "c" : 1733,
+    "p" : 112,
+    "c" : 138,
     "r" : "subnetwork",
-    "name" : "NetworkCC"
+    "name" : "NetworkBB"
   }, {
-    "p" : 1733,
-    "c" : 1733,
+    "p" : 148,
+    "c" : 254,
     "r" : "view",
     "name" : "NetworkCC view"
   }, {
-    "p" : 1691,
-    "c" : 1745,
+    "p" : 112,
+    "c" : 148,
     "r" : "subnetwork",
-    "name" : "NetworkDD"
+    "name" : "NetworkCC"
   }, {
-    "p" : 1745,
-    "c" : 1745,
+    "p" : 158,
+    "c" : 292,
     "r" : "view",
     "name" : "NetworkDD view"
+  }, {
+    "p" : 112,
+    "c" : 158,
+    "r" : "subnetwork",
+    "name" : "NetworkDD"
   } ]
 }, {
   "metaData" : [ {
     "consistencyGroup" : 1,
-    "elementCount" : 0,
+    "elementCount" : 5,
     "name" : "networkAttributes",
     "version" : "1.0"
   }, {
