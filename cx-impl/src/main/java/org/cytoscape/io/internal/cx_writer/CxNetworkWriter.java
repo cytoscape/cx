@@ -114,10 +114,12 @@ public class CxNetworkWriter implements CyWriter {
         final long t0 = System.currentTimeMillis();
 
         if (TimingUtil.WRITE_TO_DEV_NULL) {
-            exporter.writeNetwork(_network, _write_siblings, aspects, new FileOutputStream(new File("/dev/null")));
+            exporter.writeNetwork(_network, _write_siblings,  aspects, new FileOutputStream(new File("/dev/null")));
         }
         else if (TimingUtil.WRITE_TO_BYTE_ARRAY_OUTPUTSTREAM) {
-            exporter.writeNetwork(_network, _write_siblings, aspects, new ByteArrayOutputStream());
+            exporter.writeNetwork(_network, _write_siblings,  aspects, new ByteArrayOutputStream());
+            
+            
         }
         else {
             exporter.writeNetwork(_network, _write_siblings, aspects, _os);

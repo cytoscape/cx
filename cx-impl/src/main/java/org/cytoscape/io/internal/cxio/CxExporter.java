@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 
+import org.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
 import org.cxio.aspects.datamodels.AttributesAspectUtils;
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.cxio.aspects.datamodels.CyGroupsElement;
@@ -32,6 +33,7 @@ import org.cxio.metadata.MetaDataCollection;
 import org.cytoscape.group.CyGroup;
 import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.internal.cx_writer.VisualPropertiesGatherer;
+import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
@@ -83,6 +85,8 @@ import org.cytoscape.view.vizmap.VisualMappingManager;
 public final class CxExporter {
 
     private final static boolean DEFAULT_USE_DEFAULT_PRETTY_PRINTING = true;
+
+    private static final boolean DEBUG = true;
 
     private VisualLexicon        _lexicon;
     private boolean              _use_default_pretty_printing;
@@ -203,7 +207,7 @@ public final class CxExporter {
                 writeEdges(network, write_siblings, w);
             }
             if (aspects.contains(Aspect.NETWORK_ATTRIBUTES)) {
-                writeNetworkAttributes(network, write_siblings, w, CyNetwork.DEFAULT_ATTRS);
+                writeNetworkAttributes(network, write_siblings,  w, CyNetwork.DEFAULT_ATTRS);
             }
             if (aspects.contains(Aspect.HIDDEN_ATTRIBUTES)) {
                 writeHiddenAttributes(network, write_siblings, w, CyNetwork.HIDDEN_ATTRS);
@@ -273,7 +277,7 @@ public final class CxExporter {
                                       final AspectSet aspects,
                                       final OutputStream out) throws IOException {
         // Filters are not being used, thus null.
-        return writeNetwork(network, write_siblings, aspects, null, out);
+        return writeNetwork(network, write_siblings,  aspects, null, out);
 
     }
 
@@ -930,10 +934,15 @@ public final class CxExporter {
 
         final CySubNetwork my_subnet = (CySubNetwork) network;
         final CyRootNetwork my_root = my_subnet.getRootNetwork();
-
+        
+        Collection<CyColumn> x = my_root.getDefaultNetworkTable().getColumns();
+        for (CyColumn cyColumn : x) {
+            System.out.println(cyColumn.getName());
+        }
+        String collection_name = obtainNetworkCollectionName(my_root);
         final List<CySubNetwork> subnets = makeSubNetworkList(write_siblings, my_subnet, my_root, true);
         for (final CySubNetwork subnet : subnets) {
-            writeNetworkAttributesHelper(namespace, subnet, elements);
+            writeNetworkAttributesHelper(namespace, subnet, elements,collection_name );
         }
 
         final long t0 = System.currentTimeMillis();
@@ -962,17 +971,27 @@ public final class CxExporter {
     @SuppressWarnings("rawtypes")
     private void writeNetworkAttributesHelper(final String namespace,
                                               final CyNetwork my_network,
-                                              final List<AspectElement> elements) {
+                                              final List<AspectElement> elements,
+                                              final String collection_name) {
 
         final CyRow row = my_network.getRow(my_network, namespace);
-
+        if (DEBUG ) {
+            System.out.println("collection name: " + collection_name);
+        }
+        if ( collection_name != null ) {
+            elements.add( new NetworkAttributesElement( null,
+                                             "name",
+                                             collection_name,
+                                             ATTRIBUTE_DATA_TYPE.STRING) );
+        }
+        
         if (row != null) {
             final Map<String, Object> values = row.getAllValues();
 
             if ((values != null) && !values.isEmpty()) {
                 for (final String column_name : values.keySet()) {
                     if (column_name.equals(CxUtil.SUID) || column_name.equals(CxUtil.SELECTED)
-                            || column_name.equals(CxUtil.NAME_COL) || column_name.equals(CxUtil.SHARED_NAME_COL)) {
+                           /* || column_name.equals(CxUtil.NAME_COL)*/ || column_name.equals(CxUtil.SHARED_NAME_COL)) {
                         continue;
                     }
                     final Object value = values.get(column_name);

@@ -26,6 +26,7 @@ import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.view.vizmap.VisualStyleFactory;
 import org.osgi.framework.BundleContext;
 
+
 /**
  * Activator for CX support module.
  */
@@ -54,6 +55,7 @@ public class CyActivator extends AbstractCyActivator {
         final CyGroupManager group_manager = getService(bc, CyGroupManager.class);
         final CyNetworkTableManager table_manager = getService(bc, CyNetworkTableManager.class);
         final CyNetworkViewFactory network_view_factory = getService(bc, CyNetworkViewFactory.class);
+      
 
         final CxNetworkWriterFactory network_writer_factory = new CxNetworkWriterFactory(cx_filter,
                                                                                          visual_mapping_manager,
