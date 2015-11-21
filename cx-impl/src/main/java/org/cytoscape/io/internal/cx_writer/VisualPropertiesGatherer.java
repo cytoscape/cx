@@ -416,7 +416,7 @@ public final class VisualPropertiesGatherer {
             }
             if (col_type != null) {
                 System.out.println("mapping type is '" + attr_class + "' will use (from table column) '" + col_type
-                                   + "' instead");
+                        + "' instead");
                 if ((col_type == Float.class) || (col_type == Double.class)) {
                     return "double";
                 }
@@ -428,7 +428,7 @@ public final class VisualPropertiesGatherer {
                 }
                 else {
                     throw new IllegalArgumentException("don't know how to deal with type '" + col_type
-                                                       + "' (from table column)");
+                            + "' (from table column)");
                 }
             }
             else {
