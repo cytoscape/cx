@@ -211,12 +211,61 @@ public class CxNetworkReaderTest {
 
     @Test
     public void test14() throws Exception {
-        final File test_file = new File("src/test/resources/testData/mapping_types.cx");
+        final File test_file = new File("src/test/resources/testData/ndex1.cx");
+        final List<CyNetwork> networks = loadNetwork(test_file, false);
+        assertTrue((networks.size() == 2));
+        final CyNetwork n1 = networks.get(0);
+        assertTrue(n1.getNodeCount() == 2);
+        assertTrue(n1.getEdgeCount() == 1);
+        final CyNetwork n2 = networks.get(1);
+        assertTrue(n2.getNodeCount() == 3);
+        assertTrue(n2.getEdgeCount() == 3);
+        
+    }
+    
+    @Test
+    public void test15() throws Exception {
+        final File test_file = new File("src/test/resources/testData/ndex2.cx");
+        final List<CyNetwork> networks = loadNetwork(test_file, false);
+        assertTrue((networks.size() == 2));
+        final CyNetwork n1 = networks.get(0);
+        assertTrue(n1.getNodeCount() == 2);
+        assertTrue(n1.getEdgeCount() == 1);
+        final CyNetwork n2 = networks.get(1);
+        assertTrue(n2.getNodeCount() == 3);
+        assertTrue(n2.getEdgeCount() == 3);
+    }
+    
+    @Test
+    public void test16() throws Exception {
+        final File test_file = new File("src/test/resources/testData/ndex3.cx");
+        final List<CyNetwork> networks = loadNetwork(test_file, false);
+        assertTrue((networks.size() == 2));
+        final CyNetwork n1 = networks.get(0);
+        assertTrue(n1.getNodeCount() == 2);
+        assertTrue(n1.getEdgeCount() == 1);
+        final CyNetwork n2 = networks.get(1);
+        assertTrue(n2.getNodeCount() == 3);
+        assertTrue(n2.getEdgeCount() == 3);
+    }
+    
+    @Test
+    public void test17() throws Exception {
+        final File test_file = new File("src/test/resources/testData/ndex4.cx");
         final List<CyNetwork> networks = loadNetwork(test_file, false);
         assertTrue((networks.size() == 1));
-        final CyNetwork n = networks.get(0);
-        assertTrue(n.getNodeCount() == 2);
-        assertTrue(n.getEdgeCount() == 0);
+        final CyNetwork n1 = networks.get(0);
+        assertTrue(n1.getNodeCount() == 8);
+        assertTrue(n1.getEdgeCount() == 12);
     }
-
+    @Test
+    public void test18() throws Exception {
+        final File test_file = new File("src/test/resources/testData/c_elegans.cx");
+        final List<CyNetwork> networks = loadNetwork(test_file, false);
+        assertTrue((networks.size() == 1));
+        final CyNetwork n1 = networks.get(0);
+        assertTrue(n1.getNodeCount() == 3941);
+        assertTrue(n1.getEdgeCount() == 8642);
+    }
+    
 }
