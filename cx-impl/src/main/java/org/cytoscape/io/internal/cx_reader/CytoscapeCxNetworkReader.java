@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
 
+import org.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
 import org.cxio.aspects.datamodels.NetworkAttributesElement;
 import org.cxio.aux.AspectElementCounts;
 import org.cxio.core.CxReader;
@@ -18,6 +19,7 @@ import org.cytoscape.group.CyGroupFactory;
 import org.cytoscape.io.internal.cxio.Aspect;
 import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxImporter;
+import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.TimingUtil;
 import org.cytoscape.io.read.AbstractCyNetworkReader;
 import org.cytoscape.model.CyNetwork;
@@ -36,10 +38,11 @@ import org.cytoscape.work.util.ListSingleSelection;
 
 public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
-    private static final boolean               DEBUG = true;
+    private static final boolean               DEBUG                                                         = true;
+    private static final boolean               ALLOW_TO_USE_NETWORK_COLLECTION_NAME_FROM_NETWORK_ATTTRIBUTES = true;
 
     private final List<CyNetwork>              _networks;
-    private final String                       _network_collection_name;
+    private String                             _network_collection_name;
     private CxToCy                             _cx_to_cy;
     private final InputStream                  _in;
     private final VisualMappingManager         _visual_mapping_manager;
@@ -192,19 +195,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                 root_list.setSelectedValue(_network_collection_name);
             }
         }
-    
-        //final List<AspectElement> network_attributes = res.get(NetworkAttributesElement.ASPECT_NAME);
-        
-       /* if (network_attributes != null) {
-            for (final AspectElement e : network_attributes) {
-                final NetworkAttributesElement nae = (NetworkAttributesElement) e;
-                if ( nae.getSubnetwork() == null && nae.getName() != null  && nae.getPropertyOf() != null &&   nae.getPropertyOf().size() ==1 ) {
-                    System.out.println("__collection: " + nae.getValue());
-                }
-            }
-        }*/
-        
-    
+
         final CyRootNetwork root_network = getRootNetwork();
 
         // Select Network Collection
@@ -222,6 +213,15 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         }
         else {
             // Need to create new network with new root.
+            if (ALLOW_TO_USE_NETWORK_COLLECTION_NAME_FROM_NETWORK_ATTTRIBUTES) {
+                final String collection_name_from_network_attributes = getCollectionNameFromNetworkAttributes(res);
+                if (collection_name_from_network_attributes != null) {
+                    _network_collection_name = collection_name_from_network_attributes;
+                    if (DEBUG) {
+                        System.out.println("collection name from network attributes: " + _network_collection_name);
+                    }
+                }
+            }
             _networks.addAll(_cx_to_cy.createNetwork(res,
                                                      null,
                                                      cyNetworkFactory,
@@ -233,6 +233,27 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         if (TimingUtil.TIMING) {
             TimingUtil.reportTimeDifference(t0, "total time build", 0);
         }
+    }
+
+    public final static String getCollectionNameFromNetworkAttributes(final SortedMap<String, List<AspectElement>> res) {
+        final List<AspectElement> network_attributes = res.get(NetworkAttributesElement.ASPECT_NAME);
+        String collection_name_from_network_attributes = null;
+        if (network_attributes != null) {
+            for (final AspectElement e : network_attributes) {
+                final NetworkAttributesElement nae = (NetworkAttributesElement) e;
+                if ((nae.getSubnetwork() == null) && (nae.getName() != null)
+                        && (nae.getDataType() == ATTRIBUTE_DATA_TYPE.STRING) && nae.getName().equals(CxUtil.NAME_COL)
+                        && nae.isSingleValue() && (nae.getValue() != null) && (nae.getValue().length() > 0)) {
+                    if (collection_name_from_network_attributes == null) {
+                        collection_name_from_network_attributes = nae.getValue();
+                    }
+                    else {
+                        return null;
+                    }
+                }
+            }
+        }
+        return collection_name_from_network_attributes;
     }
 
 }

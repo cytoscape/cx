@@ -410,9 +410,7 @@ public final class ViewMaker {
                         for (final VisualPropertyDependency<?> d : style.getAllVisualPropertyDependencies()) {
                             if (d.getIdString().equals(key)) {
                                 d.setDependency(Boolean.parseBoolean(entry.getValue()));
-                                if (DEBUG) {
-                                    System.out.println(d.getIdString() + ": " + entry.getValue());
-                                }
+                               
                             }
                         }
                     }
