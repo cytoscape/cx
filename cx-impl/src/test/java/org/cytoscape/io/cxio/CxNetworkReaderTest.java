@@ -66,6 +66,7 @@ public class CxNetworkReaderTest {
 
     @Test
     public void test1() throws Exception {
+       
         final File test_file = new File("src/test/resources/testData/gal_filtered_1.cx");
         final List<CyNetwork> networks = loadNetwork(test_file, true);
         assertTrue((networks.size() == 1));
