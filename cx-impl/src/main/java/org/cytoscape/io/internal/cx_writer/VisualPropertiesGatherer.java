@@ -1,5 +1,6 @@
 package org.cytoscape.io.internal.cx_writer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -184,7 +185,15 @@ public final class VisualPropertiesGatherer {
             if (mapping instanceof PassthroughMapping<?, ?>) {
                 final PassthroughMapping<?, ?> pm = (PassthroughMapping<?, ?>) mapping;
                 final String col = pm.getMappingColumnName();
-                final String type = toAttributeType(pm.getMappingColumnType(), table, col);
+                String type = null;
+                try {
+                    type = toAttributeType(pm.getMappingColumnType(), table, col);
+                }
+                catch (final IOException e) {
+                    System.out.println("WARNING: problem with mapping/column '" + col
+                            + "': column not present, ignoring corresponding passthrough mapping");
+                    return;
+                }
                 final StringBuilder sb = new StringBuilder();
                 sb.append(CxUtil.VM_COL);
                 sb.append("=");
@@ -198,7 +207,15 @@ public final class VisualPropertiesGatherer {
             else if (mapping instanceof DiscreteMapping<?, ?>) {
                 final DiscreteMapping<?, ?> dm = (DiscreteMapping<?, ?>) mapping;
                 final String col = dm.getMappingColumnName();
-                final String type = toAttributeType(dm.getMappingColumnType(), table, col);
+                String type = null;
+                try {
+                    type = toAttributeType(dm.getMappingColumnType(), table, col);
+                }
+                catch (final IOException e) {
+                    System.out.println("WARNING: problem with mapping/column '" + col
+                            + "': column not present, ignoring corresponding discrete mapping");
+                    return;
+                }
                 final Map<?, ?> map = dm.getAll();
                 final StringBuilder sb = new StringBuilder();
                 sb.append(CxUtil.VM_COL);
@@ -227,6 +244,7 @@ public final class VisualPropertiesGatherer {
                     catch (final Exception e) {
                         System.out.println("could not add discrete mapping entry: " + value);
                         e.printStackTrace();
+                        return;
                     }
                     ++counter;
                 }
@@ -235,7 +253,15 @@ public final class VisualPropertiesGatherer {
             else if (mapping instanceof ContinuousMapping<?, ?>) {
                 final ContinuousMapping<?, ?> cm = (ContinuousMapping<?, ?>) mapping;
                 final String col = cm.getMappingColumnName();
-                final String type = toAttributeType(cm.getMappingColumnType(), table, col);
+                String type = null;
+                try {
+                    type = toAttributeType(cm.getMappingColumnType(), table, col);
+                }
+                catch (final IOException e) {
+                    System.out.println("WARNING: problem with mapping/column '" + col
+                            + "': column not present, ignoring corresponding continuous mapping");
+                    return;
+                }
                 final StringBuilder sb = new StringBuilder();
                 sb.append(CxUtil.VM_COL);
                 sb.append("=");
@@ -387,7 +413,8 @@ public final class VisualPropertiesGatherer {
         }
     }
 
-    private final static String toAttributeType(final Class<?> attr_class, final CyTable table, final String col_name) {
+    private final static String toAttributeType(final Class<?> attr_class, final CyTable table, final String col_name)
+            throws IOException {
         if (attr_class == String.class) {
             return "string";
         }
@@ -411,12 +438,12 @@ public final class VisualPropertiesGatherer {
                     col_type = table.getColumn(col_name).getType();
                 }
                 else {
-                    throw new IllegalStateException("failed to obtain column '" + col_name + "'");
+                    throw new IOException("failed to obtain column '" + col_name + "'");
                 }
             }
             if (col_type != null) {
                 System.out.println("mapping type is '" + attr_class + "' will use (from table column) '" + col_type
-                        + "' instead");
+                                   + "' instead");
                 if ((col_type == Float.class) || (col_type == Double.class)) {
                     return "double";
                 }
@@ -428,7 +455,7 @@ public final class VisualPropertiesGatherer {
                 }
                 else {
                     throw new IllegalArgumentException("don't know how to deal with type '" + col_type
-                            + "' (from table column)");
+                                                       + "' (from table column)");
                 }
             }
             else {
