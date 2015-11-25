@@ -20,6 +20,7 @@ import org.cytoscape.io.internal.cxio.Aspect;
 import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxImporter;
 import org.cytoscape.io.internal.cxio.CxUtil;
+import org.cytoscape.io.internal.cxio.Settings;
 import org.cytoscape.io.internal.cxio.TimingUtil;
 import org.cytoscape.io.read.AbstractCyNetworkReader;
 import org.cytoscape.model.CyNetwork;
@@ -38,7 +39,6 @@ import org.cytoscape.work.util.ListSingleSelection;
 
 public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
-    private static final boolean               DEBUG                                                         = true;
     private static final boolean               ALLOW_TO_USE_NETWORK_COLLECTION_NAME_FROM_NETWORK_ATTTRIBUTES = true;
 
     private final List<CyNetwork>              _networks;
@@ -109,7 +109,6 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                                       _vmf_factory_p);
         }
         catch (final IOException e) {
-
             e.printStackTrace();
         }
         if (view != null) {
@@ -169,7 +168,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
             final AspectElementCounts counts = cxr.getAspectElementCounts();
             final MetaDataCollection pre = cxr.getPreMetaData();
             final MetaDataCollection post = cxr.getPostMetaData();
-            if (DEBUG) {
+            if (Settings.INSTANCE.isDebug()) {
                 if (counts != null) {
                     System.out.println("Aspects elements read in:");
                     System.out.println(counts);
@@ -217,7 +216,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                 final String collection_name_from_network_attributes = getCollectionNameFromNetworkAttributes(res);
                 if (collection_name_from_network_attributes != null) {
                     _network_collection_name = collection_name_from_network_attributes;
-                    if (DEBUG) {
+                    if (Settings.INSTANCE.isDebug()) {
                         System.out.println("collection name from network attributes: " + _network_collection_name);
                     }
                 }

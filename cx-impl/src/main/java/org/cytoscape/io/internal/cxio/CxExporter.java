@@ -84,18 +84,29 @@ import org.cytoscape.view.vizmap.VisualMappingManager;
  */
 public final class CxExporter {
 
-    private final static boolean DEFAULT_USE_DEFAULT_PRETTY_PRINTING = true;
+    private final static boolean     DEFAULT_USE_DEFAULT_PRETTY_PRINTING      = true;
+    
+   
 
-    private static final boolean DEBUG                               = true;
+    private VisualLexicon            _lexicon;
+    private boolean                  _use_default_pretty_printing;
+    private VisualMappingManager     _visual_mapping_manager;
+    private CyNetworkViewManager     _networkview_manager;
+    private CyGroupManager           _group_manager;
+    private boolean                  _write_pre_metdata;
+    private boolean                  _write_post_metdata;
+    private long                     _next_suid;
 
-    private VisualLexicon        _lexicon;
-    private boolean              _use_default_pretty_printing;
-    private VisualMappingManager _visual_mapping_manager;
-    private CyNetworkViewManager _networkview_manager;
-    private CyGroupManager       _group_manager;
-    private boolean              _write_pre_metdata;
-    private boolean              _write_post_metdata;
-    private long                 _next_suid;
+    private final static Set<String> ADDITIONAL_IGNORE_FOR_EDGE_ATTRIBUTES    = new HashSet<String>();
+    private final static Set<String> ADDITIONAL_IGNORE_FOR_NODE_ATTRIBUTES    = new HashSet<String>();
+    private final static Set<String> ADDITIONAL_IGNORE_FOR_NETWORK_ATTRIBUTES = new HashSet<String>();
+
+    static {
+        ADDITIONAL_IGNORE_FOR_EDGE_ATTRIBUTES.add(CxUtil.SHARED_INTERACTION);
+        ADDITIONAL_IGNORE_FOR_NETWORK_ATTRIBUTES.add(CxUtil.SHARED_NAME_COL);
+        ADDITIONAL_IGNORE_FOR_NODE_ATTRIBUTES.add(CxUtil.SHARED_NAME_COL);
+        ADDITIONAL_IGNORE_FOR_NODE_ATTRIBUTES.add(CxUtil.REPRESENTS);
+    }
 
     /**
      * This returns a new instance of CxExporter.
@@ -278,7 +289,6 @@ public final class CxExporter {
                                       final OutputStream out) throws IOException {
         // Filters are not being used, thus null.
         return writeNetwork(network, write_siblings, aspects, null, out);
-
     }
 
     private final static void addDataToMetaDataCollection(final MetaDataCollection pre_meta_data,
@@ -750,6 +760,21 @@ public final class CxExporter {
         }
     }
 
+    private final static boolean isIgnore(final String column_name,
+                                          final Set<String> additional_to_ignore,
+                                          final Settings setttings) {
+        if (setttings.isIgnoreSuidColumn() && column_name.equals(CxUtil.SUID)) {
+            return true;
+        }
+        else if (setttings.isIgnoreSelectedColumn() && column_name.equals(CxUtil.SELECTED)) {
+            return true;
+        }
+        else if ((additional_to_ignore != null) && additional_to_ignore.contains(column_name)) {
+            return true;
+        }
+        return false;
+    }
+
     @SuppressWarnings("rawtypes")
     private void writeEdgeAttributesHelper(final String namespace,
                                            final CyNetwork my_network,
@@ -763,8 +788,7 @@ public final class CxExporter {
                 final Map<String, Object> values = row.getAllValues();
                 if ((values != null) && !values.isEmpty()) {
                     for (final String column_name : values.keySet()) {
-                        if (column_name.equals(CxUtil.SUID) || column_name.equals(CxUtil.SELECTED)
-                                || column_name.equals(CxUtil.SHARED_INTERACTION)) {
+                        if (isIgnore(column_name, ADDITIONAL_IGNORE_FOR_EDGE_ATTRIBUTES, Settings.INSTANCE)) {
                             continue;
                         }
                         final Object value = values.get(column_name);
@@ -889,7 +913,7 @@ public final class CxExporter {
 
             if ((values != null) && !values.isEmpty()) {
                 for (final String column_name : values.keySet()) {
-                    if (column_name.equals(CxUtil.SUID) || column_name.equals(CxUtil.SELECTED)) {
+                    if (isIgnore(column_name, null, Settings.INSTANCE)) {
                         continue;
                     }
                     final Object value = values.get(column_name);
@@ -941,7 +965,7 @@ public final class CxExporter {
         }
         final String collection_name = obtainNetworkCollectionName(my_root);
         final List<CySubNetwork> subnets = makeSubNetworkList(write_siblings, my_subnet, my_root, true);
-        if (DEBUG) {
+        if (Settings.INSTANCE.isDebug()) {
             System.out.println("collection name: " + collection_name);
         }
         if (collection_name != null) {
@@ -987,8 +1011,7 @@ public final class CxExporter {
 
             if ((values != null) && !values.isEmpty()) {
                 for (final String column_name : values.keySet()) {
-                    if (column_name.equals(CxUtil.SUID) || column_name.equals(CxUtil.SELECTED)
-                    /* || column_name.equals(CxUtil.NAME_COL) */|| column_name.equals(CxUtil.SHARED_NAME_COL)) {
+                    if (isIgnore(column_name, ADDITIONAL_IGNORE_FOR_NETWORK_ATTRIBUTES, Settings.INSTANCE)) {
                         continue;
                     }
                     final Object value = values.get(column_name);
@@ -1058,8 +1081,7 @@ public final class CxExporter {
 
                 if ((values != null) && !values.isEmpty()) {
                     for (final String column_name : values.keySet()) {
-                        if (column_name.equals(CxUtil.SUID) || column_name.equals(CxUtil.SELECTED)
-                                || column_name.equals(CxUtil.SHARED_NAME_COL) || column_name.equals(CxUtil.REPRESENTS)) {
+                        if (isIgnore(column_name, ADDITIONAL_IGNORE_FOR_NODE_ATTRIBUTES, Settings.INSTANCE)) {
                             continue;
                         }
                         final Object value = values.get(column_name);

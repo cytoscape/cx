@@ -28,6 +28,8 @@ import org.cxio.core.interfaces.AspectElement;
 import org.cxio.util.CxioUtil;
 import org.cytoscape.group.CyGroup;
 import org.cytoscape.group.CyGroupFactory;
+import org.cytoscape.io.internal.cxio.CxUtil;
+import org.cytoscape.io.internal.cxio.Settings;
 import org.cytoscape.io.internal.cxio.VisualPropertyType;
 import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyEdge;
@@ -42,7 +44,6 @@ import org.cytoscape.model.subnetwork.CySubNetwork;
 
 public final class CxToCy {
 
-    private final static boolean       DEBUG          = true;
     private final static boolean       STRICT         = false;
     private static final long          DEFAULT_SUBNET = -Long.MAX_VALUE;
 
@@ -213,12 +214,12 @@ public final class CxToCy {
             for (final Long s : subnetwork_parent_ids) {
                 parent_network_id = s;
             }
-            if (DEBUG) {
+            if (Settings.INSTANCE.isDebug()) {
                 System.out.println("parent_network_id: " + parent_network_id);
             }
 
             subnetwork_ids = getSubNetworkIds(parent_network_id, network_relations);
-            if (DEBUG) {
+            if (Settings.INSTANCE.isDebug()) {
                 System.out.println("subnetwork_ids: " + subnetwork_ids);
             }
             if ((subnetwork_ids == null) || subnetwork_ids.isEmpty()) {
@@ -228,7 +229,7 @@ public final class CxToCy {
             _view_to_subnet_map = makeViewToSubNetworkMap(network_relations);
             _subnet_to_views_map = makeSubNetworkToViewsMap(network_relations);
             subnet_to_subnet_name_map = makeSubNetworkToNameMap(network_relations);
-            if (DEBUG) {
+            if (Settings.INSTANCE.isDebug()) {
                 System.out.println("view to subnet:");
                 System.out.println(_view_to_subnet_map);
                 System.out.println("subnet to views:");
@@ -238,7 +239,7 @@ public final class CxToCy {
             }
         }
         else {
-            if (DEBUG) {
+            if (Settings.INSTANCE.isDebug()) {
                 System.out.println("no network relations");
             }
             subnet_info_present = false;
@@ -277,7 +278,7 @@ public final class CxToCy {
                               subnet_info_present);
 
         processNetworkAttributes(network_attributes, network_attributes_map, subnet_info_present, subnetwork_ids);
-        //System.out.println(network_attributes_map);
+        // System.out.println(network_attributes_map);
 
         processHiddenAttributes(hidden_attributes, hidden_attributes_map);
 
@@ -285,7 +286,7 @@ public final class CxToCy {
 
         final List<CyNetwork> new_networks = new ArrayList<CyNetwork>();
 
-        if (DEBUG) {
+        if (Settings.INSTANCE.isDebug()) {
             System.out.println("number of subnetworks: " + number_of_subnetworks);
         }
 
@@ -295,14 +296,14 @@ public final class CxToCy {
 
             final Long subnetwork_id = subnetwork_ids.size() > 0 ? subnetwork_ids.get(i) : sub_network.getSUID();
 
-            if (DEBUG) {
+            if (Settings.INSTANCE.isDebug()) {
                 System.out.println("subnetwork id: " + subnetwork_id);
             }
 
             _network_suid_to_networkrelations_map.put(sub_network.getSUID(), subnetwork_id);
-            if (DEBUG) {
+            if (Settings.INSTANCE.isDebug()) {
                 System.out.println("added " + sub_network.getSUID() + "->" + subnetwork_id
-                                   + " to network suid to networkrelations map");
+                        + " to network suid to networkrelations map");
             }
 
             if (!subnet_info_present) {
@@ -321,7 +322,7 @@ public final class CxToCy {
                             .getNodes());
                     edges_in_subnet = new HashSet<Long>(_visual_element_collections.getSubNetworkElement(subnetwork_id)
                             .getEdges());
-                    if (DEBUG) {
+                    if (Settings.INSTANCE.isDebug()) {
                         System.out.println("nodes count in subnet: " + nodes_in_subnet.size());
                         System.out.println("edges count in subnet: " + edges_in_subnet.size());
                     }
@@ -348,7 +349,7 @@ public final class CxToCy {
                                         sub_network.getTable(CyNetwork.class, CyNetwork.LOCAL_ATTRS));
             }
             else if (network_attributes_map.containsKey(DEFAULT_SUBNET)) {
-                if (DEBUG) {
+                if (Settings.INSTANCE.isDebug()) {
                     System.out.println("adding network attributes lacking sub-network information");
                 }
                 addNetworkAttributeData(network_attributes_map.get(DEFAULT_SUBNET),
@@ -389,7 +390,7 @@ public final class CxToCy {
                         for (final Long applies_to_node : applies_to_nodes) {
                             _nodes_with_visual_properties.add(_cxid_to_cynode_map.get(applies_to_node));
                             _visual_element_collections.addNodeVisualPropertiesElement(view, _cxid_to_cynode_map
-                                                                                       .get(applies_to_node), vpe);
+                                    .get(applies_to_node), vpe);
                         }
                     }
                     else if (vpe.getPropertiesOf().equals(VisualPropertyType.EDGES.asString())) {
@@ -397,7 +398,7 @@ public final class CxToCy {
                         for (final Long applies_to_edge : applies_to_edges) {
                             _edges_with_visual_properties.add(_cxid_to_cyedge_map.get(applies_to_edge));
                             _visual_element_collections.addEdgeVisualPropertiesElement(view, _cxid_to_cyedge_map
-                                                                                       .get(applies_to_edge), vpe);
+                                    .get(applies_to_edge), vpe);
                         }
                     }
                 }
@@ -427,7 +428,7 @@ public final class CxToCy {
                           final Map<Long, List<CyGroupsElement>> view_to_groups_map,
                           final CySubNetwork sub_network,
                           final Long subnetwork_id) {
-        if (DEBUG) {
+        if (Settings.INSTANCE.isDebug()) {
             System.out.println(view_to_groups_map);
             System.out.println("subnetwork_id" + subnetwork_id);
             System.out.println(_subnet_to_views_map);
@@ -435,7 +436,7 @@ public final class CxToCy {
         if (_subnet_to_views_map.containsKey(subnetwork_id)) {
             final List<Long> vs = _subnet_to_views_map.get(subnetwork_id);
             for (final Long v : vs) {
-                if (DEBUG) {
+                if (Settings.INSTANCE.isDebug()) {
                     System.out.println("______ v=" + v);
                 }
                 final List<CyGroupsElement> g = view_to_groups_map.get(v);
@@ -453,8 +454,8 @@ public final class CxToCy {
                     }
                     final CyNode group_node = sub_network.addNode();
                     final CyGroup gr = group_factory.createGroup(sub_network,
-                                                                 /* group_node, */
-                                                                 nodes_for_group, edges_for_group, true);
+                    /* group_node, */
+                    nodes_for_group, edges_for_group, true);
                 }
             }
         }
@@ -555,7 +556,7 @@ public final class CxToCy {
                                         final Long subnetwork_id,
                                         final boolean subnet_info_present) throws IOException {
         if (elements == null) {
-            if (DEBUG) {
+            if (Settings.INSTANCE.isDebug()) {
                 System.out.println("info: no edge attributes for cx edge " + cx_edge_id);
             }
             return;
@@ -706,7 +707,7 @@ public final class CxToCy {
                                         final Long subnetwork_id,
                                         final boolean subnet_info_present) throws IOException {
         if (elements == null) {
-            if (DEBUG) {
+            if (Settings.INSTANCE.isDebug()) {
                 System.out.println("info: no node attributes for cx node " + cx_node_id);
             }
             return;
@@ -770,7 +771,8 @@ public final class CxToCy {
         if (e != null) {
             final String name = e.getName();
             if (name != null) {
-                if (!(name.equals(CyIdentifiable.SUID))) {
+                if ((!Settings.INSTANCE.isIgnoreSuidColumn() || !(name.equals(CxUtil.SUID)))
+                        && (!Settings.INSTANCE.isIgnoreSelectedColumn() || !(name.equals(CxUtil.SELECTED)))) {
                     // New column creation:
                     if (table.getColumn(name) == null) {
                         final Class<?> data_type = getDataType(e.getDataType());
@@ -927,7 +929,7 @@ public final class CxToCy {
         }
         else {
             throw new IllegalArgumentException("don't know how to deal with type '" + type + "' for value '" + value
-                    + "'");
+                                               + "'");
         }
     }
 

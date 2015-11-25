@@ -1,5 +1,7 @@
 package org.cytoscape.io.internal.cxio;
 
+import org.cytoscape.model.CyIdentifiable;
+
 public final class CxUtil {
 
     public final static String SELECTED                       = "selected";
@@ -12,7 +14,7 @@ public final class CxUtil {
     public final static String PASSTHROUGH_MAPPING            = "PASSTHROUGH_MAPPING_";
     public final static String VM_COL                         = "COL";
     public final static String VM_TYPE                        = "T";
-    static final String        SUID                           = "SUID";
+    public final static String SUID       =             CyIdentifiable.SUID;
     public final static String DISCRETE                       = "DISCRETE";
     public final static String CONTINUOUS                     = "CONTINUOUS";
     public final static String PASSTHROUGH                    = "PASSTHROUGH";

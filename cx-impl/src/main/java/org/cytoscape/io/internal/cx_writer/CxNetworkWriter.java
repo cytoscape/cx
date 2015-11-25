@@ -12,6 +12,7 @@ import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.internal.cxio.Aspect;
 import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxExporter;
+import org.cytoscape.io.internal.cxio.Settings;
 import org.cytoscape.io.internal.cxio.TimingUtil;
 import org.cytoscape.io.write.CyWriter;
 import org.cytoscape.model.CyNetwork;
@@ -36,7 +37,6 @@ public class CxNetworkWriter implements CyWriter {
     private final static Logger        logger                 = LoggerFactory.getLogger(CxNetworkWriter.class);
     private static final boolean       WRITE_SIBLINGS_DEFAULT = true;
     private final static String        ENCODING               = "UTF-8";
-    private static final boolean       DEBUG                  = true;
 
     private final OutputStream         _os;
     private final CyNetwork            _network;
@@ -83,7 +83,7 @@ public class CxNetworkWriter implements CyWriter {
             taskMonitor.setStatusMessage("Exporting current network as CX...");
         }
 
-        if (DEBUG) {
+        if (Settings.INSTANCE.isDebug()) {
             System.out.println("Encoding = " + _encoder.charset());
         }
 
@@ -118,7 +118,6 @@ public class CxNetworkWriter implements CyWriter {
         }
         else if (TimingUtil.WRITE_TO_BYTE_ARRAY_OUTPUTSTREAM) {
             exporter.writeNetwork(_network, _write_siblings, aspects, new ByteArrayOutputStream());
-
         }
         else {
             exporter.writeNetwork(_network, _write_siblings, aspects, _os);

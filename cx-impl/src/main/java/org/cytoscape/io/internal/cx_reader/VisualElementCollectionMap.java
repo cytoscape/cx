@@ -123,12 +123,10 @@ final public class VisualElementCollectionMap {
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         for (final Map.Entry<Long, VisualElementCollection> entry : _data.entrySet()) {
-            sb.append("KEY: ");
+            sb.append("key: ");
             sb.append(entry.getKey());
             sb.append("\n");
-
-            sb.append("VALUES: ");
-
+            sb.append("value: ");
             sb.append("\n");
             sb.append(entry.getValue().toString());
             sb.append("\n");
@@ -136,6 +134,10 @@ final public class VisualElementCollectionMap {
         }
         return sb.toString();
 
+    }
+    
+    public final boolean isEmpty() {
+        return _data.isEmpty();
     }
 
 }
