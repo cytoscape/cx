@@ -53,7 +53,10 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
     @Override
     public CyWriter createWriter(final OutputStream os, final CyNetwork network) {
         if ((_visual_mapping_manager != null) && (_application_manager != null)) {
-            final VisualLexicon lexicon = _application_manager.getCurrentRenderingEngine().getVisualLexicon();
+            VisualLexicon lexicon = null;
+            if (_application_manager.getCurrentRenderingEngine() != null) {
+                lexicon = _application_manager.getCurrentRenderingEngine().getVisualLexicon();
+            }
 
             return new CxNetworkWriter(os,
                                        network,
