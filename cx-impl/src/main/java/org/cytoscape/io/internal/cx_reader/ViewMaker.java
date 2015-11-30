@@ -44,18 +44,23 @@ public final class ViewMaker {
                                                final CxToCy cx_to_cy,
                                                final String network_collection_name,
                                                final CyNetworkViewFactory networkview_factory,
+                                               final CyNetworkViewFactory null_networkview_factory,
                                                final RenderingEngineManager rendering_engine_manager,
                                                final VisualMappingManager visual_mapping_manager,
                                                final VisualStyleFactory visual_style_factory,
                                                final VisualMappingFunctionFactory vmf_factory_c,
                                                final VisualMappingFunctionFactory vmf_factory_d,
                                                final VisualMappingFunctionFactory vmf_factory_p) throws IOException {
-        final CyNetworkView view = networkview_factory.createNetworkView(network);
+       
+      
         final VisualElementCollectionMap collection = cx_to_cy.getVisualElementCollectionMap();
+        final CyNetworkView view = networkview_factory.createNetworkView(network);
         if ((collection == null) || collection.isEmpty()) {
             return view;
+           
         }
 
+       
         final Long network_id = cx_to_cy.getNetworkSuidToNetworkRelationsMap().get(network.getSUID());
 
         if (DEBUG) {
@@ -73,7 +78,8 @@ public final class ViewMaker {
             if (DEBUG) {
                 System.out.println("no view for sub-network " + network_id + " found");
             }
-            return view;
+           // return view;
+            return null_networkview_factory.createNetworkView(network);
         }
 
         final Long subnetwork_id = cx_to_cy.getSubNetworkToViewsMap().get(network_id).get(0);
@@ -195,7 +201,7 @@ public final class ViewMaker {
         if (have_default_visual_properties) {
             visual_mapping_manager.addVisualStyle(new_visual_style);
             new_visual_style.apply(view);
-            visual_mapping_manager.setCurrentVisualStyle(new_visual_style);
+            //visual_mapping_manager.setCurrentVisualStyle(new_visual_style);
             visual_mapping_manager.setVisualStyle(new_visual_style, view);
         }
 
