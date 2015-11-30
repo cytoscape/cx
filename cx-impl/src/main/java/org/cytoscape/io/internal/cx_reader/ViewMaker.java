@@ -44,7 +44,6 @@ public final class ViewMaker {
                                                final CxToCy cx_to_cy,
                                                final String network_collection_name,
                                                final CyNetworkViewFactory networkview_factory,
-                                               final CyNetworkViewFactory null_networkview_factory,
                                                final RenderingEngineManager rendering_engine_manager,
                                                final VisualMappingManager visual_mapping_manager,
                                                final VisualStyleFactory visual_style_factory,
@@ -78,8 +77,7 @@ public final class ViewMaker {
             if (DEBUG) {
                 System.out.println("no view for sub-network " + network_id + " found");
             }
-           // return view;
-            return null_networkview_factory.createNetworkView(network);
+            return view;
         }
 
         final Long subnetwork_id = cx_to_cy.getSubNetworkToViewsMap().get(network_id).get(0);
