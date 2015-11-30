@@ -199,7 +199,7 @@ public final class ViewMaker {
         if (have_default_visual_properties) {
             visual_mapping_manager.addVisualStyle(new_visual_style);
             new_visual_style.apply(view);
-            //visual_mapping_manager.setCurrentVisualStyle(new_visual_style);
+            visual_mapping_manager.setCurrentVisualStyle(new_visual_style);
             visual_mapping_manager.setVisualStyle(new_visual_style, view);
         }
 
