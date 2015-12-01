@@ -36,7 +36,7 @@ import org.cytoscape.view.vizmap.mappings.PassthroughMapping;
 public final class ViewMaker {
 
     public static final Pattern  DIRECT_NET_PROPS_PATTERN = Pattern
-                                                                  .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
+            .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
 
     private static final boolean DEBUG                    = true;
 
@@ -50,16 +50,14 @@ public final class ViewMaker {
                                                final VisualMappingFunctionFactory vmf_factory_c,
                                                final VisualMappingFunctionFactory vmf_factory_d,
                                                final VisualMappingFunctionFactory vmf_factory_p) throws IOException {
-       
-      
+
         final VisualElementCollectionMap collection = cx_to_cy.getVisualElementCollectionMap();
         final CyNetworkView view = networkview_factory.createNetworkView(network);
         if ((collection == null) || collection.isEmpty()) {
             return view;
-           
+
         }
 
-       
         final Long network_id = cx_to_cy.getNetworkSuidToNetworkRelationsMap().get(network.getSUID());
 
         if (DEBUG) {
@@ -87,7 +85,7 @@ public final class ViewMaker {
 
         final boolean have_default_visual_properties = ((collection.getNetworkVisualPropertiesElement(subnetwork_id) != null)
                 || (collection.getNodesDefaultVisualPropertiesElement(subnetwork_id) != null) || (collection
-                .getEdgesDefaultVisualPropertiesElement(subnetwork_id) != null));
+                        .getEdgesDefaultVisualPropertiesElement(subnetwork_id) != null));
 
         VisualStyle new_visual_style = null;
         if (have_default_visual_properties) {
@@ -109,13 +107,13 @@ public final class ViewMaker {
 
         if (collection.getNetworkVisualPropertiesElement(subnetwork_id) != null) {
             ViewMaker
-                    .setDefaultVisualPropertiesAndMappings(lexicon,
-                                                           collection.getNetworkVisualPropertiesElement(subnetwork_id),
-                                                           new_visual_style,
-                                                           CyNetwork.class,
-                                                           vmf_factory_c,
-                                                           vmf_factory_d,
-                                                           vmf_factory_p);
+            .setDefaultVisualPropertiesAndMappings(lexicon,
+                                                   collection.getNetworkVisualPropertiesElement(subnetwork_id),
+                                                   new_visual_style,
+                                                   CyNetwork.class,
+                                                   vmf_factory_c,
+                                                   vmf_factory_d,
+                                                   vmf_factory_p);
         }
         else {
             if (DEBUG) {
@@ -125,14 +123,14 @@ public final class ViewMaker {
 
         if (collection.getNodesDefaultVisualPropertiesElement(subnetwork_id) != null) {
             ViewMaker
-                    .setDefaultVisualPropertiesAndMappings(lexicon,
-                                                           collection
-                                                                   .getNodesDefaultVisualPropertiesElement(subnetwork_id),
-                                                           new_visual_style,
-                                                           CyNode.class,
-                                                           vmf_factory_c,
-                                                           vmf_factory_d,
-                                                           vmf_factory_p);
+            .setDefaultVisualPropertiesAndMappings(lexicon,
+                                                   collection
+                                                   .getNodesDefaultVisualPropertiesElement(subnetwork_id),
+                                                   new_visual_style,
+                                                   CyNode.class,
+                                                   vmf_factory_c,
+                                                   vmf_factory_d,
+                                                   vmf_factory_p);
         }
         else {
             if (DEBUG) {
@@ -142,14 +140,14 @@ public final class ViewMaker {
 
         if (collection.getEdgesDefaultVisualPropertiesElement(subnetwork_id) != null) {
             ViewMaker
-                    .setDefaultVisualPropertiesAndMappings(lexicon,
-                                                           collection
-                                                                   .getEdgesDefaultVisualPropertiesElement(subnetwork_id),
-                                                           new_visual_style,
-                                                           CyEdge.class,
-                                                           vmf_factory_c,
-                                                           vmf_factory_d,
-                                                           vmf_factory_p);
+            .setDefaultVisualPropertiesAndMappings(lexicon,
+                                                   collection
+                                                   .getEdgesDefaultVisualPropertiesElement(subnetwork_id),
+                                                   new_visual_style,
+                                                   CyEdge.class,
+                                                   vmf_factory_c,
+                                                   vmf_factory_d,
+                                                   vmf_factory_p);
         }
         else {
             if (DEBUG) {
@@ -275,7 +273,7 @@ public final class ViewMaker {
                     }
                     else {
                         System.out.println("could not parse serializable string from discrete mapping value '" + v
-                                           + "'");
+                                + "'");
                     }
                 }
                 else {
@@ -314,7 +312,7 @@ public final class ViewMaker {
             if (network_collection_name.toLowerCase().endsWith(".cx")) {
                 viz_style_title = String.format("%s-Style", network_collection_name.substring(0,
                                                                                               network_collection_name
-                                                                                              .length() - 3));
+                                                                                                      .length() - 3));
             }
             else {
                 viz_style_title = String.format("%s-Style", network_collection_name);
@@ -355,10 +353,11 @@ public final class ViewMaker {
                                                                    final VisualMappingFunctionFactory vmf_factory_c,
                                                                    final VisualMappingFunctionFactory vmf_factory_d,
                                                                    final VisualMappingFunctionFactory vmf_factory_p)
-            throws IOException {
+                                                                           throws IOException {
 
         final SortedMap<String, String> props = cy_visual_properties_element.getProperties();
         final SortedMap<String, Mapping> maps = cy_visual_properties_element.getMappings();
+        final SortedMap<String, String> dependencies = cy_visual_properties_element.getDependencies();
 
         if (props != null) {
             for (final Map.Entry<String, String> entry : props.entrySet()) {
@@ -407,15 +406,17 @@ public final class ViewMaker {
                     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ remove me
                 }
                 else {
+                    // vvvvvvvvvvvvvvvvvvvvvvvvvvv remove me
                     if (key.equals(CxUtil.ARROW_COLOR_MATCHES_EDGE)
                             || key.equals(CxUtil.NODE_CUSTOM_GRAPHICS_SIZE_SYNC) || key.equals(CxUtil.NODE_SIZE_LOCKED)) {
                         for (final VisualPropertyDependency<?> d : style.getAllVisualPropertyDependencies()) {
                             if (d.getIdString().equals(key)) {
                                 d.setDependency(Boolean.parseBoolean(entry.getValue()));
-
                             }
                         }
                     }
+                    // TODO
+                    // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ remove me
                     else {
                         final VisualProperty vp = lexicon.lookup(my_class, key);
                         if (vp != null) {
@@ -425,7 +426,7 @@ public final class ViewMaker {
                             }
                             catch (final Exception e) {
                                 throw new IOException("could not parse serializable string from '" + entry.getValue()
-                                                      + "' for '" + key + "'");
+                                        + "' for '" + key + "'");
                             }
                             if (parsed_value != null) {
                                 style.setDefaultValue(vp, parsed_value);
@@ -462,6 +463,24 @@ public final class ViewMaker {
                 }
             }
         }
+        if (dependencies != null) {
+            for (final Entry<String, String> entry : dependencies.entrySet()) {
+                final String k = entry.getKey();
+                final String v = entry.getValue();
+                if ((k != null) && (v != null)) {
+                    for (final VisualPropertyDependency<?> d : style.getAllVisualPropertyDependencies()) {
+                        if (d.getIdString().equals(k)) {
+                            try {
+                                d.setDependency(Boolean.parseBoolean(v));
+                            }
+                            catch (final Exception e) {
+                                throw new IOException("could not parse boolean from '" + v + "'");
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public final static void setEdgeVisualProperties(final CyNetworkView view,
@@ -486,7 +505,7 @@ public final class ViewMaker {
                 else {
                     if (DEBUG) {
                         System.out.println("edges visual properties element for edge " + edge.getSUID()
-                                           + " in sub-network " + subnetwork_id + " is null");
+                                + " in sub-network " + subnetwork_id + " is null");
                     }
                 }
             }
@@ -515,7 +534,7 @@ public final class ViewMaker {
                 else {
                     if (DEBUG) {
                         System.out.println("nodes visual properties element for node " + node.getSUID()
-                                           + " in sub-network " + subnetwork_id + " is null");
+                                + " in sub-network " + subnetwork_id + " is null");
                     }
                 }
             }
