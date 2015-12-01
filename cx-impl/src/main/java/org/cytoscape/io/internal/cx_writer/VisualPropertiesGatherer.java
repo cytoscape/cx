@@ -191,7 +191,7 @@ public final class VisualPropertiesGatherer {
                 }
                 catch (final IOException e) {
                     System.out.println("WARNING: problem with mapping/column '" + col
-                            + "': column not present, ignoring corresponding passthrough mapping");
+                                       + "': column not present, ignoring corresponding passthrough mapping");
                     return;
                 }
                 final StringBuilder sb = new StringBuilder();
@@ -213,7 +213,7 @@ public final class VisualPropertiesGatherer {
                 }
                 catch (final IOException e) {
                     System.out.println("WARNING: problem with mapping/column '" + col
-                            + "': column not present, ignoring corresponding discrete mapping");
+                                       + "': column not present, ignoring corresponding discrete mapping");
                     return;
                 }
                 final Map<?, ?> map = dm.getAll();
@@ -259,7 +259,7 @@ public final class VisualPropertiesGatherer {
                 }
                 catch (final IOException e) {
                     System.out.println("WARNING: problem with mapping/column '" + col
-                            + "': column not present, ignoring corresponding continuous mapping");
+                                       + "': column not present, ignoring corresponding continuous mapping");
                     return;
                 }
                 final StringBuilder sb = new StringBuilder();
@@ -386,7 +386,7 @@ public final class VisualPropertiesGatherer {
                                             final CyVisualPropertiesElement vpe) {
         for (final VisualPropertyDependency<?> d : style.getAllVisualPropertyDependencies()) {
             if (d.getIdString().equals(id_string)) {
-                vpe.putProperty(id_string, String.valueOf(d.isDependencyEnabled()));
+                vpe.putDependency(id_string, String.valueOf(d.isDependencyEnabled()));
                 return;
             }
         }
@@ -443,7 +443,7 @@ public final class VisualPropertiesGatherer {
             }
             if (col_type != null) {
                 System.out.println("mapping type is '" + attr_class + "' will use (from table column) '" + col_type
-                                   + "' instead");
+                        + "' instead");
                 if ((col_type == Float.class) || (col_type == Double.class)) {
                     return "double";
                 }
@@ -455,7 +455,7 @@ public final class VisualPropertiesGatherer {
                 }
                 else {
                     throw new IllegalArgumentException("don't know how to deal with type '" + col_type
-                                                       + "' (from table column)");
+                            + "' (from table column)");
                 }
             }
             else {
