@@ -6,111 +6,139 @@
   "metaData" : [ {
     "consistencyGroup" : 1,
     "elementCount" : 2,
-    "idCounter" : 2641,
+    "idCounter" : 381,
     "name" : "nodes",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 0,
-    "idCounter" : 2641,
+    "idCounter" : 381,
     "name" : "edges",
+    "properties" : [ ],
     "version" : "1.0"
   } ]
 }, {
   "nodes" : [ {
-    "@id" : 2639,
-    "n" : "Node 2"
-  }, {
-    "@id" : 2637,
+    "@id" : 376,
     "n" : "Node 1"
+  }, {
+    "@id" : 375,
+    "n" : "Node 2"
+  } ]
+}, {
+  "networkAttributes" : [ {
+    "n" : "name",
+    "v" : "mapping_types.cx"
+  }, {
+    "s" : 365,
+    "n" : "name",
+    "v" : "Network"
+  }, {
+    "s" : 365,
+    "n" : "selected",
+    "v" : "true",
+    "d" : "boolean"
   } ]
 }, {
   "nodeAttributes" : [ {
-    "s" : 2625,
-    "po" : 2639,
-    "n" : "str",
-    "v" : "b"
-  }, {
-    "s" : 2625,
-    "po" : 2639,
-    "n" : "bool",
-    "v" : "true",
-    "d" : "boolean"
-  }, {
-    "s" : 2625,
-    "po" : 2639,
-    "n" : "name",
-    "v" : "Node 2"
-  }, {
-    "s" : 2625,
-    "po" : 2639,
-    "n" : "i",
-    "v" : "2",
-    "d" : "integer"
-  }, {
-    "s" : 2625,
-    "po" : 2639,
-    "n" : "fp",
-    "v" : "1.2",
-    "d" : "double"
-  }, {
-    "s" : 2625,
-    "po" : 2639,
-    "n" : "l",
-    "v" : "2222222",
-    "d" : "long"
-  }, {
-    "s" : 2625,
-    "po" : 2637,
+    "s" : 365,
+    "po" : 376,
     "n" : "str",
     "v" : "a"
   }, {
-    "s" : 2625,
-    "po" : 2637,
+    "s" : 365,
+    "po" : 376,
     "n" : "bool",
     "v" : "false",
     "d" : "boolean"
   }, {
-    "s" : 2625,
-    "po" : 2637,
+    "s" : 365,
+    "po" : 376,
     "n" : "name",
     "v" : "Node 1"
   }, {
-    "s" : 2625,
-    "po" : 2637,
+    "s" : 365,
+    "po" : 376,
     "n" : "i",
     "v" : "1",
     "d" : "integer"
   }, {
-    "s" : 2625,
-    "po" : 2637,
+    "s" : 365,
+    "po" : 376,
     "n" : "fp",
     "v" : "1.4",
     "d" : "double"
   }, {
-    "s" : 2625,
-    "po" : 2637,
+    "s" : 365,
+    "po" : 376,
     "n" : "l",
     "v" : "1111111",
     "d" : "long"
+  }, {
+    "s" : 365,
+    "po" : 376,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 365,
+    "po" : 375,
+    "n" : "str",
+    "v" : "b"
+  }, {
+    "s" : 365,
+    "po" : 375,
+    "n" : "bool",
+    "v" : "true",
+    "d" : "boolean"
+  }, {
+    "s" : 365,
+    "po" : 375,
+    "n" : "name",
+    "v" : "Node 2"
+  }, {
+    "s" : 365,
+    "po" : 375,
+    "n" : "i",
+    "v" : "2",
+    "d" : "integer"
+  }, {
+    "s" : 365,
+    "po" : 375,
+    "n" : "fp",
+    "v" : "1.2",
+    "d" : "double"
+  }, {
+    "s" : 365,
+    "po" : 375,
+    "n" : "l",
+    "v" : "2222222",
+    "d" : "long"
+  }, {
+    "s" : 365,
+    "po" : 375,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
   } ]
 }, {
   "cartesianLayout" : [ {
-    "node" : 2639,
-    "view" : 2635,
-    "x" : 52.0,
-    "y" : -23.0
-  }, {
-    "node" : 2637,
-    "view" : 2635,
+    "node" : 376,
+    "view" : 377,
     "x" : -121.0,
     "y" : 25.0
+  }, {
+    "node" : 375,
+    "view" : 377,
+    "x" : 52.0,
+    "y" : -23.0
   } ]
 }, {
   "visualProperties" : [ {
     "properties_of" : "network",
-    "applies_to" : 2635,
-    "view" : 2635,
+    "applies_to" : 377,
+    "view" : 377,
     "properties" : {
       "NETWORK_BACKGROUND_PAINT" : "#FFFFFF",
       "NETWORK_CENTER_X_LOCATION" : "0.0",
@@ -126,8 +154,8 @@
     }
   }, {
     "properties_of" : "nodes:default",
-    "applies_to" : 2635,
-    "view" : 2635,
+    "applies_to" : 377,
+    "view" : 377,
     "properties" : {
       "COMPOUND_NODE_PADDING" : "10.0",
       "COMPOUND_NODE_SHAPE" : "ROUND_RECTANGLE",
@@ -193,6 +221,10 @@
       "NODE_Y_LOCATION" : "0.0",
       "NODE_Z_LOCATION" : "0.0"
     },
+    "dependencies" : {
+      "nodeCustomGraphicsSizeSync" : "true",
+      "nodeSizeLocked" : "false"
+    },
     "mappings" : {
       "NODE_BORDER_PAINT" : {
         "type" : "DISCRETE",
@@ -212,13 +244,13 @@
       },
       "NODE_WIDTH" : {
         "type" : "CONTINUOUS",
-        "definition" : "COL=l,T=long,L=0=1.0,E=0=10.0,G=0=10.0,OV=0=1111111.0,L=1=30.0,E=1=30.0,G=1=1.0,OV=1=2222222.0"
+        "definition" : "COL=l,T=long,L=0=1.0,E=0=10.0,G=0=10.0,OV=0=1111111,L=1=30.0,E=1=30.0,G=1=1.0,OV=1=2222222"
       }
     }
   }, {
     "properties_of" : "edges:default",
-    "applies_to" : 2635,
-    "view" : 2635,
+    "applies_to" : 377,
+    "view" : 377,
     "properties" : {
       "EDGE_CURVED" : "true",
       "EDGE_LABEL_COLOR" : "#000000",
@@ -242,81 +274,94 @@
       "EDGE_UNSELECTED_PAINT" : "#404040",
       "EDGE_VISIBLE" : "true",
       "EDGE_WIDTH" : "2.0"
+    },
+    "dependencies" : {
+      "arrowColorMatchesEdge" : "false"
     }
   } ]
 }, {
   "subNetworks" : [ {
-    "@id" : 2625,
-    "nodes" : [ 2639, 2637 ],
+    "@id" : 365,
+    "nodes" : [ 376, 375 ],
     "edges" : [ ]
   } ]
 }, {
   "cyViews" : [ {
-    "@id" : 2635,
-    "s" : 2625
+    "@id" : 377,
+    "s" : 365
   } ]
 }, {
   "networkRelations" : [ {
-    "p" : 2625,
-    "c" : 2635,
+    "p" : 365,
+    "c" : 377,
     "r" : "view",
     "name" : "Network view"
   }, {
-    "p" : 2609,
-    "c" : 2625,
+    "p" : 349,
+    "c" : 365,
     "r" : "subnetwork",
     "name" : "Network"
   } ]
 }, {
   "metaData" : [ {
     "consistencyGroup" : 1,
-    "elementCount" : 0,
+    "elementCount" : 3,
     "name" : "networkAttributes",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 0,
     "name" : "hiddenAttributes",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
-    "elementCount" : 12,
+    "elementCount" : 14,
     "name" : "nodeAttributes",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 0,
     "name" : "edgeAttributes",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 2,
     "name" : "cartesianLayout",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 3,
     "name" : "visualProperties",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 1,
     "name" : "subNetworks",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 1,
     "name" : "cyViews",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 0,
     "name" : "cyGroups",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 2,
     "name" : "networkRelations",
+    "properties" : [ ],
     "version" : "1.0"
   } ]
 }, {

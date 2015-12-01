@@ -6,356 +6,438 @@
   "metaData" : [ {
     "consistencyGroup" : 1,
     "elementCount" : 6,
-    "idCounter" : 86,
+    "idCounter" : 432,
     "name" : "nodes",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 5,
-    "idCounter" : 86,
+    "idCounter" : 432,
     "name" : "edges",
+    "properties" : [ ],
     "version" : "1.0"
   } ]
 }, {
   "nodes" : [ {
-    "@id" : 67,
-    "n" : "Node 1"
+    "@id" : 413,
+    "n" : "Node 6"
   }, {
-    "@id" : 66,
-    "n" : "Node 2"
-  }, {
-    "@id" : 65,
-    "n" : "Node 3"
-  }, {
-    "@id" : 64,
-    "n" : "Node 4"
-  }, {
-    "@id" : 63,
+    "@id" : 412,
     "n" : "Node 5"
   }, {
-    "@id" : 62,
-    "n" : "Node 6"
+    "@id" : 411,
+    "n" : "Node 4"
+  }, {
+    "@id" : 410,
+    "n" : "Node 3"
+  }, {
+    "@id" : 409,
+    "n" : "Node 2"
+  }, {
+    "@id" : 408,
+    "n" : "Node 1"
   } ]
 }, {
   "edges" : [ {
-    "@id" : 72,
-    "s" : 67,
-    "t" : 64,
+    "@id" : 418,
+    "s" : 410,
+    "t" : 412,
     "i" : "interacts with"
   }, {
-    "@id" : 71,
-    "s" : 66,
-    "t" : 65,
+    "@id" : 417,
+    "s" : 409,
+    "t" : 411,
     "i" : "interacts with"
   }, {
-    "@id" : 70,
-    "s" : 66,
-    "t" : 63,
+    "@id" : 416,
+    "s" : 409,
+    "t" : 412,
     "i" : "interacts with"
   }, {
-    "@id" : 69,
-    "s" : 66,
-    "t" : 64,
+    "@id" : 415,
+    "s" : 409,
+    "t" : 410,
     "i" : "interacts with"
   }, {
-    "@id" : 68,
-    "s" : 65,
-    "t" : 63,
+    "@id" : 414,
+    "s" : 408,
+    "t" : 411,
     "i" : "interacts with"
   } ]
 }, {
+  "networkAttributes" : [ {
+    "n" : "name",
+    "v" : "various_mappings_gradients2.cx"
+  }, {
+    "s" : 398,
+    "n" : "name",
+    "v" : "NETWORK X"
+  }, {
+    "s" : 398,
+    "n" : "selected",
+    "v" : "true",
+    "d" : "boolean"
+  } ]
+}, {
   "nodeAttributes" : [ {
-    "s" : 52,
-    "po" : 67,
+    "s" : 398,
+    "po" : 413,
+    "n" : "name",
+    "v" : "Node 6"
+  }, {
+    "s" : 398,
+    "po" : 413,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 398,
+    "po" : 412,
     "n" : "Shape",
     "v" : "o"
   }, {
-    "s" : 52,
-    "po" : 67,
-    "n" : "S",
-    "v" : [ "1" ],
-    "d" : "list_of_long"
-  }, {
-    "s" : 52,
-    "po" : 67,
-    "n" : "Node Name",
-    "v" : "A"
-  }, {
-    "s" : 52,
-    "po" : 67,
-    "n" : "name",
-    "v" : "Node 1"
-  }, {
-    "s" : 52,
-    "po" : 67,
-    "n" : "Exp",
-    "v" : "1.2",
-    "d" : "double"
-  }, {
-    "s" : 52,
-    "po" : 66,
-    "n" : "Shape",
-    "v" : "e"
-  }, {
-    "s" : 52,
-    "po" : 66,
-    "n" : "S",
-    "v" : [ "1", "2", "3" ],
-    "d" : "list_of_long"
-  }, {
-    "s" : 52,
-    "po" : 66,
-    "n" : "Node Name",
-    "v" : "B"
-  }, {
-    "s" : 52,
-    "po" : 66,
-    "n" : "name",
-    "v" : "Node 2"
-  }, {
-    "s" : 52,
-    "po" : 66,
-    "n" : "Exp",
-    "v" : "2.0",
-    "d" : "double"
-  }, {
-    "s" : 52,
-    "po" : 65,
-    "n" : "Shape",
-    "v" : "o"
-  }, {
-    "s" : 52,
-    "po" : 65,
-    "n" : "Node Name",
-    "v" : "C"
-  }, {
-    "s" : 52,
-    "po" : 65,
-    "n" : "name",
-    "v" : "Node 3"
-  }, {
-    "s" : 52,
-    "po" : 65,
-    "n" : "Exp",
-    "v" : "1.4",
-    "d" : "double"
-  }, {
-    "s" : 52,
-    "po" : 64,
-    "n" : "Shape",
-    "v" : "e"
-  }, {
-    "s" : 52,
-    "po" : 64,
-    "n" : "Node Name",
-    "v" : "D"
-  }, {
-    "s" : 52,
-    "po" : 64,
-    "n" : "name",
-    "v" : "Node 4"
-  }, {
-    "s" : 52,
-    "po" : 64,
-    "n" : "Exp",
-    "v" : "1.753",
-    "d" : "double"
-  }, {
-    "s" : 52,
-    "po" : 63,
-    "n" : "Shape",
-    "v" : "o"
-  }, {
-    "s" : 52,
-    "po" : 63,
+    "s" : 398,
+    "po" : 412,
     "n" : "Node Name",
     "v" : "E"
   }, {
-    "s" : 52,
-    "po" : 63,
+    "s" : 398,
+    "po" : 412,
     "n" : "name",
     "v" : "Node 5"
   }, {
-    "s" : 52,
-    "po" : 63,
+    "s" : 398,
+    "po" : 412,
     "n" : "Exp",
     "v" : "1.5",
     "d" : "double"
   }, {
-    "s" : 52,
-    "po" : 62,
+    "s" : 398,
+    "po" : 412,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 398,
+    "po" : 411,
+    "n" : "Shape",
+    "v" : "e"
+  }, {
+    "s" : 398,
+    "po" : 411,
+    "n" : "Node Name",
+    "v" : "D"
+  }, {
+    "s" : 398,
+    "po" : 411,
     "n" : "name",
-    "v" : "Node 6"
+    "v" : "Node 4"
+  }, {
+    "s" : 398,
+    "po" : 411,
+    "n" : "Exp",
+    "v" : "1.753",
+    "d" : "double"
+  }, {
+    "s" : 398,
+    "po" : 411,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 398,
+    "po" : 410,
+    "n" : "Shape",
+    "v" : "o"
+  }, {
+    "s" : 398,
+    "po" : 410,
+    "n" : "Node Name",
+    "v" : "C"
+  }, {
+    "s" : 398,
+    "po" : 410,
+    "n" : "name",
+    "v" : "Node 3"
+  }, {
+    "s" : 398,
+    "po" : 410,
+    "n" : "Exp",
+    "v" : "1.4",
+    "d" : "double"
+  }, {
+    "s" : 398,
+    "po" : 410,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 398,
+    "po" : 409,
+    "n" : "Shape",
+    "v" : "e"
+  }, {
+    "s" : 398,
+    "po" : 409,
+    "n" : "S",
+    "v" : [ "1", "2", "3" ],
+    "d" : "list_of_long"
+  }, {
+    "s" : 398,
+    "po" : 409,
+    "n" : "Node Name",
+    "v" : "B"
+  }, {
+    "s" : 398,
+    "po" : 409,
+    "n" : "name",
+    "v" : "Node 2"
+  }, {
+    "s" : 398,
+    "po" : 409,
+    "n" : "Exp",
+    "v" : "2.0",
+    "d" : "double"
+  }, {
+    "s" : 398,
+    "po" : 409,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 398,
+    "po" : 408,
+    "n" : "Shape",
+    "v" : "o"
+  }, {
+    "s" : 398,
+    "po" : 408,
+    "n" : "S",
+    "v" : [ "1" ],
+    "d" : "list_of_long"
+  }, {
+    "s" : 398,
+    "po" : 408,
+    "n" : "Node Name",
+    "v" : "A"
+  }, {
+    "s" : 398,
+    "po" : 408,
+    "n" : "name",
+    "v" : "Node 1"
+  }, {
+    "s" : 398,
+    "po" : 408,
+    "n" : "Exp",
+    "v" : "1.2",
+    "d" : "double"
+  }, {
+    "s" : 398,
+    "po" : 408,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
   } ]
 }, {
   "edgeAttributes" : [ {
-    "s" : 52,
-    "po" : 72,
+    "s" : 398,
+    "po" : 418,
     "n" : "shared name",
-    "v" : "Node 1 (interacts with) Node 4"
+    "v" : "Node 3 (interacts with) Node 5"
   }, {
-    "s" : 52,
-    "po" : 72,
+    "s" : 398,
+    "po" : 418,
     "n" : "Label",
-    "v" : "e"
+    "v" : "c"
   }, {
-    "s" : 52,
-    "po" : 72,
+    "s" : 398,
+    "po" : 418,
     "n" : "name",
-    "v" : "Node 1 (interacts with) Node 4"
+    "v" : "Node 3 (interacts with) Node 5"
   }, {
-    "s" : 52,
-    "po" : 72,
+    "s" : 398,
+    "po" : 418,
     "n" : "interaction",
     "v" : "interacts with"
   }, {
-    "s" : 52,
-    "po" : 72,
+    "s" : 398,
+    "po" : 418,
     "n" : "L",
     "v" : "2",
     "d" : "integer"
   }, {
-    "s" : 52,
-    "po" : 71,
-    "n" : "shared name",
-    "v" : "Node 2 (interacts with) Node 3"
+    "s" : 398,
+    "po" : 418,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
   }, {
-    "s" : 52,
-    "po" : 71,
-    "n" : "Label",
-    "v" : "a"
-  }, {
-    "s" : 52,
-    "po" : 71,
-    "n" : "name",
-    "v" : "Node 2 (interacts with) Node 3"
-  }, {
-    "s" : 52,
-    "po" : 71,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 52,
-    "po" : 71,
-    "n" : "L",
-    "v" : "1",
-    "d" : "integer"
-  }, {
-    "s" : 52,
-    "po" : 70,
-    "n" : "shared name",
-    "v" : "Node 2 (interacts with) Node 5"
-  }, {
-    "s" : 52,
-    "po" : 70,
-    "n" : "Label",
-    "v" : "b"
-  }, {
-    "s" : 52,
-    "po" : 70,
-    "n" : "name",
-    "v" : "Node 2 (interacts with) Node 5"
-  }, {
-    "s" : 52,
-    "po" : 70,
-    "n" : "interaction",
-    "v" : "interacts with"
-  }, {
-    "s" : 52,
-    "po" : 70,
-    "n" : "L",
-    "v" : "2",
-    "d" : "integer"
-  }, {
-    "s" : 52,
-    "po" : 69,
+    "s" : 398,
+    "po" : 417,
     "n" : "shared name",
     "v" : "Node 2 (interacts with) Node 4"
   }, {
-    "s" : 52,
-    "po" : 69,
+    "s" : 398,
+    "po" : 417,
     "n" : "Label",
     "v" : "d"
   }, {
-    "s" : 52,
-    "po" : 69,
+    "s" : 398,
+    "po" : 417,
     "n" : "name",
     "v" : "Node 2 (interacts with) Node 4"
   }, {
-    "s" : 52,
-    "po" : 69,
+    "s" : 398,
+    "po" : 417,
     "n" : "interaction",
     "v" : "interacts with"
   }, {
-    "s" : 52,
-    "po" : 69,
+    "s" : 398,
+    "po" : 417,
     "n" : "L",
     "v" : "3",
     "d" : "integer"
   }, {
-    "s" : 52,
-    "po" : 68,
+    "s" : 398,
+    "po" : 417,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 398,
+    "po" : 416,
     "n" : "shared name",
-    "v" : "Node 3 (interacts with) Node 5"
+    "v" : "Node 2 (interacts with) Node 5"
   }, {
-    "s" : 52,
-    "po" : 68,
+    "s" : 398,
+    "po" : 416,
     "n" : "Label",
-    "v" : "c"
+    "v" : "b"
   }, {
-    "s" : 52,
-    "po" : 68,
+    "s" : 398,
+    "po" : 416,
     "n" : "name",
-    "v" : "Node 3 (interacts with) Node 5"
+    "v" : "Node 2 (interacts with) Node 5"
   }, {
-    "s" : 52,
-    "po" : 68,
+    "s" : 398,
+    "po" : 416,
     "n" : "interaction",
     "v" : "interacts with"
   }, {
-    "s" : 52,
-    "po" : 68,
+    "s" : 398,
+    "po" : 416,
     "n" : "L",
     "v" : "2",
     "d" : "integer"
+  }, {
+    "s" : 398,
+    "po" : 416,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 398,
+    "po" : 415,
+    "n" : "shared name",
+    "v" : "Node 2 (interacts with) Node 3"
+  }, {
+    "s" : 398,
+    "po" : 415,
+    "n" : "Label",
+    "v" : "a"
+  }, {
+    "s" : 398,
+    "po" : 415,
+    "n" : "name",
+    "v" : "Node 2 (interacts with) Node 3"
+  }, {
+    "s" : 398,
+    "po" : 415,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 398,
+    "po" : 415,
+    "n" : "L",
+    "v" : "1",
+    "d" : "integer"
+  }, {
+    "s" : 398,
+    "po" : 415,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 398,
+    "po" : 414,
+    "n" : "shared name",
+    "v" : "Node 1 (interacts with) Node 4"
+  }, {
+    "s" : 398,
+    "po" : 414,
+    "n" : "Label",
+    "v" : "e"
+  }, {
+    "s" : 398,
+    "po" : 414,
+    "n" : "name",
+    "v" : "Node 1 (interacts with) Node 4"
+  }, {
+    "s" : 398,
+    "po" : 414,
+    "n" : "interaction",
+    "v" : "interacts with"
+  }, {
+    "s" : 398,
+    "po" : 414,
+    "n" : "L",
+    "v" : "2",
+    "d" : "integer"
+  }, {
+    "s" : 398,
+    "po" : 414,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
   } ]
 }, {
   "cartesianLayout" : [ {
-    "node" : 67,
-    "view" : 73,
-    "x" : 105.0,
-    "y" : 158.0
+    "node" : 413,
+    "view" : 419,
+    "x" : -190.0,
+    "y" : 94.0
   }, {
-    "node" : 66,
-    "view" : 73,
-    "x" : -32.0,
-    "y" : -126.0
-  }, {
-    "node" : 65,
-    "view" : 73,
-    "x" : -173.0,
-    "y" : -46.0
-  }, {
-    "node" : 64,
-    "view" : 73,
-    "x" : 104.0,
-    "y" : -38.0
-  }, {
-    "node" : 63,
-    "view" : 73,
+    "node" : 412,
+    "view" : 419,
     "x" : -34.0,
     "y" : 53.0
   }, {
-    "node" : 62,
-    "view" : 73,
-    "x" : -190.0,
-    "y" : 94.0
+    "node" : 411,
+    "view" : 419,
+    "x" : 104.0,
+    "y" : -38.0
+  }, {
+    "node" : 410,
+    "view" : 419,
+    "x" : -173.0,
+    "y" : -46.0
+  }, {
+    "node" : 409,
+    "view" : 419,
+    "x" : -32.0,
+    "y" : -126.0
+  }, {
+    "node" : 408,
+    "view" : 419,
+    "x" : 105.0,
+    "y" : 158.0
   } ]
 }, {
   "visualProperties" : [ {
     "properties_of" : "network",
-    "applies_to" : 73,
-    "view" : 73,
+    "applies_to" : 419,
+    "view" : 419,
     "properties" : {
       "NETWORK_BACKGROUND_PAINT" : "#000000",
       "NETWORK_CENTER_X_LOCATION" : "0.0",
@@ -371,8 +453,8 @@
     }
   }, {
     "properties_of" : "nodes:default",
-    "applies_to" : 73,
-    "view" : 73,
+    "applies_to" : 419,
+    "view" : 419,
     "properties" : {
       "COMPOUND_NODE_PADDING" : "10.0",
       "COMPOUND_NODE_SHAPE" : "ROUND_RECTANGLE",
@@ -438,6 +520,10 @@
       "NODE_Y_LOCATION" : "0.0",
       "NODE_Z_LOCATION" : "0.0"
     },
+    "dependencies" : {
+      "nodeCustomGraphicsSizeSync" : "true",
+      "nodeSizeLocked" : "false"
+    },
     "mappings" : {
       "NODE_FILL_COLOR" : {
         "type" : "CONTINUOUS",
@@ -454,8 +540,8 @@
     }
   }, {
     "properties_of" : "edges:default",
-    "applies_to" : 73,
-    "view" : 73,
+    "applies_to" : 419,
+    "view" : 419,
     "properties" : {
       "EDGE_CURVED" : "true",
       "EDGE_LABEL_COLOR" : "#000000",
@@ -480,6 +566,9 @@
       "EDGE_VISIBLE" : "true",
       "EDGE_WIDTH" : "2.0"
     },
+    "dependencies" : {
+      "arrowColorMatchesEdge" : "false"
+    },
     "mappings" : {
       "EDGE_LABEL" : {
         "type" : "PASSTHROUGH",
@@ -492,120 +581,130 @@
     }
   }, {
     "properties_of" : "nodes",
-    "applies_to" : 62,
-    "view" : 73,
+    "applies_to" : 413,
+    "view" : 419,
     "properties" : {
       "NODE_CUSTOMGRAPHICS_1" : "org.cytoscape.LinearGradient:{\"cy_angle\":225.0,\"cy_gradientFractions\":[0.0,0.47588426,1.0],\"cy_gradientColors\":[\"#0033FF\",\"#FFFFFF\",\"#FFFF00\"]}"
     }
   }, {
     "properties_of" : "edges",
-    "applies_to" : 72,
-    "view" : 73,
+    "applies_to" : 418,
+    "view" : 419,
     "properties" : {
       "EDGE_LABEL_COLOR" : "#FFFF00"
     }
   }, {
     "properties_of" : "edges",
-    "applies_to" : 71,
-    "view" : 73,
+    "applies_to" : 417,
+    "view" : 419,
     "properties" : {
       "EDGE_LABEL_COLOR" : "#FFFF00"
     }
   }, {
     "properties_of" : "edges",
-    "applies_to" : 70,
-    "view" : 73,
+    "applies_to" : 416,
+    "view" : 419,
     "properties" : {
       "EDGE_LABEL_COLOR" : "#FFFF00"
     }
   }, {
     "properties_of" : "edges",
-    "applies_to" : 69,
-    "view" : 73,
+    "applies_to" : 415,
+    "view" : 419,
     "properties" : {
       "EDGE_LABEL_COLOR" : "#FFFF00"
     }
   }, {
     "properties_of" : "edges",
-    "applies_to" : 68,
-    "view" : 73,
+    "applies_to" : 414,
+    "view" : 419,
     "properties" : {
       "EDGE_LABEL_COLOR" : "#FFFF00"
     }
   } ]
 }, {
   "subNetworks" : [ {
-    "@id" : 52,
-    "nodes" : [ 67, 66, 65, 64, 63, 62 ],
-    "edges" : [ 72, 71, 70, 69, 68 ]
+    "@id" : 398,
+    "nodes" : [ 413, 412, 411, 410, 409, 408 ],
+    "edges" : [ 418, 417, 416, 415, 414 ]
   } ]
 }, {
   "cyViews" : [ {
-    "@id" : 73,
-    "s" : 52
+    "@id" : 419,
+    "s" : 398
   } ]
 }, {
   "networkRelations" : [ {
-    "p" : 52,
-    "c" : 73,
+    "p" : 398,
+    "c" : 419,
     "r" : "view",
     "name" : "NETWORK X view"
   }, {
-    "p" : 36,
-    "c" : 52,
+    "p" : 382,
+    "c" : 398,
     "r" : "subnetwork",
     "name" : "NETWORK X"
   } ]
 }, {
   "metaData" : [ {
     "consistencyGroup" : 1,
-    "elementCount" : 0,
+    "elementCount" : 3,
     "name" : "networkAttributes",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 0,
     "name" : "hiddenAttributes",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
-    "elementCount" : 23,
+    "elementCount" : 29,
     "name" : "nodeAttributes",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
-    "elementCount" : 25,
+    "elementCount" : 30,
     "name" : "edgeAttributes",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 6,
     "name" : "cartesianLayout",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 9,
     "name" : "visualProperties",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 1,
     "name" : "subNetworks",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 1,
     "name" : "cyViews",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 0,
     "name" : "cyGroups",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 2,
     "name" : "networkRelations",
+    "properties" : [ ],
     "version" : "1.0"
   } ]
 }, {
