@@ -6,111 +6,171 @@
   "metaData" : [ {
     "consistencyGroup" : 1,
     "elementCount" : 4,
-    "idCounter" : 749,
+    "idCounter" : 618,
     "name" : "nodes",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 4,
-    "idCounter" : 749,
+    "idCounter" : 618,
     "name" : "edges",
+    "properties" : [ ],
     "version" : "1.0"
   } ]
 }, {
   "nodes" : [ {
-    "@id" : 734,
-    "n" : "Node Four",
-    "r" : "Represents Node Four"
+    "@id" : 603,
+    "n" : "Node One",
+    "r" : "Represents Node One"
   }, {
-    "@id" : 733,
-    "n" : "Node Three",
-    "r" : "Represents Node Three"
-  }, {
-    "@id" : 732,
+    "@id" : 602,
     "n" : "Node Two",
     "r" : "Represents Node Two"
   }, {
-    "@id" : 731,
-    "n" : "Node One",
-    "r" : "Represents Node One"
+    "@id" : 601,
+    "n" : "Node Three",
+    "r" : "Represents Node Three"
+  }, {
+    "@id" : 600,
+    "n" : "Node Four",
+    "r" : "Represents Node Four"
   } ]
 }, {
   "edges" : [ {
-    "@id" : 737,
-    "s" : 733,
-    "t" : 734,
-    "i" : "3->4"
+    "@id" : 607,
+    "s" : 603,
+    "t" : 602,
+    "i" : "1->2"
   }, {
-    "@id" : 736,
-    "s" : 732,
-    "t" : 733,
-    "i" : "2->3"
-  }, {
-    "@id" : 738,
-    "s" : 731,
-    "t" : 734,
+    "@id" : 606,
+    "s" : 603,
+    "t" : 600,
     "i" : "1->4"
   }, {
-    "@id" : 735,
-    "s" : 731,
-    "t" : 732,
-    "i" : "1->2"
+    "@id" : 605,
+    "s" : 602,
+    "t" : 601,
+    "i" : "2->3"
+  }, {
+    "@id" : 604,
+    "s" : 601,
+    "t" : 600,
+    "i" : "3->4"
   } ]
 }, {
-  "hiddenAttributes" : [ {
-    "s" : 721,
-    "n" : "layoutAlgorithm",
-    "v" : "Prefuse Force Directed Layout"
+  "networkAttributes" : [ {
+    "n" : "name",
+    "v" : "nodes_edges_with_n_r_i_cy_output"
+  }, {
+    "s" : 590,
+    "n" : "name",
+    "v" : "nodes_edges_with_n_r_i"
+  }, {
+    "s" : 590,
+    "n" : "selected",
+    "v" : "true",
+    "d" : "boolean"
   } ]
 }, {
   "nodeAttributes" : [ {
-    "s" : 721,
-    "po" : 734,
+    "s" : 590,
+    "po" : 603,
     "n" : "name",
-    "v" : "4"
+    "v" : "1"
   }, {
-    "s" : 721,
-    "po" : 733,
-    "n" : "name",
-    "v" : "3"
+    "s" : 590,
+    "po" : 603,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
   }, {
-    "s" : 721,
-    "po" : 732,
+    "s" : 590,
+    "po" : 602,
     "n" : "name",
     "v" : "2"
   }, {
-    "s" : 721,
-    "po" : 731,
+    "s" : 590,
+    "po" : 602,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 590,
+    "po" : 601,
     "n" : "name",
-    "v" : "1"
+    "v" : "3"
+  }, {
+    "s" : 590,
+    "po" : 601,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 590,
+    "po" : 600,
+    "n" : "name",
+    "v" : "4"
+  }, {
+    "s" : 590,
+    "po" : 600,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  } ]
+}, {
+  "edgeAttributes" : [ {
+    "s" : 590,
+    "po" : 607,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 590,
+    "po" : 606,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 590,
+    "po" : 605,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 590,
+    "po" : 604,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
   } ]
 }, {
   "cartesianLayout" : [ {
-    "node" : 734,
-    "view" : 721,
-    "x" : 75.54177856445312,
-    "y" : 18.783506870269775
+    "node" : 603,
+    "view" : 608,
+    "x" : -18.78857421875,
+    "y" : 75.47545289993286
   }, {
-    "node" : 733,
-    "view" : 721,
-    "x" : 18.81097412109375,
-    "y" : -75.45047521591187
-  }, {
-    "node" : 732,
-    "view" : 721,
+    "node" : 602,
+    "view" : 608,
     "x" : -75.56417846679688,
     "y" : -18.80848455429077
   }, {
-    "node" : 731,
-    "view" : 721,
-    "x" : -18.78857421875,
-    "y" : 75.47545289993286
+    "node" : 601,
+    "view" : 608,
+    "x" : 18.81097412109375,
+    "y" : -75.45047521591187
+  }, {
+    "node" : 600,
+    "view" : 608,
+    "x" : 75.54177856445312,
+    "y" : 18.783506870269775
   } ]
 }, {
   "visualProperties" : [ {
     "properties_of" : "network",
-    "applies_to" : 721,
-    "view" : 721,
+    "applies_to" : 608,
+    "view" : 608,
     "properties" : {
       "NETWORK_BACKGROUND_PAINT" : "#FFFFFF",
       "NETWORK_CENTER_X_LOCATION" : "0.0",
@@ -126,8 +186,8 @@
     }
   }, {
     "properties_of" : "nodes:default",
-    "applies_to" : 721,
-    "view" : 721,
+    "applies_to" : 608,
+    "view" : 608,
     "properties" : {
       "COMPOUND_NODE_PADDING" : "10.0",
       "COMPOUND_NODE_SHAPE" : "ROUND_RECTANGLE",
@@ -191,13 +251,22 @@
       "NODE_WIDTH" : "75.0",
       "NODE_X_LOCATION" : "0.0",
       "NODE_Y_LOCATION" : "0.0",
-      "NODE_Z_LOCATION" : "0.0",
-      "PASSTHROUGH_MAPPING_NODE_LABEL" : "COL=name,T=string"
+      "NODE_Z_LOCATION" : "0.0"
+    },
+    "dependencies" : {
+      "nodeCustomGraphicsSizeSync" : "true",
+      "nodeSizeLocked" : "false"
+    },
+    "mappings" : {
+      "NODE_LABEL" : {
+        "type" : "PASSTHROUGH",
+        "definition" : "COL=name,T=string"
+      }
     }
   }, {
     "properties_of" : "edges:default",
-    "applies_to" : 721,
-    "view" : 721,
+    "applies_to" : 608,
+    "view" : 608,
     "properties" : {
       "EDGE_CURVED" : "true",
       "EDGE_LABEL_COLOR" : "#000000",
@@ -221,81 +290,94 @@
       "EDGE_UNSELECTED_PAINT" : "#404040",
       "EDGE_VISIBLE" : "true",
       "EDGE_WIDTH" : "2.0"
+    },
+    "dependencies" : {
+      "arrowColorMatchesEdge" : "false"
     }
   } ]
 }, {
   "subNetworks" : [ {
-    "@id" : 721,
-    "nodes" : [ 734, 733, 732, 731 ],
-    "edges" : [ 737, 736, 738, 735 ]
+    "@id" : 590,
+    "nodes" : [ 603, 602, 601, 600 ],
+    "edges" : [ 607, 606, 605, 604 ]
   } ]
 }, {
   "cyViews" : [ {
-    "@id" : 721,
-    "s" : 721
+    "@id" : 608,
+    "s" : 590
   } ]
 }, {
   "networkRelations" : [ {
-    "p" : 705,
-    "c" : 721,
-    "r" : "subnetwork",
-    "name" : "nodes_edges_with_n_r_i.cx"
-  }, {
-    "p" : 721,
-    "c" : 721,
+    "p" : 590,
+    "c" : 608,
     "r" : "view",
-    "name" : "nodes_edges_with_n_r_i.cx view"
+    "name" : "nodes_edges_with_n_r_i view"
+  }, {
+    "p" : 574,
+    "c" : 590,
+    "r" : "subnetwork",
+    "name" : "nodes_edges_with_n_r_i"
   } ]
 }, {
   "metaData" : [ {
     "consistencyGroup" : 1,
-    "elementCount" : 0,
+    "elementCount" : 3,
     "name" : "networkAttributes",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
-    "elementCount" : 1,
+    "elementCount" : 0,
     "name" : "hiddenAttributes",
+    "properties" : [ ],
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : 1,
+    "elementCount" : 8,
+    "name" : "nodeAttributes",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 4,
-    "name" : "nodeAttributes",
-    "version" : "1.0"
-  }, {
-    "consistencyGroup" : 1,
-    "elementCount" : 0,
     "name" : "edgeAttributes",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 4,
     "name" : "cartesianLayout",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 3,
     "name" : "visualProperties",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 1,
     "name" : "subNetworks",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 1,
     "name" : "cyViews",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 0,
     "name" : "cyGroups",
+    "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 2,
     "name" : "networkRelations",
+    "properties" : [ ],
     "version" : "1.0"
   } ]
 }, {
