@@ -24,12 +24,14 @@ import org.cxio.aspects.datamodels.NetworkRelationsElement;
 import org.cxio.aspects.datamodels.NodeAttributesElement;
 import org.cxio.aspects.datamodels.NodesElement;
 import org.cxio.aspects.datamodels.SubNetworkElement;
+import org.cxio.core.CxReader;
 import org.cxio.core.interfaces.AspectElement;
 import org.cxio.util.CxioUtil;
 import org.cytoscape.group.CyGroup;
 import org.cytoscape.group.CyGroupFactory;
 import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.Settings;
+import org.cytoscape.io.internal.cxio.TimingUtil;
 import org.cytoscape.io.internal.cxio.VisualPropertyType;
 import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyEdge;
@@ -44,7 +46,6 @@ import org.cytoscape.model.subnetwork.CySubNetwork;
 
 public final class CxToCy {
 
-    private final static boolean       STRICT         = false;
     private static final long          DEFAULT_SUBNET = -Long.MAX_VALUE;
 
     private Set<CyNode>                _nodes_with_visual_properties;
@@ -296,14 +297,9 @@ public final class CxToCy {
 
             final Long subnetwork_id = subnetwork_ids.size() > 0 ? subnetwork_ids.get(i) : sub_network.getSUID();
 
-            if (Settings.INSTANCE.isDebug()) {
-                System.out.println("subnetwork id: " + subnetwork_id);
-            }
-
             _network_suid_to_networkrelations_map.put(sub_network.getSUID(), subnetwork_id);
             if (Settings.INSTANCE.isDebug()) {
-                System.out.println("added " + sub_network.getSUID() + "->" + subnetwork_id
-                        + " to network suid to networkrelations map");
+                System.out.println("network suid->network-relations: " + sub_network.getSUID() + "->" + subnetwork_id);
             }
 
             if (!subnet_info_present) {
@@ -323,8 +319,8 @@ public final class CxToCy {
                     edges_in_subnet = new HashSet<Long>(_visual_element_collections.getSubNetworkElement(subnetwork_id)
                             .getEdges());
                     if (Settings.INSTANCE.isDebug()) {
-                        System.out.println("nodes count in subnet: " + nodes_in_subnet.size());
-                        System.out.println("edges count in subnet: " + edges_in_subnet.size());
+                        System.out.println("sub-network nodes/edges: " + nodes_in_subnet.size() + "/"
+                                + edges_in_subnet.size());
                     }
                 }
 
@@ -430,15 +426,13 @@ public final class CxToCy {
                           final Long subnetwork_id) {
         if (Settings.INSTANCE.isDebug()) {
             System.out.println(view_to_groups_map);
-            System.out.println("subnetwork_id" + subnetwork_id);
+            System.out.println("groups: subnetwork_id: " + subnetwork_id);
             System.out.println(_subnet_to_views_map);
         }
         if (_subnet_to_views_map.containsKey(subnetwork_id)) {
             final List<Long> vs = _subnet_to_views_map.get(subnetwork_id);
             for (final Long v : vs) {
-                if (Settings.INSTANCE.isDebug()) {
-                    System.out.println("______ v=" + v);
-                }
+
                 final List<CyGroupsElement> g = view_to_groups_map.get(v);
                 for (final CyGroupsElement ge : g) {
                     final List<CyNode> nodes_for_group = new ArrayList<CyNode>();
@@ -522,13 +516,6 @@ public final class CxToCy {
                 final CyNode target = _cxid_to_cynode_map.get(target_id);
                 cy_edge = network.addEdge(source, target, true);
                 if (edge_element.getInteraction() != null) {
-                    // if
-                    // (edge_table_default.getColumn(org.cytoscape.io.internal.cxio.Util.SHARED_INTERACTION)
-                    // == null) {
-                    // edge_table_default.createColumn(org.cytoscape.io.internal.cxio.Util.SHARED_INTERACTION,
-                    // String.class,
-                    // false);
-                    // }
                     network.getRow(cy_edge).set(org.cytoscape.io.internal.cxio.CxUtil.SHARED_INTERACTION,
                                                 edge_element.getInteraction());
 
@@ -556,9 +543,6 @@ public final class CxToCy {
                                         final Long subnetwork_id,
                                         final boolean subnet_info_present) throws IOException {
         if (elements == null) {
-            if (Settings.INSTANCE.isDebug()) {
-                System.out.println("info: no edge attributes for cx edge " + cx_edge_id);
-            }
             return;
         }
         final CyTable table_default = network.getTable(CyEdge.class, CyNetwork.DEFAULT_ATTRS);
@@ -707,9 +691,6 @@ public final class CxToCy {
                                         final Long subnetwork_id,
                                         final boolean subnet_info_present) throws IOException {
         if (elements == null) {
-            if (Settings.INSTANCE.isDebug()) {
-                System.out.println("info: no node attributes for cx node " + cx_node_id);
-            }
             return;
         }
         final CyTable table_default = network.getTable(CyNode.class, CyNetwork.DEFAULT_ATTRS);
@@ -841,11 +822,7 @@ public final class CxToCy {
         if (network_attributes != null) {
             for (final AspectElement e : network_attributes) {
                 final NetworkAttributesElement nae = (NetworkAttributesElement) e;
-                if (STRICT) {
-                    if (!subnet_info_present && (nae.getSubnetwork() != null)) {
-                        throw new IOException("no sub-network information is present, but node attribute with sub-network data found");
-                    }
-                }
+
                 Long subnet = DEFAULT_SUBNET;
                 if (subnet_info_present) {
                     if (nae.getSubnetwork() != null) {
@@ -862,6 +839,64 @@ public final class CxToCy {
                 network_attributes_map.get(subnet).add(nae);
             }
         }
+    }
+
+    public final static SortedMap<String, List<AspectElement>> parseAsMap(final CxReader cxr,
+                                                                          long t,
+                                                                          final boolean report_timings)
+                                                                                  throws IOException {
+        long time_total = 0;
+        if (cxr == null) {
+            throw new IllegalArgumentException("reader is null");
+        }
+        long prev_time = System.currentTimeMillis() - t;
+
+        System.out.println();
+        System.out.println();
+
+        final SortedMap<String, List<AspectElement>> all_aspects = new TreeMap<String, List<AspectElement>>();
+
+        while (cxr.hasNext()) {
+            t = System.currentTimeMillis();
+            final List<AspectElement> aspects = cxr.getNext();
+            if ((aspects != null) && !aspects.isEmpty()) {
+                final String name = aspects.get(0).getAspectName();
+
+                TimingUtil.reportTime(prev_time, name, aspects.size());
+                time_total += prev_time;
+                prev_time = System.currentTimeMillis() - t;
+
+                if (!all_aspects.containsKey(name)) {
+                    all_aspects.put(name, aspects);
+                }
+                else {
+                    all_aspects.get(name).addAll(aspects);
+                }
+            }
+        }
+        TimingUtil.reportTime(time_total, "sum", -1);
+        return all_aspects;
+    }
+
+    public final static String getCollectionNameFromNetworkAttributes(final SortedMap<String, List<AspectElement>> res) {
+        final List<AspectElement> network_attributes = res.get(NetworkAttributesElement.ASPECT_NAME);
+        String collection_name_from_network_attributes = null;
+        if (network_attributes != null) {
+            for (final AspectElement e : network_attributes) {
+                final NetworkAttributesElement nae = (NetworkAttributesElement) e;
+                if ((nae.getSubnetwork() == null) && (nae.getName() != null)
+                        && (nae.getDataType() == ATTRIBUTE_DATA_TYPE.STRING) && nae.getName().equals(CxUtil.NAME_COL)
+                        && nae.isSingleValue() && (nae.getValue() != null) && (nae.getValue().length() > 0)) {
+                    if (collection_name_from_network_attributes == null) {
+                        collection_name_from_network_attributes = nae.getValue();
+                    }
+                    else {
+                        return null;
+                    }
+                }
+            }
+        }
+        return collection_name_from_network_attributes;
     }
 
     private final static void checkEdgeIds(final List<AspectElement> edges, final Set<Long> edge_ids)
@@ -941,11 +976,7 @@ public final class CxToCy {
         if (edge_attributes != null) {
             for (final AspectElement e : edge_attributes) {
                 final EdgeAttributesElement eae = (EdgeAttributesElement) e;
-                if (STRICT) {
-                    if (!subnet_info_present && (eae.getSubnetwork() != null)) {
-                        throw new IOException("no sub-network information is present, but edge attribute with sub-network data found");
-                    }
-                }
+
                 final List<Long> pos = eae.getPropertyOf();
                 for (final Long po : pos) {
                     if (!edge_attributes_map.containsKey(po)) {
@@ -973,11 +1004,7 @@ public final class CxToCy {
         if (node_attributes != null) {
             for (final AspectElement e : node_attributes) {
                 final NodeAttributesElement nae = (NodeAttributesElement) e;
-                if (STRICT) {
-                    if (!subnet_info_present && (nae.getSubnetwork() != null)) {
-                        throw new IOException("no sub-network information is present, but node attribute with sub-network data found");
-                    }
-                }
+
                 final List<Long> pos = nae.getPropertyOf();
                 for (final Long po : pos) {
                     if (perform_basic_integrity_checks) {

@@ -66,7 +66,7 @@ public class CxNetworkReaderTest {
 
     @Test
     public void test1() throws Exception {
-       
+
         final File test_file = new File("src/test/resources/testData/gal_filtered_1.cx");
         final List<CyNetwork> networks = loadNetwork(test_file, true);
         assertTrue((networks.size() == 1));
@@ -221,9 +221,9 @@ public class CxNetworkReaderTest {
         final CyNetwork n2 = networks.get(1);
         assertTrue(n2.getNodeCount() == 3);
         assertTrue(n2.getEdgeCount() == 3);
-        
+
     }
-    
+
     @Test
     public void test15() throws Exception {
         final File test_file = new File("src/test/resources/testData/ndex2.cx");
@@ -236,7 +236,7 @@ public class CxNetworkReaderTest {
         assertTrue(n2.getNodeCount() == 3);
         assertTrue(n2.getEdgeCount() == 3);
     }
-    
+
     @Test
     public void test16() throws Exception {
         final File test_file = new File("src/test/resources/testData/ndex3.cx");
@@ -249,7 +249,7 @@ public class CxNetworkReaderTest {
         assertTrue(n2.getNodeCount() == 3);
         assertTrue(n2.getEdgeCount() == 3);
     }
-    
+
     @Test
     public void test17() throws Exception {
         final File test_file = new File("src/test/resources/testData/ndex4.cx");
@@ -259,6 +259,7 @@ public class CxNetworkReaderTest {
         assertTrue(n1.getNodeCount() == 8);
         assertTrue(n1.getEdgeCount() == 12);
     }
+
     @Test
     public void test18() throws Exception {
         final File test_file = new File("src/test/resources/testData/c_elegans.cx");
@@ -268,5 +269,5 @@ public class CxNetworkReaderTest {
         assertTrue(n1.getNodeCount() == 3941);
         assertTrue(n1.getEdgeCount() == 8642);
     }
-    
+
 }

@@ -1,15 +1,11 @@
 package org.cytoscape.io.internal.cx_reader;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
 
-import org.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
-import org.cxio.aspects.datamodels.NetworkAttributesElement;
 import org.cxio.aux.AspectElementCounts;
 import org.cxio.core.CxReader;
 import org.cxio.core.interfaces.AspectElement;
@@ -19,7 +15,6 @@ import org.cytoscape.group.CyGroupFactory;
 import org.cytoscape.io.internal.cxio.Aspect;
 import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxImporter;
-import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.Settings;
 import org.cytoscape.io.internal.cxio.TimingUtil;
 import org.cytoscape.io.read.AbstractCyNetworkReader;
@@ -39,8 +34,6 @@ import org.cytoscape.work.util.ListSingleSelection;
 
 public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
-    private static final boolean               ALLOW_TO_USE_NETWORK_COLLECTION_NAME_FROM_NETWORK_ATTTRIBUTES = true;
-
     private final List<CyNetwork>              _networks;
     private String                             _network_collection_name;
     private CxToCy                             _cx_to_cy;
@@ -53,7 +46,6 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     private final VisualMappingFunctionFactory _vmf_factory_c;
     private final VisualMappingFunctionFactory _vmf_factory_d;
     private final VisualMappingFunctionFactory _vmf_factory_p;
-
     private final CyGroupFactory               _group_factory;
 
     public CytoscapeCxNetworkReader(final String network_collection_name,
@@ -145,42 +137,29 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
         final CxImporter cx_importer = CxImporter.createInstance();
 
-        long t0 = 0;
         SortedMap<String, List<AspectElement>> res = null;
-        if (TimingUtil.TIMING) {
-            final byte[] buff = new byte[8000];
-            int bytes_read = 0;
-            final ByteArrayOutputStream bao = new ByteArrayOutputStream();
-            while ((bytes_read = _in.read(buff)) != -1) {
-                bao.write(buff, 0, bytes_read);
-            }
-            final ByteArrayInputStream bis = new ByteArrayInputStream(bao.toByteArray());
-            t0 = System.currentTimeMillis();
-            final CxReader cxr = cx_importer.obtainCxReader(aspects, bis);
 
-            res = TimingUtil.parseAsMap(cxr, t0);
+        final CxReader cxr = cx_importer.obtainCxReader(aspects, _in);
+        final long t0 = System.currentTimeMillis();
+        res = CxToCy.parseAsMap(cxr, t0, Settings.INSTANCE.isTiming());
+        if (Settings.INSTANCE.isTiming()) {
             TimingUtil.reportTimeDifference(t0, "total time parsing", -1);
-            t0 = System.currentTimeMillis();
         }
-        else {
-            final CxReader cxr = cx_importer.obtainCxReader(aspects, _in);
-            res = CxReader.parseAsMap(cxr);
-            final AspectElementCounts counts = cxr.getAspectElementCounts();
-            final MetaDataCollection pre = cxr.getPreMetaData();
-            final MetaDataCollection post = cxr.getPostMetaData();
-            if (Settings.INSTANCE.isDebug()) {
-                if (counts != null) {
-                    System.out.println("Aspects elements read in:");
-                    System.out.println(counts);
-                }
-                if (pre != null) {
-                    System.out.println("Pre metadata :");
-                    System.out.println(post);
-                }
-                if (post != null) {
-                    System.out.println("Post metadata :");
-                    System.out.println(post);
-                }
+        final AspectElementCounts counts = cxr.getAspectElementCounts();
+        final MetaDataCollection pre = cxr.getPreMetaData();
+        final MetaDataCollection post = cxr.getPostMetaData();
+        if (Settings.INSTANCE.isDebug()) {
+            if (counts != null) {
+                System.out.println("Aspects elements read in:");
+                System.out.println(counts);
+            }
+            if (pre != null) {
+                System.out.println("Pre metadata :");
+                System.out.println(post);
+            }
+            if (post != null) {
+                System.out.println("Post metadata :");
+                System.out.println(post);
             }
         }
 
@@ -212,8 +191,9 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         }
         else {
             // Need to create new network with new root.
-            if (ALLOW_TO_USE_NETWORK_COLLECTION_NAME_FROM_NETWORK_ATTTRIBUTES) {
-                final String collection_name_from_network_attributes = getCollectionNameFromNetworkAttributes(res);
+            if (Settings.INSTANCE.isAllowToUseNetworkCollectionNameFromNetworkAttributes()) {
+                final String collection_name_from_network_attributes = CxToCy
+                        .getCollectionNameFromNetworkAttributes(res);
                 if (collection_name_from_network_attributes != null) {
                     _network_collection_name = collection_name_from_network_attributes;
                     if (Settings.INSTANCE.isDebug()) {
@@ -229,30 +209,11 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                                                      _perform_basic_integrity_checks));
         }
 
-        if (TimingUtil.TIMING) {
-            TimingUtil.reportTimeDifference(t0, "total time build", 0);
+        if (Settings.INSTANCE.isTiming()) {
+            System.out.println();
+            TimingUtil.reportTimeDifference(t0, "total time to build network(s) (not views)", -1);
+            System.out.println();
         }
-    }
-
-    public final static String getCollectionNameFromNetworkAttributes(final SortedMap<String, List<AspectElement>> res) {
-        final List<AspectElement> network_attributes = res.get(NetworkAttributesElement.ASPECT_NAME);
-        String collection_name_from_network_attributes = null;
-        if (network_attributes != null) {
-            for (final AspectElement e : network_attributes) {
-                final NetworkAttributesElement nae = (NetworkAttributesElement) e;
-                if ((nae.getSubnetwork() == null) && (nae.getName() != null)
-                        && (nae.getDataType() == ATTRIBUTE_DATA_TYPE.STRING) && nae.getName().equals(CxUtil.NAME_COL)
-                        && nae.isSingleValue() && (nae.getValue() != null) && (nae.getValue().length() > 0)) {
-                    if (collection_name_from_network_attributes == null) {
-                        collection_name_from_network_attributes = nae.getValue();
-                    }
-                    else {
-                        return null;
-                    }
-                }
-            }
-        }
-        return collection_name_from_network_attributes;
     }
 
 }

@@ -135,7 +135,7 @@ final public class VisualElementCollectionMap {
         return sb.toString();
 
     }
-    
+
     public final boolean isEmpty() {
         return _data.isEmpty();
     }

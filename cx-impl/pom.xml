@@ -6,7 +6,7 @@
 
 	<groupId>org.cytoscape</groupId>
 	<artifactId>cx-impl</artifactId>
-	<version>3.3.0-SNAPSHOT</version>
+	<version>0.9.0</version>
 	<name>Cytoscape CX IO Impl</name>
 	<packaging>bundle</packaging>
 

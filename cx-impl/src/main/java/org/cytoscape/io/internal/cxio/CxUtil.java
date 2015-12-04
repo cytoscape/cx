@@ -14,7 +14,7 @@ public final class CxUtil {
     public final static String PASSTHROUGH_MAPPING            = "PASSTHROUGH_MAPPING_";
     public final static String VM_COL                         = "COL";
     public final static String VM_TYPE                        = "T";
-    public final static String SUID       =             CyIdentifiable.SUID;
+    public final static String SUID                           = CyIdentifiable.SUID;
     public final static String DISCRETE                       = "DISCRETE";
     public final static String CONTINUOUS                     = "CONTINUOUS";
     public final static String PASSTHROUGH                    = "PASSTHROUGH";

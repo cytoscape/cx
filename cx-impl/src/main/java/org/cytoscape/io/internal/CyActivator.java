@@ -54,7 +54,7 @@ public class CyActivator extends AbstractCyActivator {
         final CyGroupManager group_manager = getService(bc, CyGroupManager.class);
         final CyNetworkTableManager table_manager = getService(bc, CyNetworkTableManager.class);
         final CyNetworkViewFactory network_view_factory = getService(bc, CyNetworkViewFactory.class);
-       
+
         final CxNetworkWriterFactory network_writer_factory = new CxNetworkWriterFactory(cx_filter,
                                                                                          visual_mapping_manager,
                                                                                          application_manager,
@@ -83,13 +83,13 @@ public class CyActivator extends AbstractCyActivator {
 
         final VisualMappingFunctionFactory vmfFactoryC = getService(bc,
                                                                     VisualMappingFunctionFactory.class,
-                "(mapping.type=continuous)");
+                                                                    "(mapping.type=continuous)");
         final VisualMappingFunctionFactory vmfFactoryD = getService(bc,
                                                                     VisualMappingFunctionFactory.class,
-                "(mapping.type=discrete)");
+                                                                    "(mapping.type=discrete)");
         final VisualMappingFunctionFactory vmfFactoryP = getService(bc,
                                                                     VisualMappingFunctionFactory.class,
-                "(mapping.type=passthrough)");
+                                                                    "(mapping.type=passthrough)");
 
         final CytoscapeCxNetworkReaderFactory cx_reader_factory = new CytoscapeCxNetworkReaderFactory(basic_file_filter,
                                                                                                       application_manager,
@@ -105,7 +105,7 @@ public class CyActivator extends AbstractCyActivator {
                                                                                                       vmfFactoryD,
                                                                                                       vmfFactoryP
 
-                );
+        );
         final Properties reader_factory_properties = new Properties();
 
         // This is the unique identifier for this reader. 3rd party developer

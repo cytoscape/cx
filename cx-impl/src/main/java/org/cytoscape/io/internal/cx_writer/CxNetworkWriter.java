@@ -124,7 +124,7 @@ public class CxNetworkWriter implements CyWriter {
             _os.close();
         }
 
-        if (TimingUtil.TIMING) {
+        if (Settings.INSTANCE.isTiming()) {
             TimingUtil.reportTimeDifference(t0, "total time", -1);
         }
     }
