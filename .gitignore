@@ -1,4 +1,9 @@
 doc/
-
 cx-impl/target/
 /target/
+.DS_Store
+target/
+.project
+.settings
+.classpath
+bin/
