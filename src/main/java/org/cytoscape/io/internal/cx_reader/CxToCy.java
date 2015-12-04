@@ -976,7 +976,6 @@ public final class CxToCy {
         if (edge_attributes != null) {
             for (final AspectElement e : edge_attributes) {
                 final EdgeAttributesElement eae = (EdgeAttributesElement) e;
-
                 final List<Long> pos = eae.getPropertyOf();
                 for (final Long po : pos) {
                     if (!edge_attributes_map.containsKey(po)) {
@@ -985,7 +984,10 @@ public final class CxToCy {
                                 throw new IOException("edge identifiers must not be null in edge attributes");
                             }
                             if (!edge_ids.contains(po)) {
-                                throw new IOException("edge with id '" + po + "' not present in edges aspect");
+                                if (Settings.INSTANCE.isDebug()) {
+                                    System.out.println("edge with id '" + po + "' not present in edges aspect");
+                                }
+                                continue;
                             }
                         }
                         edge_attributes_map.put(po, new ArrayList<EdgeAttributesElement>());
@@ -1004,7 +1006,6 @@ public final class CxToCy {
         if (node_attributes != null) {
             for (final AspectElement e : node_attributes) {
                 final NodeAttributesElement nae = (NodeAttributesElement) e;
-
                 final List<Long> pos = nae.getPropertyOf();
                 for (final Long po : pos) {
                     if (perform_basic_integrity_checks) {
@@ -1012,7 +1013,10 @@ public final class CxToCy {
                             throw new IOException("node identifiers must not be null in node attributes");
                         }
                         if (!node_ids.contains(po)) {
-                            throw new IOException("node with id '" + po + "' not present in nodes aspect");
+                            if (Settings.INSTANCE.isDebug()) {
+                                System.out.println("node with id '" + po + "' not present in nodes aspect");
+                            }
+                            continue;
                         }
                     }
                     if (!node_attributes_map.containsKey(po)) {
