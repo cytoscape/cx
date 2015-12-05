@@ -181,7 +181,7 @@
 		<dependency>
 			<groupId>org.cxio</groupId>
 			<artifactId>cxio</artifactId>
-			<version>0.0.1</version>
+			<version>0.9.01</version>
 		</dependency>
 		
 		<!-- Testing -->
