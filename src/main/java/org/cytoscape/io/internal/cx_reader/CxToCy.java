@@ -14,6 +14,7 @@ import org.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
 import org.cxio.aspects.datamodels.AbstractAttributesAspectElement;
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.cxio.aspects.datamodels.CyGroupsElement;
+import org.cxio.aspects.datamodels.CyTableColumnElement;
 import org.cxio.aspects.datamodels.CyViewsElement;
 import org.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.cxio.aspects.datamodels.EdgeAttributesElement;
@@ -159,12 +160,14 @@ public final class CxToCy {
         final List<AspectElement> network_relations = aspect_collection.get(NetworkRelationsElement.ASPECT_NAME);
         final List<AspectElement> groups = aspect_collection.get(CyGroupsElement.ASPECT_NAME);
         final List<AspectElement> views = aspect_collection.get(CyViewsElement.ASPECT_NAME);
+        final List<AspectElement> table_columns = aspect_collection.get(CyTableColumnElement.ASPECT_NAME);
 
         final Map<Long, List<NodeAttributesElement>> node_attributes_map = new HashMap<Long, List<NodeAttributesElement>>();
         final Map<Long, List<EdgeAttributesElement>> edge_attributes_map = new HashMap<Long, List<EdgeAttributesElement>>();
         final Map<Long, List<NetworkAttributesElement>> network_attributes_map = new HashMap<Long, List<NetworkAttributesElement>>();
         final Map<Long, List<HiddenAttributesElement>> hidden_attributes_map = new HashMap<Long, List<HiddenAttributesElement>>();
         final Map<Long, List<CyGroupsElement>> view_to_groups_map = new HashMap<Long, List<CyGroupsElement>>();
+        final Map<Long, List<CyTableColumnElement>> subnetwork_to_col_labels_map = new HashMap<Long, List<CyTableColumnElement>>();
 
         if ((nodes == null) || nodes.isEmpty()) {
             throw new IOException("no nodes in input");
@@ -266,6 +269,12 @@ public final class CxToCy {
             subnetworks_ary[i] = sub_network;
         }
 
+        
+        processColumnLabels( table_columns,
+                             subnetwork_to_col_labels_map,
+                             subnet_info_present);
+        
+        
         processNodeAttributes(node_attributes,
                               node_attributes_map,
                               perform_basic_integrity_checks,
@@ -323,7 +332,6 @@ public final class CxToCy {
                                 + edges_in_subnet.size());
                     }
                 }
-
             }
 
             addNodes(sub_network, nodes, nodes_in_subnet, node_attributes_map, subnetwork_id, subnet_info_present);
@@ -339,6 +347,12 @@ public final class CxToCy {
                          subnet_info_present);
             }
 
+            
+            addColumns( sub_network,
+            		subnetwork_to_col_labels_map,
+            		subnetwork_id,
+            		subnet_info_present );
+            
             if (network_attributes_map.containsKey(subnetwork_id)) {
                 addNetworkAttributeData(network_attributes_map.get(subnetwork_id),
                                         sub_network,
@@ -633,7 +647,62 @@ public final class CxToCy {
         }
     }
 
-    private final void addNodes(final CySubNetwork network,
+    private final void addColumns(final CySubNetwork network,
+    		final Map<Long, List<CyTableColumnElement>> subnetwork_to_col_labels_map,
+    		final Long subnetwork_id,
+    		final boolean subnet_info_present ) {
+    	if ( subnetwork_to_col_labels_map != null ) {
+    		final List<CyTableColumnElement> col_labels = subnetwork_to_col_labels_map.get(subnetwork_id);
+    		if ( col_labels != null) {
+    			for (final CyTableColumnElement col_label : col_labels) {
+    				if ( col_label != null ) {
+    					final String name = col_label.getName();
+    					if ( name != null && !name.equals(CxUtil.SUID) ) {
+    						final ATTRIBUTE_DATA_TYPE dt = col_label.getDataType();
+    						boolean is_single = isSingle(dt);
+    						final Class<?> data_type = getDataType(dt);
+    						CyTable table = null;
+    						if (col_label.getAppliesTo().equals("node_table") ) {
+    							table = network.getTable(CyNode.class, CyNetwork.DEFAULT_ATTRS);
+    						}
+    						else if (col_label.getAppliesTo().equals("edge_table") ) {
+    							table = network.getTable(CyEdge.class, CyNetwork.DEFAULT_ATTRS);
+    						}
+    						else if (col_label.getAppliesTo().equals("network_table") ) {
+    							 table = network.getTable(CyNetwork.class, CyNetwork.DEFAULT_ATTRS);
+    						}
+    						createColumn(is_single, data_type, name, table);
+    					}
+    				}
+    			}
+    		}
+    	}
+    }
+
+	public void createColumn(boolean is_single, final Class<?> data_type,
+			final String name, final CyTable table) {
+		if (table != null ) {
+			if (table.getColumn(name) == null ) {
+				if (is_single) {
+					table.createColumn(name, data_type, false);
+				}
+				else {
+					table.createListColumn(name, data_type, false);
+				}
+			}
+		}
+	}
+
+
+
+    private boolean isSingle(ATTRIBUTE_DATA_TYPE dt) {
+		
+		return ( dt==ATTRIBUTE_DATA_TYPE.BOOLEAN || dt==ATTRIBUTE_DATA_TYPE.BYTE ||
+				dt==ATTRIBUTE_DATA_TYPE.CHAR || dt==ATTRIBUTE_DATA_TYPE.DOUBLE ||
+				dt==ATTRIBUTE_DATA_TYPE.FLOAT || dt==ATTRIBUTE_DATA_TYPE.INTEGER);
+	}
+
+	private final void addNodes(final CySubNetwork network,
                                 final List<AspectElement> nodes,
                                 final Set<Long> nodes_in_subnet,
                                 final Map<Long, List<NodeAttributesElement>> node_attributes_map,
@@ -641,6 +710,9 @@ public final class CxToCy {
                                 final boolean subnet_info_present) throws IOException {
 
         final CyTable node_table_default = network.getTable(CyNode.class, CyNetwork.DEFAULT_ATTRS);
+        
+        
+        
         for (final AspectElement e : nodes) {
             final NodesElement node_element = (NodesElement) e;
             final Long node_id = node_element.getId();
@@ -1041,6 +1113,21 @@ public final class CxToCy {
                 view_to_groups_map.get(view).add(ge);
             }
         }
+    }
+    
+    private final static void processColumnLabels(final List<AspectElement> col_labels_elements,
+    	                                          final Map<Long, List<CyTableColumnElement>> subnetwork_to_col_labels_map,
+    	                                          final boolean subnet_info_presen) throws IOException {
+    	if (col_labels_elements != null) {
+    		for (final AspectElement e : col_labels_elements) {
+    			final CyTableColumnElement ce = (CyTableColumnElement) e;
+    			final long subnetwork = ce.getSubnetwork();
+    			if (!subnetwork_to_col_labels_map.containsKey(subnetwork )) {
+    				subnetwork_to_col_labels_map.put(subnetwork , new ArrayList<CyTableColumnElement>());
+    			}
+    			subnetwork_to_col_labels_map.get(subnetwork).add(ce);
+    		}
+    	}
     }
 
 }

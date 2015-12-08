@@ -6,8 +6,11 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.cxio.aspects.datamodels.CyTableColumnElement;
 import org.cxio.aspects.readers.CartesianLayoutFragmentReader;
 import org.cxio.aspects.readers.CyGroupsFragmentReader;
+import org.cxio.aspects.readers.CyTableColumnFragmentReader;
+import org.cxio.aspects.readers.CyViewsFragmentReader;
 import org.cxio.aspects.readers.CyVisualPropertiesFragmentReader;
 import org.cxio.aspects.readers.EdgeAttributesFragmentReader;
 import org.cxio.aspects.readers.EdgesFragmentReader;
@@ -19,6 +22,7 @@ import org.cxio.aspects.readers.NodesFragmentReader;
 import org.cxio.aspects.readers.SubNetworkFragmentReader;
 import org.cxio.aspects.writers.CartesianLayoutFragmentWriter;
 import org.cxio.aspects.writers.CyGroupsFragmentWriter;
+import org.cxio.aspects.writers.CyTableColumnFragmentWriter;
 import org.cxio.aspects.writers.CyViewsFragmentWriter;
 import org.cxio.aspects.writers.EdgeAttributesFragmentWriter;
 import org.cxio.aspects.writers.EdgesFragmentWriter;
@@ -121,6 +125,9 @@ public final class AspectSet {
         if (_aspects.contains(Aspect.VIEWS)) {
             writers.add(CyViewsFragmentWriter.createInstance());
         }
+        if (_aspects.contains(Aspect.TABLE_COLUMN_LABELS)) {
+            writers.add(CyTableColumnFragmentWriter.createInstance());
+        }
         return writers;
     }
 
@@ -158,6 +165,12 @@ public final class AspectSet {
         }
         if (_aspects.contains(Aspect.NETWORK_RELATIONS)) {
             readers.add(NetworkRelationsFragmentReader.createInstance());
+        }
+        if (_aspects.contains(Aspect.VIEWS)) {
+            readers.add(CyViewsFragmentReader.createInstance());
+        }
+        if (_aspects.contains(Aspect.TABLE_COLUMN_LABELS)) {
+            readers.add(CyTableColumnFragmentReader.createInstance());
         }
         return readers;
     }

@@ -14,6 +14,7 @@ import org.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
 import org.cxio.aspects.datamodels.AttributesAspectUtils;
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.cxio.aspects.datamodels.CyGroupsElement;
+import org.cxio.aspects.datamodels.CyTableColumnElement;
 import org.cxio.aspects.datamodels.CyViewsElement;
 import org.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.cxio.aspects.datamodels.EdgeAttributesElement;
@@ -38,6 +39,7 @@ import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyRow;
+import org.cytoscape.model.CyTable;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CySubNetwork;
 import org.cytoscape.view.model.CyNetworkView;
@@ -214,6 +216,9 @@ public final class CxExporter {
             }
             if (aspects.contains(Aspect.EDGES)) {
                 writeEdges(network, write_siblings, w);
+            }
+            if (aspects.contains(Aspect.TABLE_COLUMN_LABELS)) {
+            	writeTableColumnLabels(network, write_siblings, w );
             }
             if (aspects.contains(Aspect.NETWORK_ATTRIBUTES)) {
                 writeNetworkAttributes(network, write_siblings, w, CyNetwork.DEFAULT_ATTRS);
@@ -957,10 +962,6 @@ public final class CxExporter {
         final CySubNetwork my_subnet = (CySubNetwork) network;
         final CyRootNetwork my_root = my_subnet.getRootNetwork();
 
-        final Collection<CyColumn> x = my_root.getDefaultNetworkTable().getColumns();
-        for (final CyColumn cyColumn : x) {
-            System.out.println(cyColumn.getName());
-        }
         final String collection_name = obtainNetworkCollectionName(my_root);
         final List<CySubNetwork> subnets = makeSubNetworkList(write_siblings, my_subnet, my_root, true);
         if (Settings.INSTANCE.isDebug()) {
@@ -1066,6 +1067,121 @@ public final class CxExporter {
         }
     }
 
+
+    private final void writeTableColumnLabels(final CyNetwork network,
+    		final boolean write_siblings,
+    		final CxWriter w) throws IOException {
+
+    	final List<AspectElement> elements = new ArrayList<AspectElement>();
+
+    	final CySubNetwork my_subnet = (CySubNetwork) network;
+    	final CyRootNetwork my_root = my_subnet.getRootNetwork();
+    	final List<CySubNetwork> subnets = makeSubNetworkList(write_siblings, my_subnet, my_root, true);
+
+    	for (final CySubNetwork subnet : subnets) {
+    		Collection<CyColumn> c = subnet.getDefaultNodeTable().getColumns();
+    		for (CyColumn col : c) {
+    			if ( ! col.getName().equals(CxUtil.SUID)) {
+    				ATTRIBUTE_DATA_TYPE type = ATTRIBUTE_DATA_TYPE.STRING;
+    				if (col.getType() != List.class ) {
+    					type = toAttributeType(col.getType());
+    				}
+    				else {
+    					type = toListAttributeType(col.getListElementType());
+    				}
+
+    				CyTableColumnElement x = new CyTableColumnElement(subnet.getSUID(), "node_table", col.getName(),type);
+    				elements.add(x);
+    			}
+    		}
+    	}
+    	for (final CySubNetwork subnet : subnets) {
+    		Collection<CyColumn> c = subnet.getDefaultEdgeTable().getColumns();
+    		for (CyColumn col : c) {
+    			if ( ! col.getName().equals(CxUtil.SUID)) {
+    				ATTRIBUTE_DATA_TYPE type = ATTRIBUTE_DATA_TYPE.STRING;
+    				if (col.getType() != List.class ) {
+    					type = toAttributeType(col.getType());
+    				}
+    				else {
+    					type = toListAttributeType(col.getListElementType());
+    				}
+
+    				CyTableColumnElement x = new CyTableColumnElement(subnet.getSUID(), "edge_table", col.getName(),type);
+    				elements.add(x);
+    			}
+    		}
+    	}
+    	for (final CySubNetwork subnet : subnets) {
+    		Collection<CyColumn> c = subnet.getDefaultNetworkTable().getColumns();
+    		for (CyColumn col : c) {
+    			if ( ! col.getName().equals(CxUtil.SUID)) {
+    				ATTRIBUTE_DATA_TYPE type = ATTRIBUTE_DATA_TYPE.STRING;
+    				if (col.getType() != List.class ) {
+    					type = toAttributeType(col.getType());
+    				}
+    				else {
+    					type = toListAttributeType(col.getListElementType());
+    				}
+    				CyTableColumnElement x = new CyTableColumnElement(subnet.getSUID(), "network_table", col.getName(),type);
+    				elements.add(x);
+    			}
+    		}
+    	}
+
+    	final long t0 = System.currentTimeMillis();
+    	w.writeAspectElements(elements);
+    	if (Settings.INSTANCE.isTiming()) {
+    		TimingUtil.reportTimeDifference(t0, "table columns ", elements.size());
+    	}
+    }
+    
+
+    private final static ATTRIBUTE_DATA_TYPE toAttributeType(final Class<?> attr_class )
+            throws IOException {
+        if (attr_class == String.class) {
+            return ATTRIBUTE_DATA_TYPE.STRING;
+        }
+        else if ((attr_class == Float.class) || (attr_class == Double.class)) {
+        	 return ATTRIBUTE_DATA_TYPE.DOUBLE;
+        }
+        else if ((attr_class == Integer.class) || (attr_class == Short.class)) {
+        	 return ATTRIBUTE_DATA_TYPE.INTEGER;
+        }
+        else if (attr_class == Long.class) {
+        	 return ATTRIBUTE_DATA_TYPE.LONG;
+        }
+        else if (attr_class == Boolean.class) {
+        	 return ATTRIBUTE_DATA_TYPE.BOOLEAN;
+        }
+        else {
+            throw new IllegalArgumentException("don't know how to deal with type '" + attr_class + "'");
+        }
+    }
+    
+    private final static ATTRIBUTE_DATA_TYPE toListAttributeType(final Class<?> attr_class )
+            throws IOException {
+        if (attr_class == String.class) {
+            return ATTRIBUTE_DATA_TYPE.LIST_OF_STRING;
+        }
+        else if ((attr_class == Float.class) || (attr_class == Double.class)) {
+            return ATTRIBUTE_DATA_TYPE.LIST_OF_DOUBLE;
+        }
+        else if ((attr_class == Integer.class) || (attr_class == Short.class)) {
+            return ATTRIBUTE_DATA_TYPE.LIST_OF_INTEGER;
+        }
+        else if (attr_class == Long.class) {
+            return ATTRIBUTE_DATA_TYPE.LIST_OF_LONG;
+        }
+        else if (attr_class == Boolean.class) {
+            return ATTRIBUTE_DATA_TYPE.LIST_OF_BOOLEAN;
+        }
+        else {
+            throw new IllegalArgumentException("don't know how to deal with type '" + attr_class + "'");
+        }
+    }
+    
+    
     @SuppressWarnings("rawtypes")
     private void writeNodeAttributesHelper(final String namespace,
                                            final CySubNetwork my_network,

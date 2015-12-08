@@ -62,7 +62,6 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                                     final VisualMappingFunctionFactory vmf_factory_c,
                                     final VisualMappingFunctionFactory vmf_factory_d,
                                     final VisualMappingFunctionFactory vmf_factory_p,
-
                                     final boolean perform_basic_integrity_checks) throws IOException {
 
         super(input_stream, networkview_factory, network_factory, network_manager, root_network_manager);
@@ -134,6 +133,8 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         aspects.addAspect(Aspect.NETWORK_RELATIONS);
         aspects.addAspect(Aspect.SUBNETWORKS);
         aspects.addAspect(Aspect.GROUPS);
+        aspects.addAspect(Aspect.VIEWS);
+        aspects.addAspect(Aspect.TABLE_COLUMN_LABELS);
 
         final CxImporter cx_importer = CxImporter.createInstance();
 

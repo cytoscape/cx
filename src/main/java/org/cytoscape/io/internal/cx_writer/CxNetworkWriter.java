@@ -100,6 +100,7 @@ public class CxNetworkWriter implements CyWriter {
         aspects.addAspect(Aspect.VIEWS);
         aspects.addAspect(Aspect.NETWORK_RELATIONS);
         aspects.addAspect(Aspect.GROUPS);
+        aspects.addAspect(Aspect.TABLE_COLUMN_LABELS);
 
         final CxExporter exporter = CxExporter.createInstance();
         exporter.setUseDefaultPrettyPrinting(true);
