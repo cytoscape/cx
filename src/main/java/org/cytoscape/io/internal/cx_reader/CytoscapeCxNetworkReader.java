@@ -154,13 +154,22 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                 System.out.println("Aspects elements read in:");
                 System.out.println(counts);
             }
+            else {
+            	System.out.println("No aspects elements read in (!)");
+            }
             if (pre != null) {
-                System.out.println("Pre metadata :");
-                System.out.println(post);
+                System.out.println("Pre metadata:");
+                System.out.println(pre);
+            }
+            else {
+            	System.out.println("No pre metadata");
             }
             if (post != null) {
-                System.out.println("Post metadata :");
+                System.out.println("Post metadata:");
                 System.out.println(post);
+            }
+            else {
+            	System.out.println("No post metadata");
             }
         }
 
