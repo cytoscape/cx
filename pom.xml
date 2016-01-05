@@ -6,7 +6,7 @@
 
 	<groupId>org.cytoscape</groupId>
 	<artifactId>cx-impl</artifactId>
-	<version>0.9.01</version>
+	<version>0.9.02</version>
 	<name>Cytoscape CX IO Impl</name>
 	<packaging>bundle</packaging>
 
@@ -181,7 +181,7 @@
 		<dependency>
 			<groupId>org.cxio</groupId>
 			<artifactId>cxio</artifactId>
-			<version>0.9.02</version>
+			<version>0.9.04</version>
 		</dependency>
 		
 		<!-- Testing -->

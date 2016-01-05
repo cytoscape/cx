@@ -1013,31 +1013,70 @@ public final class CxToCy {
     }
 
     private final static Object parseValue(final String value, final Class<?> type) {
-        if (type == String.class) {
-            return value;
-        }
-        else if (type == Long.class) {
-            return Long.valueOf(value);
-        }
-        else if (type == Integer.class) {
-            return Integer.valueOf(value);
-        }
-        else if (type == Short.class) {
-            return Integer.valueOf(value);
-        }
-        else if (type == Float.class) {
-            return Float.valueOf(value);
-        }
-        else if (type == Double.class) {
-            return Double.valueOf(value);
-        }
-        else if (type == Boolean.class) {
-            return Boolean.valueOf(value);
-        }
-        else {
-            throw new IllegalArgumentException("don't know how to deal with type '" + type + "' for value '" + value
-                                               + "'");
-        }
+    	if (type != String.class && ( value == null || value.equals("") ) ) {
+    		return null;
+    	}
+    	if (type == String.class) {
+    		return value;
+    	}
+    	else if (type == Long.class) {
+    		try {
+    			return Long.valueOf(value);
+    		}
+    		catch ( final NumberFormatException e ) {
+    			throw new IllegalArgumentException("could not convert '" + value + "' to long"
+    					);
+    		}
+    	}
+    	else if (type == Integer.class) {
+    		try {
+    			return Integer.valueOf(value);
+    		}
+    		catch ( final NumberFormatException e ) {
+    			throw new IllegalArgumentException("could not convert '" + value + "' to integer"
+    					);
+    		}
+    	}
+    	else if (type == Short.class) {
+    		try {
+    			return Integer.valueOf(value);
+    		}
+    		catch ( final NumberFormatException e ) {
+    			throw new IllegalArgumentException("could not convert '" + value + "' to short"
+    					);
+    		}
+    	}
+    	else if (type == Float.class) {
+    		try {
+    			return Float.valueOf(value);
+    		}
+    		catch ( final NumberFormatException e ) {
+    			throw new IllegalArgumentException("could not convert '" + value + "' to float"
+    					);
+    		}
+    	}
+    	else if (type == Double.class) {
+    		try {
+    			return Double.valueOf(value);
+    		}
+    		catch ( final NumberFormatException e ) {
+    			throw new IllegalArgumentException("could not convert '" + value + "' to double"
+    					);
+    		}
+    	}
+    	else if (type == Boolean.class) {
+    		try {
+    			return Boolean.valueOf(value);
+    		}
+    		catch ( final NumberFormatException e ) {
+    			throw new IllegalArgumentException("could not convert '" + value + "' to boolean"
+    					);
+    		}
+    	}
+    	else {
+    		throw new IllegalArgumentException("don't know how to deal with type '" + type + "' for value '" + value
+    				+ "'");
+    	}
     }
 
     private final static void processEdgeAttributes(final List<AspectElement> edge_attributes,
