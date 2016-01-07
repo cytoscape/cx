@@ -1013,7 +1013,7 @@ public final class CxToCy {
     }
 
     private final static Object parseValue(final String value, final Class<?> type) {
-    	if (type != String.class && ( value == null || value.equals("") ) ) {
+    	if (type != String.class && ( value == null || value.equals("") || value.equals("NaN") || value.equals("nan") || value.toLowerCase().equals("null")) ) {
     		return null;
     	}
     	if (type == String.class) {

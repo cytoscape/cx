@@ -84,6 +84,16 @@ public class CxNetworkReaderTest {
         assertTrue(n.getNodeCount() == 331);
         assertTrue(n.getEdgeCount() == 362);
     }
+    
+    @Test
+    public void test2b() throws Exception {
+        final File test_file = new File("src/test/resources/testData/gal_filtered_3.cx");
+        final List<CyNetwork> networks = loadNetwork(test_file, true);
+        assertTrue((networks.size() == 1));
+        final CyNetwork n = networks.get(0);
+        assertTrue(n.getNodeCount() == 331);
+        assertTrue(n.getEdgeCount() == 362);
+    }
 
     @Test
     public void test3() throws Exception {
