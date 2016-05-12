@@ -76,11 +76,11 @@ public class CyActivator extends AbstractCyActivator {
         final RenderingEngineManager rendering_engine_manager = getService(bc, RenderingEngineManager.class);
         final VisualStyleFactory visual_style_factory = getService(bc, VisualStyleFactory.class);
         final CyGroupFactory group_factory = getService(bc, CyGroupFactory.class);
-        final BasicCyFileFilter basic_file_filter = new BasicCyFileFilter(new String[] { "cx" },
-                                                                          new String[] { "application/json" },
-                                                                          "CX JSON",
-                                                                          DataCategory.NETWORK,
-                                                                          streamUtil);
+        final CytoscapeCxFileFilter cxfilter = new CytoscapeCxFileFilter(new String[] { "cx" },
+                                                                                   new String[] { "application/json" },
+                                                                                  "CX JSON",
+                                                                                   DataCategory.NETWORK,
+                                                                                   streamUtil);
 
         final VisualMappingFunctionFactory vmfFactoryC = getService(bc,
                                                                     VisualMappingFunctionFactory.class,
@@ -92,7 +92,7 @@ public class CyActivator extends AbstractCyActivator {
                                                                     VisualMappingFunctionFactory.class,
                                                                     "(mapping.type=passthrough)");
 
-        final CytoscapeCxNetworkReaderFactory cx_reader_factory = new CytoscapeCxNetworkReaderFactory(basic_file_filter,
+        final CytoscapeCxNetworkReaderFactory cx_reader_factory = new CytoscapeCxNetworkReaderFactory(cxfilter,
                                                                                                       application_manager,
                                                                                                       network_factory,
                                                                                                       network_manager,
