@@ -17,7 +17,7 @@ public class CytoscapeCxFileFilter extends BasicCyFileFilter {
 
     private static final Logger logger            = LoggerFactory.getLogger(CytoscapeCxFileFilter.class);
     public static final Pattern CX_HEADER_PATTERN = Pattern
-                                                          .compile("\\s*[\\s*{\\s*\"\\s*numberVerification\\s*\"\\s*:");
+                                                          .compile("\\s*\\[\\s*\\{\\s*\"\\s*numberVerification\"\\s*:");
 
     public CytoscapeCxFileFilter(final Set<String> extensions,
                                  final Set<String> contentTypes,
@@ -83,4 +83,7 @@ public class CytoscapeCxFileFilter extends BasicCyFileFilter {
 
         return root;
     }
+   
+    
+    
 }
