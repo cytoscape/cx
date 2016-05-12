@@ -84,6 +84,15 @@ public class CytoscapeCxFileFilter extends BasicCyFileFilter {
         return root;
     }
    
-    
+    public static void main(String [] args)
+    {
+        final String str = "\t[\n{\n   \"numberVerification\"    \n:   [{\"longNumber\"     :    281474976710655} ]}, {";
+        final Matcher matcher = CX_HEADER_PATTERN.matcher(str);
+        
+        String root = null;if (matcher.find()) {
+            root = matcher.group(0);
+        }
+        System.out.println(root);
+    }
     
 }

@@ -9,6 +9,7 @@ import org.cytoscape.group.CyGroupFactory;
 import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.BasicCyFileFilter;
 import org.cytoscape.io.DataCategory;
+import org.cytoscape.io.internal.cx_reader.CytoscapeCxFileFilter;
 import org.cytoscape.io.internal.cx_reader.CytoscapeCxNetworkReaderFactory;
 import org.cytoscape.io.internal.cx_writer.CxNetworkWriterFactory;
 import org.cytoscape.io.read.InputStreamTaskFactory;
@@ -40,11 +41,11 @@ public class CyActivator extends AbstractCyActivator {
 
         final StreamUtil streamUtil = getService(bc, StreamUtil.class);
 
-        final BasicCyFileFilter cx_filter = new BasicCyFileFilter(new String[] { "cx" },
-                                                                  new String[] { "application/json" },
-                                                                  "CX JSON",
-                                                                  DataCategory.NETWORK,
-                                                                  streamUtil);
+        final CytoscapeCxFileFilter cx_filter = new CytoscapeCxFileFilter(new String[] { "cx" },
+                                                                          new String[] { "application/json" },
+                                                                           "CX JSON",
+                                                                          DataCategory.NETWORK,
+                                                                          streamUtil);
 
         // Writer:
         final VisualMappingManager visual_mapping_manager = getService(bc, VisualMappingManager.class);
