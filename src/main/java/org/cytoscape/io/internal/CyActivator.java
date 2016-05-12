@@ -111,7 +111,7 @@ public class CyActivator extends AbstractCyActivator {
 
         // This is the unique identifier for this reader. 3rd party developer
         // can use this service by using this ID.
-        reader_factory_properties.put(ID, "cytoscapejsNetworkReaderFactory");
+        reader_factory_properties.put(ID, "cytoscapeCxNetworkReaderFactory");
         registerService(bc, cx_reader_factory, InputStreamTaskFactory.class, reader_factory_properties);
 
     }
