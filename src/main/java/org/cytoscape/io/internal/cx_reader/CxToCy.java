@@ -747,15 +747,20 @@ public final class CxToCy {
                              final CyTable table) {
         if (table != null) {
             if (table.getColumn(name) == null) {
-                if (is_single) {
-                    table.createColumn(name,
-                                       data_type,
-                                       false);
-                }
-                else {
-                    table.createListColumn(name,
+                try {
+                    if (is_single) {
+                        table.createColumn(name,
                                            data_type,
                                            false);
+                    }
+                    else {
+                        table.createListColumn(name,
+                                               data_type,
+                                               false);
+                    }
+                }
+                catch ( final IllegalArgumentException e ) {
+                    System.out.println(e.getMessage());
                 }
             }
         }
@@ -763,10 +768,10 @@ public final class CxToCy {
 
     private boolean isSingle(final ATTRIBUTE_DATA_TYPE dt) {
 
-        return dt == ATTRIBUTE_DATA_TYPE.BOOLEAN || dt == ATTRIBUTE_DATA_TYPE.BYTE || dt == ATTRIBUTE_DATA_TYPE.CHAR
+        return ( dt == ATTRIBUTE_DATA_TYPE.BOOLEAN || dt == ATTRIBUTE_DATA_TYPE.BYTE || dt == ATTRIBUTE_DATA_TYPE.CHAR
                 || dt == ATTRIBUTE_DATA_TYPE.DOUBLE || dt == ATTRIBUTE_DATA_TYPE.FLOAT
                 || dt == ATTRIBUTE_DATA_TYPE.INTEGER || dt == ATTRIBUTE_DATA_TYPE.LONG
-                || dt == ATTRIBUTE_DATA_TYPE.SHORT || dt == ATTRIBUTE_DATA_TYPE.STRING;
+                || dt == ATTRIBUTE_DATA_TYPE.SHORT || dt == ATTRIBUTE_DATA_TYPE.STRING );
     }
 
     private final void addNodes(final CySubNetwork network,
