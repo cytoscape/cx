@@ -18,9 +18,9 @@
 	</properties>
 
 	<groupId>org.cytoscape</groupId>
-	<artifactId>cx-impl</artifactId>
-	<version>0.9.9</version>
-	<name>Cytoscape CX IO Impl</name>
+	<artifactId>cx-support</artifactId>
+	<version>0.9.10</version>
+	<name>CX Support</name>
 	<packaging>bundle</packaging>
 
 	<distributionManagement>
