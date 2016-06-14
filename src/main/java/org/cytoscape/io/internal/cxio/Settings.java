@@ -7,8 +7,8 @@ public final class Settings {
     private static final boolean IGNORE_SELECTED_COLUMN_DEFAULT                                        = false;
     private static final boolean IGNORE_SUID_COLUMN_DEFAULT                                            = true;
     private static final boolean WRITE_SELECTED_ONLY_IF_TRUE_DEFAULT                                   = false;
-    private static final boolean DEBUG_DEFAULT                                                         = true;
-    private static final boolean TIMING_DEFAULT                                                        = true;
+    private static final boolean DEBUG_DEFAULT                                                         = false;
+    private static final boolean TIMING_DEFAULT                                                        = false;
     private static final boolean ALLOW_TO_USE_NETWORK_COLLECTION_NAME_FROM_NETWORK_ATTTRIBUTES_DEFAULT = true;
 
     private boolean              _timing                                                               = TIMING_DEFAULT;

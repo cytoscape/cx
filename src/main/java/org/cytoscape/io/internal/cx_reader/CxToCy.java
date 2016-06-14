@@ -1030,9 +1030,9 @@ public final class CxToCy {
             if (aspects != null && !aspects.isEmpty()) {
                 final String name = aspects.get(0).getAspectName();
 
-                TimingUtil.reportTime(prev_time,
-                                      name,
-                                      aspects.size());
+//                TimingUtil.reportTime(prev_time,
+//                                      name,
+//                                      aspects.size());
                 time_total += prev_time;
                 prev_time = System.currentTimeMillis() - t;
 
@@ -1045,9 +1045,9 @@ public final class CxToCy {
                 }
             }
         }
-        TimingUtil.reportTime(time_total,
-                              "sum",
-                              -1);
+//        TimingUtil.reportTime(time_total,
+//                              "sum",
+//                              -1);
         return all_aspects;
     }
 
