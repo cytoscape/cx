@@ -1,6 +1,6 @@
 package org.cytoscape.io.cxio;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -10,6 +10,8 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.SortedMap;
+
+import javax.swing.table.DefaultTableCellRenderer;
 
 import org.cxio.misc.AspectElementCounts;
 import org.cxio.core.CxReader;
@@ -22,9 +24,11 @@ import org.cytoscape.io.internal.cxio.CxExporter;
 import org.cytoscape.io.internal.cxio.CxImporter;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkFactory;
+import org.cytoscape.model.CyTable;
 import org.cytoscape.model.NetworkTestSupport;
 import org.cytoscape.model.SUIDFactory;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
+import org.cytoscape.model.subnetwork.CySubNetwork;
 import org.junit.Test;
 
 public class CxNetworkWriterTest {
@@ -364,5 +368,57 @@ public class CxNetworkWriterTest {
         assertTrue(n2.getNodeCount() == 2);
         assertTrue(n2.getEdgeCount() == 0);
     }
-
+    
+    @Test
+    public void testRootNetworkAttr() throws Exception {
+        final File test_file = new File("src/test/resources/testData/mapping_types.cx");
+        final List<CyNetwork> networks = loadNetwork(test_file, false);
+        assertTrue((networks.size() == 1));
+        final CyNetwork n = networks.get(0);
+        assertTrue(n.getNodeCount() == 2);
+        assertTrue(n.getEdgeCount() == 0);
+        final CyRootNetwork root = ((CySubNetwork)n).getRootNetwork();
+        
+        final String attr1 = "description";
+        final String attr2 = "double1";
+        final String attr3 = "int1";
+        final String attr4 = "bool1";
+        
+        final String val1 = "test description";
+        final Double val2 = 22.11;
+        final Integer val3 = 7;
+        final Boolean val4 = true;
+        
+        root.getDefaultNetworkTable().createColumn(attr1, String.class, false);
+        root.getDefaultNetworkTable().createColumn(attr2, Double.class, false);
+        root.getDefaultNetworkTable().createColumn(attr3, Integer.class, false);
+        root.getDefaultNetworkTable().createColumn(attr4, Boolean.class, false);
+        
+        root.getRow(root).set(CyNetwork.NAME, "test1");
+        root.getRow(root).set(attr1, val1);
+        root.getRow(root).set(attr2, val2);
+        root.getRow(root).set(attr3, val3);
+        root.getRow(root).set(attr4, val4);
+        
+        System.out.println(root.getDefaultNetworkTable().getColumns());
+        
+        // name, shared_name, selected, SUID, and extra 4 columns
+        assertEquals(root.getDefaultNetworkTable().getColumns().size(), 8);
+        
+        final ByteArrayOutputStream out = writeNetwork(n);
+        String outStr = out.toString();
+        System.out.println(outStr);
+        
+        final ByteArrayInputStream in = new ByteArrayInputStream(outStr.getBytes(StandardCharsets.UTF_8));
+        final List<CyNetwork> networks_2 = loadNetwork(in, true);
+        assertTrue((networks_2.size() == 1));
+        final CyNetwork n2 = networks_2.get(0);
+        assertTrue(n2.getNodeCount() == 2);
+        assertTrue(n2.getEdgeCount() == 0);
+        
+        final CyRootNetwork root2 = ((CySubNetwork)n2).getRootNetwork();
+        System.out.println("======= Resulting root network ==========");
+        System.out.println(root2.getDefaultNetworkTable().getColumns());
+        assertEquals(root2.getDefaultNetworkTable().getColumns().size(), 8);
+    }
 }

@@ -958,7 +958,7 @@ public final class CxExporter {
                                               final String namespace) throws IOException {
 
         final List<AspectElement> elements = new ArrayList<AspectElement>();
-
+        
         final CySubNetwork my_subnet = (CySubNetwork) network;
         final CyRootNetwork my_root = my_subnet.getRootNetwork();
 
@@ -967,9 +967,9 @@ public final class CxExporter {
         if (Settings.INSTANCE.isDebug()) {
             System.out.println("collection name: " + collection_name);
         }
-        if (collection_name != null) {
-            elements.add(new NetworkAttributesElement(null, "name", collection_name, ATTRIBUTE_DATA_TYPE.STRING));
-        }
+        
+        // Write root table
+        writeNetworkAttributesHelper(namespace, my_root, elements);
 
         for (final CySubNetwork subnet : subnets) {
             writeNetworkAttributesHelper(namespace, subnet, elements);
@@ -1018,7 +1018,14 @@ public final class CxExporter {
                         continue;
                     }
                     NetworkAttributesElement e = null;
-                    final long subnet = my_network.getSUID();
+                    
+                    final Long subnet;
+                    if(my_network instanceof CyRootNetwork) {
+                    		subnet = null;
+                    } else {
+                    		subnet = my_network.getSUID();
+                    }
+                    
                     if (value instanceof List) {
                         final List<String> attr_values = new ArrayList<String>();
                         for (final Object v : (List) value) {
