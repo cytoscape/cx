@@ -1,6 +1,7 @@
 package org.cytoscape.io.cxio;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -8,23 +9,23 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.List;
 import java.util.SortedMap;
 
-import javax.swing.table.DefaultTableCellRenderer;
-
-import org.cxio.misc.AspectElementCounts;
 import org.cxio.core.CxReader;
 import org.cxio.core.interfaces.AspectElement;
 import org.cxio.metadata.MetaDataCollection;
+import org.cxio.misc.AspectElementCounts;
 import org.cytoscape.io.internal.cx_reader.CxToCy;
 import org.cytoscape.io.internal.cxio.Aspect;
 import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxExporter;
 import org.cytoscape.io.internal.cxio.CxImporter;
+import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkFactory;
-import org.cytoscape.model.CyTable;
+import org.cytoscape.model.CyRow;
 import org.cytoscape.model.NetworkTestSupport;
 import org.cytoscape.model.SUIDFactory;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
@@ -377,7 +378,16 @@ public class CxNetworkWriterTest {
         final CyNetwork n = networks.get(0);
         assertTrue(n.getNodeCount() == 2);
         assertTrue(n.getEdgeCount() == 0);
+        
         final CyRootNetwork root = ((CySubNetwork)n).getRootNetwork();
+        
+        final String subName = "Subnetwork 1";
+        final String collectionName = "Collection 1";
+        
+        // New Sub Network Name
+        n.getRow(n).set(CyNetwork.NAME, subName);
+        // New Collection name
+        root.getRow(root).set(CyNetwork.NAME, collectionName);
         
         final String attr1 = "description";
         final String attr2 = "double1";
@@ -394,7 +404,6 @@ public class CxNetworkWriterTest {
         root.getDefaultNetworkTable().createColumn(attr3, Integer.class, false);
         root.getDefaultNetworkTable().createColumn(attr4, Boolean.class, false);
         
-        root.getRow(root).set(CyNetwork.NAME, "test1");
         root.getRow(root).set(attr1, val1);
         root.getRow(root).set(attr2, val2);
         root.getRow(root).set(attr3, val3);
@@ -420,5 +429,23 @@ public class CxNetworkWriterTest {
         System.out.println("======= Resulting root network ==========");
         System.out.println(root2.getDefaultNetworkTable().getColumns());
         assertEquals(root2.getDefaultNetworkTable().getColumns().size(), 8);
+        
+        System.out.println(root2.getRow(root2));
+        
+        final CyRow r1 = n2.getRow(n2);
+        final CyRow row2 = root2.getRow(root2);
+        n2.getDefaultNetworkTable().getColumns().stream()
+        		.forEach(col-> System.out.println(col.getName() + " = " + r1.get(col.getName(), col.getType())));
+        System.out.println("====================");
+        root2.getDefaultNetworkTable().getColumns().stream()
+        		.forEach(col-> System.out.println(col.getName() + " = " + row2.get(col.getName(), col.getType())));
+        
+        assertEquals(n2.getRow(n2).get(CyNetwork.NAME, String.class), subName);
+        assertEquals(root2.getRow(root2).get(CyNetwork.NAME, String.class), collectionName);
+        
+        assertEquals(root2.getRow(root2).get(attr1, String.class), val1);
+        assertEquals(root2.getRow(root2).get(attr2, Double.class), val2);
+        assertEquals(root2.getRow(root2).get(attr3, Integer.class), val3);
+        assertEquals(root2.getRow(root2).get(attr4, Boolean.class), val4);
     }
 }

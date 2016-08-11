@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
 import org.cxio.aspects.datamodels.AbstractAttributesAspectElement;
@@ -32,7 +33,6 @@ import org.cytoscape.group.CyGroup;
 import org.cytoscape.group.CyGroupFactory;
 import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.Settings;
-import org.cytoscape.io.internal.cxio.TimingUtil;
 import org.cytoscape.io.internal.cxio.VisualPropertyType;
 import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyEdge;
@@ -42,6 +42,7 @@ import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyRow;
 import org.cytoscape.model.CyTable;
+import org.cytoscape.model.CyTableManager;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CySubNetwork;
 
@@ -143,6 +144,39 @@ public final class CxToCy {
                              perform_basic_integrity_checks);
 
     }
+    
+    private final void createColumn(final NetworkAttributesElement el, final CyTable table) {
+    		final String colName = el.getName();
+    		if(table.getColumn(colName) == null) {
+    			table.createColumn(colName, getDataType(el.getDataType()), false);
+    		}
+    }
+    
+	private final void addNetworkCollectionAttributes(
+			final List<NetworkAttributesElement> netAttr, final CyRootNetwork root) {
+	
+		// If network attribute is not available, simply skip it.
+		if(netAttr == null) {
+			return;
+		}
+		
+		// Get default table and the row for the Collection
+		final CyTable table = root.getDefaultNetworkTable();
+		final CyRow row = table.getRow(root.getSUID());
+		
+		final Set<NetworkAttributesElement> rootAttrs = netAttr.stream()
+			.filter(attr -> attr.getSubnetwork() == null)
+			.collect(Collectors.toSet());
+
+		// Create new columns if necessary
+		rootAttrs.stream()
+			.forEach(rootAttr->createColumn(rootAttr, table));
+
+		// Assign actual collection attributes
+		rootAttrs.stream()
+			.forEach(rootAttr->addToColumn(table, row, rootAttr));
+		
+	}
 
     public final List<CyNetwork> createNetwork(final SortedMap<String, List<AspectElement>> aspect_collection,
                                                CyRootNetwork root_network,
@@ -156,7 +190,7 @@ public final class CxToCy {
         final List<AspectElement> cartesian_layout_elements = aspect_collection.get(CartesianLayoutElement.ASPECT_NAME);
         final List<AspectElement> node_attributes = aspect_collection.get(NodeAttributesElement.ASPECT_NAME);
         final List<AspectElement> edge_attributes = aspect_collection.get(EdgeAttributesElement.ASPECT_NAME);
-        final List<AspectElement> network_attributes = aspect_collection.get(NetworkAttributesElement.ASPECT_NAME);
+        final List<? extends AspectElement> network_attributes = aspect_collection.get(NetworkAttributesElement.ASPECT_NAME);
         final List<AspectElement> hidden_attributes = aspect_collection.get(HiddenAttributesElement.ASPECT_NAME);
         final List<AspectElement> visual_properties = aspect_collection.get(CyVisualPropertiesElement.ASPECT_NAME);
         final List<AspectElement> subnetworks = aspect_collection.get(SubNetworkElement.ASPECT_NAME);
@@ -270,12 +304,16 @@ public final class CxToCy {
                 sub_network = (CySubNetwork) network_factory.createNetwork();
                 root_network = sub_network.getRootNetwork();
                 if (!CxioUtil.isEmpty(collection_name)) {
+                		
                     root_network.getRow(root_network).set(CyNetwork.NAME,
                                                           collection_name);
                 }
             }
             subnetworks_ary[i] = sub_network;
         }
+        
+        addNetworkCollectionAttributes((List<NetworkAttributesElement>) network_attributes, root_network);
+        
 
         processColumnLabels(table_columns,
                             subnetwork_to_col_labels_map,
@@ -305,6 +343,7 @@ public final class CxToCy {
         processGroups(groups,
                       view_to_groups_map,
                       subnet_info_present);
+
 
         final List<CyNetwork> new_networks = new ArrayList<CyNetwork>();
 
@@ -379,9 +418,11 @@ public final class CxToCy {
                                                              CyNetwork.LOCAL_ATTRS));
             }
             else if (network_attributes_map.containsKey(DEFAULT_SUBNET)) {
+            		// This is the root network! 
                 if (Settings.INSTANCE.isDebug()) {
                     System.out.println("adding network attributes lacking sub-network information");
                 }
+                
                 addNetworkAttributeData(network_attributes_map.get(DEFAULT_SUBNET),
                                         sub_network,
                                         sub_network.getTable(CyNetwork.class,
@@ -665,24 +706,22 @@ public final class CxToCy {
         }
     }
 
-    private final void addNetworkAttributeData(final List<NetworkAttributesElement> elements,
-                                               final CyNetwork network,
-                                               final CyTable table) {
-        if (table == null) {
-            throw new IllegalArgumentException("table (network) must not be null");
-        }
-        if (elements == null) {
-            return;
-        }
-        final CyRow row = network.getRow(network);
-        if (row != null) {
-            for (final AbstractAttributesAspectElement e : elements) {
-                addToColumn(table,
-                            row,
-                            e);
-            }
-        }
-    }
+	private final void addNetworkAttributeData(final List<NetworkAttributesElement> elements, final CyNetwork network,
+			final CyTable table) {
+		if (table == null) {
+			throw new IllegalArgumentException("table (network) must not be null");
+		}
+		if (elements == null) {
+			return;
+		}
+		final CyRow row = network.getRow(network);
+
+		if (row != null) {
+			for (final AbstractAttributesAspectElement e : elements) {
+				addToColumn(table, row, e);
+			}
+		}
+	}
 
     private void addNetworkNames(final CySubNetwork sub_network,
                                  final Map<Long, String> subnet_to_subnet_name_map,
@@ -918,11 +957,8 @@ public final class CxToCy {
                     if (table.getColumn(name) == null) {
                         final Class<?> data_type = getDataType(e.getDataType());
                         if (e.isSingleValue()) {
-                            table.createColumn(name,
-                                               data_type,
-                                               false);
-                        }
-                        else {
+							table.createColumn(name, data_type, false);
+                        } else {
                             table.createListColumn(name,
                                                    data_type,
                                                    false);
@@ -981,33 +1017,32 @@ public final class CxToCy {
         }
     }
 
-    private void processNetworkAttributes(final List<AspectElement> network_attributes,
-                                          final Map<Long, List<NetworkAttributesElement>> network_attributes_map,
-                                          final boolean subnet_info_present,
-                                          final List<Long> subnetworks_ids) throws IOException {
+	private void processNetworkAttributes(final List<? extends AspectElement> network_attributes,
+			final Map<Long, List<NetworkAttributesElement>> network_attributes_map, final boolean subnet_info_present,
+			final List<Long> subnetworks_ids) throws IOException {
 
-        if (network_attributes != null) {
-            for (final AspectElement e : network_attributes) {
-                final NetworkAttributesElement nae = (NetworkAttributesElement) e;
+		if (network_attributes == null) {
+			return;
+		}
+		
+		for (final AspectElement e : network_attributes) {
+			final NetworkAttributesElement nae = (NetworkAttributesElement) e;
 
-                Long subnet = DEFAULT_SUBNET;
-                if (subnet_info_present) {
-                    if (nae.getSubnetwork() != null) {
-                        subnet = nae.getSubnetwork();
-                    }
-                    else if (subnetworks_ids.size() == 1) {
-                        subnet = subnetworks_ids.get(0);
-                    }
-                }
+			Long subnet = DEFAULT_SUBNET;
+			if (subnet_info_present) {
+				if (nae.getSubnetwork() != null) {
+					subnet = nae.getSubnetwork();
+				} else if (subnetworks_ids.size() == 1) {
+					subnet = subnetworks_ids.get(0);
+				}
+			}
 
-                if (!network_attributes_map.containsKey(subnet)) {
-                    network_attributes_map.put(subnet,
-                                               new ArrayList<NetworkAttributesElement>());
-                }
-                network_attributes_map.get(subnet).add(nae);
-            }
-        }
-    }
+			if (!network_attributes_map.containsKey(subnet)) {
+				network_attributes_map.put(subnet, new ArrayList<NetworkAttributesElement>());
+			}
+			network_attributes_map.get(subnet).add(nae);
+		}
+	}
 
     public final static SortedMap<String, List<AspectElement>> parseAsMap(final CxReader cxr,
                                                                           long t,
