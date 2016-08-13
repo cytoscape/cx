@@ -50,16 +50,18 @@ public final class ViewMaker {
                                                final VisualMappingFunctionFactory vmf_factory_d,
                                                final VisualMappingFunctionFactory vmf_factory_p) throws IOException {
 
+	System.out.println("VIEW  $$$$$$$$ COL: " + network_collection_name);
+	System.out.println("VIEW  $$$$$$$$ NET: " + network.getRow(network).get(CyNetwork.NAME, String.class));
         final long t0 = System.currentTimeMillis();
         final VisualElementCollectionMap collection = cx_to_cy.getVisualElementCollectionMap();
         final CyNetworkView view = networkview_factory.createNetworkView(network);
         if ((collection == null) || collection.isEmpty()) {
             return view;
-
         }
 
         final Long network_id = cx_to_cy.getNetworkSuidToNetworkRelationsMap().get(network.getSUID());
 
+		System.out.println("\n\n$$$$$$$$ NET MAP: " + cx_to_cy.getNetworkSuidToNetworkRelationsMap());
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         // PLEASE NOTE
         // -----------
@@ -68,9 +70,15 @@ public final class ViewMaker {
         // might change, which means instead of "get(0)" we will need a
         // loop.
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        if (!cx_to_cy.getSubNetworkToViewsMap().containsKey(network_id)) {
-            return view;
-        }
+		try {
+			System.out.println("$$$$$$$$ NET ID: " + network_id);
+			if (network_id == null || !cx_to_cy.getSubNetworkToViewsMap().containsKey(network_id)) {
+				return view;
+			}
+		} catch (Exception e) {
+			System.out.println("---------- TREE ERR");
+			e.printStackTrace();
+		}
 
         final Long view_id = cx_to_cy.getSubNetworkToViewsMap().get(network_id).get(0);
         if (Settings.INSTANCE.isDebug()) {
@@ -157,9 +165,10 @@ public final class ViewMaker {
 
         if (have_default_visual_properties) {
             visual_mapping_manager.addVisualStyle(new_visual_style);
+            visual_mapping_manager.setVisualStyle(new_visual_style, view);
             new_visual_style.apply(view);
             visual_mapping_manager.setCurrentVisualStyle(new_visual_style);
-            visual_mapping_manager.setVisualStyle(new_visual_style, view);
+					System.out.println("\n\n@@CX APPLY style: " + new_visual_style.getTitle());
         }
         if (Settings.INSTANCE.isTiming()) {
             TimingUtil.reportTimeDifference(t0, "time to make view", -1);

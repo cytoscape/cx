@@ -58,7 +58,8 @@ public final class CxToCy {
     private Map<Long, CyEdge>          _cxid_to_cyedge_map;
     private Map<Long, Long>            _view_to_subnet_map;
     private Map<Long, List<Long>>      _subnet_to_views_map;
-
+    
+    
     public final Map<Long, Long> getViewToSubNetworkMap() {
         return _view_to_subnet_map;
     }
@@ -357,6 +358,9 @@ public final class CxToCy {
 
             final Long subnetwork_id = subnetwork_ids.size() > 0 ? subnetwork_ids.get(i) : sub_network.getSUID();
 
+            System.out.println(i + ": && Adding to map: " + sub_network.getSUID());
+            System.out.println("    " + i + ": && ID: " + subnetwork_id);
+            
             _network_suid_to_networkrelations_map.put(sub_network.getSUID(),
                                                       subnetwork_id);
             if (Settings.INSTANCE.isDebug()) {
