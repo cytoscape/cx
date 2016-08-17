@@ -434,7 +434,7 @@
     "y" : 158.0
   } ]
 }, {
-  "visualProperties" : [ {
+  "cyVisualProperties" : [ {
     "properties_of" : "network",
     "applies_to" : 419,
     "view" : 419,
@@ -623,7 +623,7 @@
     }
   } ]
 }, {
-  "subNetworks" : [ {
+  "cySubNetworks" : [ {
     "@id" : 398,
     "nodes" : [ 413, 412, 411, 410, 409, 408 ],
     "edges" : [ 418, 417, 416, 415, 414 ]
@@ -634,7 +634,7 @@
     "s" : 398
   } ]
 }, {
-  "networkRelations" : [ {
+  "cyNetworkRelations" : [ {
     "p" : 398,
     "c" : 419,
     "r" : "view",
@@ -655,7 +655,7 @@
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 0,
-    "name" : "hiddenAttributes",
+    "name" : "cyHiddenAttributes",
     "properties" : [ ],
     "version" : "1.0"
   }, {
@@ -679,13 +679,13 @@
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 9,
-    "name" : "visualProperties",
+    "name" : "cyVisualProperties",
     "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 1,
-    "name" : "subNetworks",
+    "name" : "cySubNetworks",
     "properties" : [ ],
     "version" : "1.0"
   }, {
@@ -703,7 +703,7 @@
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 2,
-    "name" : "networkRelations",
+    "name" : "cyNetworkRelations",
     "properties" : [ ],
     "version" : "1.0"
   } ]

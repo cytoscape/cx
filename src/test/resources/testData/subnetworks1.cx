@@ -35,7 +35,7 @@
 		"t": 7
 	}]
 }, {
-	"subNetworks": [{
+	"cySubNetworks": [{
 		"@id": 1,
 		"nodes": [1, 2, 3, 4, 5],
 		"edges": [101]
@@ -53,7 +53,7 @@
 		"s": 2
 	}]
 }, {
-	"networkRelations": [{
+	"cyNetworkRelations": [{
 		"p": 0,
 		"c": 1,
 		"r": "subnetwork",

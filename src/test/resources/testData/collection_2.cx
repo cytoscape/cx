@@ -1516,7 +1516,7 @@
     "y" : -89.0
   } ]
 }, {
-  "visualProperties" : [ {
+  "cyVisualProperties" : [ {
     "properties_of" : "network",
     "applies_to" : 309,
     "view" : 309,
@@ -1678,7 +1678,7 @@
     "y" : -92.0
   } ]
 }, {
-  "visualProperties" : [ {
+  "cyVisualProperties" : [ {
     "properties_of" : "network",
     "applies_to" : 314,
     "view" : 314,
@@ -1855,7 +1855,7 @@
     "y" : -93.0
   } ]
 }, {
-  "visualProperties" : [ {
+  "cyVisualProperties" : [ {
     "properties_of" : "network",
     "applies_to" : 331,
     "view" : 331,
@@ -2012,7 +2012,7 @@
     "y" : -41.0
   } ]
 }, {
-  "visualProperties" : [ {
+  "cyVisualProperties" : [ {
     "properties_of" : "network",
     "applies_to" : 369,
     "view" : 369,
@@ -2147,7 +2147,7 @@
     }
   } ]
 }, {
-  "subNetworks" : [ {
+  "cySubNetworks" : [ {
     "@id" : 205,
     "nodes" : [ 246, 245 ],
     "edges" : [ 247 ]
@@ -2179,7 +2179,7 @@
     "s" : 235
   } ]
 }, {
-  "networkRelations" : [ {
+  "cyNetworkRelations" : [ {
     "p" : 205,
     "c" : 309,
     "r" : "view",
@@ -2230,7 +2230,7 @@
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 0,
-    "name" : "hiddenAttributes",
+    "name" : "cyHiddenAttributes",
     "properties" : [ ],
     "version" : "1.0"
   }, {
@@ -2254,13 +2254,13 @@
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 12,
-    "name" : "visualProperties",
+    "name" : "cyVisualProperties",
     "properties" : [ ],
     "version" : "1.0"
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 4,
-    "name" : "subNetworks",
+    "name" : "cySubNetworks",
     "properties" : [ ],
     "version" : "1.0"
   }, {
@@ -2278,7 +2278,7 @@
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 8,
-    "name" : "networkRelations",
+    "name" : "cyNetworkRelations",
     "properties" : [ ],
     "version" : "1.0"
   } ]

@@ -20,7 +20,7 @@
     "name" : "networkAttributes"
   }, {
     "elementCount" : 0,
-    "name" : "hiddenAttributes"
+    "name" : "cyHiddenAttributes"
   }, {
     "elementCount" : 5,
     "name" : "nodeAttributes"
@@ -32,10 +32,10 @@
     "name" : "cartesianLayout"
   }, {
     "elementCount" : 6,
-    "name" : "visualProperties"
+    "name" : "cyVisualProperties"
   }, {
     "elementCount" : 2,
-    "name" : "subNetworks"
+    "name" : "cySubNetworks"
   }, {
     "elementCount" : 2,
     "name" : "cyViews"
@@ -44,7 +44,7 @@
     "name" : "cyGroups"
   }, {
     "elementCount" : 4,
-    "name" : "networkRelations"
+    "name" : "cyNetworkRelations"
   } ]
 }, {
   "ndexStatus" : [ {
@@ -319,7 +319,7 @@
     "y" : -112.0
   } ]
 }, {
-  "subNetworks" : [ {
+  "cySubNetworks" : [ {
     "@id" : 52,
     "nodes" : [ 78, 76 ],
     "edges" : [ 92 ]
@@ -337,7 +337,7 @@
     "s" : 64
   } ]
 }, {
-  "networkRelations" : [ {
+  "cyNetworkRelations" : [ {
     "p" : 36,
     "c" : 52,
     "r" : "subnetwork",
@@ -359,7 +359,7 @@
     "name" : "B view"
   } ]
 }, {
-  "visualProperties" : [ {
+  "cyVisualProperties" : [ {
     "properties_of" : "network",
     "applies_to" : 52,
     "view" : 52,

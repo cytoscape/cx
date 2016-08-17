@@ -158,7 +158,7 @@
         ]
     },
     {
-        "visualProperties": [
+        "cyVisualProperties": [
             {
                 "properties_of": "nodes",
                 "applies_to": 1,
