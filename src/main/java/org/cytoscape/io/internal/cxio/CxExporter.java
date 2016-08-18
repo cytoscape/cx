@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
 import org.cxio.aspects.datamodels.AttributesAspectUtils;
@@ -31,6 +32,7 @@ import org.cxio.core.interfaces.AspectElement;
 import org.cxio.core.interfaces.AspectFragmentWriter;
 import org.cxio.filters.AspectKeyFilter;
 import org.cxio.metadata.MetaDataCollection;
+import org.cxio.metadata.MetaDataElement;
 import org.cytoscape.group.CyGroup;
 import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.internal.cx_writer.VisualPropertiesGatherer;
@@ -311,6 +313,18 @@ public final class CxExporter {
             pre_meta_data.setIdCounter(aspect_name, id_counter);
         }
     }
+    
+    private final static void addDataToPreMetaDataCollection(final MetaDataCollection pre_meta_data,
+                                                          final String aspect_name,
+                                                          final Long consistency_group,
+                                                          final String key,
+                                                          final String value) {
+        pre_meta_data.setVersion(aspect_name, "1.0");
+        if ((key != null) && (key.length() > 0)) {
+            pre_meta_data.setProperty(aspect_name, key, value);
+        }
+        pre_meta_data.setConsistencyGroup(aspect_name, consistency_group);
+    }
 
     private final static void addDataToMetaDataCollection(final MetaDataCollection pre_meta_data,
                                                           final String aspect_name,
@@ -325,6 +339,16 @@ public final class CxExporter {
         }
         pre_meta_data.setConsistencyGroup(aspect_name, consistency_group);
 
+    }
+    
+    private final static void addDataToPostMetaDataCollection(final MetaDataCollection pre_meta_data,
+                                                          final String aspect_name,
+                                                          final Long counter) {
+//        pre_meta_data.setElementCount(aspect_name, counter);
+        final MetaDataElement element = new MetaDataElement(new TreeMap<String, Object>());
+        element.setName(aspect_name);
+        element.setElementCount(counter);
+        pre_meta_data.add(element);
     }
 
     private final static String getInteractionFromEdgeTable(final CyNetwork network, final CyEdge edge) {
@@ -590,109 +614,71 @@ public final class CxExporter {
         }
     }
 
-    private final void addPostMetadata(final AspectSet aspects,
-                                       final CyNetwork network,
-                                       final CxWriter w,
-                                       final Long consistency_group,
-                                       final AspectElementCounts aspects_counts) {
+	private final void addPostMetadata(final AspectSet aspects, final CyNetwork network, final CxWriter w,
+			final Long consistency_group, final AspectElementCounts aspects_counts) {
 
-        final long t0 = System.currentTimeMillis();
-        final MetaDataCollection post_meta_data = new MetaDataCollection();
+		final long t0 = System.currentTimeMillis();
+		final MetaDataCollection post_meta_data = new MetaDataCollection();
 
-        if (aspects.contains(Aspect.NETWORK_ATTRIBUTES)) {
-            addDataToMetaDataCollection(post_meta_data,
-                                        NetworkAttributesElement.ASPECT_NAME,
-                                        consistency_group,
-                                        (long) aspects_counts
-                                                .getAspectElementCount(NetworkAttributesElement.ASPECT_NAME),
-                                        "",
-                                        "");
-        }
-        if (aspects.contains(Aspect.HIDDEN_ATTRIBUTES)) {
-            addDataToMetaDataCollection(post_meta_data,
-                                        HiddenAttributesElement.ASPECT_NAME,
-                                        consistency_group,
-                                        (long) aspects_counts
-                                                .getAspectElementCount(HiddenAttributesElement.ASPECT_NAME),
-                                        "",
-                                        "");
-        }
-        if (aspects.contains(Aspect.NODE_ATTRIBUTES)) {
-            addDataToMetaDataCollection(post_meta_data,
-                                        NodeAttributesElement.ASPECT_NAME,
-                                        consistency_group,
-                                        (long) aspects_counts.getAspectElementCount(NodeAttributesElement.ASPECT_NAME),
-                                        "",
-                                        "");
-        }
-        if (aspects.contains(Aspect.EDGE_ATTRIBUTES)) {
-            addDataToMetaDataCollection(post_meta_data,
-                                        EdgeAttributesElement.ASPECT_NAME,
-                                        consistency_group,
-                                        (long) aspects_counts.getAspectElementCount(EdgeAttributesElement.ASPECT_NAME),
-                                        "",
-                                        "");
-        }
+		if (aspects.contains(Aspect.TABLE_COLUMN_LABELS)) {
+			addDataToPostMetaDataCollection(post_meta_data, CyTableColumnElement.ASPECT_NAME,
+					(long) aspects_counts.getAspectElementCount(CyTableColumnElement.ASPECT_NAME));
+		}
 
-        if (aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
-            addDataToMetaDataCollection(post_meta_data,
-                                        CartesianLayoutElement.ASPECT_NAME,
-                                        consistency_group,
-                                        (long) aspects_counts.getAspectElementCount(CartesianLayoutElement.ASPECT_NAME),
-                                        "",
-                                        "");
-        }
+		if (aspects.contains(Aspect.NETWORK_ATTRIBUTES)) {
+			addDataToPostMetaDataCollection(post_meta_data, NetworkAttributesElement.ASPECT_NAME,
+					(long) aspects_counts.getAspectElementCount(NetworkAttributesElement.ASPECT_NAME));
+		}
+		if (aspects.contains(Aspect.HIDDEN_ATTRIBUTES)) {
+			addDataToPostMetaDataCollection(post_meta_data, HiddenAttributesElement.ASPECT_NAME,
+					(long) aspects_counts.getAspectElementCount(HiddenAttributesElement.ASPECT_NAME));
+		}
+		if (aspects.contains(Aspect.NODE_ATTRIBUTES)) {
+			addDataToPostMetaDataCollection(post_meta_data, NodeAttributesElement.ASPECT_NAME,
+					(long) aspects_counts.getAspectElementCount(NodeAttributesElement.ASPECT_NAME));
+		}
+		if (aspects.contains(Aspect.EDGE_ATTRIBUTES)) {
+			addDataToPostMetaDataCollection(post_meta_data, EdgeAttributesElement.ASPECT_NAME,
+					(long) aspects_counts.getAspectElementCount(EdgeAttributesElement.ASPECT_NAME));
+		}
 
-        if (aspects.contains(Aspect.VISUAL_PROPERTIES)) {
-            addDataToMetaDataCollection(post_meta_data,
-                                        CyVisualPropertiesElement.ASPECT_NAME,
-                                        consistency_group,
-                                        (long) aspects_counts
-                                                .getAspectElementCount(CyVisualPropertiesElement.ASPECT_NAME),
-                                        "",
-                    "");
-        }
-        if (aspects.contains(Aspect.SUBNETWORKS)) {
-            addDataToMetaDataCollection(post_meta_data,
-                                        SubNetworkElement.ASPECT_NAME,
-                                        consistency_group,
-                                        (long) aspects_counts.getAspectElementCount(SubNetworkElement.ASPECT_NAME),
-                                        "",
-                    "");
-        }
-        if (aspects.contains(Aspect.VIEWS)) {
-            addDataToMetaDataCollection(post_meta_data,
-                                        CyViewsElement.ASPECT_NAME,
-                                        consistency_group,
-                                        (long) aspects_counts.getAspectElementCount(CyViewsElement.ASPECT_NAME),
-                                        "",
-                    "");
-        }
-        if (aspects.contains(Aspect.GROUPS)) {
-            addDataToMetaDataCollection(post_meta_data,
-                                        CyGroupsElement.ASPECT_NAME,
-                                        consistency_group,
-                                        (long) aspects_counts.getAspectElementCount(CyGroupsElement.ASPECT_NAME),
-                                        "",
-                    "");
-        }
-        if (aspects.contains(Aspect.NETWORK_RELATIONS)) {
-            addDataToMetaDataCollection(post_meta_data,
-                                        NetworkRelationsElement.ASPECT_NAME,
-                                        consistency_group,
-                                        (long) aspects_counts
-                                                .getAspectElementCount(NetworkRelationsElement.ASPECT_NAME),
-                                        "",
-                                        "");
-        }
+		if (aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
+			addDataToPostMetaDataCollection(post_meta_data, CartesianLayoutElement.ASPECT_NAME,
+					(long) aspects_counts.getAspectElementCount(CartesianLayoutElement.ASPECT_NAME));
+		}
 
-        w.addPostMetaData(post_meta_data);
+		if (aspects.contains(Aspect.VISUAL_PROPERTIES)) {
+			addDataToPostMetaDataCollection(post_meta_data, CyVisualPropertiesElement.ASPECT_NAME,
+					(long) aspects_counts.getAspectElementCount(CyVisualPropertiesElement.ASPECT_NAME));
+		}
+		if (aspects.contains(Aspect.SUBNETWORKS)) {
+			addDataToPostMetaDataCollection(post_meta_data, SubNetworkElement.ASPECT_NAME,
+					(long) aspects_counts.getAspectElementCount(SubNetworkElement.ASPECT_NAME));
+		}
+		if (aspects.contains(Aspect.VIEWS)) {
+			addDataToPostMetaDataCollection(post_meta_data, CyViewsElement.ASPECT_NAME,
+					(long) aspects_counts.getAspectElementCount(CyViewsElement.ASPECT_NAME));
+		}
+		if (aspects.contains(Aspect.GROUPS)) {
+			addDataToPostMetaDataCollection(post_meta_data, CyGroupsElement.ASPECT_NAME,
+					(long) aspects_counts.getAspectElementCount(CyGroupsElement.ASPECT_NAME)
 
-        if (Settings.INSTANCE.isTiming()) {
-            TimingUtil.reportTimeDifference(t0, "post meta-data", -1);
-        }
+			);
+		}
+		if (aspects.contains(Aspect.NETWORK_RELATIONS)) {
+			addDataToPostMetaDataCollection(post_meta_data, NetworkRelationsElement.ASPECT_NAME,
+					(long) aspects_counts.getAspectElementCount(NetworkRelationsElement.ASPECT_NAME)
 
-    }
+			);
+		}
+
+		w.addPostMetaData(post_meta_data);
+
+		if (Settings.INSTANCE.isTiming()) {
+			TimingUtil.reportTimeDifference(t0, "post meta-data", -1);
+		}
+
+	}
 
     private final void addPreMetadata(final AspectSet aspects,
                                       final CyNetwork network,
@@ -729,6 +715,87 @@ public final class CxExporter {
                                         consistency_group,
                                         _next_suid,
                                         (long) my_network.getEdgeList().size(),
+                                        "",
+                                        "");
+        }
+        
+        if (aspects.contains(Aspect.TABLE_COLUMN_LABELS)) {
+            addDataToPreMetaDataCollection(pre_meta_data,
+            								CyTableColumnElement.ASPECT_NAME,
+                                        consistency_group,
+                                        "",
+                                        "");
+        }
+        
+        if (aspects.contains(Aspect.NETWORK_ATTRIBUTES)) {
+            addDataToPreMetaDataCollection(pre_meta_data,
+                                        NetworkAttributesElement.ASPECT_NAME,
+                                        consistency_group,
+                                        "",
+                                        "");
+        }
+        if (aspects.contains(Aspect.HIDDEN_ATTRIBUTES)) {
+            addDataToPreMetaDataCollection(pre_meta_data,
+                                        HiddenAttributesElement.ASPECT_NAME,
+                                        consistency_group,
+                                        "",
+                                        "");
+        }
+        if (aspects.contains(Aspect.NODE_ATTRIBUTES)) {
+            addDataToPreMetaDataCollection(pre_meta_data,
+                                        NodeAttributesElement.ASPECT_NAME,
+                                        consistency_group,
+                                        "",
+                                        "");
+        }
+        if (aspects.contains(Aspect.EDGE_ATTRIBUTES)) {
+            addDataToPreMetaDataCollection(pre_meta_data,
+                                        EdgeAttributesElement.ASPECT_NAME,
+                                        consistency_group,
+                                        "",
+                                        "");
+        }
+
+        if (aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
+            addDataToPreMetaDataCollection(pre_meta_data,
+                                        CartesianLayoutElement.ASPECT_NAME,
+                                        consistency_group,
+                                        "",
+                                        "");
+        }
+
+        if (aspects.contains(Aspect.VISUAL_PROPERTIES)) {
+            addDataToPreMetaDataCollection(pre_meta_data,
+                                        CyVisualPropertiesElement.ASPECT_NAME,
+                                        consistency_group,
+                                        "",
+                    "");
+        }
+        if (aspects.contains(Aspect.SUBNETWORKS)) {
+            addDataToPreMetaDataCollection(pre_meta_data,
+                                        SubNetworkElement.ASPECT_NAME,
+                                        consistency_group,
+                                        "",
+                    "");
+        }
+        if (aspects.contains(Aspect.VIEWS)) {
+            addDataToPreMetaDataCollection(pre_meta_data,
+                                        CyViewsElement.ASPECT_NAME,
+                                        consistency_group,
+                                        "",
+                    "");
+        }
+        if (aspects.contains(Aspect.GROUPS)) {
+            addDataToPreMetaDataCollection(pre_meta_data,
+                                        CyGroupsElement.ASPECT_NAME,
+                                        consistency_group,
+                                        "",
+                    "");
+        }
+        if (aspects.contains(Aspect.NETWORK_RELATIONS)) {
+            addDataToPreMetaDataCollection(pre_meta_data,
+                                        NetworkRelationsElement.ASPECT_NAME,
+                                        consistency_group,
                                         "",
                                         "");
         }
