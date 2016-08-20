@@ -248,8 +248,7 @@ public final class CxExporter {
                 final AspectElementCounts aspects_counts = w.getAspectElementCounts();
                 addPostMetadata(aspects, network, w, 1L, aspects_counts);
             }
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
             msg = e.getMessage();
             success = false;
@@ -326,30 +325,13 @@ public final class CxExporter {
         pre_meta_data.setConsistencyGroup(aspect_name, consistency_group);
     }
 
-    private final static void addDataToMetaDataCollection(final MetaDataCollection pre_meta_data,
-                                                          final String aspect_name,
-                                                          final Long consistency_group,
-                                                          final Long counter,
-                                                          final String key,
-                                                          final String value) {
-        pre_meta_data.setElementCount(aspect_name, counter);
-        pre_meta_data.setVersion(aspect_name, "1.0");
-        if ((key != null) && (key.length() > 0)) {
-            pre_meta_data.setProperty(aspect_name, key, value);
-        }
-        pre_meta_data.setConsistencyGroup(aspect_name, consistency_group);
-
-    }
-    
-    private final static void addDataToPostMetaDataCollection(final MetaDataCollection pre_meta_data,
-                                                          final String aspect_name,
-                                                          final Long counter) {
-//        pre_meta_data.setElementCount(aspect_name, counter);
-        final MetaDataElement element = new MetaDataElement(new TreeMap<String, Object>());
-        element.setName(aspect_name);
-        element.setElementCount(counter);
-        pre_meta_data.add(element);
-    }
+	private final static void addDataToPostMetaDataCollection(final MetaDataCollection pre_meta_data,
+			final String aspect_name, final Long counter) {
+		final MetaDataElement element = new MetaDataElement(new TreeMap<String, Object>());
+		element.setName(aspect_name);
+		element.setElementCount(counter);
+		pre_meta_data.add(element);
+	}
 
     private final static String getInteractionFromEdgeTable(final CyNetwork network, final CyEdge edge) {
         final CyRow row = network.getTable(CyEdge.class, CyNetwork.DEFAULT_ATTRS).getRow(edge.getSUID());
