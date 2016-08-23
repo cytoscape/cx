@@ -446,47 +446,44 @@ public final class CxExporter {
         }
     }
 
-    private final void writeNetworkRelations(final CyNetwork network,
-                                             final boolean write_siblings,
-                                             final CxWriter w,
-                                             final boolean ignore_nameless_sub_networks) throws IOException {
-        final CySubNetwork as_subnet = (CySubNetwork) network;
-        final CyRootNetwork root = as_subnet.getRootNetwork();
-        final List<CySubNetwork> subnetworks = makeSubNetworkList(write_siblings, as_subnet, root, true);
+	private final void writeNetworkRelations(
+			final CyNetwork network, final boolean write_siblings, final CxWriter w,
+			final boolean ignore_nameless_sub_networks) throws IOException {
+		
+		final CySubNetwork as_subnet = (CySubNetwork) network;
+		final CyRootNetwork root = as_subnet.getRootNetwork();
+		final List<CySubNetwork> subnetworks = makeSubNetworkList(write_siblings, as_subnet, root, true);
 
-        final List<AspectElement> elements = new ArrayList<AspectElement>();
-        final long parent = root.getSUID();
+		final List<AspectElement> elements = new ArrayList<AspectElement>();
 
-        for (final CySubNetwork subnetwork : subnetworks) {
+		for (final CySubNetwork subnetwork : subnetworks) {
 
-            final String name = getSubNetworkName(subnetwork);
-            if (ignore_nameless_sub_networks && (name == null)) {
-                continue;
-            }
-            final NetworkRelationsElement rel_subnet = new NetworkRelationsElement(parent,
-                                                                                   subnetwork.getSUID(),
-                                                                                   NetworkRelationsElement.TYPE_SUBNETWORK,
-                                                                                   name);
-            // PLEASE NOTE:
-            // Cytoscape currently has only one view per sub-network.
-            final Collection<CyNetworkView> views = _networkview_manager.getNetworkViews(subnetwork);
-            for (final CyNetworkView view : views) {
-                final NetworkRelationsElement rel_view = new NetworkRelationsElement(subnetwork.getSUID(),
-                                                                                     view.getSUID(),
-                                                                                     NetworkRelationsElement.TYPE_VIEW,
-                                                                                     name + " view");
-                elements.add(rel_view);
-            }
-            elements.add(rel_subnet);
+			final String name = getSubNetworkName(subnetwork);
+			if (ignore_nameless_sub_networks && (name == null)) {
+				continue;
+			}
+			
+			// Subnetworks does not need root ID since it's not used in CX.
+			final NetworkRelationsElement rel_subnet = new NetworkRelationsElement(null, subnetwork.getSUID(),
+					NetworkRelationsElement.TYPE_SUBNETWORK, name);
+			// PLEASE NOTE:
+			// Cytoscape currently has only one view per sub-network.
+			final Collection<CyNetworkView> views = _networkview_manager.getNetworkViews(subnetwork);
+			for (final CyNetworkView view : views) {
+				final NetworkRelationsElement rel_view = new NetworkRelationsElement(subnetwork.getSUID(),
+						view.getSUID(), NetworkRelationsElement.TYPE_VIEW, name + " view");
+				elements.add(rel_view);
+			}
+			elements.add(rel_subnet);
 
-        }
-        final long t0 = System.currentTimeMillis();
-        w.writeAspectElements(elements);
-        if (Settings.INSTANCE.isTiming()) {
-            TimingUtil.reportTimeDifference(t0, "network relations", elements.size());
-        }
+		}
+		final long t0 = System.currentTimeMillis();
+		w.writeAspectElements(elements);
+		if (Settings.INSTANCE.isTiming()) {
+			TimingUtil.reportTimeDifference(t0, "network relations", elements.size());
+		}
 
-    }
+	}
 
     public static String getSubNetworkName(final CySubNetwork subnetwork) {
         final CyRow row = subnetwork.getRow(subnetwork, CyNetwork.DEFAULT_ATTRS);
