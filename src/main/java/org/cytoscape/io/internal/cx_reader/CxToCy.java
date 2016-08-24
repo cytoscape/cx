@@ -124,7 +124,8 @@ public final class CxToCy {
         final List<Long> subnets = new ArrayList<Long>();
         for (final AspectElement e : networks_relations) {
             final NetworkRelationsElement nwe = (NetworkRelationsElement) e;
-            if (nwe.getRelationship() == NetworkRelationsElement.TYPE_SUBNETWORK && nwe.getParent().equals(parent_id)) {
+            
+            if (nwe.getRelationship() == NetworkRelationsElement.TYPE_SUBNETWORK) {
                 subnets.add(nwe.getChild());
             }
         }
