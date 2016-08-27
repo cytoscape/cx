@@ -711,7 +711,8 @@ public final class CxToCy {
         }
     }
 
-	private final void addNetworkAttributeData(final List<NetworkAttributesElement> elements, final CyNetwork network,
+	private final void addNetworkAttributeData(
+			final List<NetworkAttributesElement> elements, final CyNetwork network,
 			final CyTable table) {
 		if (table == null) {
 			throw new IllegalArgumentException("table (network) must not be null");
@@ -720,12 +721,13 @@ public final class CxToCy {
 			return;
 		}
 		final CyRow row = network.getRow(network);
-
-		if (row != null) {
-			for (final AbstractAttributesAspectElement e : elements) {
-				addToColumn(table, row, e);
-			}
+		if(row == null) {
+			return;
 		}
+
+		elements.stream()
+			.filter(el -> el.getSubnetwork() != null)
+			.forEach(e -> addToColumn(table, row, e));
 	}
 
     private void addNetworkNames(final CySubNetwork sub_network,
