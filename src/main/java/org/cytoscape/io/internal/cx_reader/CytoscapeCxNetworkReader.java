@@ -121,8 +121,6 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     @Override
     public void run(final TaskMonitor taskMonitor) throws Exception {
 
-    		System.out.println("\n\n\n=============== RUN called ====================\n\n\n");
-
         final AspectSet aspects = new AspectSet();
         aspects.addAspect(Aspect.NODES);
         aspects.addAspect(Aspect.EDGES);

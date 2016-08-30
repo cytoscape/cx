@@ -42,11 +42,14 @@ import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyRow;
 import org.cytoscape.model.CyTable;
-import org.cytoscape.model.CyTableManager;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CySubNetwork;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class CxToCy {
+    
+	private static final Logger logger = LoggerFactory.getLogger(CxToCy.class);
 
     private static final long          DEFAULT_SUBNET = -Long.MAX_VALUE;
 
@@ -1061,35 +1064,24 @@ public final class CxToCy {
         }
         long prev_time = System.currentTimeMillis() - t;
 
-        System.out.println();
-        System.out.println();
-
         final SortedMap<String, List<AspectElement>> all_aspects = new TreeMap<String, List<AspectElement>>();
 
         while (cxr.hasNext()) {
             t = System.currentTimeMillis();
             final List<AspectElement> aspects = cxr.getNext();
             if (aspects != null && !aspects.isEmpty()) {
-                final String name = aspects.get(0).getAspectName();
-
-//                TimingUtil.reportTime(prev_time,
-//                                      name,
-//                                      aspects.size());
+                String name = aspects.get(0).getAspectName();
                 time_total += prev_time;
                 prev_time = System.currentTimeMillis() - t;
 
                 if (!all_aspects.containsKey(name)) {
-                    all_aspects.put(name,
-                                    aspects);
+                    all_aspects.put(name, aspects);
                 }
                 else {
                     all_aspects.get(name).addAll(aspects);
                 }
             }
         }
-//        TimingUtil.reportTime(time_total,
-//                              "sum",
-//                              -1);
         return all_aspects;
     }
 
@@ -1142,21 +1134,23 @@ public final class CxToCy {
         }
     }
 
-    private final static Object getValue(final AbstractAttributesAspectElement e,
-                                         final CyColumn column) {
-        if (e.isSingleValue()) {
-            return parseValue(e.getValue(),
-                              column.getType());
-        }
-        else {
-            final List<Object> list = new ArrayList<Object>();
-            for (final String value : e.getValues()) {
-                list.add(parseValue(value,
-                                    column.getListElementType()));
-            }
-            return list;
-        }
-    }
+	private final static Object getValue(final AbstractAttributesAspectElement e, final CyColumn column) {
+		if (e.isSingleValue()) {
+			Object val = null;
+			try {
+				val = parseValue(e.getValue(), column.getType());
+			} catch (Exception ex) {
+				logger.warn("Could not process element: " + e, ex);
+				ex.printStackTrace();
+				val = null;
+			}
+			return val;
+		} else {
+			return e.getValues().stream()
+				.map(value -> parseValue(value, column.getListElementType()))
+				.collect(Collectors.toList());
+		}
+	}
 
     private final static Object parseValue(final String value,
                                            final Class<?> type) {
