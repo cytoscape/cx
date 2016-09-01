@@ -153,7 +153,11 @@ public final class CxToCy {
     private final void createColumn(final NetworkAttributesElement el, final CyTable table) {
     		final String colName = el.getName();
     		if(table.getColumn(colName) == null) {
-    			table.createColumn(colName, getDataType(el.getDataType()), false);
+    			if(el.isSingleValue()) {
+    				table.createColumn(colName, getDataType(el.getDataType()), false);
+    			} else {
+    				table.createListColumn(colName, getDataType(el.getDataType()), false);
+    			}
     		}
     }
     
@@ -955,33 +959,56 @@ public final class CxToCy {
         }
     }
 
-    private void addToColumn(final CyTable table,
-                             final CyRow row,
-                             final AbstractAttributesAspectElement e) {
-        if (e != null) {
-            final String name = e.getName();
-            if (name != null) {
-                if ((!Settings.INSTANCE.isIgnoreSuidColumn() || !name.equals(CxUtil.SUID))
-                        && (!Settings.INSTANCE.isIgnoreSelectedColumn() || !name.equals(CxUtil.SELECTED))) {
-                    // New column creation:
-                    if (table.getColumn(name) == null) {
-                        final Class<?> data_type = getDataType(e.getDataType());
-                        if (e.isSingleValue()) {
-							table.createColumn(name, data_type, false);
-                        } else {
-                            table.createListColumn(name,
-                                                   data_type,
-                                                   false);
-                        }
-                    }
-                    final CyColumn col = table.getColumn(name);
-                    row.set(name,
-                            getValue(e,
-                                     col));
-                }
-            }
-        }
-    }
+	private final void addToColumn(final CyTable table, final CyRow row, final AbstractAttributesAspectElement e) {
+		if (e == null) {
+			return;
+		}
+
+		final String name = e.getName();
+		// TODO: This is necessary for now because core creates this special attributes
+		if (name == null || name.equals("__Annotations")) {
+			return;
+		}
+		
+		if ((!Settings.INSTANCE.isIgnoreSuidColumn() || !name.equals(CxUtil.SUID))
+				&& (!Settings.INSTANCE.isIgnoreSelectedColumn() || !name.equals(CxUtil.SELECTED))) {
+			
+			final String type = e.getDataType().toString();
+			final Class<?> data_type = getDataType(e.getDataType());
+			
+			// New column creation:
+			if (table.getColumn(name) == null) {
+				final boolean isSingle = e.isSingleValue();
+				if(isSingle && type.startsWith("list_of")) {
+					// Invalid entry.
+					logger.warn("Invalid entry found: " + e.toString());
+					return;
+				}
+				
+				if (e.isSingleValue()) {
+					table.createColumn(name, data_type, false);
+				} else {
+					table.createListColumn(name, data_type, false);
+				}
+			}
+			
+			final CyColumn col = table.getColumn(name);
+			if(col.getListElementType() != null) {
+				if(e.isSingleValue()) {
+					// Contradiction, i.e., invalid CX element.
+					logger.warn("Invalid entry.  Not a list: " + e.toString());
+					return;
+				}
+			}
+			
+			final Object val = getValue(e, col);
+			try {
+				row.set(name, val);
+			} catch (Exception ex) {
+				logger.warn("Invalid element found: " + e, ex);
+			}
+		}
+	}
 
     private Class<?> getDataType(final ATTRIBUTE_DATA_TYPE type) {
         switch (type) {
