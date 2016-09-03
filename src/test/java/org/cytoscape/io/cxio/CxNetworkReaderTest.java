@@ -1,10 +1,11 @@
 package org.cytoscape.io.cxio;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.List;
 import java.util.SortedMap;
 
@@ -16,11 +17,15 @@ import org.cytoscape.io.internal.cx_reader.CxToCy;
 import org.cytoscape.io.internal.cxio.Aspect;
 import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxImporter;
+import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkFactory;
+import org.cytoscape.model.CyTable;
 import org.cytoscape.model.NetworkTestSupport;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.junit.Test;
+
+import com.google.common.collect.Table;
 
 public class CxNetworkReaderTest {
 
@@ -278,6 +283,25 @@ public class CxNetworkReaderTest {
         final CyNetwork n1 = networks.get(0);
         assertTrue(n1.getNodeCount() == 3941);
         assertTrue(n1.getEdgeCount() == 8642);
+    }
+    
+    @Test
+    public void listAttributeTest1() throws Exception {
+        final File test_file = new File("src/test/resources/testData/listAttr1.cx");
+        final List<CyNetwork> networks = loadNetwork(test_file, true);
+        assertEquals(1, networks.size());
+        
+        final CyNetwork n1 = networks.get(0);
+        assertEquals(5, n1.getNodeCount());
+        assertEquals(6, n1.getEdgeCount());
+        
+        final CyTable nodeTable = n1.getDefaultNodeTable();
+        final Collection<CyColumn> cols = nodeTable.getColumns();
+        System.out.println(cols);
+        final CyColumn listIntCol = nodeTable.getColumn("intList1");
+        assertNotNull(listIntCol);
+        
+        assertEquals(Integer.class, listIntCol.getListElementType());
     }
 
 }

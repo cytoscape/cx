@@ -21,7 +21,7 @@
 
 	<groupId>org.cytoscape</groupId>
 	<artifactId>cx-support</artifactId>
-	<version>1.1.0</version>
+	<version>1.1.1</version>
 	<name>CX Support</name>
 	<description>CX JSON Reader and Writer for Cytoscape</description>
 	<packaging>bundle</packaging>

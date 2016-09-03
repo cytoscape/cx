@@ -366,9 +366,6 @@ public final class CxToCy {
 
             final Long subnetwork_id = subnetwork_ids.size() > 0 ? subnetwork_ids.get(i) : sub_network.getSUID();
 
-            System.out.println(i + ": && Adding to map: " + sub_network.getSUID());
-            System.out.println("    " + i + ": && ID: " + subnetwork_id);
-            
             _network_suid_to_networkrelations_map.put(sub_network.getSUID(),
                                                       subnetwork_id);
             if (Settings.INSTANCE.isDebug()) {
@@ -977,22 +974,28 @@ public final class CxToCy {
 			final Class<?> data_type = getDataType(e.getDataType());
 			
 			// New column creation:
-			if (table.getColumn(name) == null) {
+			CyColumn col = table.getColumn(name);
+			if (col == null) {
 				final boolean isSingle = e.isSingleValue();
 				if(isSingle && type.startsWith("list_of")) {
 					// Invalid entry.
 					logger.warn("Invalid entry found: " + e.toString());
 					return;
 				}
-				
 				if (e.isSingleValue()) {
 					table.createColumn(name, data_type, false);
 				} else {
 					table.createListColumn(name, data_type, false);
 				}
+				
+				col = table.getColumn(name);
+				if(col == null) {
+					// Invalid entry.
+					logger.warn("Failed to create table column");
+					return;
+				}
 			}
 			
-			final CyColumn col = table.getColumn(name);
 			if(col.getListElementType() != null) {
 				if(e.isSingleValue()) {
 					// Contradiction, i.e., invalid CX element.
