@@ -10,6 +10,7 @@ import org.cytoscape.io.read.AbstractInputStreamTaskFactory;
 import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.subnetwork.CyRootNetworkManager;
+import org.cytoscape.view.layout.CyLayoutAlgorithmManager;
 import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.view.presentation.RenderingEngineManager;
 import org.cytoscape.view.vizmap.VisualMappingFunctionFactory;
@@ -32,6 +33,7 @@ public class CytoscapeCxNetworkReaderFactory extends AbstractInputStreamTaskFact
     private final VisualMappingFunctionFactory _vmf_factory_c;
     private final VisualMappingFunctionFactory _vmf_factory_d;
     private final VisualMappingFunctionFactory _vmf_factory_p;
+    private final CyLayoutAlgorithmManager layoutManager;
 
     public CytoscapeCxNetworkReaderFactory(final CyFileFilter filter,
                                            final CyApplicationManager application_manager,
@@ -45,7 +47,8 @@ public class CytoscapeCxNetworkReaderFactory extends AbstractInputStreamTaskFact
                                            final CyNetworkViewFactory networkview_factory,
                                            final VisualMappingFunctionFactory vmf_factory_c,
                                            final VisualMappingFunctionFactory vmf_factory_d,
-                                           final VisualMappingFunctionFactory vmf_factory_p) {
+                                           final VisualMappingFunctionFactory vmf_factory_p,
+                                           final CyLayoutAlgorithmManager layoutManager) {
         super(filter);
         _application_manager = application_manager;
         _network_factory = network_factory;
@@ -59,6 +62,7 @@ public class CytoscapeCxNetworkReaderFactory extends AbstractInputStreamTaskFact
         _vmf_factory_c = vmf_factory_c;
         _vmf_factory_d = vmf_factory_d;
         _vmf_factory_p = vmf_factory_p;
+        this.layoutManager = layoutManager;
     }
 
     @Override
@@ -78,7 +82,7 @@ public class CytoscapeCxNetworkReaderFactory extends AbstractInputStreamTaskFact
                                                                  _vmf_factory_c,
                                                                  _vmf_factory_d,
                                                                  _vmf_factory_p,
-                                                                 PERFORM_BASIC_INTEGRITY_CHECKS));
+                                                                 PERFORM_BASIC_INTEGRITY_CHECKS, layoutManager));
         }
         catch (final IOException e) {
 

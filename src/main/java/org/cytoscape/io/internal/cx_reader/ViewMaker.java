@@ -2,6 +2,7 @@ package org.cytoscape.io.internal.cx_reader;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -39,7 +40,7 @@ public final class ViewMaker {
     public static final Pattern DIRECT_NET_PROPS_PATTERN = Pattern
             .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
 
-    public final static CyNetworkView makeView(final CyNetwork network,
+    public final static Map<CyNetworkView, Boolean> makeView(final CyNetwork network,
                                                final CxToCy cx_to_cy,
                                                final String network_collection_name,
                                                final CyNetworkViewFactory networkview_factory,
@@ -48,13 +49,18 @@ public final class ViewMaker {
                                                final VisualStyleFactory visual_style_factory,
                                                final VisualMappingFunctionFactory vmf_factory_c,
                                                final VisualMappingFunctionFactory vmf_factory_d,
-                                               final VisualMappingFunctionFactory vmf_factory_p) throws IOException {
+                                               final VisualMappingFunctionFactory vmf_factory_p) 
+                                            		   throws IOException {
 
+    		final Map<CyNetworkView, Boolean> hasLayoutMap = new HashMap<>();
+    		
         final long t0 = System.currentTimeMillis();
         final VisualElementCollectionMap collection = cx_to_cy.getVisualElementCollectionMap();
         final CyNetworkView view = networkview_factory.createNetworkView(network);
+        hasLayoutMap.put(view, false);
+        
         if ((collection == null) || collection.isEmpty()) {
-            return view;
+            return hasLayoutMap;
         }
 
         final Long network_id = cx_to_cy.getNetworkSuidToNetworkRelationsMap().get(network.getSUID());
@@ -69,7 +75,7 @@ public final class ViewMaker {
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		try {
 			if (network_id == null || !cx_to_cy.getSubNetworkToViewsMap().containsKey(network_id)) {
-				return view;
+				return hasLayoutMap;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -156,6 +162,7 @@ public final class ViewMaker {
                     }
                 }
             }
+            hasLayoutMap.put(view, true);
         }
 
         if (have_default_visual_properties) {
@@ -167,7 +174,7 @@ public final class ViewMaker {
         if (Settings.INSTANCE.isTiming()) {
             TimingUtil.reportTimeDifference(t0, "time to make view", -1);
         }
-        return view;
+        return hasLayoutMap;
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

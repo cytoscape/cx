@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
 
 import org.cxio.misc.AspectElementCounts;
@@ -23,12 +24,16 @@ import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CyRootNetworkManager;
+import org.cytoscape.view.layout.CyLayoutAlgorithm;
+import org.cytoscape.view.layout.CyLayoutAlgorithmManager;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.view.presentation.RenderingEngineManager;
 import org.cytoscape.view.vizmap.VisualMappingFunctionFactory;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.view.vizmap.VisualStyleFactory;
+import org.cytoscape.work.Task;
+import org.cytoscape.work.TaskIterator;
 import org.cytoscape.work.TaskMonitor;
 import org.cytoscape.work.util.ListSingleSelection;
 
@@ -47,6 +52,9 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     private final VisualMappingFunctionFactory _vmf_factory_d;
     private final VisualMappingFunctionFactory _vmf_factory_p;
     private final CyGroupFactory               _group_factory;
+    
+    private final CyLayoutAlgorithmManager layoutManager;
+	private TaskMonitor parentTaskMonitor;
 
     public CytoscapeCxNetworkReader(final String network_collection_name,
                                     final InputStream input_stream,
@@ -62,7 +70,8 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                                     final VisualMappingFunctionFactory vmf_factory_c,
                                     final VisualMappingFunctionFactory vmf_factory_d,
                                     final VisualMappingFunctionFactory vmf_factory_p,
-                                    final boolean perform_basic_integrity_checks) throws IOException {
+                                    final boolean perform_basic_integrity_checks,
+                                    final CyLayoutAlgorithmManager layoutManager) throws IOException {
 
         super(input_stream, networkview_factory, network_factory, network_manager, root_network_manager);
 
@@ -81,14 +90,16 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         _vmf_factory_c = vmf_factory_c;
         _vmf_factory_d = vmf_factory_d;
         _vmf_factory_p = vmf_factory_p;
+        this.layoutManager = layoutManager;
     }
 
     @Override
     public CyNetworkView buildCyNetworkView(final CyNetwork network) {
 
         CyNetworkView view = null;
+        Boolean hasLayout = false;
         try {
-            view = ViewMaker.makeView(network,
+            Map<CyNetworkView, Boolean> result = ViewMaker.makeView(network,
                                       _cx_to_cy,
                                       _network_collection_name,
                                       _networkview_factory,
@@ -98,11 +109,27 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                                       _vmf_factory_c,
                                       _vmf_factory_d,
                                       _vmf_factory_p);
+            view = result.keySet().iterator().next();
+            hasLayout = result.get(view);
         }
         catch (final IOException e) {
             e.printStackTrace();
         }
+        
         if (view != null) {
+			if (!hasLayout) {
+				final CyLayoutAlgorithm layout = layoutManager.getDefaultLayout();
+				TaskIterator itr = layout.createTaskIterator(view, layout.getDefaultLayoutContext(),
+						CyLayoutAlgorithm.ALL_NODE_VIEWS, "");
+				Task nextTask = itr.next();
+				parentTaskMonitor
+						.setStatusMessage("Layout data was not available in the CX.  Applying default layout...");
+				try {
+					nextTask.run(parentTaskMonitor);
+				} catch (Exception e) {
+					throw new RuntimeException("Could not finish layout", e);
+				}
+			}
             view.updateView();
         }
         return view;
@@ -121,6 +148,8 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     @Override
     public void run(final TaskMonitor taskMonitor) throws Exception {
 
+    		this.parentTaskMonitor = taskMonitor;
+    		
         final AspectSet aspects = new AspectSet();
         aspects.addAspect(Aspect.NODES);
         aspects.addAspect(Aspect.EDGES);

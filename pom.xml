@@ -21,7 +21,7 @@
 
 	<groupId>org.cytoscape</groupId>
 	<artifactId>cx-support</artifactId>
-	<version>1.1.1</version>
+	<version>1.1.2</version>
 	<name>CX Support</name>
 	<description>CX JSON Reader and Writer for Cytoscape</description>
 	<packaging>bundle</packaging>
@@ -156,6 +156,12 @@
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>io-api</artifactId>
+			<version>${cytoscape.api.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.cytoscape</groupId>
+			<artifactId>layout-api</artifactId>
 			<version>${cytoscape.api.version}</version>
 			<scope>provided</scope>
 		</dependency>

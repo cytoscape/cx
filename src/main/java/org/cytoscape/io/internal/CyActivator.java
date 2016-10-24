@@ -18,6 +18,7 @@ import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.CyNetworkTableManager;
 import org.cytoscape.model.subnetwork.CyRootNetworkManager;
 import org.cytoscape.service.util.AbstractCyActivator;
+import org.cytoscape.view.layout.CyLayoutAlgorithmManager;
 import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.presentation.RenderingEngineManager;
@@ -39,6 +40,7 @@ public class CyActivator extends AbstractCyActivator {
     public void start(final BundleContext bc) {
 
         final StreamUtil streamUtil = getService(bc, StreamUtil.class);
+        final CyLayoutAlgorithmManager layoutManager = getService(bc, CyLayoutAlgorithmManager.class);
 
         final CytoscapeCxFileFilter cx_filter = new CytoscapeCxFileFilter(new String[] { "cx" },
                                                                           new String[] { "application/json" },
@@ -103,7 +105,8 @@ public class CyActivator extends AbstractCyActivator {
                                                                                                       network_view_factory,
                                                                                                       vmfFactoryC,
                                                                                                       vmfFactoryD,
-                                                                                                      vmfFactoryP
+                                                                                                      vmfFactoryP,
+                                                                                                      layoutManager
 
         );
         final Properties reader_factory_properties = new Properties();
