@@ -131,6 +131,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 				}
 			}
             view.updateView();
+            view.fitContent();
         }
         return view;
 
