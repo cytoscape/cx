@@ -10,6 +10,7 @@ import java.util.TreeSet;
 
 import org.cxio.core.CxReader;
 import org.cxio.core.interfaces.AspectFragmentReader;
+import org.cytoscape.io.cx.Aspect;
 
 /**
  * This class is for de-serializing CX formatted networks, views, and attribute

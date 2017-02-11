@@ -13,7 +13,7 @@ import org.cxio.core.interfaces.AspectElement;
 import org.cxio.metadata.MetaDataCollection;
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.group.CyGroupFactory;
-import org.cytoscape.io.internal.cxio.Aspect;
+import org.cytoscape.io.cx.Aspect;
 import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxImporter;
 import org.cytoscape.io.internal.cxio.Settings;

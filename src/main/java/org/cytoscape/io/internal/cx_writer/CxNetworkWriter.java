@@ -9,7 +9,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 
 import org.cytoscape.group.CyGroupManager;
-import org.cytoscape.io.internal.cxio.Aspect;
+import org.cytoscape.io.cx.Aspect;
 import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxExporter;
 import org.cytoscape.io.internal.cxio.Settings;

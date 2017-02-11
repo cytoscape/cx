@@ -1,4 +1,4 @@
-package org.cytoscape.io.internal.cxio;
+package org.cytoscape.io.cx;
 
 import org.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.cxio.aspects.datamodels.CyGroupsElement;
@@ -13,6 +13,7 @@ import org.cxio.aspects.datamodels.NetworkRelationsElement;
 import org.cxio.aspects.datamodels.NodeAttributesElement;
 import org.cxio.aspects.datamodels.NodesElement;
 import org.cxio.aspects.datamodels.SubNetworkElement;
+import org.cytoscape.io.internal.cxio.AspectSet;
 
 /**
  * This enumeration is used to identify aspects relevant for Cytoscape networks

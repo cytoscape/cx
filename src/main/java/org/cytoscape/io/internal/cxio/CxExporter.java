@@ -35,6 +35,7 @@ import org.cxio.metadata.MetaDataCollection;
 import org.cxio.metadata.MetaDataElement;
 import org.cytoscape.group.CyGroup;
 import org.cytoscape.group.CyGroupManager;
+import org.cytoscape.io.cx.Aspect;
 import org.cytoscape.io.internal.cx_writer.VisualPropertiesGatherer;
 import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyEdge;

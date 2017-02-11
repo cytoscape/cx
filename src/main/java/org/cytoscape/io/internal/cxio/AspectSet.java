@@ -6,7 +6,6 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.cxio.aspects.datamodels.CyTableColumnElement;
 import org.cxio.aspects.readers.CartesianLayoutFragmentReader;
 import org.cxio.aspects.readers.CyGroupsFragmentReader;
 import org.cxio.aspects.readers.CyTableColumnFragmentReader;
@@ -35,6 +34,7 @@ import org.cxio.aspects.writers.SubNetworkFragmentWriter;
 import org.cxio.aspects.writers.VisualPropertiesFragmentWriter;
 import org.cxio.core.interfaces.AspectFragmentReader;
 import org.cxio.core.interfaces.AspectFragmentWriter;
+import org.cytoscape.io.cx.Aspect;
 
 /**
  * This class is primarily for storing of {@link Aspect Aspect identifiers} to
