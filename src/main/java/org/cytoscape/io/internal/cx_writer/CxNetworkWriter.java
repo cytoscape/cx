@@ -7,7 +7,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
+import java.nio.file.DirectoryStream.Filter;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+import org.cytoscape.application.events.SetSelectedNetworksEvent;
 import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.cx.Aspect;
 import org.cytoscape.io.internal.cxio.AspectSet;
@@ -19,10 +25,13 @@ import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.CyNetworkTableManager;
 import org.cytoscape.model.SUIDFactory;
+import org.cytoscape.task.create.NewEmptyNetworkViewFactory;
 import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.work.TaskMonitor;
+import org.cytoscape.work.Tunable;
+import org.cytoscape.work.util.ListMultipleSelection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +56,15 @@ public class CxNetworkWriter implements CyWriter {
     private final CyGroupManager       _group_manager;
     private boolean                    _write_siblings;
 
+    
+	public ListMultipleSelection<Aspect> filter = new ListMultipleSelection<>();
+
+	
+	@Tunable(description="Aspects")
+	public ListMultipleSelection<Aspect> getFilter() {
+		return filter;
+	}
+    
     public CxNetworkWriter(final OutputStream os,
                            final CyNetwork network,
                            final VisualMappingManager visual_mapping_manager,
@@ -56,7 +74,17 @@ public class CxNetworkWriter implements CyWriter {
                            final CyNetworkTableManager table_manager,
                            final VisualLexicon lexicon) {
 
-        _visual_mapping_manager = visual_mapping_manager;
+    		// Add all
+    		final List<Aspect> vals = new ArrayList<>();
+    		for(Aspect a: Aspect.values()){
+    			vals.add(a);
+    		}
+    		
+    		// Select all
+    		filter.setPossibleValues(vals);
+    		filter.setSelectedValues(vals);
+        
+    		_visual_mapping_manager = visual_mapping_manager;
         _networkview_manager = networkview_manager;
         _lexicon = lexicon;
         _os = os;
@@ -87,20 +115,24 @@ public class CxNetworkWriter implements CyWriter {
             System.out.println("Encoding = " + _encoder.charset());
         }
 
+        final List<Aspect> selected = filter.getSelectedValues();
+        
         final AspectSet aspects = new AspectSet();
-        aspects.addAspect(Aspect.NODES);
-        aspects.addAspect(Aspect.EDGES);
-        aspects.addAspect(Aspect.NETWORK_ATTRIBUTES);
-        aspects.addAspect(Aspect.NODE_ATTRIBUTES);
-        aspects.addAspect(Aspect.EDGE_ATTRIBUTES);
-        aspects.addAspect(Aspect.HIDDEN_ATTRIBUTES);
-        aspects.addAspect(Aspect.CARTESIAN_LAYOUT);
-        aspects.addAspect(Aspect.VISUAL_PROPERTIES);
-        aspects.addAspect(Aspect.SUBNETWORKS);
-        aspects.addAspect(Aspect.VIEWS);
-        aspects.addAspect(Aspect.NETWORK_RELATIONS);
-        aspects.addAspect(Aspect.GROUPS);
-        aspects.addAspect(Aspect.TABLE_COLUMN_LABELS);
+        selected.stream().forEach(aspect->aspects.addAspect(aspect));
+        
+//        aspects.addAspect(Aspect.NODES);
+//        aspects.addAspect(Aspect.EDGES);
+//        aspects.addAspect(Aspect.NETWORK_ATTRIBUTES);
+//        aspects.addAspect(Aspect.NODE_ATTRIBUTES);
+//        aspects.addAspect(Aspect.EDGE_ATTRIBUTES);
+//        aspects.addAspect(Aspect.HIDDEN_ATTRIBUTES);
+//        aspects.addAspect(Aspect.CARTESIAN_LAYOUT);
+//        aspects.addAspect(Aspect.VISUAL_PROPERTIES);
+//        aspects.addAspect(Aspect.SUBNETWORKS);
+//        aspects.addAspect(Aspect.VIEWS);
+//        aspects.addAspect(Aspect.NETWORK_RELATIONS);
+//        aspects.addAspect(Aspect.GROUPS);
+//        aspects.addAspect(Aspect.TABLE_COLUMN_LABELS);
 
         final CxExporter exporter = CxExporter.createInstance();
         exporter.setUseDefaultPrettyPrinting(true);

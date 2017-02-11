@@ -1,38 +1,59 @@
-package org.cytoscape.io.cxio;
+package org.cytoscape.io.cx;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedMap;
 
 import org.cxio.core.CxReader;
 import org.cxio.core.interfaces.AspectElement;
 import org.cxio.metadata.MetaDataCollection;
 import org.cxio.misc.AspectElementCounts;
-import org.cytoscape.io.cx.Aspect;
+import org.cytoscape.ding.DVisualLexicon;
+import org.cytoscape.ding.NetworkViewTestSupport;
+import org.cytoscape.ding.customgraphics.CustomGraphicsManager;
+import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.internal.cx_reader.CxToCy;
+import org.cytoscape.io.internal.cx_writer.CxNetworkWriter;
 import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxExporter;
 import org.cytoscape.io.internal.cxio.CxImporter;
-import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkFactory;
+import org.cytoscape.model.CyNetworkManager;
+import org.cytoscape.model.CyNetworkTableManager;
 import org.cytoscape.model.CyRow;
 import org.cytoscape.model.NetworkTestSupport;
 import org.cytoscape.model.SUIDFactory;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CySubNetwork;
+import org.cytoscape.view.model.CyNetworkView;
+import org.cytoscape.view.model.CyNetworkViewManager;
+import org.cytoscape.view.model.VisualLexicon;
+import org.cytoscape.view.vizmap.VisualMappingManager;
+import org.cytoscape.view.vizmap.VisualStyle;
 import org.junit.Test;
 
 public class CxNetworkWriterTest {
+	
+	
+	protected NetworkTestSupport nts = new NetworkTestSupport();
+	protected NetworkViewTestSupport nvts = new NetworkViewTestSupport();
+	protected CyNetworkManager networkManager = nts.getNetworkManager();
 
     private List<CyNetwork> loadNetwork(final File test_file, final boolean must_have_meta) throws Exception {
         final NetworkTestSupport nts = new NetworkTestSupport();
@@ -131,9 +152,6 @@ public class CxNetworkWriterTest {
 
         final CxExporter exporter = CxExporter.createInstance();
         exporter.setUseDefaultPrettyPrinting(true);
-        // exporter.setLexicon(_lexicon);
-        // exporter.setVisualMappingManager(_visual_mapping_manager);
-        // exporter.setNetworkViewManager(_networkview_manager);
         exporter.setGroupManager(null);
         exporter.setWritePreMetadata(true);
         exporter.setWritePostMetadata(true);
@@ -447,5 +465,55 @@ public class CxNetworkWriterTest {
         assertEquals(root2.getRow(root2).get(attr2, Double.class), val2);
         assertEquals(root2.getRow(root2).get(attr3, Integer.class), val3);
         assertEquals(root2.getRow(root2).get(attr4, Boolean.class), val4);
+    }
+    
+    @Test
+    public void aspectFilterTest() throws Exception {
+        final File test_file = new File("src/test/resources/testData/gal_filtered_1.cx");
+        final List<CyNetwork> networks = loadNetwork(test_file, true);
+        assertTrue((networks.size() == 1));
+        final CyNetwork n = networks.get(0);
+        assertTrue(n.getNodeCount() == 331);
+        assertTrue(n.getEdgeCount() == 362);
+        
+        // Create writer
+        final File out_file = new File("target/gal_filtered_1_filtered.cx");
+        final FileOutputStream out = new FileOutputStream(out_file);
+        
+		VisualMappingManager vmm = mock(VisualMappingManager.class);
+		Set<VisualStyle> styles = new HashSet<VisualStyle>();
+		VisualStyle mockStyle = mock(VisualStyle.class);
+		when(mockStyle.getTitle()).thenReturn("mock1");
+		styles.add(mockStyle);
+		when(vmm.getAllVisualStyles()).thenReturn(styles);
+		
+		CyNetworkViewManager viewManager = mock(CyNetworkViewManager.class);
+		Collection<CyNetworkView> views = new HashSet<>();
+		when(viewManager.getNetworkViews(n)).thenReturn(views);
+        
+		CyGroupManager groupManager = mock(CyGroupManager.class);
+		CyNetworkTableManager tblManager = mock(CyNetworkTableManager.class);
+        
+		final CustomGraphicsManager cgManager = mock(CustomGraphicsManager.class);
+		DVisualLexicon lexicon = new DVisualLexicon(cgManager);
+		Set<VisualLexicon> lex = new HashSet<>();
+		lex.add(lexicon);
+		when(vmm.getAllVisualLexicon()).thenReturn(lex);
+				
+		final CxNetworkWriter writer = new CxNetworkWriter(
+        		out, n, vmm, viewManager, networkManager, groupManager, tblManager, null);
+
+		final List<Aspect> aspects = new ArrayList<>();
+		aspects.add(Aspect.NODES);
+		
+		writer.filter.setSelectedValues(aspects);
+		writer.run(null);
+		
+//        final List<CyNetwork> networks_2 = loadNetwork(in, true);
+//        assertTrue((networks_2.size() == 1));
+//        final CyNetwork n2 = networks_2.get(0);
+//        assertTrue(n2.getNodeCount() == 331);
+//        assertTrue(n2.getEdgeCount() == 362);
+
     }
 }

@@ -1,4 +1,4 @@
-package org.cytoscape.io.cxio;
+package org.cytoscape.io.cx;
 
 import static org.junit.Assert.*;
 

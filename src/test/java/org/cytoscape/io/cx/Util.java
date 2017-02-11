@@ -1,4 +1,4 @@
-package org.cytoscape.io.cxio;
+package org.cytoscape.io.cx;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
