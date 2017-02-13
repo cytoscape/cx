@@ -477,8 +477,42 @@ public class CxNetworkWriterTest {
         assertTrue(n.getEdgeCount() == 362);
         
         // Create writer
-        final File out_file = new File("target/gal_filtered_1_filtered.cx");
-        final FileOutputStream out = new FileOutputStream(out_file);
+        final File outFile = new File("target/gal_filtered_1_filtered.cx");
+
+        final CxNetworkWriter writer = this.buildWriter(n, outFile);
+        
+        // Specify aspect name to be written in the CX
+		final List<Aspect> aspects = new ArrayList<>();
+		aspects.add(Aspect.NODES);
+		writer.filter.setSelectedValues(aspects);
+		
+		writer.run(null);
+    }
+    
+    @Test
+    public void aspectFilterTestFull() throws Exception {
+        final File test_file = new File("src/test/resources/testData/gal_filtered_1.cx");
+        final List<CyNetwork> networks = loadNetwork(test_file, true);
+        final CyNetwork n = networks.get(0);
+        
+        // Create writer
+        final String outFileName = "target/gal_filtered_1_full.cx";
+        final File outFile = new File(outFileName);
+
+        // By default, it writes all of the standard aspects
+        final CxNetworkWriter writer = this.buildWriter(n, outFile);
+		writer.run(null);
+		
+        final List<CyNetwork> networks_2 = loadNetwork(new File(outFileName), true);
+        assertTrue((networks_2.size() == 1));
+        final CyNetwork n2 = networks_2.get(0);
+        assertTrue(n2.getNodeCount() == 331);
+        assertTrue(n2.getEdgeCount() == 362);
+    }
+    
+    private final CxNetworkWriter buildWriter(final CyNetwork n, final File outFile) throws Exception {
+        
+    		final FileOutputStream out = new FileOutputStream(outFile);
         
 		VisualMappingManager vmm = mock(VisualMappingManager.class);
 		Set<VisualStyle> styles = new HashSet<VisualStyle>();
@@ -502,18 +536,7 @@ public class CxNetworkWriterTest {
 				
 		final CxNetworkWriter writer = new CxNetworkWriter(
         		out, n, vmm, viewManager, networkManager, groupManager, tblManager, null);
-
-		final List<Aspect> aspects = new ArrayList<>();
-		aspects.add(Aspect.NODES);
-		
-		writer.filter.setSelectedValues(aspects);
-		writer.run(null);
-		
-//        final List<CyNetwork> networks_2 = loadNetwork(in, true);
-//        assertTrue((networks_2.size() == 1));
-//        final CyNetwork n2 = networks_2.get(0);
-//        assertTrue(n2.getNodeCount() == 331);
-//        assertTrue(n2.getEdgeCount() == 362);
-
+    	
+		return writer;
     }
 }
