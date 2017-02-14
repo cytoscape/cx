@@ -468,7 +468,7 @@ public class CxNetworkWriterTest {
     }
     
     @Test
-    public void aspectFilterTest() throws Exception {
+    public void aspectFilterTest1() throws Exception {
         final File test_file = new File("src/test/resources/testData/gal_filtered_1.cx");
         final List<CyNetwork> networks = loadNetwork(test_file, true);
         assertTrue((networks.size() == 1));
@@ -484,7 +484,72 @@ public class CxNetworkWriterTest {
         // Specify aspect name to be written in the CX
 		final List<Aspect> aspects = new ArrayList<>();
 		aspects.add(Aspect.NODES);
+		aspects.add(Aspect.NODE_ATTRIBUTES);
+		
+		final List<String> nodeFilter = new ArrayList<>();
+		nodeFilter.add(CyNetwork.NAME);
 		writer.filter.setSelectedValues(aspects);
+		writer.nodeColFilter.setSelectedValues(nodeFilter);
+		
+		writer.run(null);
+    }
+    
+    @Test
+    public void aspectFilterTest2() throws Exception {
+    		// Diffusion service example
+    		final String diffuseFile = "src/test/resources/testData/diffuse1.cx";
+        final File df = new File(diffuseFile);
+        final List<CyNetwork> networks = loadNetwork(df, true);
+        assertTrue((networks.size() == 1));
+        final CyNetwork n = networks.get(0);
+        
+        // Create writer
+        final File outFile = new File("target/diffuse1-filtered.cx");
+        final CxNetworkWriter writer = this.buildWriter(n, outFile);
+        
+        // Specify aspect name to be written in the CX
+		final List<Aspect> aspects = new ArrayList<>();
+		aspects.add(Aspect.NODES);
+		aspects.add(Aspect.EDGES);
+		aspects.add(Aspect.NODE_ATTRIBUTES);
+		
+		final List<String> nodeFilter = new ArrayList<>();
+		nodeFilter.add(CyNetwork.NAME);
+		nodeFilter.add("diffusion_input");
+		
+		writer.filter.setSelectedValues(aspects);
+		writer.nodeColFilter.setSelectedValues(nodeFilter);
+		
+		writer.run(null);
+    }
+    
+    @Test
+    public void aspectFilterTest3() throws Exception {
+    		// Diffusion service example
+    		final String diffuseFile = "src/test/resources/testData/galFiltered_2subnets.cx";
+        final File df = new File(diffuseFile);
+        final List<CyNetwork> networks = loadNetwork(df, true);
+        assertTrue((networks.size() == 2));
+        final CyNetwork n1 = networks.get(0);
+        final CyNetwork n2 = networks.get(1);
+        
+        // Create writer
+        final File outFile = new File("target/sub2.cx");
+        final CxNetworkWriter writer = this.buildWriter(n2, outFile);
+        
+        // Specify aspect name to be written in the CX
+		final List<Aspect> aspects = new ArrayList<>();
+		aspects.add(Aspect.NODES);
+		aspects.add(Aspect.EDGES);
+		aspects.add(Aspect.NODE_ATTRIBUTES);
+		
+		final List<String> nodeFilter = new ArrayList<>();
+		nodeFilter.add(CyNetwork.NAME);
+		
+		writer.filter.setSelectedValues(aspects);
+		writer.nodeColFilter.setSelectedValues(nodeFilter);
+
+		writer.writeSiblings = false;
 		
 		writer.run(null);
     }

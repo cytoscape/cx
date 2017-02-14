@@ -1,6 +1,8 @@
 package org.cytoscape.io.internal.cxio;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
@@ -18,14 +20,14 @@ import org.cxio.filters.AspectKeyFilter;
  */
 public final class FilterSet {
 
-    final private SortedSet<AspectKeyFilter> _filters;
+    final private Set<AspectKeyFilter> _filters;
 
     /**
      * Constructor, creates an empty FilterSet.
      *
      */
     public FilterSet() {
-        _filters = new TreeSet<AspectKeyFilter>();
+        _filters = new HashSet<AspectKeyFilter>();
     }
 
     /**
@@ -35,7 +37,7 @@ public final class FilterSet {
      *            the AspectKeyFilters to initialize this FilterSet with
      */
     public FilterSet(final Collection<AspectKeyFilter> filters) {
-        _filters = new TreeSet<AspectKeyFilter>();
+        _filters = new HashSet<AspectKeyFilter>();
         _filters.addAll(filters);
     }
 
@@ -49,7 +51,7 @@ public final class FilterSet {
         _filters.add(filter);
     }
 
-    final SortedSet<AspectKeyFilter> getFilters() {
+    final Set<AspectKeyFilter> getFilters() {
         return _filters;
     }
 
