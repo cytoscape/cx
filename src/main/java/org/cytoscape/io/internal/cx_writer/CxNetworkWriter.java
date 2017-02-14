@@ -143,11 +143,25 @@ public class CxNetworkWriter implements CyWriter {
     }
 
     
-    private final AspectKeyFilter createColumnFilter() {
+    private final AspectKeyFilter createColumnFilter(Class<? extends CyIdentifiable> type) {
         // Create colum filter
-        final AspectKeyFilter nodeFilter = new AspectKeyFilterBasic(Aspect.NODE_ATTRIBUTES.asString());
-        nodeColFilter.getSelectedValues().stream().forEach(colName->nodeFilter.addIncludeAspectKey(colName));
-        return nodeFilter;
+        final AspectKeyFilter filter;
+        final ListMultipleSelection<String> colFilter;
+        
+        if(type == CyNode.class) {
+        		filter = new AspectKeyFilterBasic(Aspect.NODE_ATTRIBUTES.asString());
+        		colFilter = nodeColFilter;
+        } else if(type == CyEdge.class) {
+        		filter = new AspectKeyFilterBasic(Aspect.EDGE_ATTRIBUTES.asString());        	
+        		colFilter = edgeColFilter;
+        } else if(type == CyNetwork.class) {
+        		filter = new AspectKeyFilterBasic(Aspect.NETWORK_ATTRIBUTES.asString());
+        		colFilter = networkColFilter;
+        } else {
+        		throw new IllegalStateException("There is no valid aspect: " + type);
+        }
+        colFilter.getSelectedValues().stream().forEach(colName->filter.addIncludeAspectKey(colName));
+        return filter;
     }
     
     private final List<String> getAllColumnNames(final Class<? extends CyIdentifiable> type) {
@@ -189,12 +203,15 @@ public class CxNetworkWriter implements CyWriter {
         selected.stream().forEach(aspect->aspects.addAspect(aspect));
         
         // Create column-level filter
-        AspectKeyFilter nodeFilter = createColumnFilter();
-
+        AspectKeyFilter nodeFilter = createColumnFilter(CyNode.class);
+        AspectKeyFilter edgeFilter = createColumnFilter(CyEdge.class);
+        AspectKeyFilter networkFilter = createColumnFilter(CyNetwork.class);
+        
         final FilterSet filterSet = new FilterSet();
         filterSet.addFilter(nodeFilter);
-
-        
+        filterSet.addFilter(edgeFilter);
+        filterSet.addFilter(networkFilter);
+ 
         final CxExporter exporter = CxExporter.createInstance();
         exporter.setUseDefaultPrettyPrinting(true);
         exporter.setLexicon(_lexicon);

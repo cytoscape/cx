@@ -32,6 +32,7 @@ import org.cytoscape.io.internal.cx_writer.CxNetworkWriter;
 import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxExporter;
 import org.cytoscape.io.internal.cxio.CxImporter;
+import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
@@ -542,16 +543,32 @@ public class CxNetworkWriterTest {
 		aspects.add(Aspect.NODES);
 		aspects.add(Aspect.EDGES);
 		aspects.add(Aspect.NODE_ATTRIBUTES);
+		aspects.add(Aspect.EDGE_ATTRIBUTES);
 		
 		final List<String> nodeFilter = new ArrayList<>();
 		nodeFilter.add(CyNetwork.NAME);
 		
+		final List<String> edgeFilter = new ArrayList<>();
+		edgeFilter.add(CyNetwork.SELECTED);
+		
 		writer.filter.setSelectedValues(aspects);
 		writer.nodeColFilter.setSelectedValues(nodeFilter);
+		writer.edgeColFilter.setSelectedValues(edgeFilter);
 
 		writer.writeSiblings = false;
 		
 		writer.run(null);
+		
+		// Check the contents
+        final List<CyNetwork> result = loadNetwork(outFile, true);
+        assertTrue((result.size() == 1));
+        final CyNetwork resultNet = result.get(0);
+        assertTrue(resultNet.getNodeCount() == 19);
+        assertTrue(resultNet.getEdgeCount() == 27);
+        
+        final Collection<CyColumn> edgeCols = resultNet.getDefaultEdgeTable().getColumns();
+        System.out.println(edgeCols);
+        assertEquals(6, edgeCols.size());
     }
     
     @Test
