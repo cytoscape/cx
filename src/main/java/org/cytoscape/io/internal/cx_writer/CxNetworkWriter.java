@@ -1,7 +1,6 @@
 package org.cytoscape.io.internal.cx_writer;
 
 import java.io.ByteArrayOutputStream;
-import java.io.Console;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -9,16 +8,13 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.cxio.filters.AspectKeyFilter;
 import org.cxio.filters.AspectKeyFilterBasic;
-import org.cytoscape.application.events.SetSelectedNetworksEvent;
 import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.cx.Aspect;
 import org.cytoscape.io.internal.cxio.AspectSet;
@@ -43,10 +39,6 @@ import org.cytoscape.work.Tunable;
 import org.cytoscape.work.util.ListMultipleSelection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.traversal.NodeFilter;
-
-import com.google.common.base.FinalizablePhantomReference;
-import com.google.common.collect.SetMultimap;
 
 /**
  * This class is an example on how to use CxExporter in a Cytoscape task.
@@ -222,7 +214,6 @@ public class CxNetworkWriter implements CyWriter {
             exporter.writeNetwork(_network, writeSiblings, aspects, new ByteArrayOutputStream());
         }
         else {
-        		System.out.println("------------------ With filter");
             exporter.writeNetwork(_network, writeSiblings, aspects, filterSet, _os);
             _os.close();
         }

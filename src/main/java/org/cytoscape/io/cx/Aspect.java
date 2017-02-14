@@ -16,8 +16,11 @@ import org.cxio.aspects.datamodels.SubNetworkElement;
 import org.cytoscape.io.internal.cxio.AspectSet;
 
 /**
- * This enumeration is used to identify aspects relevant for Cytoscape networks
- * and tables.
+ *	This enumeration is used to identify aspects relevant for Cytoscape networks
+ *	and tables.
+ *
+ *	This is the list of core CX aspects supported by Cytoscape.
+ *
  *
  * @see AspectSet
  *
