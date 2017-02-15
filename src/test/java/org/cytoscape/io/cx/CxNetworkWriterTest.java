@@ -489,7 +489,7 @@ public class CxNetworkWriterTest {
 		
 		final List<String> nodeFilter = new ArrayList<>();
 		nodeFilter.add(CyNetwork.NAME);
-		writer.filter.setSelectedValues(aspects);
+		writer.aspectFilter.setSelectedValues(aspects);
 		writer.nodeColFilter.setSelectedValues(nodeFilter);
 		
 		writer.run(null);
@@ -518,7 +518,7 @@ public class CxNetworkWriterTest {
 		nodeFilter.add(CyNetwork.NAME);
 		nodeFilter.add("diffusion_input");
 		
-		writer.filter.setSelectedValues(aspects);
+		writer.aspectFilter.setSelectedValues(aspects);
 		writer.nodeColFilter.setSelectedValues(nodeFilter);
 		
 		writer.run(null);
@@ -551,7 +551,7 @@ public class CxNetworkWriterTest {
 		final List<String> edgeFilter = new ArrayList<>();
 		edgeFilter.add(CyNetwork.SELECTED);
 		
-		writer.filter.setSelectedValues(aspects);
+		writer.aspectFilter.setSelectedValues(aspects);
 		writer.nodeColFilter.setSelectedValues(nodeFilter);
 		writer.edgeColFilter.setSelectedValues(edgeFilter);
 

@@ -62,7 +62,7 @@ public class CxNetworkWriter implements CyWriter {
     private final CyGroupManager       _group_manager;
 
     
-	public ListMultipleSelection<String> filter = new ListMultipleSelection<>();
+	public ListMultipleSelection<String> aspectFilter = new ListMultipleSelection<>();
 	public ListMultipleSelection<String> nodeColFilter = new ListMultipleSelection<>();
 	public ListMultipleSelection<String> edgeColFilter = new ListMultipleSelection<>();
 	public ListMultipleSelection<String> networkColFilter = new ListMultipleSelection<>();
@@ -73,7 +73,7 @@ public class CxNetworkWriter implements CyWriter {
 
 	@Tunable(description="Aspects")
 	public ListMultipleSelection<String> getFilter() {
-		return filter;
+		return aspectFilter;
 	}
 
 	@Tunable(description="Node Columns")
@@ -125,8 +125,8 @@ public class CxNetworkWriter implements CyWriter {
     		}
     		
     		// Select all
-    		filter.setPossibleValues(vals);
-    		filter.setSelectedValues(vals);
+    		aspectFilter.setPossibleValues(vals);
+    		aspectFilter.setSelectedValues(vals);
     		
     		// Node Column filter
     		final List<String> nodeColumnNames = getAllColumnNames(CyNode.class);
@@ -210,7 +210,7 @@ public class CxNetworkWriter implements CyWriter {
         }
 
         // Create aspect-level filter
-        final List<String> selected = filter.getSelectedValues();
+        final List<String> selected = aspectFilter.getSelectedValues();
         final AspectSet aspects = new AspectSet();
         
         selected.stream().forEach(aspect->aspects.addAspect(aspectMap.get(aspect)));
