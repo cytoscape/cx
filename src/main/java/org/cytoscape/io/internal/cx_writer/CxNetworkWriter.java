@@ -8,7 +8,9 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -60,17 +62,17 @@ public class CxNetworkWriter implements CyWriter {
     private final CyGroupManager       _group_manager;
 
     
-	public ListMultipleSelection<Aspect> filter = new ListMultipleSelection<>();
+	public ListMultipleSelection<String> filter = new ListMultipleSelection<>();
 	public ListMultipleSelection<String> nodeColFilter = new ListMultipleSelection<>();
 	public ListMultipleSelection<String> edgeColFilter = new ListMultipleSelection<>();
 	public ListMultipleSelection<String> networkColFilter = new ListMultipleSelection<>();
 
 	
-	@Tunable(description="Is singleton network?")
+	@Tunable(description="Write all networks in the collection")
     public Boolean writeSiblings = true;
 
 	@Tunable(description="Aspects")
-	public ListMultipleSelection<Aspect> getFilter() {
+	public ListMultipleSelection<String> getFilter() {
 		return filter;
 	}
 
@@ -90,6 +92,9 @@ public class CxNetworkWriter implements CyWriter {
 	}
     
 	
+	private final Map<String, Aspect> aspectMap;
+	
+	
     public CxNetworkWriter(final OutputStream os,
                            final CyNetwork network,
                            final VisualMappingManager visual_mapping_manager,
@@ -105,11 +110,18 @@ public class CxNetworkWriter implements CyWriter {
         _os = os;
         _network = network;
         _group_manager = group_manager;
+        
+        // Create Aspect Map
+    
+        aspectMap = new HashMap<>();
+        for(Aspect aspect: Aspect.values()) {
+        		aspectMap.put(aspect.toString(),aspect);
+        }
 
     		// Add all
-    		final List<Aspect> vals = new ArrayList<>();
+    		final List<String> vals = new ArrayList<>();
     		for(Aspect a: Aspect.values()){
-    			vals.add(a);
+    			vals.add(a.toString());
     		}
     		
     		// Select all
@@ -198,9 +210,10 @@ public class CxNetworkWriter implements CyWriter {
         }
 
         // Create aspect-level filter
-        final List<Aspect> selected = filter.getSelectedValues();
+        final List<String> selected = filter.getSelectedValues();
         final AspectSet aspects = new AspectSet();
-        selected.stream().forEach(aspect->aspects.addAspect(aspect));
+        
+        selected.stream().forEach(aspect->aspects.addAspect(aspectMap.get(aspect)));
         
         // Create column-level filter
         AspectKeyFilter nodeFilter = createColumnFilter(CyNode.class);

@@ -483,9 +483,9 @@ public class CxNetworkWriterTest {
         final CxNetworkWriter writer = this.buildWriter(n, outFile);
         
         // Specify aspect name to be written in the CX
-		final List<Aspect> aspects = new ArrayList<>();
-		aspects.add(Aspect.NODES);
-		aspects.add(Aspect.NODE_ATTRIBUTES);
+		final List<String> aspects = new ArrayList<>();
+		aspects.add(Aspect.NODES.toString());
+		aspects.add(Aspect.NODE_ATTRIBUTES.toString());
 		
 		final List<String> nodeFilter = new ArrayList<>();
 		nodeFilter.add(CyNetwork.NAME);
@@ -509,10 +509,10 @@ public class CxNetworkWriterTest {
         final CxNetworkWriter writer = this.buildWriter(n, outFile);
         
         // Specify aspect name to be written in the CX
-		final List<Aspect> aspects = new ArrayList<>();
-		aspects.add(Aspect.NODES);
-		aspects.add(Aspect.EDGES);
-		aspects.add(Aspect.NODE_ATTRIBUTES);
+		final List<String> aspects = new ArrayList<>();
+		aspects.add(Aspect.NODES.toString());
+		aspects.add(Aspect.EDGES.toString());
+		aspects.add(Aspect.NODE_ATTRIBUTES.toString());
 		
 		final List<String> nodeFilter = new ArrayList<>();
 		nodeFilter.add(CyNetwork.NAME);
@@ -539,11 +539,11 @@ public class CxNetworkWriterTest {
         final CxNetworkWriter writer = this.buildWriter(n2, outFile);
         
         // Specify aspect name to be written in the CX
-		final List<Aspect> aspects = new ArrayList<>();
-		aspects.add(Aspect.NODES);
-		aspects.add(Aspect.EDGES);
-		aspects.add(Aspect.NODE_ATTRIBUTES);
-		aspects.add(Aspect.EDGE_ATTRIBUTES);
+		final List<String> aspects = new ArrayList<>();
+		aspects.add(Aspect.NODES.toString());
+		aspects.add(Aspect.EDGES.toString());
+		aspects.add(Aspect.NODE_ATTRIBUTES.toString());
+		aspects.add(Aspect.EDGE_ATTRIBUTES.toString());
 		
 		final List<String> nodeFilter = new ArrayList<>();
 		nodeFilter.add(CyNetwork.NAME);
@@ -569,6 +569,8 @@ public class CxNetworkWriterTest {
         final Collection<CyColumn> edgeCols = resultNet.getDefaultEdgeTable().getColumns();
         System.out.println(edgeCols);
         assertEquals(6, edgeCols.size());
+        
+        
     }
     
     @Test
