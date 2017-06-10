@@ -33,6 +33,7 @@ import org.cytoscape.model.CyNetworkTableManager;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyTable;
 import org.cytoscape.model.SUIDFactory;
+import org.cytoscape.model.subnetwork.CySubNetwork;
 import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingManager;
@@ -41,6 +42,8 @@ import org.cytoscape.work.Tunable;
 import org.cytoscape.work.util.ListMultipleSelection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 
 /**
  * This class is an example on how to use CxExporter in a Cytoscape task.
@@ -183,15 +186,24 @@ public class CxNetworkWriter implements CyWriter {
         
     		// Local
     		final CyTable localTable = _network.getTable(type, CyNetwork.LOCAL_ATTRS);
-        
+    		
         final SortedSet<String> colNames = new TreeSet<>();
         
-        colNames.addAll(sharedTable.getColumns().stream()
-        		.map(col-> col.getName()).collect(Collectors.toList()));
+        colNames.addAll(
+        		sharedTable.getColumns().stream()
+        			.map(col-> col.getName()).collect(Collectors.toList()));
         colNames.addAll(
         		localTable.getColumns().stream()
         			.map(col-> col.getName()).collect(Collectors.toList())
         	);
+
+    		if(type == CyNetwork.class) {
+    			// Add Root table to available column names
+    			final CyTable rootTable = ((CySubNetwork)_network).getRootNetwork().getDefaultNetworkTable();
+    			colNames.addAll(
+    				rootTable.getColumns().stream()
+        				.map(col-> col.getName()).collect(Collectors.toList()));
+    		}
     		
         return new ArrayList<String>(colNames);
     }
