@@ -616,16 +616,23 @@ public final class CxToCy {
 
                 final CyNode source = _cxid_to_cynode_map.get(source_id);
                 final CyNode target = _cxid_to_cynode_map.get(target_id);
-                cy_edge = network.addEdge(source,
-                                          target,
-                                          true);
-                if (edge_element.getInteraction() != null) {
-                    network.getRow(cy_edge).set(org.cytoscape.io.internal.cxio.CxUtil.SHARED_INTERACTION,
-                                                edge_element.getInteraction());
+                cy_edge = network.addEdge(source, target, true);
 
+
+                final CyRow edgeRow = network.getRow(cy_edge);
+                String interaction = edge_element.getInteraction();
+                if (interaction != null) {
+                    edgeRow.set(org.cytoscape.io.internal.cxio.CxUtil.SHARED_INTERACTION, interaction);
+                    edgeRow.set(CyEdge.INTERACTION, interaction);
                 }
-                _cxid_to_cyedge_map.put(edge_id,
-                                        cy_edge);
+
+                // Generate Cytoscape-style edge name (will be replaced with CX name if available)
+                final String sName = network.getRow(source).get(CyNetwork.NAME, String.class);
+                final String tName = network.getRow(target).get(CyNetwork.NAME, String.class);
+                edgeRow.set(CyNetwork.NAME, sName + " (" + interaction + ") " + tName);
+
+
+                _cxid_to_cyedge_map.put(edge_id, cy_edge);
             }
             else {
                 ((CySubNetwork) network).addEdge(cy_edge);
