@@ -121,49 +121,49 @@
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>application-api</artifactId>
-			<version>[${cytoscape.api.version},)</version>
+			<version>${cytoscape.api.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>viewmodel-api</artifactId>
-			<version>[${cytoscape.api.version},)</version>
+			<version>${cytoscape.api.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>group-api</artifactId>
-			<version>[${cytoscape.api.version},)</version>
+			<version>${cytoscape.api.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>service-api</artifactId>
-			<version>[${cytoscape.api.version},)</version>
+			<version>${cytoscape.api.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>vizmap-api</artifactId>
-			<version>[${cytoscape.api.version},)</version>
+			<version>${cytoscape.api.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>work-api</artifactId>
-			<version>[${cytoscape.api.version},)</version>
+			<version>${cytoscape.api.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>io-api</artifactId>
-			<version>[${cytoscape.api.version},)</version>
+			<version>${cytoscape.api.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>layout-api</artifactId>
-			<version>[${cytoscape.api.version},)</version>
+			<version>${cytoscape.api.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -196,7 +196,7 @@
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>model-impl</artifactId>
-			<version>[${cytoscape.api.version},)</version>
+			<version>${cytoscape.api.version}</version>
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
@@ -205,46 +205,46 @@
 			<artifactId>model-impl</artifactId>
 			<scope>test</scope>
 			<type>test-jar</type>
-			<version>[${cytoscape.api.version},)</version>
+			<version>${cytoscape.api.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>model-impl</artifactId>
 			<scope>test</scope>
-			<version>[${cytoscape.api.version},)</version>
+			<version>${cytoscape.api.version}</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>event-api</artifactId>
 			<scope>test</scope>
-			<version>[${cytoscape.api.version},)</version>
+			<version>${cytoscape.api.version}</version>
 			<type>test-jar</type>
 		</dependency>
 
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>ding-presentation-impl</artifactId>
-			<version>[${cytoscape.api.version},)</version>
+			<version>${cytoscape.api.version}</version>
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>ding-presentation-impl</artifactId>
-			<version>[${cytoscape.api.version},)</version>
+			<version>${cytoscape.api.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>viewmodel-impl</artifactId>
-			<version>[${cytoscape.api.version},)</version>
+			<version>${cytoscape.api.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>viewmodel-impl</artifactId>
-			<version>[${cytoscape.api.version},)</version>
+			<version>${cytoscape.api.version}</version>
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
