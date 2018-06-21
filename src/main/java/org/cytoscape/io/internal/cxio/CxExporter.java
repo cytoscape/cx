@@ -33,6 +33,8 @@ import org.cxio.core.interfaces.AspectFragmentWriter;
 import org.cxio.filters.AspectKeyFilter;
 import org.cxio.metadata.MetaDataCollection;
 import org.cxio.metadata.MetaDataElement;
+import org.cytoscape.application.CyApplicationManager;
+import org.cytoscape.application.NetworkViewRenderer;
 import org.cytoscape.group.CyGroup;
 import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.cx.Aspect;
@@ -42,13 +44,13 @@ import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyRow;
-import org.cytoscape.model.CyTable;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CySubNetwork;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.model.View;
 import org.cytoscape.view.model.VisualLexicon;
+import org.cytoscape.view.presentation.RenderingEngineFactory;
 import org.cytoscape.view.presentation.property.BasicVisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 
@@ -91,11 +93,11 @@ public final class CxExporter {
 
     private final static boolean     DEFAULT_USE_DEFAULT_PRETTY_PRINTING      = true;
 
-    private VisualLexicon            _lexicon;
     private boolean                  _use_default_pretty_printing;
     private VisualMappingManager     _visual_mapping_manager;
     private CyNetworkViewManager     _networkview_manager;
     private CyGroupManager           _group_manager;
+    private CyApplicationManager 	 _application_manager;
     private boolean                  _write_pre_metdata;
     private boolean                  _write_post_metdata;
     private long                     _next_suid;
@@ -124,10 +126,6 @@ public final class CxExporter {
         _group_manager = group_manager;
     }
 
-    public void setLexicon(final VisualLexicon lexicon) {
-        _lexicon = lexicon;
-    }
-
     public void setNetworkViewManager(final CyNetworkViewManager networkview_manager) {
         _networkview_manager = networkview_manager;
 
@@ -145,6 +143,9 @@ public final class CxExporter {
         _visual_mapping_manager = visual_mapping_manager;
     }
 
+    public void setApplicationManager(final CyApplicationManager application_manager) {
+    	_application_manager = application_manager;
+    }
     public final void setWritePostMetadata(final boolean write_post_metdata) {
         _write_post_metdata = write_post_metdata;
     }
@@ -1303,6 +1304,17 @@ public final class CxExporter {
         }
     }
 
+    private VisualLexicon getLexicon(CyNetworkView view) {
+    	NetworkViewRenderer renderer = _application_manager.getNetworkViewRenderer(view.getRendererId());
+
+		RenderingEngineFactory<CyNetwork> factory = renderer == null ? null
+
+				: renderer.getRenderingEngineFactory(NetworkViewRenderer.DEFAULT_CONTEXT);
+
+		VisualLexicon lexicon = factory == null ? null : factory.getVisualLexicon();
+		return lexicon;
+	}
+    
     private final void writeSubNetworks(final CyNetwork network,
                                         final boolean write_siblings,
                                         final CxWriter w,
@@ -1311,11 +1323,12 @@ public final class CxExporter {
         final CySubNetwork my_subnet = (CySubNetwork) network;
         final CyRootNetwork my_root = my_subnet.getRootNetwork();
         final List<CySubNetwork> subnets = makeSubNetworkList(write_siblings, my_subnet, my_root, true);
-
+      
+        
         for (final CySubNetwork subnet : subnets) {
             final Collection<CyNetworkView> views = _networkview_manager.getNetworkViews(subnet);
             for (final CyNetworkView view : views) {
-
+            	  final VisualLexicon _lexicon = getLexicon(view);
                 if (aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
                     writeCartesianLayout(view, w);
                 }
