@@ -62,10 +62,10 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
                                        network,
                                        _visual_mapping_manager,
                                        _networkview_manager,
-                                       _network_manager,
-                                       _group_manager,
-                                       _table_manager,
-                                       lexicon);
+                                       //_network_manager,
+                                       //_group_manager,
+                                       //_table_manager,
+                                       lexicon, false);
         }
         else {
             throw new IllegalStateException("visual_mapping_manager and/or application_manager or null");
@@ -87,10 +87,10 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
                                        view.getModel(),
                                        _visual_mapping_manager,
                                        _networkview_manager,
-                                       _network_manager,
-                                       _group_manager,
-                                       _table_manager,
-                                       lexicon);
+                                       //_network_manager,
+                                       //_group_manager,
+                                       //_table_manager,
+                                       lexicon, false);
 
         }
         throw new IllegalStateException("visual_mapping_manager and/or application_manager or null");

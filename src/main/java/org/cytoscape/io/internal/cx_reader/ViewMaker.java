@@ -416,7 +416,7 @@ public final class ViewMaker {
                 final Mapping mapping = entry.getValue();
                 final String mapping_type = mapping.getType();
                 final VisualProperty vp = lexicon.lookup(my_class, mapping_target);
-                final StringParser sp = new StringParser(mapping.getDefintion());
+                final StringParser sp = new StringParser(mapping.getDefinition());
                 final String col = sp.get(CxUtil.VM_COL);
                 final String type = sp.get(CxUtil.VM_TYPE);
                 final Class<?> type_class = ViewMaker.toClass(type);

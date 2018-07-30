@@ -1,18 +1,12 @@
 package org.cytoscape.io.cx;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Set;
-import java.util.SortedMap;
-
-import org.cxio.aspects.datamodels.CartesianLayoutElement;
-import org.cxio.aspects.datamodels.EdgeAttributesElement;
-import org.cxio.aspects.datamodels.EdgesElement;
-import org.cxio.aspects.datamodels.NodeAttributesElement;
-import org.cxio.aspects.datamodels.NodesElement;
 import org.cxio.aspects.readers.CartesianLayoutFragmentReader;
 import org.cxio.aspects.readers.EdgeAttributesFragmentReader;
 import org.cxio.aspects.readers.EdgesFragmentReader;
@@ -23,7 +17,7 @@ import org.cxio.aspects.writers.EdgeAttributesFragmentWriter;
 import org.cxio.aspects.writers.EdgesFragmentWriter;
 import org.cxio.aspects.writers.NodeAttributesFragmentWriter;
 import org.cxio.aspects.writers.NodesFragmentWriter;
-import org.cxio.core.CxReader;
+import org.cxio.core.CxElementReader2;
 import org.cxio.core.CxWriter;
 import org.cxio.core.interfaces.AspectElement;
 import org.cxio.core.interfaces.AspectFragmentReader;
@@ -31,12 +25,15 @@ import org.cxio.core.interfaces.AspectFragmentReader;
 final class TestUtil {
 
     final static String cyCxRoundTrip(final String input_cx) throws IOException {
-        final CxReader p = CxReader.createInstance(input_cx, getCytoscapeAspectFragmentReaders());
-        final SortedMap<String, List<AspectElement>> res = CxReader.parseAsMap(p);
-
+    	ByteArrayInputStream inputStream = new ByteArrayInputStream(input_cx.getBytes());
+    	final CxElementReader2 p = new CxElementReader2(inputStream, getCytoscapeAspectFragmentReaders(), true);
+        
+//    	final CxReader p = CxReader.createInstance(input_cx, getCytoscapeAspectFragmentReaders());
+        
+    
         final OutputStream out = new ByteArrayOutputStream();
 
-        final CxWriter w = CxWriter.createInstance(out);
+        final CxWriter w = CxWriter.createInstance(out, true);
         w.addAspectFragmentWriter(NodesFragmentWriter.createInstance());
         w.addAspectFragmentWriter(EdgesFragmentWriter.createInstance());
         w.addAspectFragmentWriter(CartesianLayoutFragmentWriter.createInstance());
@@ -44,11 +41,12 @@ final class TestUtil {
         w.addAspectFragmentWriter(EdgeAttributesFragmentWriter.createInstance());
 
         w.start();
-        w.writeAspectElements(res.get(NodesElement.ASPECT_NAME));
-        w.writeAspectElements(res.get(EdgesElement.ASPECT_NAME));
-        w.writeAspectElements(res.get(CartesianLayoutElement.ASPECT_NAME));
-        w.writeAspectElements(res.get(NodeAttributesElement.ASPECT_NAME));
-        w.writeAspectElements(res.get(EdgeAttributesElement.ASPECT_NAME));
+        Iterator<AspectElement> iter = p.iterator();
+        while(iter.hasNext()) {
+        	AspectElement e = iter.next();
+        	w.start();
+            w.writeAspectElement(e);
+        }
         w.end(true, null);
 
         return out.toString();

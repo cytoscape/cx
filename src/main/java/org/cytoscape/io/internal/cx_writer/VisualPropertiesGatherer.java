@@ -9,6 +9,7 @@ import java.util.Set;
 import org.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.cxio.core.interfaces.AspectElement;
 import org.cxio.util.CxioUtil;
+import org.cytoscape.io.internal.cxio.CxExporter;
 import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.VisualPropertyType;
 import org.cytoscape.model.CyColumn;
@@ -58,33 +59,33 @@ public final class VisualPropertiesGatherer {
      * @return a List of AspectElement
      */
     public static final List<AspectElement> gatherVisualPropertiesAsAspectElements(final CyNetworkView view,
-                                                                                   final CyNetwork network,
                                                                                    final VisualMappingManager visual_mapping_manager,
                                                                                    final VisualLexicon lexicon,
-                                                                                   final Set<VisualPropertyType> types) {
+                                                                                   final Set<VisualPropertyType> types,
+                                                                                   boolean writeSiblings) {
 
-        final List<AspectElement> elements = new ArrayList<AspectElement>();
+        final List<AspectElement> elements = new ArrayList<>();
         final VisualStyle current_visual_style = visual_mapping_manager.getVisualStyle(view);
         final Set<VisualProperty<?>> all_visual_properties = lexicon.getAllVisualProperties();
 
         if (types.contains(VisualPropertyType.NETWORK)) {
-            gatherNetworkVisualProperties(view, network, elements, current_visual_style, all_visual_properties);
+            gatherNetworkVisualProperties(view, elements, current_visual_style, all_visual_properties, writeSiblings);
         }
 
         if (types.contains(VisualPropertyType.NODES_DEFAULT)) {
-            gatherNodesDefaultVisualProperties(view, network, elements, current_visual_style, all_visual_properties);
+            gatherNodesDefaultVisualProperties(view, elements, current_visual_style, all_visual_properties, writeSiblings);
         }
 
         if (types.contains(VisualPropertyType.EDGES_DEFAULT)) {
-            gatherEdgesDefaultVisualProperties(view, network, elements, current_visual_style, all_visual_properties);
+            gatherEdgesDefaultVisualProperties(view, elements, current_visual_style, all_visual_properties, writeSiblings);
         }
 
         if (types.contains(VisualPropertyType.NODES)) {
-            gatherNodeVisualProperties(view, network, elements, all_visual_properties);
+            gatherNodeVisualProperties(view, elements, all_visual_properties, writeSiblings);
         }
 
         if (types.contains(VisualPropertyType.EDGES)) {
-            gatherEdgeVisualProperties(view, network, elements, all_visual_properties);
+            gatherEdgeVisualProperties(view, elements, all_visual_properties, writeSiblings);
         }
 
         return elements;
@@ -173,58 +174,87 @@ public final class VisualPropertiesGatherer {
             }
         }
     }
+    
+    
+    private static String processColForVisualStyleMapping(String colName, boolean shiftSharedNameToName ) {
+    		if (shiftSharedNameToName) {
+    			if (colName.equals(CxUtil.SHARED_NAME_COL))
+    				return CxUtil.NAME_COL;
+    		}
+    		return colName;
+    }
+    
+    final public static char COMMA = ',';
+    
+    // escape ',' with double ',' 
+    private static String escapeString(String str) {
+        if (str == null) {
+          return null;
+        }
+        StringBuilder result = new StringBuilder();
+        for (int i=0; i<str.length(); i++) {
+          char curChar = str.charAt(i);
+          if (curChar == COMMA) {
+            // special char
+            result.append(COMMA);
+          }
+          result.append(curChar);
+        }
+        return result.toString();
+      }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
+    // Note: ',' in column name and value are escaped by ',,' 
     private final static void addMappings(final VisualStyle style,
                                           final VisualProperty vp,
                                           final CyVisualPropertiesElement cvp,
-                                          final CyTable table) {
+                                          final CyTable table, 
+                                          boolean shiftSharedNameToName) {
         final VisualMappingFunction<?, ?> mapping = style.getVisualMappingFunction(vp);
-
         if (mapping != null) {
+            final String col = processColForVisualStyleMapping( mapping.getMappingColumnName(),shiftSharedNameToName) ;
+            
             if (mapping instanceof PassthroughMapping<?, ?>) {
                 final PassthroughMapping<?, ?> pm = (PassthroughMapping<?, ?>) mapping;
-                final String col = pm.getMappingColumnName();
                 String type = null;
                 try {
                     type = toAttributeType(pm.getMappingColumnType(), table, col);
                 }
                 catch (final IOException e) {
                     System.out.println("WARNING: problem with mapping/column '" + col
-                            + "': column not present, ignoring corresponding passthrough mapping");
+                            + "': column not present, ignoring corresponding passthrough mapping. " + e.getMessage());
                     return;
                 }
                 final StringBuilder sb = new StringBuilder();
                 sb.append(CxUtil.VM_COL);
                 sb.append("=");
-                sb.append(col);
+                sb.append(escapeString(col));
                 sb.append(",");
                 sb.append(CxUtil.VM_TYPE);
                 sb.append("=");
-                sb.append(type);
+                sb.append(escapeString(type));
                 cvp.putMapping(vp.getIdString(), CxUtil.PASSTHROUGH, sb.toString());
             }
             else if (mapping instanceof DiscreteMapping<?, ?>) {
                 final DiscreteMapping<?, ?> dm = (DiscreteMapping<?, ?>) mapping;
-                final String col = dm.getMappingColumnName();
                 String type = null;
                 try {
                     type = toAttributeType(dm.getMappingColumnType(), table, col);
                 }
                 catch (final IOException e) {
                     System.out.println("WARNING: problem with mapping/column '" + col
-                            + "': column not present, ignoring corresponding discrete mapping");
+                            + "': column not present, ignoring corresponding discrete mapping. " + e.getMessage());
                     return;
                 }
                 final Map<?, ?> map = dm.getAll();
                 final StringBuilder sb = new StringBuilder();
                 sb.append(CxUtil.VM_COL);
                 sb.append("=");
-                sb.append(col);
+                sb.append(escapeString(col));
                 sb.append(",");
                 sb.append(CxUtil.VM_TYPE);
                 sb.append("=");
-                sb.append(type);
+                sb.append(escapeString(type));
                 int counter = 0;
                 for (final Map.Entry<?, ?> entry : map.entrySet()) {
                     final Object value = entry.getValue();
@@ -235,11 +265,11 @@ public final class VisualPropertiesGatherer {
                         sb.append(",K=");
                         sb.append(counter);
                         sb.append("=");
-                        sb.append(entry.getKey().toString());
+                        sb.append(escapeString(entry.getKey().toString()));
                         sb.append(",V=");
                         sb.append(counter);
                         sb.append("=");
-                        sb.append(vp.toSerializableString(value));
+                        sb.append(escapeString(vp.toSerializableString(value)));
                     }
                     catch (final Exception e) {
                         System.out.println("could not add discrete mapping entry: " + value);
@@ -252,24 +282,23 @@ public final class VisualPropertiesGatherer {
             }
             else if (mapping instanceof ContinuousMapping<?, ?>) {
                 final ContinuousMapping<?, ?> cm = (ContinuousMapping<?, ?>) mapping;
-                final String col = cm.getMappingColumnName();
                 String type = null;
                 try {
                     type = toAttributeType(cm.getMappingColumnType(), table, col);
                 }
                 catch (final IOException e) {
                     System.out.println("WARNING: problem with mapping/column '" + col
-                            + "': column not present, ignoring corresponding continuous mapping");
+                            + "': column not present, ignoring corresponding continuous mapping." + e.getMessage());
                     return;
                 }
                 final StringBuilder sb = new StringBuilder();
                 sb.append(CxUtil.VM_COL);
                 sb.append("=");
-                sb.append(col);
+                sb.append(escapeString(col));
                 sb.append(",");
                 sb.append(CxUtil.VM_TYPE);
                 sb.append("=");
-                sb.append(type);
+                sb.append(escapeString(type));
                 final List<?> points = cm.getAllPoints();
                 int counter = 0;
                 for (final Object point : points) {
@@ -280,19 +309,19 @@ public final class VisualPropertiesGatherer {
                     sb.append(",L=");
                     sb.append(counter);
                     sb.append("=");
-                    sb.append(vp.toSerializableString(lesser));
+                    sb.append(escapeString(vp.toSerializableString(lesser)));
                     sb.append(",E=");
                     sb.append(counter);
                     sb.append("=");
-                    sb.append(vp.toSerializableString(equal));
+                    sb.append(escapeString(vp.toSerializableString(equal)));
                     sb.append(",G=");
                     sb.append(counter);
                     sb.append("=");
-                    sb.append(vp.toSerializableString(greater));
+                    sb.append(escapeString(vp.toSerializableString(greater)));
                     sb.append(",OV=");
                     sb.append(counter);
                     sb.append("=");
-                    sb.append(cp.getValue());
+                    sb.append(escapeString(cp.getValue().toString()));
                     ++counter;
                 }
                 cvp.putMapping(vp.getIdString(), CxUtil.CONTINUOUS, sb.toString());
@@ -302,19 +331,20 @@ public final class VisualPropertiesGatherer {
 
     @SuppressWarnings("rawtypes")
     private static void gatherEdgesDefaultVisualProperties(final CyNetworkView view,
-                                                           final CyNetwork network,
                                                            final List<AspectElement> visual_properties,
                                                            final VisualStyle current_visual_style,
-                                                           final Set<VisualProperty<?>> all_visual_properties) {
+                                                           final Set<VisualProperty<?>> all_visual_properties,
+                                                           boolean writeSiblings) {
 
         final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.EDGES_DEFAULT.asString(),
-                                                                          view.getSUID());
-        e.addAppliesTo(view.getSUID());
+        																  writeSiblings? view.getSUID(): null,
+                                                                          writeSiblings? view.getSUID(): null);
+     //   e.setApplies_to(view.getSUID());
         for (final VisualProperty visual_property : all_visual_properties) {
             if (visual_property.getTargetDataType() == CyEdge.class) {
                 addDefaultProperties(current_visual_style, visual_property, e);
-                final CyTable table = network.getTable(CyEdge.class, CyNetwork.DEFAULT_ATTRS);
-                addMappings(current_visual_style, visual_property, e, table);
+                final CyTable table = view.getModel().getTable(CyEdge.class, CyNetwork.DEFAULT_ATTRS);
+                addMappings(current_visual_style, visual_property, e, table,false);
             }
         }
         addDependency(CxUtil.ARROW_COLOR_MATCHES_EDGE, current_visual_style, e);
@@ -323,14 +353,15 @@ public final class VisualPropertiesGatherer {
 
     @SuppressWarnings("rawtypes")
     private static void gatherEdgeVisualProperties(final CyNetworkView view,
-                                                   final CyNetwork network,
                                                    final List<AspectElement> visual_properties,
-                                                   final Set<VisualProperty<?>> all_visual_properties) {
-        for (final CyEdge edge : network.getEdgeList()) {
+                                                   final Set<VisualProperty<?>> all_visual_properties,
+                                                   boolean writeSiblings) {
+        for (final CyEdge edge : view.getModel().getEdgeList()) {
             final View<CyEdge> edge_view = view.getEdgeView(edge);
             final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.EDGES.asString(),
-                                                                              view.getSUID());
-            e.addAppliesTo(edge.getSUID());
+            												CxExporter.getEdgeIdToExport(edge, view.getModel()),//edge.getSUID(),                                                                             
+            												writeSiblings ? view.getSUID() : null);
+     //       e.setApplies_to(edge.getSUID());
             for (final VisualProperty visual_property : all_visual_properties) {
                 if (visual_property.getTargetDataType() == CyEdge.class) {
                     addProperties(edge_view, visual_property, e);
@@ -345,13 +376,14 @@ public final class VisualPropertiesGatherer {
 
     @SuppressWarnings("rawtypes")
     private static void gatherNetworkVisualProperties(final CyNetworkView view,
-                                                      final CyNetwork network,
                                                       final List<AspectElement> visual_properties,
                                                       final VisualStyle current_visual_style,
-                                                      final Set<VisualProperty<?>> all_visual_properties) {
+                                                      final Set<VisualProperty<?>> all_visual_properties,
+                                                      boolean writeSiblings) {
         final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.NETWORK.asString(),
-                                                                          view.getSUID());
-        e.addAppliesTo(view.getSUID());
+        												writeSiblings? view.getSUID() : null,
+                                                        writeSiblings? view.getSUID() : null);
+
         for (final VisualProperty visual_property : all_visual_properties) {
             if (visual_property.getTargetDataType() == CyNetwork.class) {
                 addPropertiesNetwork(view, current_visual_style, visual_property, e);
@@ -362,18 +394,19 @@ public final class VisualPropertiesGatherer {
 
     @SuppressWarnings("rawtypes")
     private static void gatherNodesDefaultVisualProperties(final CyNetworkView view,
-                                                           final CyNetwork network,
                                                            final List<AspectElement> visual_properties,
                                                            final VisualStyle current_visual_style,
-                                                           final Set<VisualProperty<?>> all_visual_properties) {
+                                                           final Set<VisualProperty<?>> all_visual_properties,
+                                                           boolean writeSiblings) {
         final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.NODES_DEFAULT.asString(),
-                                                                          view.getSUID());
-        e.addAppliesTo(view.getSUID());
+        											writeSiblings? view.getSUID(): null,                      
+        											writeSiblings? view.getSUID(): null);
+    //    e.setApplies_to(view.getSUID());
         for (final VisualProperty visual_property : all_visual_properties) {
             if (visual_property.getTargetDataType() == CyNode.class) {
                 addDefaultProperties(current_visual_style, visual_property, e);
-                final CyTable table = network.getTable(CyNode.class, CyNetwork.DEFAULT_ATTRS);
-                addMappings(current_visual_style, visual_property, e, table);
+                final CyTable table = view.getModel().getTable(CyNode.class, CyNetwork.DEFAULT_ATTRS);
+                addMappings(current_visual_style, visual_property, e, table, !writeSiblings);
             }
         }
         addDependency(CxUtil.NODE_CUSTOM_GRAPHICS_SIZE_SYNC, current_visual_style, e);
@@ -394,14 +427,15 @@ public final class VisualPropertiesGatherer {
 
     @SuppressWarnings("rawtypes")
     private static void gatherNodeVisualProperties(final CyNetworkView view,
-                                                   final CyNetwork network,
                                                    final List<AspectElement> visual_properties,
-                                                   final Set<VisualProperty<?>> all_visual_properties) {
-        for (final CyNode cy_node : network.getNodeList()) {
+                                                   final Set<VisualProperty<?>> all_visual_properties,
+                                                   boolean writeSiblings) {
+        for (final CyNode cy_node : view.getModel().getNodeList()) {
             final View<CyNode> node_view = view.getNodeView(cy_node);
             final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.NODES.asString(),
-                                                                              view.getSUID());
-            e.addAppliesTo(cy_node.getSUID());
+            																CxExporter.getNodeIdToExport(cy_node, view.getModel()),//cy_node.getSUID(),
+                                                                             writeSiblings? view.getSUID() : null);
+      //      e.setApplies_to(cy_node.getSUID());
             for (final VisualProperty visual_property : all_visual_properties) {
                 if (visual_property.getTargetDataType() == CyNode.class) {
                     addProperties(node_view, visual_property, e);
@@ -455,7 +489,7 @@ public final class VisualPropertiesGatherer {
                 }
                 else {
                     throw new IllegalArgumentException("don't know how to deal with type '" + col_type
-                                                       + "' (from table column)");
+                                                       + "' (from table column "+ col_name + ")");
                 }
             }
             else {
@@ -463,7 +497,7 @@ public final class VisualPropertiesGatherer {
             }
         }
         else {
-            throw new IllegalArgumentException("don't know how to deal with type '" + attr_class + "'");
+            throw new IllegalArgumentException("don't know how to deal with type '" + attr_class + "' for column " + col_name);
         }
     }
 

@@ -36,6 +36,7 @@ import org.cytoscape.work.Task;
 import org.cytoscape.work.TaskIterator;
 import org.cytoscape.work.TaskMonitor;
 import org.cytoscape.work.util.ListSingleSelection;
+import org.ndexbio.model.cx.NiceCXNetwork;
 
 public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
@@ -166,42 +167,48 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         aspects.addAspect(Aspect.VIEWS);
         aspects.addAspect(Aspect.TABLE_COLUMN_LABELS);
 
-        final CxImporter cx_importer = CxImporter.createInstance();
+        final CxImporter cx_importer = new CxImporter();
 
         SortedMap<String, List<AspectElement>> res = null;
 
-        final CxReader cxr = cx_importer.obtainCxReader(aspects, _in);
+        NiceCXNetwork niceCX = cx_importer.getCXNetworkFromStream(_in);
+        
+//        final CxReader cxr = cx_importer.obtainCxReader(aspects, _in);
         final long t0 = System.currentTimeMillis();
-        res = CxToCy.parseAsMap(cxr, t0, Settings.INSTANCE.isTiming());
+//        res = CxToCy.parseAsMap(cxr, t0, Settings.INSTANCE.isTiming());
+        
+        
         if (Settings.INSTANCE.isTiming()) {
             TimingUtil.reportTimeDifference(t0, "total time parsing", -1);
         }
-        final AspectElementCounts counts = cxr.getAspectElementCounts();
-        final MetaDataCollection pre = cxr.getPreMetaData();
-        final MetaDataCollection post = cxr.getPostMetaData();
-        if (Settings.INSTANCE.isDebug()) {
-            if (counts != null) {
-                System.out.println("Aspects elements read in:");
-                System.out.println(counts);
-            }
-            else {
-            	System.out.println("No aspects elements read in (!)");
-            }
-            if (pre != null) {
-                System.out.println("Pre metadata:");
-                System.out.println(pre);
-            }
-            else {
-            	System.out.println("No pre metadata");
-            }
-            if (post != null) {
-                System.out.println("Post metadata:");
-                System.out.println(post);
-            }
-            else {
-            	System.out.println("No post metadata");
-            }
-        }
+        
+        
+//        final AspectElementCounts counts = cxr.getAspectElementCounts();
+//        final MetaDataCollection pre = cxr.getPreMetaData();
+//        final MetaDataCollection post = cxr.getPostMetaData();
+//        if (Settings.INSTANCE.isDebug()) {
+//            if (counts != null) {
+//                System.out.println("Aspects elements read in:");
+//                System.out.println(counts);
+//            }
+//            else {
+//            	System.out.println("No aspects elements read in (!)");
+//            }
+//            if (pre != null) {
+//                System.out.println("Pre metadata:");
+//                System.out.println(pre);
+//            }
+//            else {
+//            	System.out.println("No pre metadata");
+//            }
+//            if (post != null) {
+//                System.out.println("Post metadata:");
+//                System.out.println(post);
+//            }
+//            else {
+//            	System.out.println("No post metadata");
+//            }
+//        }
 
         _cx_to_cy = new CxToCy();
 
@@ -222,12 +229,15 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
         if (root_network != null) {
             // Root network exists
-            _networks.addAll(_cx_to_cy.createNetwork(res,
-                                                     root_network,
-                                                     null,
-                                                     _group_factory,
-                                                     null,
-                                                     _perform_basic_integrity_checks));
+//            _networks.addAll(_cx_to_cy.createNetwork(res,
+//                                                     root_network,
+//                                                     null,
+//                                                     _group_factory,
+//                                                     null,
+//                                                     _perform_basic_integrity_checks));
+            
+            _networks.addAll(_cx_to_cy.createNetwork(niceCX, root_network, cyNetworkFactory, 
+            		_network_collection_name));
         }
         else {
             // Need to create new network with new root.
@@ -241,12 +251,14 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                     }
                 }
             }
-            _networks.addAll(_cx_to_cy.createNetwork(res,
-                                                     null,
-                                                     cyNetworkFactory,
-                                                     _group_factory,
-                                                     _network_collection_name,
-                                                     _perform_basic_integrity_checks));
+//            _networks.addAll(_cx_to_cy.createNetwork(res,
+//                                                     null,
+//                                                     cyNetworkFactory,
+//                                                     _group_factory,
+//                                                     _network_collection_name,
+//                                                     _perform_basic_integrity_checks));
+            _networks.addAll(_cx_to_cy.createNetwork(niceCX, root_network, cyNetworkFactory, 
+            		_network_collection_name));
         }
 
         if (Settings.INSTANCE.isTiming()) {
