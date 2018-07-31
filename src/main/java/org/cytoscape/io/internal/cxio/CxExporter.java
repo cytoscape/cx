@@ -47,6 +47,8 @@ import org.cxio.core.interfaces.AspectFragmentWriter;
 import org.cxio.metadata.MetaDataCollection;
 import org.cxio.metadata.MetaDataElement;
 import org.cxio.misc.AspectElementCounts;
+import org.cytoscape.application.CyApplicationManager;
+import org.cytoscape.application.NetworkViewRenderer;
 import org.cytoscape.group.CyGroup;
 import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.cx.Aspect;
@@ -65,6 +67,7 @@ import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.model.View;
 import org.cytoscape.view.model.VisualLexicon;
+import org.cytoscape.view.presentation.RenderingEngineFactory;
 import org.cytoscape.view.presentation.property.BasicVisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.ndexbio.model.cx.NamespacesElement;
@@ -106,12 +109,12 @@ public final class CxExporter {
 
 	// private final static boolean DEFAULT_USE_DEFAULT_PRETTY_PRINTING = true;
 
-	private VisualLexicon _lexicon;
+	
 	// private boolean _use_default_pretty_printing;
 	private VisualMappingManager _visual_mapping_manager;
 	private CyNetworkViewManager _networkview_manager;
 	private CyGroupManager _group_manager;
-
+	private CyApplicationManager _application_manager;
 	// private long _next_suid;
 
 	public final static String[] cySupportedAspectNames = { NodesElement.ASPECT_NAME, EdgesElement.ASPECT_NAME,
@@ -174,13 +177,25 @@ public final class CxExporter {
 		return writers;
 	}
 
-	/*
-	 * public void setGroupManager(final CyGroupManager group_manager) {
-	 * _group_manager = group_manager; }
-	 */
-
-	public void setLexicon(final VisualLexicon lexicon) {
-		_lexicon = lexicon;
+	
+	public void setGroupManager(final CyGroupManager group_manager) {
+	    _group_manager = group_manager; 
+	}
+	 
+	
+	public void setApplicationManager(final CyApplicationManager application_manager) {
+		_application_manager = application_manager;
+	}
+	
+	private VisualLexicon getLexicon(CyNetworkView view) {
+		NetworkViewRenderer renderer = _application_manager.getNetworkViewRenderer(view.getRendererId()); 
+		 
+	    RenderingEngineFactory<CyNetwork> factory = renderer == null ? null 
+	 
+	        : renderer.getRenderingEngineFactory(NetworkViewRenderer.DEFAULT_CONTEXT); 
+	 
+	    VisualLexicon lexicon = factory == null ? null : factory.getVisualLexicon(); 
+	    return lexicon;
 	}
 
 	public void setNetworkViewManager(final CyNetworkViewManager networkview_manager) {
@@ -252,7 +267,7 @@ public final class CxExporter {
 	 */
 
 	public final boolean writeNetwork(final CyNetwork network, final boolean write_siblings, final AspectSet aspects,
-			final OutputStream out, boolean isUpdate) throws IOException {
+			final OutputStream out) throws IOException {
 
 		if (!aspects.contains(Aspect.SUBNETWORKS)) {
 			if (aspects.contains(Aspect.VISUAL_PROPERTIES)) {
@@ -303,14 +318,12 @@ public final class CxExporter {
 				? CXInfoManager.getProvenance(network).getEntity()
 				: null);
 
-		ProvenanceEvent creationEvent = new ProvenanceEvent("CyNDEx-2 " + (isUpdate ? "Update" : "Upload"),
+		ProvenanceEvent creationEvent = new ProvenanceEvent("Cytoscape Export",
 				new Timestamp(Calendar.getInstance().getTimeInMillis()));
 		if (oldProvenanceEntity != null)
 			creationEvent.addInput(oldProvenanceEntity);
 		cytoscapeProvenance.getEntity().setCreationEvent(creationEvent);
 		List<SimplePropertyValuePair> provenanceProps = new ArrayList<>(5);
-//		provenanceProps.add(new SimplePropertyValuePair("cyNDEx2 Version", CyActivator.getAppVersion()));
-//		provenanceProps.add(new SimplePropertyValuePair("Cytoscape Version", CyActivator.getCyVersion()));
 
 		CyRootNetwork rootNetwork = ((CySubNetwork) network).getRootNetwork();
 
@@ -1368,7 +1381,7 @@ public final class CxExporter {
 			for (final CySubNetwork subnet : subnets) {
 				final Collection<CyNetworkView> views = _networkview_manager.getNetworkViews(subnet);
 				for (final CyNetworkView view : views) {
-
+					final VisualLexicon _lexicon = getLexicon(view);
 					writeCartesianLayout(view, w, write_siblings);
 					writeVisualProperties(view, _visual_mapping_manager, _lexicon, w, write_siblings);
 					

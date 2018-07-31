@@ -12,7 +12,6 @@ import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.CyNetworkTableManager;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewManager;
-import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 
 public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
@@ -53,19 +52,15 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
     @Override
     public CyWriter createWriter(final OutputStream os, final CyNetwork network) {
         if ((_visual_mapping_manager != null) && (_application_manager != null)) {
-            VisualLexicon lexicon = null;
-            if (_application_manager.getCurrentRenderingEngine() != null) {
-                lexicon = _application_manager.getCurrentRenderingEngine().getVisualLexicon();
-            }
-
+            
             return new CxNetworkWriter(os,
                                        network,
                                        _visual_mapping_manager,
                                        _networkview_manager,
                                        //_network_manager,
-                                       //_group_manager,
+                                       _group_manager,
                                        //_table_manager,
-                                       lexicon, false);
+                                       _application_manager);
         }
         else {
             throw new IllegalStateException("visual_mapping_manager and/or application_manager or null");
@@ -81,16 +76,15 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
     @Override
     public CyWriter createWriter(final OutputStream os, final CyNetworkView view) {
         if ((_visual_mapping_manager != null) && (_application_manager != null)) {
-            final VisualLexicon lexicon = _application_manager.getCurrentRenderingEngine().getVisualLexicon();
 
             return new CxNetworkWriter(os,
                                        view.getModel(),
                                        _visual_mapping_manager,
                                        _networkview_manager,
                                        //_network_manager,
-                                       //_group_manager,
+                                       _group_manager,
                                        //_table_manager,
-                                       lexicon, false);
+                                       _application_manager);
 
         }
         throw new IllegalStateException("visual_mapping_manager and/or application_manager or null");
