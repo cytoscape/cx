@@ -73,7 +73,8 @@
 						<Embed-Dependency>*;scope=!provided|test;groupId=!org.cytoscape</Embed-Dependency>
 						<Embed-Transitive>true</Embed-Transitive>
 						<Import-Package>*;resolution:=optional</Import-Package>
-						<Export-Package>org.cytoscape.io.cx</Export-Package>
+						<Export-Package>${bundle.namespace}.*,org.ndexbio.*;version="${project.version}"</Export-Package>
+						
 					</instructions>
 				</configuration>
 			</plugin>
