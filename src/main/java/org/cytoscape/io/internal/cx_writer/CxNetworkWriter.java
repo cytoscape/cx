@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 import org.cxio.filters.AspectKeyFilter;
 import org.cxio.filters.AspectKeyFilterBasic;
+import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.cx.Aspect;
 import org.cytoscape.io.internal.cxio.AspectSet;
@@ -35,15 +36,12 @@ import org.cytoscape.model.CyTable;
 import org.cytoscape.model.SUIDFactory;
 import org.cytoscape.model.subnetwork.CySubNetwork;
 import org.cytoscape.view.model.CyNetworkViewManager;
-import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.work.TaskMonitor;
 import org.cytoscape.work.Tunable;
 import org.cytoscape.work.util.ListMultipleSelection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 
 /**
  * This class is an example on how to use CxExporter in a Cytoscape task.
@@ -60,10 +58,9 @@ public class CxNetworkWriter implements CyWriter {
     private final CyNetwork            _network;
     private final CharsetEncoder       _encoder;
     private final VisualMappingManager _visual_mapping_manager;
-    private final VisualLexicon        _lexicon;
     private final CyNetworkViewManager _networkview_manager;
     private final CyGroupManager       _group_manager;
-
+    private final CyApplicationManager _application_manager;
     
 	public ListMultipleSelection<String> aspectFilter = new ListMultipleSelection<>();
 	public ListMultipleSelection<String> nodeColFilter = new ListMultipleSelection<>();
@@ -105,14 +102,16 @@ public class CxNetworkWriter implements CyWriter {
                            final CyNetworkManager network_manager,
                            final CyGroupManager group_manager,
                            final CyNetworkTableManager table_manager,
-                           final VisualLexicon lexicon) {
+                           final CyApplicationManager application_manager) {
 
     		_visual_mapping_manager = visual_mapping_manager;
         _networkview_manager = networkview_manager;
-        _lexicon = lexicon;
+        
         _os = os;
         _network = network;
         _group_manager = group_manager;
+        
+        _application_manager = application_manager;
         
         // Create Aspect Map
     
@@ -208,6 +207,7 @@ public class CxNetworkWriter implements CyWriter {
         return new ArrayList<String>(colNames);
     }
     
+   
     
     @Override
     public void run(final TaskMonitor taskMonitor) throws Exception {
@@ -239,7 +239,7 @@ public class CxNetworkWriter implements CyWriter {
  
         final CxExporter exporter = CxExporter.createInstance();
         exporter.setUseDefaultPrettyPrinting(true);
-        exporter.setLexicon(_lexicon);
+        exporter.setApplicationManager(_application_manager);
         exporter.setVisualMappingManager(_visual_mapping_manager);
         exporter.setNetworkViewManager(_networkview_manager);
         exporter.setGroupManager(_group_manager);
