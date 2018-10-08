@@ -5,18 +5,18 @@ import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.cxio.aspects.datamodels.CartesianLayoutElement;
-import org.cxio.aspects.datamodels.EdgeAttributesElement;
-import org.cxio.aspects.datamodels.EdgesElement;
-import org.cxio.aspects.datamodels.NetworkAttributesElement;
-import org.cxio.aspects.datamodels.NodeAttributesElement;
-import org.cxio.aspects.datamodels.NodesElement;
-import org.cxio.aspects.readers.GeneralAspectFragmentReader;
-import org.cxio.core.CxElementReader2;
-import org.cxio.core.interfaces.AspectElement;
-import org.cxio.core.interfaces.AspectFragmentReader;
-import org.cxio.metadata.MetaDataCollection;
-import org.cxio.metadata.MetaDataElement;
+import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
+import org.ndexbio.cxio.aspects.datamodels.EdgeAttributesElement;
+import org.ndexbio.cxio.aspects.datamodels.EdgesElement;
+import org.ndexbio.cxio.aspects.datamodels.NetworkAttributesElement;
+import org.ndexbio.cxio.aspects.datamodels.NodeAttributesElement;
+import org.ndexbio.cxio.aspects.datamodels.NodesElement;
+import org.ndexbio.cxio.aspects.readers.GeneralAspectFragmentReader;
+import org.ndexbio.cxio.core.CxElementReader2;
+import org.ndexbio.cxio.core.interfaces.AspectElement;
+import org.ndexbio.cxio.core.interfaces.AspectFragmentReader;
+import org.ndexbio.cxio.metadata.MetaDataCollection;
+import org.ndexbio.cxio.metadata.MetaDataElement;
 import org.cytoscape.io.cx.Aspect;
 import org.ndexbio.model.cx.NamespacesElement;
 import org.ndexbio.model.cx.NdexNetworkStatus;
@@ -116,101 +116,6 @@ public final class CxImporter {
 
         
     }
-
-    /**
-     * This creates a new CxImporter
-     *
-     * @return a new CxImporter
-     */
-/*    public final static CxImporter createInstance() {
-        return new CxImporter();
-    } */
-
-    /**
-     * To use custom readers for other aspects than the standard nodes, edges,
-     * node attributes, edge attributes and cartesian layout.
-     *
-     *
-     * @param additional_readers
-     *            a collection of additional custom readers to add
-     */
- /*   public final void addAdditionalReaders(final Collection<AspectFragmentReader> additional_readers) {
-        _additional_readers.addAll(additional_readers);
-    } */
-
-    /**
-     * To use a custom reader for another aspect than the standard nodes, edges,
-     * node attributes, edge attributes and cartesian layout.
-     *
-     *
-     * @param additional_reader
-     *            an additional custom readers to add
-     */
- /*   public final void addAdditionalReader(final AspectFragmentReader additional_reader) {
-        _additional_readers.add(additional_reader);
-    }
-*/
-    /**
-     * This is the primary method to parse a CX formatted input stream by
-     * returning a CxReader for a given InputStream and set of Aspects. The
-     * CxReader in turn is then used to obtain aspect fragments from the stream.
-     * Which aspects are de-serialized and which ones are ignored is controlled
-     * by the AspectSet argument. <br>
-     * By way of example:
-     *
-     * <pre>
-     * {@code}
-     * CxImporter cx_importer = CxImporter.createInstance();
-     * AspectSet aspects = new AspectSet();
-     * aspects.addAspect(Aspect.NODES);
-     * 
-     * CxReader r = cx_importer.getCxReader(aspects, in);
-     * 
-     * while (r.hasNext()) {
-     *     List&lt;AspectElement&gt; elements = r.getNext();
-     *     if (!elements.isEmpty()) {
-     *         String aspect_name = elements.get(0).getAspectName();
-     *         // Do something with "elements":
-     *         for (AspectElement element : elements) {
-     *             System.out.println(element.toString());
-     *         }
-     *     }
-     * }
-     *
-     * </pre>
-     *
-     * @see <a
-     *      href="https://github.com/cmzmasek/cxio/wiki/Java-Library-for-CX-Serialization-and-De-serialization">cxio</a>
-     *
-     * @param aspects
-     *            the set of aspects to de-serialize
-     * @param in
-     *            a CX formatted input stream
-     * @return
-     * @throws IOException
-     *
-     * @see AspectSet
-     * @see Aspect
-     */
-  /*  public final CxReader obtainCxReader(final AspectSet aspects, final InputStream in) throws IOException {
-        final Set<AspectFragmentReader> all_readers = getAllAspectFragmentReaders(aspects.getCySupportedAspectFragmentReaders());
-        final CxReader r = CxReader.createInstance(in, all_readers);
-        return r;
-    }
-
-    private Set<AspectFragmentReader> getAllAspectFragmentReaders(final Set<AspectFragmentReader> readers) {
-
-        final Set<AspectFragmentReader> all = new HashSet<>();
-        for (final AspectFragmentReader reader : readers) {
-            all.add(reader);
-        }
-        if (_additional_readers != null) {
-            for (final AspectFragmentReader reader : _additional_readers) {
-                all.add(reader);
-            }
-        }
-        return all;
-    } */
     
     public NiceCXNetwork getCXNetworkFromStream( final InputStream in) throws IOException {
         CxElementReader2 r = new CxElementReader2(in, all_readers, true);
@@ -297,31 +202,4 @@ public final class CxImporter {
         return niceCX;
     }
     
-
-    /* this function converts an old CX network (exported by very old version of cyNDEx app) to a new one. It basically does this aspect name changes:
-     *    visualProperties  --> cyVisualProperties
-     * 	  subNetworks       --> cySubNetworks
-     *    networkRelations  --> cyNetworkRelations
-     *    hiddenAttributes  --> cyHiddenAttributes
-     *  */
-  /*  
-    private static NiceCXNetwork migrateOldCyAspects(NiceCXNetwork oldNet) {
-        MetaDataCollection metadata = oldNet.getMetadata()
-    		
-        	if ( metadata.getMetaDataElement("visualProperties") != null) {
-        		
-        	}
-    	
-    }
-    
-    
-    private static void renameOpaqueAspect(String oldName, String newName, NiceCXNetwork network) {
-    		MetaDataCollection metadata = network.getMetadata();
-    		MetaDataElement metaDataElmt = metadata.remove(oldName);
-    		metaDataElmt.setName(newName);
-    		metadata.add(metaDataElmt);
-    		
-    		
-    }
-    */
 }

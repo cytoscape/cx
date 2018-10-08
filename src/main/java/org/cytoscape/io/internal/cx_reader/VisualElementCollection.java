@@ -3,9 +3,9 @@ package org.cytoscape.io.internal.cx_reader;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.cxio.aspects.datamodels.CartesianLayoutElement;
-import org.cxio.aspects.datamodels.CyVisualPropertiesElement;
-import org.cxio.aspects.datamodels.SubNetworkElement;
+import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
+import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
+import org.ndexbio.cxio.aspects.datamodels.SubNetworkElement;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNode;
 

@@ -7,10 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 
-import org.cxio.misc.AspectElementCounts;
-import org.cxio.core.CxReader;
-import org.cxio.core.interfaces.AspectElement;
-import org.cxio.metadata.MetaDataCollection;
+import org.ndexbio.cxio.core.interfaces.AspectElement;
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.group.CyGroupFactory;
 import org.cytoscape.io.cx.Aspect;
@@ -150,22 +147,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     @Override
     public void run(final TaskMonitor taskMonitor) throws Exception {
 
-    		this.parentTaskMonitor = taskMonitor;
-    		
-        final AspectSet aspects = new AspectSet();
-        aspects.addAspect(Aspect.NODES);
-        aspects.addAspect(Aspect.EDGES);
-        aspects.addAspect(Aspect.NODE_ATTRIBUTES);
-        aspects.addAspect(Aspect.EDGE_ATTRIBUTES);
-        aspects.addAspect(Aspect.NETWORK_ATTRIBUTES);
-        aspects.addAspect(Aspect.HIDDEN_ATTRIBUTES);
-        aspects.addAspect(Aspect.VISUAL_PROPERTIES);
-        aspects.addAspect(Aspect.CARTESIAN_LAYOUT);
-        aspects.addAspect(Aspect.NETWORK_RELATIONS);
-        aspects.addAspect(Aspect.SUBNETWORKS);
-        aspects.addAspect(Aspect.GROUPS);
-        aspects.addAspect(Aspect.VIEWS);
-        aspects.addAspect(Aspect.TABLE_COLUMN_LABELS);
+    	this.parentTaskMonitor = taskMonitor;
 
         final CxImporter cx_importer = new CxImporter();
 
@@ -173,43 +155,14 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
         NiceCXNetwork niceCX = cx_importer.getCXNetworkFromStream(_in);
         
-//        final CxReader cxr = cx_importer.obtainCxReader(aspects, _in);
         final long t0 = System.currentTimeMillis();
-//        res = CxToCy.parseAsMap(cxr, t0, Settings.INSTANCE.isTiming());
         
         
         if (Settings.INSTANCE.isTiming()) {
             TimingUtil.reportTimeDifference(t0, "total time parsing", -1);
         }
         
-        
-//        final AspectElementCounts counts = cxr.getAspectElementCounts();
-//        final MetaDataCollection pre = cxr.getPreMetaData();
-//        final MetaDataCollection post = cxr.getPostMetaData();
-//        if (Settings.INSTANCE.isDebug()) {
-//            if (counts != null) {
-//                System.out.println("Aspects elements read in:");
-//                System.out.println(counts);
-//            }
-//            else {
-//            	System.out.println("No aspects elements read in (!)");
-//            }
-//            if (pre != null) {
-//                System.out.println("Pre metadata:");
-//                System.out.println(pre);
-//            }
-//            else {
-//            	System.out.println("No pre metadata");
-//            }
-//            if (post != null) {
-//                System.out.println("Post metadata:");
-//                System.out.println(post);
-//            }
-//            else {
-//            	System.out.println("No post metadata");
-//            }
-//        }
-
+       
         _cx_to_cy = new CxToCy();
 
         // Select the root collection name from the list.
@@ -228,13 +181,6 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         // 2. If not available, use optional parameter
 
         if (root_network != null) {
-            // Root network exists
-//            _networks.addAll(_cx_to_cy.createNetwork(res,
-//                                                     root_network,
-//                                                     null,
-//                                                     _group_factory,
-//                                                     null,
-//                                                     _perform_basic_integrity_checks));
             
             _networks.addAll(_cx_to_cy.createNetwork(niceCX, root_network, cyNetworkFactory, 
             		_network_collection_name));
@@ -251,12 +197,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                     }
                 }
             }
-//            _networks.addAll(_cx_to_cy.createNetwork(res,
-//                                                     null,
-//                                                     cyNetworkFactory,
-//                                                     _group_factory,
-//                                                     _network_collection_name,
-//                                                     _perform_basic_integrity_checks));
+
             _networks.addAll(_cx_to_cy.createNetwork(niceCX, root_network, cyNetworkFactory, 
             		_network_collection_name));
         }

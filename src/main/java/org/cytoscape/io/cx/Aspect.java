@@ -1,18 +1,18 @@
 package org.cytoscape.io.cx;
 
-import org.cxio.aspects.datamodels.CartesianLayoutElement;
-import org.cxio.aspects.datamodels.CyGroupsElement;
-import org.cxio.aspects.datamodels.CyTableColumnElement;
-import org.cxio.aspects.datamodels.CyViewsElement;
-import org.cxio.aspects.datamodels.CyVisualPropertiesElement;
-import org.cxio.aspects.datamodels.EdgeAttributesElement;
-import org.cxio.aspects.datamodels.EdgesElement;
-import org.cxio.aspects.datamodels.HiddenAttributesElement;
-import org.cxio.aspects.datamodels.NetworkAttributesElement;
-import org.cxio.aspects.datamodels.NetworkRelationsElement;
-import org.cxio.aspects.datamodels.NodeAttributesElement;
-import org.cxio.aspects.datamodels.NodesElement;
-import org.cxio.aspects.datamodels.SubNetworkElement;
+import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
+import org.ndexbio.cxio.aspects.datamodels.CyGroupsElement;
+import org.ndexbio.cxio.aspects.datamodels.CyTableColumnElement;
+import org.ndexbio.cxio.aspects.datamodels.CyViewsElement;
+import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
+import org.ndexbio.cxio.aspects.datamodels.EdgeAttributesElement;
+import org.ndexbio.cxio.aspects.datamodels.EdgesElement;
+import org.ndexbio.cxio.aspects.datamodels.HiddenAttributesElement;
+import org.ndexbio.cxio.aspects.datamodels.NetworkAttributesElement;
+import org.ndexbio.cxio.aspects.datamodels.NetworkRelationsElement;
+import org.ndexbio.cxio.aspects.datamodels.NodeAttributesElement;
+import org.ndexbio.cxio.aspects.datamodels.NodesElement;
+import org.ndexbio.cxio.aspects.datamodels.SubNetworkElement;
 import org.cytoscape.io.internal.cxio.AspectSet;
 
 /**

@@ -9,9 +9,9 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.regex.Pattern;
 
-import org.cxio.aspects.datamodels.CartesianLayoutElement;
-import org.cxio.aspects.datamodels.CyVisualPropertiesElement;
-import org.cxio.aspects.datamodels.Mapping;
+import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
+import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
+import org.ndexbio.cxio.aspects.datamodels.Mapping;
 import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.Settings;
 import org.cytoscape.io.internal.cxio.TimingUtil;

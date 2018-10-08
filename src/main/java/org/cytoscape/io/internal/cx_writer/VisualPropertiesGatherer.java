@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.cxio.aspects.datamodels.CyVisualPropertiesElement;
-import org.cxio.core.interfaces.AspectElement;
-import org.cxio.util.CxioUtil;
+import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
+import org.ndexbio.cxio.core.interfaces.AspectElement;
+import org.ndexbio.cxio.util.CxioUtil;
 import org.cytoscape.io.internal.cxio.CxExporter;
 import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.VisualPropertyType;
@@ -359,7 +359,7 @@ public final class VisualPropertiesGatherer {
         for (final CyEdge edge : view.getModel().getEdgeList()) {
             final View<CyEdge> edge_view = view.getEdgeView(edge);
             final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.EDGES.asString(),
-            												CxExporter.getEdgeIdToExport(edge, view.getModel()),//edge.getSUID(),                                                                             
+            												CxExporter.getElementId(edge, view.getModel()),                                                                           
             												writeSiblings ? view.getSUID() : null);
      //       e.setApplies_to(edge.getSUID());
             for (final VisualProperty visual_property : all_visual_properties) {
@@ -433,7 +433,7 @@ public final class VisualPropertiesGatherer {
         for (final CyNode cy_node : view.getModel().getNodeList()) {
             final View<CyNode> node_view = view.getNodeView(cy_node);
             final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.NODES.asString(),
-            																CxExporter.getNodeIdToExport(cy_node, view.getModel()),//cy_node.getSUID(),
+            																CxExporter.getElementId(cy_node, view.getModel()),
                                                                              writeSiblings? view.getSUID() : null);
       //      e.setApplies_to(cy_node.getSUID());
             for (final VisualProperty visual_property : all_visual_properties) {

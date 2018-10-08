@@ -7,20 +7,20 @@ import java.io.OutputStream;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import org.cxio.aspects.readers.CartesianLayoutFragmentReader;
-import org.cxio.aspects.readers.EdgeAttributesFragmentReader;
-import org.cxio.aspects.readers.EdgesFragmentReader;
-import org.cxio.aspects.readers.NodeAttributesFragmentReader;
-import org.cxio.aspects.readers.NodesFragmentReader;
-import org.cxio.aspects.writers.CartesianLayoutFragmentWriter;
-import org.cxio.aspects.writers.EdgeAttributesFragmentWriter;
-import org.cxio.aspects.writers.EdgesFragmentWriter;
-import org.cxio.aspects.writers.NodeAttributesFragmentWriter;
-import org.cxio.aspects.writers.NodesFragmentWriter;
-import org.cxio.core.CxElementReader2;
-import org.cxio.core.CxWriter;
-import org.cxio.core.interfaces.AspectElement;
-import org.cxio.core.interfaces.AspectFragmentReader;
+import org.ndexbio.cxio.aspects.readers.CartesianLayoutFragmentReader;
+import org.ndexbio.cxio.aspects.readers.EdgeAttributesFragmentReader;
+import org.ndexbio.cxio.aspects.readers.EdgesFragmentReader;
+import org.ndexbio.cxio.aspects.readers.NodeAttributesFragmentReader;
+import org.ndexbio.cxio.aspects.readers.NodesFragmentReader;
+import org.ndexbio.cxio.aspects.writers.CartesianLayoutFragmentWriter;
+import org.ndexbio.cxio.aspects.writers.EdgeAttributesFragmentWriter;
+import org.ndexbio.cxio.aspects.writers.EdgesFragmentWriter;
+import org.ndexbio.cxio.aspects.writers.NodeAttributesFragmentWriter;
+import org.ndexbio.cxio.aspects.writers.NodesFragmentWriter;
+import org.ndexbio.cxio.core.CxElementReader2;
+import org.ndexbio.cxio.core.CxWriter;
+import org.ndexbio.cxio.core.interfaces.AspectElement;
+import org.ndexbio.cxio.core.interfaces.AspectFragmentReader;
 
 final class TestUtil {
 

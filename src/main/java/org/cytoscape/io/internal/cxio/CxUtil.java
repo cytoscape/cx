@@ -21,11 +21,4 @@ public final class CxUtil {
     public static final String NODE_SIZE_LOCKED               = "nodeSizeLocked";
     public static final String NODE_CUSTOM_GRAPHICS_SIZE_SYNC = "nodeCustomGraphicsSizeSync";
     public static final String ARROW_COLOR_MATCHES_EDGE       = "arrowColorMatchesEdge";
-    
-    public static final String UUID_COLUMN 					  = "NDEx UUID";
-	public static final String CX_ID_COLUMN 				  = "NDEx CX ID";
-	public static final String METADATA_COLUMN 				  = "NDEx Metadata";
-	public static final String PROVENANCE_COLUMN 			  = "NDEx Provenance";
-	public static final String OPAQUE_ASPECTS_COLUMN_PREFIX   = "NDEx Opaque Aspect";
-	public static final String NAMESPACES_COLUMN 			  = "NDEx Namespaces";
 }

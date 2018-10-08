@@ -96,14 +96,10 @@ public class CxNetworkWriter implements CyWriter {
 		aspects.addAspect(Aspect.TABLE_COLUMN_LABELS);
 
 		final CxExporter exporter = CxExporter.createInstance();
-	//	exporter.setUseDefaultPrettyPrinting(true);
 		exporter.setApplicationManager(_application_manager);
 		exporter.setVisualMappingManager(_visual_mapping_manager);
 		exporter.setNetworkViewManager(_networkview_manager);
 		exporter.setGroupManager(_group_manager);
-		// exporter.setWritePreMetadata(true);
-		// exporter.setWritePostMetadata(true);
-		// exporter.setNextSuid(SUIDFactory.getNextSUID());
 
 		final long t0 = System.currentTimeMillis();
 		if (TimingUtil.WRITE_TO_DEV_NULL) {
