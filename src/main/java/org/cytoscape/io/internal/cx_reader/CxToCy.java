@@ -47,6 +47,8 @@ import org.ndexbio.model.cx.NiceCXNetwork;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 public final class CxToCy {
 
 	private static final Logger logger = LoggerFactory.getLogger(CxToCy.class);
@@ -937,8 +939,17 @@ public final class CxToCy {
 			}
 			return val;
 		} else {
-			return e.getValues().stream().map(value -> parseValue(value, column.getListElementType()))
-					.collect(Collectors.toList());
+			List<Object> vals = new ArrayList<Object>();
+			for (String value : e.getValues()) {
+				Object val = parseValue(value, column.getListElementType());
+				if (val == null) {
+					val = Double.NaN;
+				}
+				vals.add(val);
+			}
+			return vals;
+//			return e.getValues().stream().map(value -> parseValue(value, column.getListElementType()))
+//					.collect(Collectors.toList());
 		}
 	}
 
@@ -1054,6 +1065,7 @@ public final class CxToCy {
 
 	public final static String getCollectionNameFromNetworkAttributes(
 			final SortedMap<String, List<AspectElement>> res) {
+		
 		final List<AspectElement> network_attributes = res.get(NetworkAttributesElement.ASPECT_NAME);
 		String collection_name_from_network_attributes = null;
 		if (network_attributes != null) {

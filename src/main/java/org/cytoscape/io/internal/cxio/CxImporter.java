@@ -120,8 +120,11 @@ public final class CxImporter {
     public NiceCXNetwork getCXNetworkFromStream( final InputStream in) throws IOException {
         CxElementReader2 r = new CxElementReader2(in, all_readers, true);
         
-        MetaDataCollection metadata = r.getPreMetaData();
-		
+        MetaDataCollection metadata = null;
+        try {
+        	metadata = r.getPreMetaData();
+        }catch (IOException e) {
+        }
         long nodeIdCounter = 0;
         long edgeIdCounter = 0;
         

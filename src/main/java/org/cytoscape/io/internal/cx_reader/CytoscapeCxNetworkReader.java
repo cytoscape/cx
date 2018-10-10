@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 
+import org.ndexbio.cxio.aspects.datamodels.NetworkAttributesElement;
+import org.ndexbio.cxio.core.CxElementReader2;
 import org.ndexbio.cxio.core.interfaces.AspectElement;
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.group.CyGroupFactory;
@@ -157,11 +159,9 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         
         final long t0 = System.currentTimeMillis();
         
-        
         if (Settings.INSTANCE.isTiming()) {
             TimingUtil.reportTimeDifference(t0, "total time parsing", -1);
         }
-        
        
         _cx_to_cy = new CxToCy();
 
@@ -186,16 +186,16 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
             		_network_collection_name));
         }
         else {
+        	for (NetworkAttributesElement attr : niceCX.getNetworkAttributes()) {
+        		Long sub = attr.getSubnetwork();
+        		if (sub == null && attr.getName().equals("name")) {
+        			_network_collection_name = attr.getValue();
+        			break;
+        		}
+        	}
             // Need to create new network with new root.
-            if (Settings.INSTANCE.isAllowToUseNetworkCollectionNameFromNetworkAttributes()) {
-                final String collection_name_from_network_attributes = CxToCy
-                        .getCollectionNameFromNetworkAttributes(res);
-                if (collection_name_from_network_attributes != null) {
-                    _network_collection_name = collection_name_from_network_attributes;
-                    if (Settings.INSTANCE.isDebug()) {
-                        System.out.println("collection name from network attributes: " + _network_collection_name);
-                    }
-                }
+            if (Settings.INSTANCE.isDebug()) {
+                System.out.println("collection name from network attributes: " + _network_collection_name);
             }
 
             _networks.addAll(_cx_to_cy.createNetwork(niceCX, root_network, cyNetworkFactory, 
