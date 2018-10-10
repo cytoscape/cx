@@ -770,8 +770,7 @@ public final class CxToCy {
 		}
 
 		final String name = e.getName();
-		// TODO: This is necessary for now because core creates this special attributes
-		if (name == null || name.equals("__Annotations")) {
+		if (name == null){
 			return;
 		}
 
