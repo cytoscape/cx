@@ -15,6 +15,12 @@
     "idCounter" : 180,
     "name" : "edges",
     "version" : "1.0"
+  }, {
+    "consistencyGroup" : 1,
+    "elementCount" : 1,
+    "idCounter" : 15001,
+    "name" : "cyGroups",
+    "version" : "1.0"
   } ]
 }, {
   "nodes" : [ {
