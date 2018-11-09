@@ -11,7 +11,6 @@ import java.nio.charset.CharsetEncoder;
 
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.group.CyGroupManager;
-import org.cytoscape.io.cx.Aspect;
 import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxExporter;
 import org.cytoscape.io.internal.cxio.Settings;
@@ -33,7 +32,7 @@ import org.slf4j.LoggerFactory;
 public class CxNetworkWriter implements CyWriter {
 
 	private final static Logger logger = LoggerFactory.getLogger(CxNetworkWriter.class);
-	private static final boolean WRITE_SIBLINGS_DEFAULT = true;
+	private static final boolean WRITE_SIBLINGS_DEFAULT = false;
 	private final static String ENCODING = "UTF-8";
 
 	private final OutputStream _os;
@@ -46,9 +45,12 @@ public class CxNetworkWriter implements CyWriter {
 	
 	private boolean _write_siblings;
 
-	public CxNetworkWriter(final OutputStream os, final CyNetwork network,
-			final VisualMappingManager visual_mapping_manager, final CyNetworkViewManager networkview_manager,
-			final CyGroupManager group_manager, final CyApplicationManager app_manager) {
+	public CxNetworkWriter(final OutputStream os, 
+			final CyNetwork network,
+			final VisualMappingManager visual_mapping_manager, 
+			final CyNetworkViewManager networkview_manager,
+			final CyGroupManager group_manager, 
+			final CyApplicationManager app_manager) {
 
 		_visual_mapping_manager = visual_mapping_manager;
 		_networkview_manager = networkview_manager;
@@ -76,30 +78,20 @@ public class CxNetworkWriter implements CyWriter {
 			taskMonitor.setStatusMessage("Exporting current network as CX...");
 		}
 
-		if (Settings.INSTANCE.isDebug()) {
-			System.out.println("Encoding = " + _encoder.charset());
-		}
+		Settings.INSTANCE.debug("Encoding = " + _encoder.charset());
+		
 
-		final AspectSet aspects = new AspectSet();
-		aspects.addAspect(Aspect.NODES);
-		aspects.addAspect(Aspect.EDGES);
-		aspects.addAspect(Aspect.NETWORK_ATTRIBUTES);
-		aspects.addAspect(Aspect.NODE_ATTRIBUTES);
-		aspects.addAspect(Aspect.EDGE_ATTRIBUTES);
-		aspects.addAspect(Aspect.HIDDEN_ATTRIBUTES);
-		aspects.addAspect(Aspect.CARTESIAN_LAYOUT);
-		aspects.addAspect(Aspect.VISUAL_PROPERTIES);
-		aspects.addAspect(Aspect.SUBNETWORKS);
-		aspects.addAspect(Aspect.VIEWS);
-		aspects.addAspect(Aspect.NETWORK_RELATIONS);
-		aspects.addAspect(Aspect.GROUPS);
-		aspects.addAspect(Aspect.TABLE_COLUMN_LABELS);
+		final AspectSet aspects = AspectSet.getCytoscapeAspectSet();
 
 		final CxExporter exporter = CxExporter.createInstance();
-		exporter.setApplicationManager(_application_manager);
+	//	exporter.setUseDefaultPrettyPrinting(true);
+//		exporter.setApplicationManager(_application_manager);
 		exporter.setVisualMappingManager(_visual_mapping_manager);
 		exporter.setNetworkViewManager(_networkview_manager);
 		exporter.setGroupManager(_group_manager);
+		// exporter.setWritePreMetadata(true);
+		// exporter.setWritePostMetadata(true);
+		// exporter.setNextSuid(SUIDFactory.getNextSUID());
 
 		final long t0 = System.currentTimeMillis();
 		if (TimingUtil.WRITE_TO_DEV_NULL) {

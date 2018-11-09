@@ -11,118 +11,132 @@ import org.cytoscape.model.CyNode;
 
 final public class VisualElementCollectionMap {
 
-    private final Map<Long, VisualElementCollection> _data;
+	private final Map<Long, VisualElementCollection> view_data;
+	private final Map<Long, VisualElementCollection> subnet_data;
+    
 
     public VisualElementCollectionMap() {
-        _data = new HashMap<Long, VisualElementCollection>();
+    	view_data = new HashMap<Long, VisualElementCollection>();
+    	subnet_data = new HashMap<Long, VisualElementCollection>();
+        
     }
 
-    public final void addCartesianLayoutElement(final Long subnet,
+    public final void addCartesianLayoutElement(final Long view,
                                                 final CyNode node,
                                                 final CartesianLayoutElement layout) {
-        checkForKey(subnet);
-        _data.get(subnet).getCartesianLayoutElementsMap().put(node, layout);
+        checkForView(view);
+        view_data.get(view).getCartesianLayoutElementsMap().put(node, layout);
     }
 
-    public final void addEdgesDefaultVisualPropertiesElement(final Long subnet,
+    public final void addEdgesDefaultVisualPropertiesElement(final Long view,
                                                              final CyVisualPropertiesElement edges_default_visual_properties_element) {
-        checkForKey(subnet);
-        _data.get(subnet).setEdgesDefaultVisualPropertiesElement(edges_default_visual_properties_element);
+        checkForView(view);
+        view_data.get(view).setEdgesDefaultVisualPropertiesElement(edges_default_visual_properties_element);
     }
 
-    public final void addEdgeVisualPropertiesElement(final Long subnet,
+    public final void addEdgeVisualPropertiesElement(final Long view,
                                                      final CyEdge edge,
                                                      final CyVisualPropertiesElement edges_visual_properties_element) {
-        checkForKey(subnet);
-        _data.get(subnet).getEdgeVisualPropertiesElementsMap().put(edge, edges_visual_properties_element);
+    	checkForView(view);
+        view_data.get(view).getEdgeVisualPropertiesElementsMap().put(edge, edges_visual_properties_element);
     }
 
-    public final void addNetworkVisualPropertiesElement(final Long subnet,
+    public final void addNetworkVisualPropertiesElement(final Long view,
                                                         final CyVisualPropertiesElement network_visual_properties_element) {
-        checkForKey(subnet);
-        _data.get(subnet).setNetworkVisualPropertiesElement(network_visual_properties_element);
+    	checkForView(view);
+        view_data.get(view).setNetworkVisualPropertiesElement(network_visual_properties_element);
     }
 
-    public final void addNodesDefaultVisualPropertiesElement(final Long subnet,
+    public final void addNodesDefaultVisualPropertiesElement(final Long view,
                                                              final CyVisualPropertiesElement nodes_default_visual_properties_element) {
-        checkForKey(subnet);
-        _data.get(subnet).setNodesDefaultVisualPropertiesElement(nodes_default_visual_properties_element);
+    	checkForView(view);
+        view_data.get(view).setNodesDefaultVisualPropertiesElement(nodes_default_visual_properties_element);
     }
 
-    public final void addNodeVisualPropertiesElement(final Long subnet,
+    public final void addNodeVisualPropertiesElement(final Long view,
                                                      final CyNode node,
                                                      final CyVisualPropertiesElement nodes_visual_properties_element) {
-        checkForKey(subnet);
-        _data.get(subnet).getNodeVisualPropertiesElementsMap().put(node, nodes_visual_properties_element);
+    	checkForView(view);
+        view_data.get(view).getNodeVisualPropertiesElementsMap().put(node, nodes_visual_properties_element);
     }
 
-    private final void checkForKey(final Long subnet) {
-        if (subnet == null) {
-            throw new IllegalArgumentException("subnetwork must not be null");
+    private final void checkForView(final Long view) {
+        if (view == null) {
+            throw new IllegalArgumentException("view must not be null");
         }
-        if (!_data.containsKey(subnet)) {
-            _data.put(subnet, new VisualElementCollection());
+        if (!view_data.containsKey(view)) {
+            view_data.put(view, new VisualElementCollection());
         }
     }
 
-    public final Map<CyNode, CartesianLayoutElement> getCartesianLayoutElements(final Long subnet) {
-        if (!_data.containsKey(subnet)) {
+    public final Map<CyNode, CartesianLayoutElement> getCartesianLayoutElements(final Long view) {
+        if (!view_data.containsKey(view)) {
             return null;
         }
-        return _data.get(subnet).getCartesianLayoutElementsMap();
+        return view_data.get(view).getCartesianLayoutElementsMap();
     }
 
-    public final CyVisualPropertiesElement getEdgesDefaultVisualPropertiesElement(final Long subnet) {
-        if (!_data.containsKey(subnet)) {
+    public final CyVisualPropertiesElement getEdgesDefaultVisualPropertiesElement(final Long view) {
+        if (!view_data.containsKey(view)) {
             return null;
         }
-        return _data.get(subnet).getEdgesDefaultVisualPropertiesElement();
+        return view_data.get(view).getEdgesDefaultVisualPropertiesElement();
     }
 
-    public final Map<CyEdge, CyVisualPropertiesElement> getEdgeVisualPropertiesElementsMap(final Long subnet) {
-        if (!_data.containsKey(subnet)) {
+    public final Map<CyEdge, CyVisualPropertiesElement> getEdgeVisualPropertiesElementsMap(final Long view) {
+        if (!view_data.containsKey(view)) {
             return null;
         }
-        return _data.get(subnet).getEdgeVisualPropertiesElementsMap();
+        return view_data.get(view).getEdgeVisualPropertiesElementsMap();
     }
 
-    public final CyVisualPropertiesElement getNetworkVisualPropertiesElement(final Long subnet) {
-        if (!_data.containsKey(subnet)) {
+    public final CyVisualPropertiesElement getNetworkVisualPropertiesElement(final Long view) {
+        if (!view_data.containsKey(view)) {
             return null;
         }
-        return _data.get(subnet).getNetworkVisualPropertiesElement();
+        return view_data.get(view).getNetworkVisualPropertiesElement();
     }
 
-    public final CyVisualPropertiesElement getNodesDefaultVisualPropertiesElement(final Long subnet) {
-        if (!_data.containsKey(subnet)) {
+    public final CyVisualPropertiesElement getNodesDefaultVisualPropertiesElement(final Long view) {
+        if (!view_data.containsKey(view)) {
             return null;
         }
-        return _data.get(subnet).getNodesDefaultVisualPropertiesElement();
+        return view_data.get(view).getNodesDefaultVisualPropertiesElement();
     }
 
-    public final Map<CyNode, CyVisualPropertiesElement> getNodeVisualPropertiesElementsMap(final Long subnet) {
-        if (!_data.containsKey(subnet)) {
+    public final Map<CyNode, CyVisualPropertiesElement> getNodeVisualPropertiesElementsMap(final Long view) {
+        if (!view_data.containsKey(view)) {
             return null;
         }
-        return _data.get(subnet).getNodeVisualPropertiesElementsMap();
+        return view_data.get(view).getNodeVisualPropertiesElementsMap();
     }
 
+    // Subnetwork Elements are not view specific, and need their own mapping
     public final SubNetworkElement getSubNetworkElement(final Long subnet) {
-        if (!_data.containsKey(subnet)) {
+        if (!subnet_data.containsKey(subnet)) {
             return null;
         }
-        return _data.get(subnet).getSubNetworkElement();
+        return subnet_data.get(subnet).getSubNetworkElement();
+    }
+    
+    private final void checkForSubnet(final Long subnet) {
+        if (subnet == null) {
+            throw new IllegalArgumentException("subnet must not be null");
+        }
+        if (!subnet_data.containsKey(subnet)) {
+        	subnet_data.put(subnet, new VisualElementCollection());
+        }
     }
 
     public final void addSubNetworkElement(final Long subnet, final SubNetworkElement subnetwork_element) {
-        checkForKey(subnet);
-        _data.get(subnet).setSubNetworkElement(subnetwork_element);
+        checkForSubnet(subnet);
+        subnet_data.get(subnet).setSubNetworkElement(subnetwork_element);
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        for (final Map.Entry<Long, VisualElementCollection> entry : _data.entrySet()) {
+        for (final Map.Entry<Long, VisualElementCollection> entry : view_data.entrySet()) {
             sb.append("key: ");
             sb.append(entry.getKey());
             sb.append("\n");
@@ -136,8 +150,16 @@ final public class VisualElementCollectionMap {
 
     }
 
-    public final boolean isEmpty() {
-        return _data.isEmpty();
+    public final boolean isEmptyViews() {
+        return view_data.isEmpty();
     }
+    
+    public final boolean isEmptySubnets() {
+        return subnet_data.isEmpty();
+    }
+
+	public boolean isEmpty() {
+		return isEmptySubnets() && isEmptySubnets();
+	}
 
 }

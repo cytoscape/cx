@@ -12,6 +12,7 @@ import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.CyNetworkTableManager;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewManager;
+import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 
 public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
@@ -22,6 +23,7 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
     private final CyNetworkManager      _network_manager;
     private final CyGroupManager        _group_manager;
     private final CyNetworkTableManager _table_manager;
+    private final VisualLexicon 		_lexicon;
 
     public CxNetworkWriterFactory(final CyFileFilter filter) {
         _filter = filter;
@@ -31,6 +33,7 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
         _network_manager = null;
         _group_manager = null;
         _table_manager = null;
+        _lexicon = null;
     }
 
     public CxNetworkWriterFactory(final CyFileFilter filter,
@@ -39,7 +42,8 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
                                   final CyNetworkViewManager networkview_manager,
                                   final CyNetworkManager network_manager,
                                   final CyGroupManager group_manager,
-                                  final CyNetworkTableManager table_manager) {
+                                  final CyNetworkTableManager table_manager,
+                                  final VisualLexicon lexicon) {
         _filter = filter;
         _visual_mapping_manager = visual_mapping_manager;
         _application_manager = application_manager;
@@ -47,6 +51,7 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
         _network_manager = network_manager;
         _group_manager = group_manager;
         _table_manager = table_manager;
+        _lexicon = lexicon;
     }
 
     @Override
@@ -76,7 +81,6 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
     @Override
     public CyWriter createWriter(final OutputStream os, final CyNetworkView view) {
         if ((_visual_mapping_manager != null) && (_application_manager != null)) {
-
             return new CxNetworkWriter(os,
                                        view.getModel(),
                                        _visual_mapping_manager,

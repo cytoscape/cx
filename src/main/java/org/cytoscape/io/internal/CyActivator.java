@@ -21,10 +21,12 @@ import org.cytoscape.service.util.AbstractCyActivator;
 import org.cytoscape.view.layout.CyLayoutAlgorithmManager;
 import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.view.model.CyNetworkViewManager;
+import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.presentation.RenderingEngineManager;
 import org.cytoscape.view.vizmap.VisualMappingFunctionFactory;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.view.vizmap.VisualStyleFactory;
+import org.cytoscape.work.swing.DialogTaskManager;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -48,6 +50,7 @@ public class CyActivator extends AbstractCyActivator {
                                                                           DataCategory.NETWORK,
                                                                           streamUtil);
 
+        
         // Writer:
         final VisualMappingManager visual_mapping_manager = getService(bc, VisualMappingManager.class);
         final CyApplicationManager application_manager = getService(bc, CyApplicationManager.class);
@@ -56,14 +59,16 @@ public class CyActivator extends AbstractCyActivator {
         final CyGroupManager group_manager = getService(bc, CyGroupManager.class);
         final CyNetworkTableManager table_manager = getService(bc, CyNetworkTableManager.class);
         final CyNetworkViewFactory network_view_factory = getService(bc, CyNetworkViewFactory.class);
-
+        final VisualLexicon lexicon = getService(bc, VisualLexicon.class);
+        final DialogTaskManager task_manager = getService(bc, DialogTaskManager.class);
         final CxNetworkWriterFactory network_writer_factory = new CxNetworkWriterFactory(cx_filter,
                                                                                          visual_mapping_manager,
                                                                                          application_manager,
                                                                                          networkview_manager,
                                                                                          network_manager,
                                                                                          group_manager,
-                                                                                         table_manager);
+                                                                                         table_manager,
+                                                                                         lexicon);
 
         final Properties cx_writer_factory_properties = new Properties();
 
@@ -93,6 +98,7 @@ public class CyActivator extends AbstractCyActivator {
                                                                     VisualMappingFunctionFactory.class,
                                                                     "(mapping.type=passthrough)");
 
+        
         final CytoscapeCxNetworkReaderFactory cx_reader_factory = new CytoscapeCxNetworkReaderFactory(cxfilter,
                                                                                                       application_manager,
                                                                                                       network_factory,
@@ -103,10 +109,12 @@ public class CyActivator extends AbstractCyActivator {
                                                                                                       group_factory,
                                                                                                       rendering_engine_manager,
                                                                                                       network_view_factory,
+                                                                                                      networkview_manager,
                                                                                                       vmfFactoryC,
                                                                                                       vmfFactoryD,
                                                                                                       vmfFactoryP,
-                                                                                                      layoutManager
+                                                                                                      layoutManager,
+                                                                                                      task_manager
 
         );
         final Properties reader_factory_properties = new Properties();

@@ -2,7 +2,6 @@ package org.cytoscape.io.internal.cx_reader;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,8 +17,10 @@ import org.cytoscape.io.internal.cxio.TimingUtil;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
+import org.cytoscape.view.layout.CyLayoutAlgorithm;
+import org.cytoscape.view.layout.CyLayoutAlgorithmManager;
 import org.cytoscape.view.model.CyNetworkView;
-import org.cytoscape.view.model.CyNetworkViewFactory;
+import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.model.View;
 import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.model.VisualProperty;
@@ -34,63 +35,45 @@ import org.cytoscape.view.vizmap.mappings.BoundaryRangeValues;
 import org.cytoscape.view.vizmap.mappings.ContinuousMapping;
 import org.cytoscape.view.vizmap.mappings.DiscreteMapping;
 import org.cytoscape.view.vizmap.mappings.PassthroughMapping;
+import org.cytoscape.work.TaskIterator;
+import org.cytoscape.work.swing.DialogTaskManager;
 
 public final class ViewMaker {
 
     public static final Pattern DIRECT_NET_PROPS_PATTERN = Pattern
             .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
 
-    public final static Map<CyNetworkView, Boolean> makeView(final CyNetwork network,
-                                               final CxToCy cx_to_cy,
-                                               final String network_collection_name,
-                                               final CyNetworkViewFactory networkview_factory,
-                                               final RenderingEngineManager rendering_engine_manager,
-                                               final VisualMappingManager visual_mapping_manager,
-                                               final VisualStyleFactory visual_style_factory,
-                                               final VisualMappingFunctionFactory vmf_factory_c,
-                                               final VisualMappingFunctionFactory vmf_factory_d,
-                                               final VisualMappingFunctionFactory vmf_factory_p) 
-                                            		   throws IOException {
-
-    		final Map<CyNetworkView, Boolean> hasLayoutMap = new HashMap<>();
+    public final static void makeView(final CyNetworkView view,
+										final long cx_view_id,
+                                        final CxToCy cx_to_cy,
+                                        final String network_collection_name,
+                                        final RenderingEngineManager rendering_engine_manager,
+                                        final CyLayoutAlgorithmManager layout_manager,
+                                        final DialogTaskManager task_manager,
+                                        final CyNetworkViewManager networkview_manager,
+                                        final VisualMappingManager visual_mapping_manager,
+                                        final VisualStyleFactory visual_style_factory,
+                                        final VisualMappingFunctionFactory vmf_factory_c,
+                                        final VisualMappingFunctionFactory vmf_factory_d,
+                                        final VisualMappingFunctionFactory vmf_factory_p) 
+                                        		throws IOException {
     		
-        final long t0 = System.currentTimeMillis();
-        final VisualElementCollectionMap collection = cx_to_cy.getVisualElementCollectionMap();
-        final CyNetworkView view = networkview_factory.createNetworkView(network);
-        hasLayoutMap.put(view, false);
         
-        if ((collection == null) || collection.isEmpty()) {
-            return hasLayoutMap;
+    	final long t0 = System.currentTimeMillis();
+    	String doLayout = view.getEdgeViews().size() < 10000 ? "force-directed" : "grid";
+    	final VisualElementCollectionMap collection = cx_to_cy.getVisualElementCollectionMap();
+    	
+    	if ((collection == null) || collection.isEmpty()) {
+    		Settings.INSTANCE.debug("Default style for " + view);
+            ViewMaker.applyStyle(visual_mapping_manager.getDefaultVisualStyle(), view, layout_manager, task_manager, networkview_manager, doLayout);
+            return ;
         }
-
-        final Long network_id = cx_to_cy.getNetworkSuidToNetworkRelationsMap().get(network.getSUID());
-
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        // PLEASE NOTE
-        // -----------
-        // For now, Cytoscape has only one view per
-        // sub-network, but in the future this
-        // might change, which means instead of "get(0)" we will need a
-        // loop.
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		try {
-			if (network_id == null || !cx_to_cy.getSubNetworkToViewsMap().containsKey(network_id)) {
-				return hasLayoutMap;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-        final Long view_id = cx_to_cy.getSubNetworkToViewsMap().get(network_id).get(0);
-        if (Settings.INSTANCE.isDebug()) {
-            System.out.println("making view " + view_id + " (network " + network_id + ")");
-        }
-
-        final boolean have_default_visual_properties = ((collection.getNetworkVisualPropertiesElement(view_id) != null)
-                || (collection.getNodesDefaultVisualPropertiesElement(view_id) != null) || (collection
-                        .getEdgesDefaultVisualPropertiesElement(view_id) != null));
-
-        VisualStyle new_visual_style = null;
+    	
+        final boolean have_default_visual_properties = ((collection.getNetworkVisualPropertiesElement(cx_view_id) != null)
+                || (collection.getNodesDefaultVisualPropertiesElement(cx_view_id) != null) || (collection
+                        .getEdgesDefaultVisualPropertiesElement(cx_view_id) != null));
+        
+        VisualStyle new_visual_style = visual_mapping_manager.getDefaultVisualStyle();
         if (have_default_visual_properties) {
             int counter = 1;
             final VisualStyle default_visual_style = visual_mapping_manager.getDefaultVisualStyle();
@@ -103,14 +86,15 @@ public final class ViewMaker {
                 }
                 counter++;
             }
-            ViewMaker.removeVisualStyle(viz_style_title, visual_mapping_manager);
+            //ViewMaker.removeVisualStyle(viz_style_title, visual_mapping_manager);
             new_visual_style.setTitle(viz_style_title);
         }
+                
         final VisualLexicon lexicon = rendering_engine_manager.getDefaultVisualLexicon();
 
-        if (collection.getNetworkVisualPropertiesElement(view_id) != null) {
+        if (collection.getNetworkVisualPropertiesElement(cx_view_id) != null) {
             ViewMaker.setDefaultVisualPropertiesAndMappings(lexicon,
-                                                            collection.getNetworkVisualPropertiesElement(view_id),
+                                                            collection.getNetworkVisualPropertiesElement(cx_view_id),
                                                             new_visual_style,
                                                             CyNetwork.class,
                                                             vmf_factory_c,
@@ -118,9 +102,9 @@ public final class ViewMaker {
                                                             vmf_factory_p);
         }
 
-        if (collection.getNodesDefaultVisualPropertiesElement(view_id) != null) {
+        if (collection.getNodesDefaultVisualPropertiesElement(cx_view_id) != null) {
             ViewMaker.setDefaultVisualPropertiesAndMappings(lexicon,
-                                                            collection.getNodesDefaultVisualPropertiesElement(view_id),
+                                                            collection.getNodesDefaultVisualPropertiesElement(cx_view_id),
                                                             new_visual_style,
                                                             CyNode.class,
                                                             vmf_factory_c,
@@ -128,9 +112,9 @@ public final class ViewMaker {
                                                             vmf_factory_p);
         }
 
-        if (collection.getEdgesDefaultVisualPropertiesElement(view_id) != null) {
+        if (collection.getEdgesDefaultVisualPropertiesElement(cx_view_id) != null) {
             ViewMaker.setDefaultVisualPropertiesAndMappings(lexicon,
-                                                            collection.getEdgesDefaultVisualPropertiesElement(view_id),
+                                                            collection.getEdgesDefaultVisualPropertiesElement(cx_view_id),
                                                             new_visual_style,
                                                             CyEdge.class,
                                                             vmf_factory_c,
@@ -138,13 +122,31 @@ public final class ViewMaker {
                                                             vmf_factory_p);
         }
 
-        ViewMaker.setNodeVisualProperties(view, lexicon, collection, view_id, cx_to_cy.getNodesWithVisualProperties());
+        ViewMaker.setNodeVisualProperties(view, lexicon, collection, cx_view_id, cx_to_cy.getNodesWithVisualProperties());
 
-        ViewMaker.setEdgeVisualProperties(view, lexicon, collection, view_id, cx_to_cy.getEdgesWithVisualProperties());
+        ViewMaker.setEdgeVisualProperties(view, lexicon, collection, cx_view_id, cx_to_cy.getEdgesWithVisualProperties());
+        
+        // If there is a Cartesian layout for the view, do not apply a layout
+        if (applyCartesianLayout(view, collection
+                .getCartesianLayoutElements(cx_view_id))) {
+        	doLayout = null;
+        }
 
-        final Map<CyNode, CartesianLayoutElement> position_map_for_view = collection
-                .getCartesianLayoutElements(view_id);
+        if (have_default_visual_properties) {
+        	// Simply add & assign style.  VMM automatically apply this later. 
+            visual_mapping_manager.addVisualStyle(new_visual_style);
+            visual_mapping_manager.setVisualStyle(new_visual_style, view);
+            
+        }
+        ViewMaker.applyStyle(new_visual_style, view, layout_manager, task_manager, networkview_manager, doLayout);
+        
+        if (Settings.INSTANCE.isTiming()) {
+            TimingUtil.reportTimeDifference(t0, "time to make view", -1);
+        }
 
+    }
+    
+    private static boolean applyCartesianLayout(CyNetworkView view, Map<CyNode, CartesianLayoutElement> position_map_for_view) {
         if ((position_map_for_view != null) && (view != null)) {
             for (final CyNode node : position_map_for_view.keySet()) {
                 if (node != null) {
@@ -162,19 +164,38 @@ public final class ViewMaker {
                     }
                 }
             }
-            hasLayoutMap.put(view, true);
+            return true;
         }
-
-        if (have_default_visual_properties) {
-        		// Simply add & assign style.  VMM automatically apply this later. 
-            visual_mapping_manager.addVisualStyle(new_visual_style);
-            visual_mapping_manager.setVisualStyle(new_visual_style, view);
+        return false;
+    }
+    
+    private static CyNetworkView applyStyle (
+    		VisualStyle style, 
+    		CyNetworkView network_view, 
+    		CyLayoutAlgorithmManager layout_manager,
+    		DialogTaskManager task_manager,
+    		CyNetworkViewManager view_manager,
+    		String layout) {
+    	    	
+        if( layout != null )
+        {
+            CyLayoutAlgorithm algorithm = layout_manager.getLayout(layout);
+            TaskIterator ti = algorithm.createTaskIterator(network_view, algorithm.getDefaultLayoutContext(), CyLayoutAlgorithm.ALL_NODE_VIEWS, "");
+            task_manager.execute(ti);
+            network_view.updateView();
+        }
+        style.apply(network_view);
+        network_view.updateView();
+        
+        view_manager.addNetworkView(network_view);
+        if (!network_view.isSet(BasicVisualLexicon.NETWORK_CENTER_X_LOCATION)
+				&& !network_view.isSet(BasicVisualLexicon.NETWORK_CENTER_Y_LOCATION)
+				&& !network_view.isSet(BasicVisualLexicon.NETWORK_CENTER_Z_LOCATION)) {
+        	network_view.fitContent();
         }
         
-        if (Settings.INSTANCE.isTiming()) {
-            TimingUtil.reportTimeDifference(t0, "time to make view", -1);
-        }
-        return hasLayoutMap;
+        return network_view;
+        
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -459,13 +480,13 @@ public final class ViewMaker {
     public final static void setEdgeVisualProperties(final CyNetworkView view,
                                                      final VisualLexicon lexicon,
                                                      final VisualElementCollectionMap collection,
-                                                     final Long subnetwork_id,
+                                                     final Long cx_view_id,
                                                      final Collection<CyEdge> edges_with_visual_properties) {
 
         if (edges_with_visual_properties != null) {
             for (final CyEdge edge : edges_with_visual_properties) {
                 final Map<CyEdge, CyVisualPropertiesElement> evpm = collection
-                        .getEdgeVisualPropertiesElementsMap(subnetwork_id);
+                        .getEdgeVisualPropertiesElementsMap(cx_view_id);
                 final CyVisualPropertiesElement vpe = evpm.get(edge);
 
                 if (vpe != null) {
@@ -482,15 +503,14 @@ public final class ViewMaker {
     public final static void setNodeVisualProperties(final CyNetworkView view,
                                                      final VisualLexicon lexicon,
                                                      final VisualElementCollectionMap collection,
-                                                     final Long subnetwork_id,
+                                                     final Long cx_view_id,
                                                      final Collection<CyNode> nodes_with_visual_properties) {
-
+    	
         if (nodes_with_visual_properties != null) {
             for (final CyNode node : nodes_with_visual_properties) {
                 final Map<CyNode, CyVisualPropertiesElement> nvpm = collection
-                        .getNodeVisualPropertiesElementsMap(subnetwork_id);
-                final CyVisualPropertiesElement vpe = nvpm.get(node);
-
+                        .getNodeVisualPropertiesElementsMap(cx_view_id);
+                final CyVisualPropertiesElement vpe = nvpm.get(node);                
                 if (vpe != null) {
                     final SortedMap<String, String> props = vpe.getProperties();
                     if (props != null) {

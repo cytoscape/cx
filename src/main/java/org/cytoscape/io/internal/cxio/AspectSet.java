@@ -9,7 +9,6 @@ import java.util.TreeSet;
 import org.ndexbio.cxio.aspects.readers.CartesianLayoutFragmentReader;
 import org.ndexbio.cxio.aspects.readers.CyGroupsFragmentReader;
 import org.ndexbio.cxio.aspects.readers.CyTableColumnFragmentReader;
-import org.ndexbio.cxio.aspects.readers.CyViewsFragmentReader;
 import org.ndexbio.cxio.aspects.readers.CyVisualPropertiesFragmentReader;
 import org.ndexbio.cxio.aspects.readers.EdgeAttributesFragmentReader;
 import org.ndexbio.cxio.aspects.readers.EdgesFragmentReader;
@@ -22,7 +21,6 @@ import org.ndexbio.cxio.aspects.readers.SubNetworkFragmentReader;
 import org.ndexbio.cxio.aspects.writers.CartesianLayoutFragmentWriter;
 import org.ndexbio.cxio.aspects.writers.CyGroupsFragmentWriter;
 import org.ndexbio.cxio.aspects.writers.CyTableColumnFragmentWriter;
-import org.ndexbio.cxio.aspects.writers.CyViewsFragmentWriter;
 import org.ndexbio.cxio.aspects.writers.EdgeAttributesFragmentWriter;
 import org.ndexbio.cxio.aspects.writers.EdgesFragmentWriter;
 import org.ndexbio.cxio.aspects.writers.HiddenAttributesFragmentWriter;
@@ -86,6 +84,23 @@ public final class AspectSet {
     final boolean contains(final Aspect aspect) {
         return _aspects.contains(aspect);
     }
+    
+    public final static AspectSet getCytoscapeAspectSet() {
+    	AspectSet aspects = new AspectSet();
+    	aspects.addAspect(Aspect.NODES);
+		aspects.addAspect(Aspect.EDGES);
+		aspects.addAspect(Aspect.NETWORK_ATTRIBUTES);
+		aspects.addAspect(Aspect.NODE_ATTRIBUTES);
+		aspects.addAspect(Aspect.EDGE_ATTRIBUTES);
+		aspects.addAspect(Aspect.HIDDEN_ATTRIBUTES);
+		aspects.addAspect(Aspect.CARTESIAN_LAYOUT);
+		aspects.addAspect(Aspect.VISUAL_PROPERTIES);
+		aspects.addAspect(Aspect.SUBNETWORKS);
+		aspects.addAspect(Aspect.NETWORK_RELATIONS);
+		aspects.addAspect(Aspect.GROUPS);
+		aspects.addAspect(Aspect.TABLE_COLUMN_LABELS);
+    	return aspects;
+    }
 
     final Set<AspectFragmentWriter> getAspectFragmentWriters() {
         final Set<AspectFragmentWriter> writers = new HashSet<AspectFragmentWriter>();
@@ -121,9 +136,6 @@ public final class AspectSet {
         }
         if (_aspects.contains(Aspect.GROUPS)) {
             writers.add(CyGroupsFragmentWriter.createInstance());
-        }
-        if (_aspects.contains(Aspect.VIEWS)) {
-            writers.add(CyViewsFragmentWriter.createInstance());
         }
         if (_aspects.contains(Aspect.TABLE_COLUMN_LABELS)) {
             writers.add(CyTableColumnFragmentWriter.createInstance());
@@ -165,9 +177,6 @@ public final class AspectSet {
         }
         if (_aspects.contains(Aspect.NETWORK_RELATIONS)) {
             readers.add(NetworkRelationsFragmentReader.createInstance());
-        }
-        if (_aspects.contains(Aspect.VIEWS)) {
-            readers.add(CyViewsFragmentReader.createInstance());
         }
         if (_aspects.contains(Aspect.TABLE_COLUMN_LABELS)) {
             readers.add(CyTableColumnFragmentReader.createInstance());

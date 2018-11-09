@@ -2,6 +2,7 @@ package org.cytoscape.io.internal.cxio;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,17 +12,14 @@ import org.ndexbio.cxio.aspects.datamodels.EdgesElement;
 import org.ndexbio.cxio.aspects.datamodels.NetworkAttributesElement;
 import org.ndexbio.cxio.aspects.datamodels.NodeAttributesElement;
 import org.ndexbio.cxio.aspects.datamodels.NodesElement;
-import org.ndexbio.cxio.aspects.readers.GeneralAspectFragmentReader;
 import org.ndexbio.cxio.core.CxElementReader2;
 import org.ndexbio.cxio.core.interfaces.AspectElement;
 import org.ndexbio.cxio.core.interfaces.AspectFragmentReader;
 import org.ndexbio.cxio.metadata.MetaDataCollection;
 import org.ndexbio.cxio.metadata.MetaDataElement;
 import org.cytoscape.io.cx.Aspect;
-import org.ndexbio.model.cx.NamespacesElement;
 import org.ndexbio.model.cx.NdexNetworkStatus;
 import org.ndexbio.model.cx.NiceCXNetwork;
-import org.ndexbio.model.cx.Provenance;
 
 /**
  * This class is for de-serializing CX formatted networks, views, and attribute
@@ -91,40 +89,100 @@ public final class CxImporter {
 
     public CxImporter() {
         
-        AspectSet aspects = new AspectSet();
-        aspects.addAspect(Aspect.NODES);
-        aspects.addAspect(Aspect.EDGES);
-        aspects.addAspect(Aspect.NETWORK_ATTRIBUTES);
-        aspects.addAspect(Aspect.NODE_ATTRIBUTES);
-        aspects.addAspect(Aspect.EDGE_ATTRIBUTES);
-        aspects.addAspect(Aspect.VISUAL_PROPERTIES);
-        aspects.addAspect(Aspect.CARTESIAN_LAYOUT);
-        aspects.addAspect(Aspect.NETWORK_RELATIONS);
-        aspects.addAspect(Aspect.SUBNETWORKS);
-        aspects.addAspect(Aspect.GROUPS);
-        aspects.addAspect(Aspect.HIDDEN_ATTRIBUTES);
-        aspects.addAspect(Aspect.TABLE_COLUMN_LABELS);
-        aspects.addAspect(Aspect.VIEWS);
+        AspectSet aspects = AspectSet.getCytoscapeAspectSet();
         
         all_readers = new HashSet<>();
         for (final AspectFragmentReader reader : aspects.getAspectFragmentReaders()) {
             all_readers.add(reader);
         }
         
-		all_readers.add(new GeneralAspectFragmentReader<> (Provenance.ASPECT_NAME,Provenance.class));
-		all_readers.add(new GeneralAspectFragmentReader<> (NamespacesElement.ASPECT_NAME,NamespacesElement.class));
+//		all_readers.add(new GeneralAspectFragmentReader<> (Provenance.ASPECT_NAME,Provenance.class));
+//		all_readers.add(new GeneralAspectFragmentReader<> (NamespacesElement.ASPECT_NAME,NamespacesElement.class));
 
         
     }
-    
+
+    /**
+     * This creates a new CxImporter
+     *
+     * @return a new CxImporter
+     */
+    public final static CxImporter createInstance() {
+        return new CxImporter();
+    } 
+
+    /**
+     * To use custom readers for other aspects than the standard nodes, edges,
+     * node attributes, edge attributes and cartesian layout.
+     *
+     *
+     * @param additional_readers
+     *            a collection of additional custom readers to add
+     */
+    public final void addAdditionalReaders(final Collection<AspectFragmentReader> additional_readers) {
+        all_readers.addAll(additional_readers);
+    } 
+
+    /**
+     * To use a custom reader for another aspect than the standard nodes, edges,
+     * node attributes, edge attributes and cartesian layout.
+     *
+     *
+     * @param additional_reader
+     *            an additional custom readers to add
+     */
+    public final void addAdditionalReader(final AspectFragmentReader additional_reader) {
+        all_readers.add(additional_reader);
+    }
+
+    /**
+     * This is the primary method to parse a CX formatted input stream by
+     * returning a CxReader for a given InputStream and set of Aspects. The
+     * CxReader in turn is then used to obtain aspect fragments from the stream.
+     * Which aspects are de-serialized and which ones are ignored is controlled
+     * by the AspectSet argument. <br>
+     * By way of example:
+     *
+     * <pre>
+     * {@code}
+     * CxImporter cx_importer = CxImporter.createInstance();
+     * AspectSet aspects = new AspectSet();
+     * aspects.addAspect(Aspect.NODES);
+     * 
+     * CxReader r = cx_importer.getCxReader(aspects, in);
+     * 
+     * while (r.hasNext()) {
+     *     List&lt;AspectElement&gt; elements = r.getNext();
+     *     if (!elements.isEmpty()) {
+     *         String aspect_name = elements.get(0).getAspectName();
+     *         // Do something with "elements":
+     *         for (AspectElement element : elements) {
+     *             System.out.println(element.toString());
+     *         }
+     *     }
+     * }
+     *
+     * </pre>
+     *
+     * @see <a
+     *      href="https://github.com/cmzmasek/cxio/wiki/Java-Library-for-CX-Serialization-and-De-serialization">cxio</a>
+     *
+     * @param aspects
+     *            the set of aspects to de-serialize
+     * @param in
+     *            a CX formatted input stream
+     * @return
+     * @throws IOException
+     *
+     * @see AspectSet
+     * @see Aspect
+     */
+  
     public NiceCXNetwork getCXNetworkFromStream( final InputStream in) throws IOException {
-        CxElementReader2 r = new CxElementReader2(in, all_readers, true);
+    	CxElementReader2 r = new CxElementReader2(in, all_readers, true);
         
-        MetaDataCollection metadata = null;
-        try {
-        	metadata = r.getPreMetaData();
-        }catch (IOException e) {
-        }
+        MetaDataCollection metadata = r.getPreMetaData();
+		
         long nodeIdCounter = 0;
         long edgeIdCounter = 0;
         
@@ -153,25 +211,24 @@ public final class CxImporter {
      					niceCX.addNetworkAttribute(( NetworkAttributesElement) elmt);
      					break;
      					
-     				case EdgeAttributesElement.ASPECT_NAME:
+     				case EdgeAttributesElement.ASPECT_NAME: //edge attributes
      					niceCX.addEdgeAttribute((EdgeAttributesElement)elmt);
      					break;
-     				case CartesianLayoutElement.ASPECT_NAME:
+     				case CartesianLayoutElement.ASPECT_NAME: // cartesian layout
      					CartesianLayoutElement e = (CartesianLayoutElement)elmt;
      					niceCX.addNodeAssociatedAspectElement(Long.valueOf(e.getNode()), e);
      					break;
-     				case Provenance.ASPECT_NAME:
-     					Provenance prov = (Provenance) elmt;
-     					niceCX.setProvenance(prov);
-     					break;
-     				case NamespacesElement.ASPECT_NAME:
-     					NamespacesElement ns = (NamespacesElement) elmt;
-     					niceCX.setNamespaces(ns);
-     					break;
+//     				case Provenance.ASPECT_NAME:
+//     					Provenance prov = (Provenance) elmt;
+//     					niceCX.setProvenance(prov);
+//     					break;
+//     				case NamespacesElement.ASPECT_NAME:
+//     					NamespacesElement ns = (NamespacesElement) elmt;
+//     					niceCX.setNamespaces(ns);
+//     					break;
      				default:    // opaque aspect
      					niceCX.addOpapqueAspect(elmt);
      			}
-
      	} 
      	
      	MetaDataCollection postmetadata = r.getPostMetaData();
@@ -186,7 +243,7 @@ public final class CxImporter {
 				  }
 				  cnt = e.getElementCount() ;
 				  if ( cnt !=null) {
-						 metadata.setElementCount(e.getName(),cnt);
+					  metadata.setElementCount(e.getName(),cnt);
 				  }
 			  }
 		  }
@@ -201,7 +258,6 @@ public final class CxImporter {
   	        metadata.setIdCounter(EdgesElement.ASPECT_NAME, Long.valueOf(edgeIdCounter));
   	
   	    niceCX.setMetadata(metadata);
-  	    
         return niceCX;
     }
     
