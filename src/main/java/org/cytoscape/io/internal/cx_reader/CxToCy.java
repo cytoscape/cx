@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.ndexbio.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
@@ -543,6 +542,9 @@ public final class CxToCy {
                 	CyGroupsElement ge = (CyGroupsElement) a;
                 	Long subnetwork_id = ge.getSubNet() == null ? DEFAULT_SUBNET : ge.getSubNet();
                 	CyNetwork sub_network = cx_subnetwork_map.get(subnetwork_id);
+                	if (sub_network instanceof CyRootNetwork) {
+                		sub_network = ((CyRootNetwork) sub_network).getBaseNetwork();
+                	}
                 	final List<CyNode> nodes_for_group = new ArrayList<>();
                     
                 		for (final Long nod : ge.getNodes()) {
@@ -555,15 +557,22 @@ public final class CxToCy {
                 		for (final Long ed : ge.getExternalEdges()) {
                 			edges_for_group.add(_cxid_to_cyedge_map.get(ed));
                 		}
-                		CyNode grpNode =  _cxid_to_cynode_map.get(ge.getGroupId());
-                		final CyRow row = sub_network.getRow(grpNode, CyNetwork.DEFAULT_ATTRS);
-                		row.set(CxUtil.SHARED_NAME_COL, ge.getName());
+//                		CyNode grpNode =  _cxid_to_cynode_map.get(ge.getGroupId());
+//                		if (grpNode == null) {
+//                			grpNode = sub_network.addNode();
+//                			group_factory.create
+//                		}
+//                		
                 		CyGroup grp = group_factory.createGroup(sub_network,
-                    						  grpNode,
+//                    						  grpNode,
                                               nodes_for_group,
                                               edges_for_group,
                                               true);
-                		grp.expand(sub_network);
+                		final CyRow row = sub_network.getRow(grp.getGroupNode(), CyNetwork.DEFAULT_ATTRS);
+                		row.set(CxUtil.SHARED_NAME_COL, ge.getName());
+                		if (!ge.isCollapsed()) {
+                			grp.expand(sub_network);
+                		}
                 	}                    
                 
            // }

@@ -16,7 +16,6 @@ import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CyRootNetworkManager;
-import org.cytoscape.view.layout.CyLayoutAlgorithm;
 import org.cytoscape.view.layout.CyLayoutAlgorithmManager;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewFactory;
@@ -25,8 +24,6 @@ import org.cytoscape.view.presentation.RenderingEngineManager;
 import org.cytoscape.view.vizmap.VisualMappingFunctionFactory;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.view.vizmap.VisualStyleFactory;
-import org.cytoscape.work.Task;
-import org.cytoscape.work.TaskIterator;
 import org.cytoscape.work.TaskMonitor;
 import org.cytoscape.work.swing.DialogTaskManager;
 import org.cytoscape.work.util.ListSingleSelection;
@@ -50,8 +47,6 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     private final VisualMappingFunctionFactory _vmf_factory_p;
     private final CyGroupFactory               _group_factory;
     
-	private TaskMonitor parentTaskMonitor;
-
     public CytoscapeCxNetworkReader(final String network_collection_name,
                                     final InputStream input_stream,
                                     final CyApplicationManager application_manager,
@@ -139,7 +134,6 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
     @Override
     public void run(final TaskMonitor taskMonitor) throws Exception {
-    	this.parentTaskMonitor = taskMonitor;
     	
     	final long t0 = System.currentTimeMillis();
         final CxImporter cx_importer = new CxImporter();

@@ -15,13 +15,11 @@ import org.cytoscape.io.read.InputStreamTaskFactory;
 import org.cytoscape.io.util.StreamUtil;
 import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
-import org.cytoscape.model.CyNetworkTableManager;
 import org.cytoscape.model.subnetwork.CyRootNetworkManager;
 import org.cytoscape.service.util.AbstractCyActivator;
 import org.cytoscape.view.layout.CyLayoutAlgorithmManager;
 import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.view.model.CyNetworkViewManager;
-import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.presentation.RenderingEngineManager;
 import org.cytoscape.view.vizmap.VisualMappingFunctionFactory;
 import org.cytoscape.view.vizmap.VisualMappingManager;
@@ -57,18 +55,13 @@ public class CyActivator extends AbstractCyActivator {
         final CyNetworkViewManager networkview_manager = getService(bc, CyNetworkViewManager.class);
         final CyNetworkManager network_manager = getService(bc, CyNetworkManager.class);
         final CyGroupManager group_manager = getService(bc, CyGroupManager.class);
-        final CyNetworkTableManager table_manager = getService(bc, CyNetworkTableManager.class);
         final CyNetworkViewFactory network_view_factory = getService(bc, CyNetworkViewFactory.class);
-        final VisualLexicon lexicon = getService(bc, VisualLexicon.class);
         final DialogTaskManager task_manager = getService(bc, DialogTaskManager.class);
         final CxNetworkWriterFactory network_writer_factory = new CxNetworkWriterFactory(cx_filter,
                                                                                          visual_mapping_manager,
                                                                                          application_manager,
                                                                                          networkview_manager,
-                                                                                         network_manager,
-                                                                                         group_manager,
-                                                                                         table_manager,
-                                                                                         lexicon);
+                                                                                         group_manager);
 
         final Properties cx_writer_factory_properties = new Properties();
 

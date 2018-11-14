@@ -96,10 +96,6 @@ public final class CxImporter {
             all_readers.add(reader);
         }
         
-//		all_readers.add(new GeneralAspectFragmentReader<> (Provenance.ASPECT_NAME,Provenance.class));
-//		all_readers.add(new GeneralAspectFragmentReader<> (NamespacesElement.ASPECT_NAME,NamespacesElement.class));
-
-        
     }
 
     /**
@@ -180,7 +176,7 @@ public final class CxImporter {
   
     public NiceCXNetwork getCXNetworkFromStream( final InputStream in) throws IOException {
     	CxElementReader2 r = new CxElementReader2(in, all_readers, true);
-        
+        Long t0 = System.currentTimeMillis();
         MetaDataCollection metadata = r.getPreMetaData();
 		
         long nodeIdCounter = 0;
@@ -210,7 +206,6 @@ public final class CxImporter {
      				case NetworkAttributesElement.ASPECT_NAME: //network attributes
      					niceCX.addNetworkAttribute(( NetworkAttributesElement) elmt);
      					break;
-     					
      				case EdgeAttributesElement.ASPECT_NAME: //edge attributes
      					niceCX.addEdgeAttribute((EdgeAttributesElement)elmt);
      					break;
@@ -218,14 +213,6 @@ public final class CxImporter {
      					CartesianLayoutElement e = (CartesianLayoutElement)elmt;
      					niceCX.addNodeAssociatedAspectElement(Long.valueOf(e.getNode()), e);
      					break;
-//     				case Provenance.ASPECT_NAME:
-//     					Provenance prov = (Provenance) elmt;
-//     					niceCX.setProvenance(prov);
-//     					break;
-//     				case NamespacesElement.ASPECT_NAME:
-//     					NamespacesElement ns = (NamespacesElement) elmt;
-//     					niceCX.setNamespaces(ns);
-//     					break;
      				default:    // opaque aspect
      					niceCX.addOpapqueAspect(elmt);
      			}
@@ -258,6 +245,9 @@ public final class CxImporter {
   	        metadata.setIdCounter(EdgesElement.ASPECT_NAME, Long.valueOf(edgeIdCounter));
   	
   	    niceCX.setMetadata(metadata);
+  	    if (Settings.INSTANCE.isTiming()) {
+			TimingUtil.reportTimeDifference(t0, "niceCX", niceCX.getMetadata().size());
+		}
         return niceCX;
     }
     

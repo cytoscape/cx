@@ -70,7 +70,7 @@
   "cyGroups" : [ {
     "@id" : 1501,
     "view" : 1000,
-    "name" : "Group One",
+    "n" : "Group One",
     "nodes" : [ 167, 165 ],
     "external_edges" : [ 172 ],
     "internal_edges" : [ 171, 170 ]

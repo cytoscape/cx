@@ -72,7 +72,7 @@ public final class ViewMaker {
         final boolean have_default_visual_properties = ((collection.getNetworkVisualPropertiesElement(cx_view_id) != null)
                 || (collection.getNodesDefaultVisualPropertiesElement(cx_view_id) != null) || (collection
                         .getEdgesDefaultVisualPropertiesElement(cx_view_id) != null));
-        
+                
         VisualStyle new_visual_style = visual_mapping_manager.getDefaultVisualStyle();
         if (have_default_visual_properties) {
             int counter = 1;
@@ -89,7 +89,7 @@ public final class ViewMaker {
             //ViewMaker.removeVisualStyle(viz_style_title, visual_mapping_manager);
             new_visual_style.setTitle(viz_style_title);
         }
-                
+        	
         final VisualLexicon lexicon = rendering_engine_manager.getDefaultVisualLexicon();
 
         if (collection.getNetworkVisualPropertiesElement(cx_view_id) != null) {
@@ -101,7 +101,7 @@ public final class ViewMaker {
                                                             vmf_factory_d,
                                                             vmf_factory_p);
         }
-
+        
         if (collection.getNodesDefaultVisualPropertiesElement(cx_view_id) != null) {
             ViewMaker.setDefaultVisualPropertiesAndMappings(lexicon,
                                                             collection.getNodesDefaultVisualPropertiesElement(cx_view_id),
@@ -111,7 +111,7 @@ public final class ViewMaker {
                                                             vmf_factory_d,
                                                             vmf_factory_p);
         }
-
+        
         if (collection.getEdgesDefaultVisualPropertiesElement(cx_view_id) != null) {
             ViewMaker.setDefaultVisualPropertiesAndMappings(lexicon,
                                                             collection.getEdgesDefaultVisualPropertiesElement(cx_view_id),
@@ -121,7 +121,7 @@ public final class ViewMaker {
                                                             vmf_factory_d,
                                                             vmf_factory_p);
         }
-
+        
         ViewMaker.setNodeVisualProperties(view, lexicon, collection, cx_view_id, cx_to_cy.getNodesWithVisualProperties());
 
         ViewMaker.setEdgeVisualProperties(view, lexicon, collection, cx_view_id, cx_to_cy.getEdgesWithVisualProperties());
@@ -131,13 +131,16 @@ public final class ViewMaker {
                 .getCartesianLayoutElements(cx_view_id))) {
         	doLayout = null;
         }
-
+        
+        
+        
         if (have_default_visual_properties) {
         	// Simply add & assign style.  VMM automatically apply this later. 
             visual_mapping_manager.addVisualStyle(new_visual_style);
             visual_mapping_manager.setVisualStyle(new_visual_style, view);
             
         }
+        
         ViewMaker.applyStyle(new_visual_style, view, layout_manager, task_manager, networkview_manager, doLayout);
         
         if (Settings.INSTANCE.isTiming()) {
@@ -176,7 +179,7 @@ public final class ViewMaker {
     		DialogTaskManager task_manager,
     		CyNetworkViewManager view_manager,
     		String layout) {
-    	    	
+        
         if( layout != null )
         {
             CyLayoutAlgorithm algorithm = layout_manager.getLayout(layout);
@@ -184,6 +187,7 @@ public final class ViewMaker {
             task_manager.execute(ti);
             network_view.updateView();
         }
+        
         style.apply(network_view);
         network_view.updateView();
         

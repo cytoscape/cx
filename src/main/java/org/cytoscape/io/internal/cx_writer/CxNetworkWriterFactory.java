@@ -8,11 +8,8 @@ import org.cytoscape.io.CyFileFilter;
 import org.cytoscape.io.write.CyNetworkViewWriterFactory;
 import org.cytoscape.io.write.CyWriter;
 import org.cytoscape.model.CyNetwork;
-import org.cytoscape.model.CyNetworkManager;
-import org.cytoscape.model.CyNetworkTableManager;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewManager;
-import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 
 public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
@@ -20,38 +17,26 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
     private final VisualMappingManager  _visual_mapping_manager;
     private final CyApplicationManager  _application_manager;
     private final CyNetworkViewManager  _networkview_manager;
-    private final CyNetworkManager      _network_manager;
     private final CyGroupManager        _group_manager;
-    private final CyNetworkTableManager _table_manager;
-    private final VisualLexicon 		_lexicon;
 
     public CxNetworkWriterFactory(final CyFileFilter filter) {
         _filter = filter;
         _visual_mapping_manager = null;
         _application_manager = null;
         _networkview_manager = null;
-        _network_manager = null;
         _group_manager = null;
-        _table_manager = null;
-        _lexicon = null;
     }
 
     public CxNetworkWriterFactory(final CyFileFilter filter,
                                   final VisualMappingManager visual_mapping_manager,
                                   final CyApplicationManager application_manager,
                                   final CyNetworkViewManager networkview_manager,
-                                  final CyNetworkManager network_manager,
-                                  final CyGroupManager group_manager,
-                                  final CyNetworkTableManager table_manager,
-                                  final VisualLexicon lexicon) {
+                                  final CyGroupManager group_manager) {
         _filter = filter;
         _visual_mapping_manager = visual_mapping_manager;
         _application_manager = application_manager;
         _networkview_manager = networkview_manager;
-        _network_manager = network_manager;
         _group_manager = group_manager;
-        _table_manager = table_manager;
-        _lexicon = lexicon;
     }
 
     @Override
@@ -62,14 +47,11 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
                                        network,
                                        _visual_mapping_manager,
                                        _networkview_manager,
-                                       //_network_manager,
                                        _group_manager,
-                                       //_table_manager,
                                        _application_manager);
         }
         else {
             throw new IllegalStateException("visual_mapping_manager and/or application_manager or null");
-            // return new CxNetworkWriter(os, network);
         }
     }
 
@@ -85,14 +67,11 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
                                        view.getModel(),
                                        _visual_mapping_manager,
                                        _networkview_manager,
-                                       //_network_manager,
                                        _group_manager,
-                                       //_table_manager,
                                        _application_manager);
 
         }
         throw new IllegalStateException("visual_mapping_manager and/or application_manager or null");
-        // return new CxNetworkWriter(os, view.getModel());
 
     }
 }
