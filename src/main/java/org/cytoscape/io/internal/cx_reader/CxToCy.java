@@ -29,6 +29,7 @@ import org.ndexbio.cxio.aspects.datamodels.SubNetworkElement;
 import org.ndexbio.cxio.core.interfaces.AspectElement;
 import org.ndexbio.cxio.metadata.MetaDataCollection;
 import org.ndexbio.cxio.misc.NumberVerification;
+import org.ndexbio.cxio.misc.OpaqueElement;
 import org.ndexbio.cxio.util.CxioUtil;
 import org.cytoscape.group.CyGroup;
 import org.cytoscape.group.CyGroupFactory;
@@ -53,6 +54,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public final class CxToCy {
@@ -126,27 +128,7 @@ public final class CxToCy {
         return sub_network;
 	}
 	
-	private void moveNamespaceToNetworkAttributes(CyNetwork network, NamespacesElement context) throws IOException {
-		// Add the context as a network attribute, removing it from the aspect list
-		// If there is already a network attribute, ignore the context
-		if (context == null || context.isEmpty()) {
-			return;
-		}
-		CyTable net_table = network.getDefaultNetworkTable();
-		if (net_table.getColumn(NamespacesElement.ASPECT_NAME) != null) {
-			return;
-		}
-		net_table.createColumn(NamespacesElement.ASPECT_NAME, String.class, true);
-		ObjectMapper mapper = new ObjectMapper();
-		String contextStr;
-		try {
-			contextStr = mapper.writeValueAsString(context);
-		} catch (JsonProcessingException e) {
-			throw new IOException("Unable to serialize @context aspect");
-		}
-		net_table.getRow(network.getSUID()).set(NamespacesElement.ASPECT_NAME, contextStr);
-		
-	}
+	
 	
 	private final void processViewRelation(NetworkRelationsElement nre) {
 		if (!nre.getRelationship().equals(NetworkRelationsElement.TYPE_VIEW)) {
@@ -263,12 +245,15 @@ public final class CxToCy {
         
         // networkAttrs -> Network default table
         processNetworkAttributes(niceCX.getNetworkAttributes(), cx_network_map, isCollection);
-        moveNamespaceToNetworkAttributes(cx_network_map.get(DEFAULT_SUBNET), niceCX.getNamespaces());
         
+        // nodes, edges, and their attributes
         processNodesAndEdges(niceCX, cx_network_map, isCollection);
-        addPositions(niceCX.getNodeAssociatedAspect(CartesianLayoutElement.ASPECT_NAME));
-     
+        
+        // visual layout information, hidden attributes, opaques, and group nodes
         processOpaqueAspects(niceCX.getOpaqueAspectTable(), cx_network_map, group_factory);
+        
+        //cartesianLayout
+        addPositions(niceCX.getNodeAssociatedAspect(CartesianLayoutElement.ASPECT_NAME));
         
         
         ArrayList<CyNetwork> networks = new ArrayList<CyNetwork>();
@@ -287,16 +272,15 @@ public final class CxToCy {
     }
     
     private final void processOpaqueAspects(Map<String, Collection<AspectElement>> opaque_table, 
-    		Map<Long, CyNetwork> cx_network_map, CyGroupFactory group_factory) throws JsonProcessingException {
+    		Map<Long, CyNetwork> cx_network_map, CyGroupFactory group_factory) throws IOException {
     	   
 		//      opaque aspects -> serialize to network hidden table
 		//    	cyVisualProperties -> create Styling for network
-		//      	cyHiddenAttrs -> network hidden table
+		//      cyHiddenAttrs -> network hidden table
 		//    	cyGroups -> create from nodes and edges
-		//    	cartesianLayout -> set node positions
-		//			@context (?) -> serialize into network default table
-		//      	including metaData
-		//      	omit: status, ndexStatus, numberVerification, provenanceHistory, cyTableColumns, cyViews
+		//		@context (?) -> serialize into network default table
+		//      including metaData
+		//      omit: status, ndexStatus, numberVerification, provenanceHistory, cyTableColumns, cyViews
 		      
 		      
 	  for (Entry<String, Collection<AspectElement>> aspect : opaque_table.entrySet()) {
@@ -304,13 +288,20 @@ public final class CxToCy {
 	  	case HiddenAttributesElement.ASPECT_NAME:
 	  		processHiddenAttributes(aspect.getValue(), cx_network_map);
 	  		break;
-	  	case CyGroupsElement.ASPECT_NAME:
-	  		addGroups(group_factory, aspect.getValue(), cx_network_map);
-	  		break;
 	  	case CyVisualPropertiesElement.ASPECT_NAME:
 	  		processVisualProperties(aspect.getValue());
 	  		break;
+	  	case CyGroupsElement.ASPECT_NAME:
+	  		addGroups(group_factory, aspect.getValue(), cx_network_map);
+	  		break;
 	  	case NamespacesElement.ASPECT_NAME:
+	  		CyTable net_table = cx_network_map.get(DEFAULT_SUBNET).getDefaultNetworkTable();
+	 		if (net_table.getColumn(NamespacesElement.ASPECT_NAME) != null) {
+	 			// Only move context if it does not exist in network table
+	 			return;
+	 		}
+	  		serializeAspect(cx_network_map.get(DEFAULT_SUBNET), aspect.getKey(), CyNetwork.DEFAULT_ATTRS, aspect.getValue());
+	  		break;
 	  	case "status":
 	  	case NdexNetworkStatus.ASPECT_NAME:
 	  	case NumberVerification.NAME:
@@ -322,7 +313,7 @@ public final class CxToCy {
 	  		break;
 	  	case MetaDataCollection.NAME:
 	  	default:
-	  		serializeOpaqueAspect(cx_network_map.get(DEFAULT_SUBNET), aspect.getKey(), aspect.getValue());
+	  		serializeAspect(cx_network_map.get(DEFAULT_SUBNET), CxUtil.OPAQUE_ASPECT_PREFIX + aspect.getKey(), CyNetwork.HIDDEN_ATTRS, aspect.getValue());
 	  		break;
 	  	}
 	  }
@@ -405,18 +396,24 @@ public final class CxToCy {
 	       table.createListColumn(name, data_type, false);
 	   }
 	}
-
-	private void serializeOpaqueAspect(CyNetwork network, String key, Collection<AspectElement> collection) throws JsonProcessingException {
-		Settings.INSTANCE.debug("Opaque aspect " + key + " size " + collection.size());
-		CyTable table = network.getTable(CyNetwork.class, CyNetwork.HIDDEN_ATTRS); //TODO: change to hidden table
-    	ObjectMapper mapper = new ObjectMapper();
-    	String aspectStr = mapper.writeValueAsString(collection);
-    	String opaqueName = CxUtil.OPAQUE_ASPECT_PREFIX + key;
-    	if (table.getColumn(opaqueName) == null) {
-    		table.createColumn(opaqueName, String.class, true);
+    
+ 	
+ 	private void serializeAspect(CyNetwork network, String column, String namespace, Collection<AspectElement> collection) throws IOException {
+ 		ObjectMapper mapper = new ObjectMapper();
+ 		ArrayList<JsonNode> nodes = new ArrayList<>();
+ 		for (AspectElement el : collection) {
+ 			OpaqueElement op = (OpaqueElement) el;
+ 			nodes.add(op.getData());
+ 		}
+ 		CyTable table = network.getTable(CyNetwork.class, namespace);
+    	
+    	String aspectStr = mapper.writeValueAsString(nodes);
+    	if (table.getColumn(column) == null) {
+    		table.createColumn(column, String.class, true);
     	}
-    	table.getRow(network.getSUID()).set(opaqueName, aspectStr);
-    }
+    	table.getRow(network.getSUID()).set(column, aspectStr);
+ 		
+ 	}
     
     private void processNodesAndEdges(NiceCXNetwork niceCX, Map<Long, CyNetwork> cx_network_map, boolean isCollection) {
     	
@@ -455,18 +452,13 @@ public final class CxToCy {
     
     private void processHiddenAttributes(Collection<AspectElement> hidden_attributes, Map<Long, CyNetwork> cx_network_map) {
     	if (hidden_attributes != null) {
-    		HashMap<Long, List<HiddenAttributesElement>> hidden_attributes_map = new HashMap<Long, List<HiddenAttributesElement>>();;
             for (final AspectElement e : hidden_attributes) {
                 final HiddenAttributesElement hae = (HiddenAttributesElement) e;
                 Long subnet = hae.getSubnetwork();
-                if (subnet == null)
+                if (subnet == null) {
                 	 subnet = DEFAULT_SUBNET;
-
-                if (!hidden_attributes_map.containsKey(subnet)) {
-                    hidden_attributes_map.put(subnet,
-                                              new ArrayList<HiddenAttributesElement>());
                 }
-                hidden_attributes_map.get(subnet).add(hae);
+
                 addHiddenAttributeData(hae, cx_network_map.get(subnet));
             }
         }
@@ -533,50 +525,49 @@ public final class CxToCy {
                           final Collection<AspectElement> groupElements,
                           final Map<Long, CyNetwork> cx_subnetwork_map) {
 
- /*       if (_subnet_to_views_map.containsKey(subnetwork_id)) {
-            final List<Long> vs = _subnet_to_views_map.get(subnetwork_id);
-            for (final Long v : vs) {
-
-                final List<CyGroupsElement> g = subnet_to_groups_map.get(v); */
-                for (final AspectElement a : groupElements) {
-                	CyGroupsElement ge = (CyGroupsElement) a;
-                	Long subnetwork_id = ge.getSubNet() == null ? DEFAULT_SUBNET : ge.getSubNet();
-                	CyNetwork sub_network = cx_subnetwork_map.get(subnetwork_id);
-                	if (sub_network instanceof CyRootNetwork) {
-                		sub_network = ((CyRootNetwork) sub_network).getBaseNetwork();
-                	}
-                	final List<CyNode> nodes_for_group = new ArrayList<>();
-                    
-                		for (final Long nod : ge.getNodes()) {
-                			nodes_for_group.add(_cxid_to_cynode_map.get(nod));
-                		}
-                		final List<CyEdge> edges_for_group = new ArrayList<>();
-                		for (final Long ed : ge.getInternalEdges()) {
-                			edges_for_group.add(_cxid_to_cyedge_map.get(ed));
-                		}
-                		for (final Long ed : ge.getExternalEdges()) {
-                			edges_for_group.add(_cxid_to_cyedge_map.get(ed));
-                		}
-//                		CyNode grpNode =  _cxid_to_cynode_map.get(ge.getGroupId());
-//                		if (grpNode == null) {
-//                			grpNode = sub_network.addNode();
-//                			group_factory.create
-//                		}
-//                		
-                		CyGroup grp = group_factory.createGroup(sub_network,
-//                    						  grpNode,
-                                              nodes_for_group,
-                                              edges_for_group,
-                                              true);
-                		final CyRow row = sub_network.getRow(grp.getGroupNode(), CyNetwork.DEFAULT_ATTRS);
-                		row.set(CxUtil.SHARED_NAME_COL, ge.getName());
-                		if (!ge.isCollapsed()) {
-                			grp.expand(sub_network);
-                		}
-                	}                    
+        for (final AspectElement a : groupElements) {
+        	CyGroupsElement ge = (CyGroupsElement) a;
+        	Long subnetwork_id = ge.getSubNet() == null ? DEFAULT_SUBNET : ge.getSubNet();
+        	CyNetwork sub_network = cx_subnetwork_map.get(subnetwork_id);
+        	if (sub_network instanceof CyRootNetwork) {
+        		sub_network = ((CyRootNetwork) sub_network).getBaseNetwork();
+        	}
+        	final List<CyNode> nodes_for_group = new ArrayList<>();
+            
+    		for (final Long nod : ge.getNodes()) {
+    			nodes_for_group.add(_cxid_to_cynode_map.get(nod));
+    		}
+    		final List<CyEdge> edges_for_group = new ArrayList<>();
+    		for (final Long ed : ge.getInternalEdges()) {
+    			edges_for_group.add(_cxid_to_cyedge_map.get(ed));
+    		}
+    		for (final Long ed : ge.getExternalEdges()) {
+    			edges_for_group.add(_cxid_to_cyedge_map.get(ed));
+    		}
+    		
+    		CyNode node = _cxid_to_cynode_map.get(ge.getGroupId());
+    		if (node == null) {
+    			Settings.INSTANCE.debug(String.format("Group node %s not listed in 'nodes' and/or 'cySubNetworks' aspect(s)", ge.getGroupId()));
+    			node = sub_network.addNode();
+    		}
+    		
+    		CyGroup grp = group_factory.createGroup(sub_network,
+							  node,
+                              nodes_for_group,
+                              null,
+                              true);
+    		
+    		final CyRow row = sub_network.getRow(grp.getGroupNode());
+    		row.set(CxUtil.SHARED_NAME_COL, ge.getName());
+    		
+    		grp.removeGroupFromNetwork(sub_network);
+    		grp.expand(sub_network);
+    		//grp.expand(sub_network);
+//    		if (!ge.isCollapsed()) {
+//    			grp.collapse(sub_network);
+//    		}
+        }
                 
-           // }
-       // }
     }
 
     public Set<CyEdge> getEdgesWithVisualProperties() {
@@ -748,14 +739,13 @@ public final class CxToCy {
 
         for (final NodesElement node_element : niceCX.getNodes().values()) {
             final Long node_id = node_element.getId();
-
+            
             if (nodes_in_subnet != null && !nodes_in_subnet.contains(node_id)) {
                 continue;
             }
             CyNode cy_node = _cxid_to_cynode_map.get(node_id);
             if (cy_node == null) {
                 cy_node = network.addNode();
-           //     network.getRow(cy_node).set(CyNetwork.NAME, String.valueOf(node_id));
                 if (node_element.getNodeRepresents() != null) {
                     if (node_table_default.getColumn(CxUtil.REPRESENTS) == null) {
                         node_table_default.createColumn(CxUtil.REPRESENTS,
@@ -779,6 +769,7 @@ public final class CxToCy {
             else {
                 network.addNode(cy_node);
             }
+            
             if ( !niceCX.getNodeAttributes().isEmpty()) {
                 addNodeTableData(niceCX.getNodeAttributes().get(node_id),
                                  cy_node,
@@ -1042,28 +1033,6 @@ public final class CxToCy {
         }
     }
 
-/*    private final static void processGroups(final Collection<AspectElement> groups_elements,
-                                            final Map<Long, List<CyGroupsElement>> subnet_to_groups_map,Long subNetworkId
-                                            ) {
-        if (groups_elements != null) {
-            for (final AspectElement e : groups_elements) {
-                final CyGroupsElement ge = (CyGroupsElement) e;
-                Long subnetId = ge.getSubNet();
-                if (subnetId == null) {
-                	subnetId = subNetworkId;
-                	ge.setSubNet(subNetworkId);
-
-                }
-                
-                if (!subnet_to_groups_map.containsKey(subnetId)) {
-                	subnet_to_groups_map.put(subnetId, new ArrayList<CyGroupsElement>());
-                }
-                subnet_to_groups_map.get(subnetId).add(ge);        
-            }
-        }
-    } 
-*/
-    
     
     public final static String getCollectionNameFromNetworkAttributes(final Collection<NetworkAttributesElement> network_attributes) {
         String collection_name_from_network_attributes = null;

@@ -1,10 +1,13 @@
 package org.cytoscape.io.internal.cxio;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,12 +27,14 @@ import org.ndexbio.cxio.aspects.datamodels.NodeAttributesElement;
 import org.ndexbio.cxio.aspects.datamodels.NodesElement;
 import org.ndexbio.cxio.aspects.datamodels.SubNetworkElement;
 import org.ndexbio.cxio.core.CxWriter;
+import org.ndexbio.cxio.core.OpaqueAspectIterator;
 import org.ndexbio.cxio.core.interfaces.AspectElement;
 import org.ndexbio.cxio.core.interfaces.AspectFragmentWriter;
 import org.ndexbio.cxio.metadata.MetaDataCollection;
 import org.ndexbio.cxio.metadata.MetaDataElement;
 import org.ndexbio.cxio.misc.AspectElementCounts;
 import org.ndexbio.cxio.misc.OpaqueElement;
+import com.fasterxml.jackson.core.JsonParseException;
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.NetworkViewRenderer;
 import org.cytoscape.group.CyGroup;
@@ -97,7 +102,7 @@ public final class CxExporter {
 //		ADDITIONAL_IGNORE_FOR_EDGE_ATTRIBUTES.add(CxUtil.SHARED_INTERACTION);
 //		ADDITIONAL_IGNORE_FOR_NETWORK_ATTRIBUTES.add(CxUtil.SHARED_NAME_COL);
 //		ADDITIONAL_IGNORE_FOR_NODE_ATTRIBUTES.add(CxUtil.SHARED_NAME_COL);
-//		ADDITIONAL_IGNORE_FOR_NODE_ATTRIBUTES.add(CxUtil.REPRESENTS);
+		ADDITIONAL_IGNORE_FOR_NODE_ATTRIBUTES.add(CxUtil.REPRESENTS);
 	}
 
 	/**
@@ -157,6 +162,7 @@ public final class CxExporter {
 	public final boolean writeNetwork(final CyNetwork network, final boolean write_siblings, final AspectSet aspects,
 			final OutputStream out) throws IOException {
 
+		Settings.INSTANCE.debug("Writing " + network + " as " + (write_siblings ? "collection" : "subnetwork"));
 		if (!aspects.contains(Aspect.SUBNETWORKS)) {
 			if (aspects.contains(Aspect.VISUAL_PROPERTIES)) {
 				throw new IllegalArgumentException("need to write sub-networks in order to write visual properties");
@@ -179,8 +185,6 @@ public final class CxExporter {
 		String msg = null;
 		boolean success = true;
 
-		Settings.INSTANCE.debug(String.format("Exporting %s to CX. WriteSib = %s", network, write_siblings));
-
 		try {
 			writeNodes(network, w, write_siblings, groupNodeIds);
 			writeGroups(network, w, write_siblings);
@@ -191,12 +195,12 @@ public final class CxExporter {
 			if (write_siblings) {
 				writeNetworkRelations(network, w, true);
 			}
-			// This is for subnets and collections because it writes CartesianLayout
+			// Writes cartesianlayout and visual props, only writes subnets for collections
 			writeSubNetworks(network, write_siblings, w, aspects);
 			
 			writeTableColumns(network, write_siblings, w);
-			writeNetworkAttributes(network, write_siblings, w); //This also handles Opaque aspects
-			writeHiddenAttributes(network, write_siblings, w, CyNetwork.HIDDEN_ATTRS);
+			writeNetworkAttributes(network, write_siblings, w);
+			writeHiddenAttributes(network, write_siblings, w, CyNetwork.HIDDEN_ATTRS); //This also handles Opaque aspects
 
 			final AspectElementCounts aspects_counts = w.getAspectElementCounts();
 			
@@ -507,8 +511,10 @@ public final class CxExporter {
 
 			Long cxId = write_siblings ? cy_node.getSUID() : getElementId(cy_node, network);
 
-			NodesElement elmt = grpNodes.contains(cy_node.getSUID()) ? new NodesElement(cxId.longValue(), null, null)
-					: new NodesElement(cxId.longValue(), getNodeAttributeValue(network, cy_node, attName, String.class),
+			NodesElement elmt = grpNodes.contains(cy_node.getSUID()) ? 
+					new NodesElement(cxId.longValue(), null, null)
+					: new NodesElement(cxId.longValue(),
+							getNodeAttributeValue(network, cy_node, attName, String.class),
 							getNodeAttributeValue(network, cy_node, CxUtil.REPRESENTS, String.class));
 
 			elements.add(elmt);
@@ -573,14 +579,12 @@ public final class CxExporter {
 	private final MetaDataCollection addPostMetadata(final CxWriter w, final AspectElementCounts aspects_counts,
 			boolean write_siblings, CyNetwork network) {
 
-		
 		MetaDataCollection post_meta_data = CxUtil.getMetaData(network);
 		if (post_meta_data == null) {
 			post_meta_data = new MetaDataCollection();
 		}
 		
-		for (AspectFragmentWriter writer : getCySupportedAspectFragmentWriters()) {
-			String name = writer.getAspectName();
+		for (String name : aspects_counts.getAllAspectNames()) {
 			long count = (long) aspects_counts.getAspectElementCount(name);
 			Long idCounter = null;
 			switch(name) {
@@ -600,6 +604,7 @@ public final class CxExporter {
 			}
 			addDataToMetaDataCollection(post_meta_data, name, count, idCounter);
 		}
+		
 		
 		final long t0 = System.currentTimeMillis();
 		w.addPostMetaData(post_meta_data);
@@ -766,7 +771,7 @@ public final class CxExporter {
 		}
 		final long t0 = System.currentTimeMillis();
 		w.writeAspectElements(elements);
-		if (Settings.INSTANCE.isTiming()) { 
+		if (Settings.INSTANCE.isTiming()) {
 			 TimingUtil.reportTimeDifference(t0, "groups", elements.size()); 
 		}
 		
@@ -780,13 +785,13 @@ public final class CxExporter {
 		final CySubNetwork my_subnet = (CySubNetwork) network;
 		final CyRootNetwork my_root = my_subnet.getRootNetwork();
 		final List<CySubNetwork> subnets = makeSubNetworkList(write_siblings, my_subnet, my_root, true);
-
-		for (final CySubNetwork subnet : subnets) {
-			writeHiddenAttributesHelper(namespace, subnet, elements, write_siblings);
-		}
-
+		
 		final long t0 = System.currentTimeMillis();
-		w.writeAspectElements(elements);
+		
+		for (final CySubNetwork subnet : subnets) {
+			writeHiddenAttributesHelper(namespace, subnet, w, write_siblings);
+		}
+		
 		if (Settings.INSTANCE.isTiming()) {
 			TimingUtil.reportTimeDifference(t0, "network attributes", elements.size());
 		}
@@ -794,7 +799,7 @@ public final class CxExporter {
 
 	@SuppressWarnings("rawtypes")
 	private static void writeHiddenAttributesHelper(final String namespace, final CyNetwork my_network,
-			final List<AspectElement> elements, boolean writeSiblings) {
+			final CxWriter w, boolean writeSiblings) throws IOException {
 
 		final CyRow row = my_network.getRow(my_network, namespace);
 		if (row != null) {
@@ -807,6 +812,11 @@ public final class CxExporter {
 						continue;
 					}
 					if (isIgnore(column_name, null, Settings.INSTANCE, value)) {
+						continue;
+					}
+					
+					if (column_name.startsWith(CxUtil.OPAQUE_ASPECT_PREFIX)) {
+						writeOpaqueElement(column_name.substring(CxUtil.OPAQUE_ASPECT_PREFIX.length()), (String)value, w);
 						continue;
 					}
 					
@@ -826,12 +836,22 @@ public final class CxExporter {
 								AttributesAspectUtils.determineDataType(value));
 					}
 					if (e != null) {
-						elements.add(e);
+						w.writeAspectElement(e);
 					}
 				}
 			}
 
 		}
+	}
+
+	private static void writeOpaqueElement(String column, String value, CxWriter w) throws JsonParseException, IOException {
+		InputStream in = new ByteArrayInputStream(value.getBytes());
+		OpaqueAspectIterator iter = new OpaqueAspectIterator(in);
+		w.startAspectFragment(column);
+		while (iter.hasNext()) {
+			w.writeOpaqueAspectElement(iter.next());
+		}
+		w.endAspectFragment();
 	}
 
 	private final static void writeNetworkAttributes(final CyNetwork network, final boolean write_siblings,
@@ -896,11 +916,6 @@ public final class CxExporter {
 						continue;
 					}
 					
-					if (column_name.startsWith(CxUtil.OPAQUE_ASPECT_PREFIX) && value instanceof String) {
-						addOpaqueAspect(elements, column_name.substring(CxUtil.OPAQUE_ASPECT_PREFIX.length()), (String) value);
-						continue;
-					}
-					
 					NetworkAttributesElement e = null;
 
 					Long subnet = null;
@@ -929,11 +944,6 @@ public final class CxExporter {
 		}
 	}
 
-	private static void addOpaqueAspect(List<AspectElement> elements, String name, String valueAsString) throws IOException {
-		OpaqueElement element = new OpaqueElement(name, valueAsString);
-		elements.add(element);
-	}
-
 	private final static void writeNodeAttributes(final CyNetwork network, final CxWriter w, final boolean write_siblings,
 			 final String namespace, Set<Long> groupNodeIds) throws IOException {
 
@@ -957,9 +967,10 @@ public final class CxExporter {
 	@SuppressWarnings("rawtypes")
 	private static void writeNodeAttributesHelper(final String namespace, final CySubNetwork my_network,
 			final List<CyNode> nodes, final List<AspectElement> elements, boolean writeSiblings, Set<Long> grpNodeIds) {
+		
 		for (final CyNode cy_node : nodes) {
-			if (grpNodeIds.contains(cy_node.getSUID()))
-				continue;
+//			if (grpNodeIds.contains(cy_node.getSUID()))
+//				continue;
 			final CyRow row = my_network.getRow(cy_node, namespace);
 			if (row != null) {
 				final Map<String, Object> values = row.getAllValues();
@@ -979,6 +990,7 @@ public final class CxExporter {
 //						}
 						
 						NodeAttributesElement e = null;
+						
 						final Long subnet = writeSiblings ? my_network.getSUID() : null;
 						
 						Long nodeId = getElementId(cy_node, my_network);

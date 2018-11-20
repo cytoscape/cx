@@ -219,6 +219,7 @@ public final class CxImporter {
      	} 
      	
      	MetaDataCollection postmetadata = r.getPostMetaData();
+     	
   	    if ( postmetadata !=null) {
 		  if( metadata == null) {
 			  metadata = postmetadata;

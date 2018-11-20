@@ -41,6 +41,7 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
 
     @Override
     public CyWriter createWriter(final OutputStream os, final CyNetwork network) {
+    	System.out.println(network);
         if ((_visual_mapping_manager != null) && (_application_manager != null)) {
             
             return new CxNetworkWriter(os,
@@ -48,10 +49,11 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
                                        _visual_mapping_manager,
                                        _networkview_manager,
                                        _group_manager,
-                                       _application_manager);
+                                       _application_manager,
+                                       true);
         }
         else {
-            throw new IllegalStateException("visual_mapping_manager and/or application_manager or null");
+            throw new IllegalStateException("visual_mapping_manager and/or application_manager are null");
         }
     }
 
@@ -68,10 +70,11 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
                                        _visual_mapping_manager,
                                        _networkview_manager,
                                        _group_manager,
-                                       _application_manager);
+                                       _application_manager,
+                                       false);
 
         }
-        throw new IllegalStateException("visual_mapping_manager and/or application_manager or null");
+        throw new IllegalStateException("visual_mapping_manager and/or application_manager are null");
 
     }
 }

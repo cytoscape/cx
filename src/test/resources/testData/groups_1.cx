@@ -18,7 +18,7 @@
   }, {
     "consistencyGroup" : 1,
     "elementCount" : 1,
-    "idCounter" : 15001,
+    "idCounter" : 1501,
     "name" : "cyGroups",
     "version" : "1.0"
   } ]
@@ -69,7 +69,6 @@
 }, {
   "cyGroups" : [ {
     "@id" : 1501,
-    "view" : 1000,
     "n" : "Group One",
     "nodes" : [ 167, 165 ],
     "external_edges" : [ 172 ],

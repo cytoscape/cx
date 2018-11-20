@@ -62,7 +62,7 @@ public final class CxUtil {
     }
     
     public static void setMetaData(CyNetwork network, MetaDataCollection metaData) {
-    	CyTable hidden_table = network.getTable(CyNetwork.class, CyNetwork.DEFAULT_ATTRS); //TODO: HIDDEN_ATTRS
+    	CyTable hidden_table = network.getTable(CyNetwork.class, CyNetwork.HIDDEN_ATTRS);
     	if (hidden_table.getColumn(CxUtil.CX_METADATA) == null) {
     		hidden_table.createColumn(CxUtil.CX_METADATA, String.class, true);
     	}

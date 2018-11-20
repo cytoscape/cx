@@ -34,6 +34,7 @@ public class CxNetworkWriter implements CyWriter {
 
 	private final static Logger logger = LoggerFactory.getLogger(CxNetworkWriter.class);
 	private static final boolean WRITE_SIBLINGS_DEFAULT = false;
+	private static final boolean USE_CXID_DEFAULT = false;
 	private final static String ENCODING = "UTF-8";
 
 	private final OutputStream _os;
@@ -46,13 +47,19 @@ public class CxNetworkWriter implements CyWriter {
 	
 	@Tunable(description="Write all networks in the collection")
     public Boolean writeSiblings = WRITE_SIBLINGS_DEFAULT;
+	
+	@Tunable(description="Use CX ID")
+    public Boolean useCxId = USE_CXID_DEFAULT;
+	
+	
 
 	public CxNetworkWriter(final OutputStream os, 
 			final CyNetwork network,
 			final VisualMappingManager visual_mapping_manager, 
 			final CyNetworkViewManager networkview_manager,
 			final CyGroupManager group_manager,
-			final CyApplicationManager application_manager) {
+			final CyApplicationManager application_manager,
+			final boolean write_siblings) {
 
 		_visual_mapping_manager = visual_mapping_manager;
 		_networkview_manager = networkview_manager;
@@ -60,6 +67,7 @@ public class CxNetworkWriter implements CyWriter {
 		_network = network;
 		_group_manager = group_manager;
 		_application_manager = application_manager;
+		writeSiblings = write_siblings;
 
 		if (Charset.isSupported(ENCODING)) {
 			// UTF-8 is supported by system
