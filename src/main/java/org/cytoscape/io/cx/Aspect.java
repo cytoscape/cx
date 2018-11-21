@@ -1,6 +1,7 @@
 package org.cytoscape.io.cx;
 
 import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
+import org.ndexbio.cxio.aspects.datamodels.CyAnnotationsElement;
 import org.ndexbio.cxio.aspects.datamodels.CyGroupsElement;
 import org.ndexbio.cxio.aspects.datamodels.CyTableColumnElement;
 import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
@@ -37,7 +38,8 @@ public enum Aspect {
     NETWORK_RELATIONS(NetworkRelationsElement.ASPECT_NAME),
     GROUPS(CyGroupsElement.ASPECT_NAME),
     HIDDEN_ATTRIBUTES(HiddenAttributesElement.ASPECT_NAME),
-    TABLE_COLUMN_LABELS(CyTableColumnElement.ASPECT_NAME);
+    TABLE_COLUMN_LABELS(CyTableColumnElement.ASPECT_NAME),
+	ANNOTATIONS(CyAnnotationsElement.ASPECT_NAME);
 
     private final String _s;
 

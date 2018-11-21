@@ -40,6 +40,7 @@ import org.cytoscape.application.NetworkViewRenderer;
 import org.cytoscape.group.CyGroup;
 import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.cx.Aspect;
+import org.cytoscape.io.internal.cx_writer.AnnotationsGatherer;
 import org.cytoscape.io.internal.cx_writer.VisualPropertiesGatherer;
 import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyEdge;
@@ -576,6 +577,19 @@ public final class CxExporter {
 		}
 	}
 
+	private final static void writeAnnotations(final CyNetworkView view,
+			final CxWriter w,
+			boolean writeSiblings) throws IOException {
+		
+		final List<AspectElement> elements = AnnotationsGatherer.gatherAnnotationsAsAspectElements();
+		
+		final long t0 = System.currentTimeMillis();
+		w.writeAspectElements(elements);
+		if (Settings.INSTANCE.isTiming()) {
+			TimingUtil.reportTimeDifference(t0, "annotations", elements.size());
+		}
+	}
+	
 	private final MetaDataCollection addPostMetadata(final CxWriter w, final AspectElementCounts aspects_counts,
 			boolean write_siblings, CyNetwork network) {
 
@@ -1043,7 +1057,7 @@ public final class CxExporter {
 				final VisualLexicon _lexicon = getLexicon(view);
 				writeCartesianLayout(view, w, write_siblings);
 				writeVisualProperties(view, _visual_mapping_manager, _lexicon, w, write_siblings);
-
+				writeAnnotations(view, w, write_siblings);
 			}
 		}
 

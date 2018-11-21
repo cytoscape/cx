@@ -19,6 +19,7 @@ import org.ndexbio.cxio.aspects.readers.NodeAttributesFragmentReader;
 import org.ndexbio.cxio.aspects.readers.NodesFragmentReader;
 import org.ndexbio.cxio.aspects.readers.SubNetworkFragmentReader;
 import org.ndexbio.cxio.aspects.writers.CartesianLayoutFragmentWriter;
+import org.ndexbio.cxio.aspects.writers.CyAnnotationsFragmentWriter;
 import org.ndexbio.cxio.aspects.writers.CyGroupsFragmentWriter;
 import org.ndexbio.cxio.aspects.writers.CyTableColumnFragmentWriter;
 import org.ndexbio.cxio.aspects.writers.EdgeAttributesFragmentWriter;
@@ -95,6 +96,7 @@ public final class AspectSet {
 		aspects.addAspect(Aspect.HIDDEN_ATTRIBUTES);
 		aspects.addAspect(Aspect.CARTESIAN_LAYOUT);
 		aspects.addAspect(Aspect.VISUAL_PROPERTIES);
+		aspects.addAspect(Aspect.ANNOTATIONS);
 		aspects.addAspect(Aspect.SUBNETWORKS);
 		aspects.addAspect(Aspect.NETWORK_RELATIONS);
 		aspects.addAspect(Aspect.GROUPS);
@@ -127,6 +129,9 @@ public final class AspectSet {
         }
         if (_aspects.contains(Aspect.VISUAL_PROPERTIES)) {
             writers.add(VisualPropertiesFragmentWriter.createInstance());
+        }
+        if (_aspects.contains(Aspect.ANNOTATIONS)) {
+            writers.add(CyAnnotationsFragmentWriter.createInstance());
         }
         if (_aspects.contains(Aspect.SUBNETWORKS)) {
             writers.add(SubNetworkFragmentWriter.createInstance());
