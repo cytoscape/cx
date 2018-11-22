@@ -57,6 +57,7 @@ import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.model.View;
 import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.presentation.RenderingEngineFactory;
+import org.cytoscape.view.presentation.annotations.AnnotationManager;
 import org.cytoscape.view.presentation.property.BasicVisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 
@@ -90,6 +91,7 @@ import org.cytoscape.view.vizmap.VisualMappingManager;
 public final class CxExporter {
 
 	private VisualMappingManager _visual_mapping_manager;
+	private AnnotationManager _annotation_manager;
 	private CyNetworkViewManager _networkview_manager;
 	private CyGroupManager _group_manager;
 	private CyApplicationManager _application_manager;
@@ -135,6 +137,10 @@ public final class CxExporter {
 		_visual_mapping_manager = visual_mapping_manager;
 	}
 
+	public void setAnnotationManager(final AnnotationManager annotation_manager) {
+		_annotation_manager = annotation_manager;
+	}
+	
 	/**
 	 * This is a method for serializing a Cytoscape network and associated table
 	 * data as CX formatted OutputStream. <br>
@@ -577,11 +583,11 @@ public final class CxExporter {
 		}
 	}
 
-	private final static void writeAnnotations(final CyNetworkView view,
+	private final static void writeAnnotations(final CyNetworkView view, final AnnotationManager annotationManager,
 			final CxWriter w,
 			boolean writeSiblings) throws IOException {
 		
-		final List<AspectElement> elements = AnnotationsGatherer.gatherAnnotationsAsAspectElements();
+		final List<AspectElement> elements = AnnotationsGatherer.gatherAnnotationsAsAspectElements(view, annotationManager);
 		
 		final long t0 = System.currentTimeMillis();
 		w.writeAspectElements(elements);
@@ -1057,7 +1063,7 @@ public final class CxExporter {
 				final VisualLexicon _lexicon = getLexicon(view);
 				writeCartesianLayout(view, w, write_siblings);
 				writeVisualProperties(view, _visual_mapping_manager, _lexicon, w, write_siblings);
-				writeAnnotations(view, w, write_siblings);
+				writeAnnotations(view, _annotation_manager, w, write_siblings);
 			}
 		}
 

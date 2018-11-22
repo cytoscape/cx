@@ -5,6 +5,7 @@ import static org.cytoscape.work.ServiceProperties.ID;
 import java.util.Properties;
 
 import org.cytoscape.application.CyApplicationManager;
+import org.cytoscape.ding.impl.cyannotator.AnnotationFactoryManager;
 import org.cytoscape.group.CyGroupFactory;
 import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.DataCategory;
@@ -21,6 +22,7 @@ import org.cytoscape.view.layout.CyLayoutAlgorithmManager;
 import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.presentation.RenderingEngineManager;
+import org.cytoscape.view.presentation.annotations.AnnotationManager;
 import org.cytoscape.view.vizmap.VisualMappingFunctionFactory;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.view.vizmap.VisualStyleFactory;
@@ -51,6 +53,7 @@ public class CyActivator extends AbstractCyActivator {
         
         // Writer:
         final VisualMappingManager visual_mapping_manager = getService(bc, VisualMappingManager.class);
+        final AnnotationManager annotation_manager = getService(bc, AnnotationManager.class);
         final CyApplicationManager application_manager = getService(bc, CyApplicationManager.class);
         final CyNetworkViewManager networkview_manager = getService(bc, CyNetworkViewManager.class);
         final CyNetworkManager network_manager = getService(bc, CyNetworkManager.class);
@@ -59,6 +62,7 @@ public class CyActivator extends AbstractCyActivator {
         final DialogTaskManager task_manager = getService(bc, DialogTaskManager.class);
         final CxNetworkWriterFactory network_writer_factory = new CxNetworkWriterFactory(cx_filter,
                                                                                          visual_mapping_manager,
+                                                                                         annotation_manager,
                                                                                          application_manager,
                                                                                          networkview_manager,
                                                                                          group_manager);
@@ -74,6 +78,7 @@ public class CyActivator extends AbstractCyActivator {
         final CyRootNetworkManager root_network_manager = getService(bc, CyRootNetworkManager.class);
         final RenderingEngineManager rendering_engine_manager = getService(bc, RenderingEngineManager.class);
         final VisualStyleFactory visual_style_factory = getService(bc, VisualStyleFactory.class);
+        final AnnotationFactoryManager annotation_factory_manager = getService(bc, AnnotationFactoryManager.class);
         final CyGroupFactory group_factory = getService(bc, CyGroupFactory.class);
         final CytoscapeCxFileFilter cxfilter = new CytoscapeCxFileFilter(new String[] { "cx" },
                                                                                    new String[] { "application/json" },
@@ -99,6 +104,7 @@ public class CyActivator extends AbstractCyActivator {
                                                                                                       root_network_manager,
                                                                                                       visual_mapping_manager,
                                                                                                       visual_style_factory,
+                                                                                                      annotation_factory_manager,
                                                                                                       group_factory,
                                                                                                       rendering_engine_manager,
                                                                                                       network_view_factory,

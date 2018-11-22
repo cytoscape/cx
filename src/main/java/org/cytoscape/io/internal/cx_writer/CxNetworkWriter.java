@@ -18,6 +18,7 @@ import org.cytoscape.io.internal.cxio.TimingUtil;
 import org.cytoscape.io.write.CyWriter;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.view.model.CyNetworkViewManager;
+import org.cytoscape.view.presentation.annotations.AnnotationManager;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.work.TaskMonitor;
 import org.cytoscape.work.Tunable;
@@ -41,6 +42,7 @@ public class CxNetworkWriter implements CyWriter {
 	private final CyNetwork _network;
 	private final CharsetEncoder _encoder;
 	private final VisualMappingManager _visual_mapping_manager;
+	private final AnnotationManager _annotation_manager;
 	private final CyNetworkViewManager _networkview_manager;
 	private final CyGroupManager _group_manager;
 	private final CyApplicationManager _application_manager;
@@ -56,12 +58,14 @@ public class CxNetworkWriter implements CyWriter {
 	public CxNetworkWriter(final OutputStream os, 
 			final CyNetwork network,
 			final VisualMappingManager visual_mapping_manager, 
+			final AnnotationManager annotation_manager,
 			final CyNetworkViewManager networkview_manager,
 			final CyGroupManager group_manager,
 			final CyApplicationManager application_manager,
 			final boolean write_siblings) {
 
 		_visual_mapping_manager = visual_mapping_manager;
+		_annotation_manager = annotation_manager;
 		_networkview_manager = networkview_manager;
 		_os = os;
 		_network = network;
@@ -95,6 +99,7 @@ public class CxNetworkWriter implements CyWriter {
 		final CxExporter exporter = CxExporter.createInstance();
 		exporter.setApplicationManager(_application_manager);
 		exporter.setVisualMappingManager(_visual_mapping_manager);
+		exporter.setAnnotationManager(_annotation_manager);
 		exporter.setNetworkViewManager(_networkview_manager);
 		exporter.setGroupManager(_group_manager);
 
