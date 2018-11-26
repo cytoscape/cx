@@ -94,6 +94,17 @@
 			<url>http://code.cytoscape.org/nexus/content/repositories/releases/</url>
 		</repository>
 		<repository>
+			<id>cytoscape_snapshots</id>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<name>Cytoscape Snapshots</name>
+			<url>http://code.cytoscape.org/nexus/content/repositories/snapshots/</url>
+		</repository>
+		<repository>
 			<id>cytoscape_thirdparty</id>
 			<snapshots>
 				<enabled>false</enabled>
