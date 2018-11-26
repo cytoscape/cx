@@ -45,7 +45,7 @@ public final class CxUtil {
     
     
     public static MetaDataCollection getMetaData(CyNetwork network) {
-    	CyTable hidden_network_table = network.getTable(CyNetwork.class, CyNetwork.DEFAULT_ATTRS); //TODO: HIDDEN_ATTRS
+    	CyTable hidden_network_table = network.getTable(CyNetwork.class, CyNetwork.HIDDEN_ATTRS);
 		CyRow row = hidden_network_table.getRow(network.getSUID());
 		if (row != null) {
 			String metaDataStr = row.get(CxUtil.CX_METADATA, String.class);
@@ -173,9 +173,14 @@ public final class CxUtil {
 	}
 	
 	static Long getCxId(CyIdentifiable cyEle, CyNetwork network) {
-		CyTable hidden_node_table = network.getTable(cyEle instanceof CyNode ? CyNode.class : CyEdge.class, CyNetwork.HIDDEN_ATTRS);
-		CyRow row = hidden_node_table.getRow(cyEle.getSUID());
+		CyTable hidden_table = network.getTable(cyEle instanceof CyNode ? CyNode.class : CyEdge.class, CyNetwork.HIDDEN_ATTRS);
+		CyRow row = hidden_table.getRow(cyEle.getSUID());
 		return row.get(CxUtil.CX_ID_MAPPING, Long.class);
+	}
+	
+	static boolean hasCxIds(CyNetwork network) {
+		CyTable hidden_table = network.getTable(CyNode.class, CyNetwork.HIDDEN_ATTRS);
+		return hidden_table.getColumn(CxUtil.CX_ID_MAPPING) != null;
 	}
     
 }

@@ -59,7 +59,8 @@ public class CxNetworkWriter implements CyWriter {
 			final CyNetworkViewManager networkview_manager,
 			final CyGroupManager group_manager,
 			final CyApplicationManager application_manager,
-			final boolean write_siblings) {
+			final boolean write_siblings,
+			final boolean use_cxId) {
 
 		_visual_mapping_manager = visual_mapping_manager;
 		_networkview_manager = networkview_manager;
@@ -68,6 +69,7 @@ public class CxNetworkWriter implements CyWriter {
 		_group_manager = group_manager;
 		_application_manager = application_manager;
 		writeSiblings = write_siblings;
+		useCxId = use_cxId;
 
 		if (Charset.isSupported(ENCODING)) {
 			// UTF-8 is supported by system
@@ -100,11 +102,11 @@ public class CxNetworkWriter implements CyWriter {
 
 		final long t0 = System.currentTimeMillis();
 		if (TimingUtil.WRITE_TO_DEV_NULL) {
-			exporter.writeNetwork(_network, writeSiblings, aspects, new FileOutputStream(new File("/dev/null")));
+			exporter.writeNetwork(_network, writeSiblings, useCxId, aspects, new FileOutputStream(new File("/dev/null")));
 		} else if (TimingUtil.WRITE_TO_BYTE_ARRAY_OUTPUTSTREAM) {
-			exporter.writeNetwork(_network, writeSiblings, aspects, new ByteArrayOutputStream());
+			exporter.writeNetwork(_network, writeSiblings, useCxId, aspects, new ByteArrayOutputStream());
 		} else {
-			exporter.writeNetwork(_network, writeSiblings, aspects, _os);
+			exporter.writeNetwork(_network, writeSiblings, useCxId, aspects, _os);
 			_os.close();
 
 		}
