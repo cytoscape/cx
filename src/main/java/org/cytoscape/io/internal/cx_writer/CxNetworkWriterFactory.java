@@ -56,7 +56,8 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
                                        _networkview_manager,
                                        _group_manager,
                                        _application_manager,
-                                       true);
+                                       true,
+                                       false);
         }
         else {
             throw new IllegalStateException("visual_mapping_manager and/or application_manager are null");
@@ -78,7 +79,8 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
                                        _networkview_manager,
                                        _group_manager,
                                        _application_manager,
-                                       false);
+                                       false,
+                                       true);
 
         }
         throw new IllegalStateException("visual_mapping_manager and/or application_manager are null");
