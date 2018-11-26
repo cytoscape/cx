@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.cytoscape.application.CyApplicationManager;
-import org.cytoscape.ding.impl.cyannotator.AnnotationFactoryManager;
+
 import org.cytoscape.group.CyGroupFactory;
 import org.cytoscape.io.internal.cxio.CxImporter;
 import org.cytoscape.io.internal.cxio.Settings;
@@ -39,7 +39,6 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     private final VisualMappingManager         _visual_mapping_manager;
     private final RenderingEngineManager       _rendering_engine_manager;
     private final CyNetworkViewManager         _networkview_manager;
-    private final AnnotationFactoryManager     _annotation_factory_manager;
     private final CyLayoutAlgorithmManager     _layout_manager;
     private final DialogTaskManager	           _task_manager;
     
@@ -61,7 +60,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                                     final RenderingEngineManager rendering_engine_manager,
                                     final CyNetworkViewFactory networkview_factory,
                                     final CyNetworkViewManager networkview_manager,
-                                    final AnnotationFactoryManager annotation_factory_manager,
+                          
                                     final CyLayoutAlgorithmManager layout_manager,
                                     final DialogTaskManager task_manager,
                                     final VisualMappingFunctionFactory vmf_factory_c,
@@ -79,7 +78,6 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         _visual_mapping_manager = visual_mapping_manager;
         _rendering_engine_manager = rendering_engine_manager;
         _networkview_manager = networkview_manager;
-        _annotation_factory_manager = annotation_factory_manager;
         _layout_manager = layout_manager;
         _task_manager = task_manager;
         _group_factory = group_factory;

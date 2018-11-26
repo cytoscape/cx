@@ -5,7 +5,6 @@ import static org.cytoscape.work.ServiceProperties.ID;
 import java.util.Properties;
 
 import org.cytoscape.application.CyApplicationManager;
-import org.cytoscape.ding.impl.cyannotator.AnnotationFactoryManager;
 import org.cytoscape.group.CyGroupFactory;
 import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.DataCategory;
@@ -78,7 +77,7 @@ public class CyActivator extends AbstractCyActivator {
         final CyRootNetworkManager root_network_manager = getService(bc, CyRootNetworkManager.class);
         final RenderingEngineManager rendering_engine_manager = getService(bc, RenderingEngineManager.class);
         final VisualStyleFactory visual_style_factory = getService(bc, VisualStyleFactory.class);
-        final AnnotationFactoryManager annotation_factory_manager = getService(bc, AnnotationFactoryManager.class);
+
         final CyGroupFactory group_factory = getService(bc, CyGroupFactory.class);
         final CytoscapeCxFileFilter cxfilter = new CytoscapeCxFileFilter(new String[] { "cx" },
                                                                                    new String[] { "application/json" },
@@ -104,7 +103,6 @@ public class CyActivator extends AbstractCyActivator {
                                                                                                       root_network_manager,
                                                                                                       visual_mapping_manager,
                                                                                                       visual_style_factory,
-                                                                                                      annotation_factory_manager,
                                                                                                       group_factory,
                                                                                                       rendering_engine_manager,
                                                                                                       network_view_factory,
