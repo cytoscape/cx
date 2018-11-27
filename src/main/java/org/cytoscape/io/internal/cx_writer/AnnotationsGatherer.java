@@ -7,6 +7,7 @@ import java.util.Map;
 import org.ndexbio.cxio.aspects.datamodels.CyAnnotationsElement;
 import org.ndexbio.cxio.core.interfaces.AspectElement;
 import org.cytoscape.io.internal.cxio.CxExporter;
+import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.presentation.annotations.Annotation;
@@ -42,11 +43,12 @@ public final class AnnotationsGatherer {
         		Object target = ((ArrowAnnotation) annotation).getTarget();
         		if (target instanceof CyNode) {
         			CyNode cy_node = (CyNode) target;
-        			e.putProperty("targetNodeId", CxExporter.getElementId(cy_node, view.getModel()).toString());
+        			e.putProperty("targetNodeId", CxUtil.getCxId(cy_node, view.getModel()).toString());
         		}
         	}
         	elements.add(e);
         }
+       
         return elements;
 
     }

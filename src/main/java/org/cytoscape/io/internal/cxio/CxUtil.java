@@ -172,7 +172,7 @@ public final class CxUtil {
 		updateCxIdCounter(type, network, counter);
 	}
 	
-	static Long getCxId(CyIdentifiable cyEle, CyNetwork network) {
+	public static Long getCxId(CyIdentifiable cyEle, CyNetwork network) {
 		CyTable hidden_table = network.getTable(cyEle instanceof CyNode ? CyNode.class : CyEdge.class, CyNetwork.HIDDEN_ATTRS);
 		CyRow row = hidden_table.getRow(cyEle.getSUID());
 		return row.get(CxUtil.CX_ID_MAPPING, Long.class);

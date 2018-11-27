@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import org.ndexbio.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
 import org.ndexbio.cxio.aspects.datamodels.AbstractAttributesAspectElement;
 import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
+import org.ndexbio.cxio.aspects.datamodels.CyAnnotationsElement;
 import org.ndexbio.cxio.aspects.datamodels.CyGroupsElement;
 import org.ndexbio.cxio.aspects.datamodels.CyTableColumnElement;
 import org.ndexbio.cxio.aspects.datamodels.CyViewsElement;
@@ -293,6 +294,9 @@ public final class CxToCy {
 	  		break;
 	  	case CyGroupsElement.ASPECT_NAME:
 	  		addGroups(group_factory, aspect.getValue(), cx_network_map);
+	  		break;
+	  	case CyAnnotationsElement.ASPECT_NAME:
+	  		System.out.println("CyAnnotations!");
 	  		break;
 	  	case NamespacesElement.ASPECT_NAME:
 	  		CyTable net_table = cx_network_map.get(DEFAULT_SUBNET).getDefaultNetworkTable();

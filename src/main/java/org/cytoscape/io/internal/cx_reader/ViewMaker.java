@@ -143,10 +143,15 @@ public final class ViewMaker {
         
         ViewMaker.applyStyle(new_visual_style, view, layout_manager, task_manager, networkview_manager, doLayout);
         
+        //TODO add annotations
+        
+        
         if (Settings.INSTANCE.isTiming()) {
             TimingUtil.reportTimeDifference(t0, "time to make view", -1);
         }
 
+       
+        
     }
     
     private static boolean applyCartesianLayout(CyNetworkView view, Map<CyNode, CartesianLayoutElement> position_map_for_view) {
@@ -202,6 +207,10 @@ public final class ViewMaker {
         
     }
 
+    private static CyNetworkView addAnnotations(CyNetworkView network_view) {
+    	return null;
+    }
+    
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public final static void addContinuousMapping(final VisualStyle style,
                                                   final VisualProperty vp,
