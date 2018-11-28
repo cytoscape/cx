@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Consumer;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -57,6 +59,7 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.deser.std.JsonNodeDeserializer;
 
 public final class CxToCy {
     
@@ -306,6 +309,9 @@ public final class CxToCy {
 	 		}
 	  		serializeAspect(cx_network_map.get(DEFAULT_SUBNET), aspect.getKey(), CyNetwork.DEFAULT_ATTRS, aspect.getValue());
 	  		break;
+	  	case CxUtil.CX_ID_MAPPING:
+	  		updateCxIds(cx_network_map.get(DEFAULT_SUBNET), aspect.getValue());
+	  		break;
 	  	case "status":
 	  	case NdexNetworkStatus.ASPECT_NAME:
 	  	case NumberVerification.NAME:
@@ -323,7 +329,24 @@ public final class CxToCy {
 	  }
 	}
     
-    private void processTableColumns(Collection<AspectElement> collection, Map<Long, CyNetwork> cx_network_map,
+    private void updateCxIds(CyNetwork cyNetwork, Collection<AspectElement> value) {
+		for (AspectElement el : value) {
+			OpaqueElement opel = (OpaqueElement) el;
+			JsonNode node = opel.getData();
+			Iterator<String> names = node.fieldNames();
+			while(names.hasNext()) {
+				String suid_str = names.next();
+				long suid = Long.valueOf(suid_str);
+				Long cxId = node.get(suid_str).asLong(-1);
+				if (cxId >= 0) {
+					System.out.printf("%s->%s", suid, cxId);
+				}
+			}
+		}
+		
+	}
+
+	private void processTableColumns(Collection<AspectElement> collection, Map<Long, CyNetwork> cx_network_map,
 			boolean isCollection) {
 		if (collection == null) {
 			return;
@@ -376,29 +399,27 @@ public final class CxToCy {
 	        	throw new IllegalArgumentException("Unrecognized 'applies_to' value for " + name + ": " + tce.getAppliesTo());
         }
         
-        createColumn(is_single,
-                     data_type,
-                     name,
-                     table);
+        createColumn(table, name, data_type, false, is_single);
         
                 
     }
     
-    private static void createColumn(final boolean is_single,
-            final Class<?> data_type,
-            final String name,
-            final CyTable table) {
+    private static CyColumn createColumn(final CyTable table, 
+    		final String name,
+    		final Class<?> data_type,
+    		final boolean immutable,
+    		final boolean is_single) {
 		if (table == null) {
-			return;
+			return null;
 		}
-		if (table.getColumn(name) != null) {
-			return;
-		}
-		if (is_single) {
-	       table.createColumn(name, data_type, false);
-	   }else {
-	       table.createListColumn(name, data_type, false);
-	   }
+		if (table.getColumn(name) == null) {
+			if (is_single) {
+		       table.createColumn(name, data_type, false);
+		   }else {
+		       table.createListColumn(name, data_type, false);
+		   }
+	    }
+		return table.getColumn(name);
 	}
     
  	
@@ -412,9 +433,8 @@ public final class CxToCy {
  		CyTable table = network.getTable(CyNetwork.class, namespace);
     	
     	String aspectStr = mapper.writeValueAsString(nodes);
-    	if (table.getColumn(column) == null) {
-    		table.createColumn(column, String.class, true);
-    	}
+    	createColumn(table, column, String.class, true, true);
+
     	table.getRow(network.getSUID()).set(column, aspectStr);
  		
  	}
@@ -668,22 +688,8 @@ public final class CxToCy {
             final String name = e.getName();
             if (name != null) {
                 if (!name.equals(CyIdentifiable.SUID)) {
-                    // New column creation:
-                    if (my_table.getColumn(name) == null) {
-                        final Class<?> data_type = getDataType(e.getDataType());
-
-                        if (e.isSingleValue()) {
-                            my_table.createColumn(name,
-                                                  data_type,
-                                                  false);
-                        }
-                        else {
-                            my_table.createListColumn(name,
-                                                      data_type,
-                                                      false);
-                        }
-                    }
-                    final CyColumn col = my_table.getColumn(name);
+                	final Class<?> data_type = getDataType(e.getDataType());
+                	final CyColumn col = createColumn(my_table, name, data_type, false, e.isSingleValue());
                     Object val = getValue(e, col);
                     try {
                     	row.set(name, val);
@@ -751,11 +757,7 @@ public final class CxToCy {
             if (cy_node == null) {
                 cy_node = network.addNode();
                 if (node_element.getNodeRepresents() != null) {
-                    if (node_table_default.getColumn(CxUtil.REPRESENTS) == null) {
-                        node_table_default.createColumn(CxUtil.REPRESENTS,
-                                                        String.class,
-                                                        false);
-                    }
+                	createColumn(node_table_default, CxUtil.REPRESENTS, String.class, false, true);
                     network.getRow(cy_node).set(CxUtil.REPRESENTS,
                                                 node_element.getNodeRepresents());
                 }
@@ -814,23 +816,9 @@ public final class CxToCy {
             	continue;
             }
             if (!name.equals(CyIdentifiable.SUID)) {
-                // New column creation:
-                if (my_table.getColumn(name) == null) {
-                    final Class<?> data_type = getDataType(e.getDataType());
+            	final Class<?> data_type = getDataType(e.getDataType());
+            	final CyColumn col = createColumn(my_table,name, data_type, false, e.isSingleValue());
 
-                    if (e.isSingleValue()) {
-                        my_table.createColumn(name,
-                                              data_type,
-                                              false);
-
-                    }
-                    else {
-                        my_table.createListColumn(name,
-                                                  data_type,
-                                                  false);
-                    }
-                }
-                final CyColumn col = my_table.getColumn(name);
                 Object val = getValue(e, col);
                 try {
                 	row.set(name, val);
@@ -876,31 +864,16 @@ public final class CxToCy {
 		if ((!Settings.INSTANCE.isIgnoreSuidColumn() || !name.equals(CxUtil.SUID))
 				&& (!Settings.INSTANCE.isIgnoreSelectedColumn() || !name.equals(CxUtil.SELECTED))) {
 			
-			final String type = e.getDataType().toString();
 			final Class<?> data_type = getDataType(e.getDataType());
 			
-			// New column creation:
-			CyColumn col = table.getColumn(name);
-			if (col == null) {
-				final boolean isSingle = e.isSingleValue();
-				if(isSingle && type.startsWith("list_of")) {
-					// Invalid entry.
-					logger.warn("Invalid entry found: " + e.toString());
-					return;
-				}
-				if (e.isSingleValue()) {
-					table.createColumn(name, data_type, false);
-				} else {
-					table.createListColumn(name, data_type, false);
-				}
-				
-				col = table.getColumn(name);
-				if(col == null) {
-					// Invalid entry.
-					logger.warn("Failed to create table column");
-					return;
-				}
+			CyColumn col = createColumn(table, name, data_type, false, e.isSingleValue());
+
+			if(col == null) {
+				// Invalid entry.
+				logger.warn("Failed to create column " + name + " in table " + table);
+				return;
 			}
+			
 			
 			if(col.getListElementType() != null) {
 				if(e.isSingleValue()) {

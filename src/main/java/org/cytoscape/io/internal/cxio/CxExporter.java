@@ -192,8 +192,12 @@ public final class CxExporter {
 
 		Set<Long> groupNodeIds = this.getGroupNodeIds(network, write_siblings);
 
+		MetaDataCollection pre_meta_data = new MetaDataCollection();
+		pre_meta_data.add(new MetaDataElement(NodesElement.ASPECT_NAME, "1.0"));
+		w.addPreMetaData(pre_meta_data);
+		
 		w.start();
-
+		
 		String msg = null;
 		boolean success = true;
 
@@ -257,9 +261,8 @@ public final class CxExporter {
 			data.put(suid, cxId);
 		}
 		
-		String aspectName = "cySubNetworkCxIds";
-		OpaqueElement element = new OpaqueElement(aspectName, data);
-		w.startAspectFragment(aspectName);
+		OpaqueElement element = new OpaqueElement(CxUtil.CX_ID_MAPPING, data);
+		w.startAspectFragment(CxUtil.CX_ID_MAPPING);
 		w.writeOpaqueAspectElement(element);
 		w.endAspectFragment();
 		
@@ -958,7 +961,9 @@ public final class CxExporter {
 					if (isIgnore(column_name, ADDITIONAL_IGNORE_FOR_NETWORK_ATTRIBUTES, Settings.INSTANCE, value)) {
 						continue;
 					}
-					
+					if (value instanceof String && ((String) value).isEmpty()) {
+						continue;
+					}
 					NetworkAttributesElement e = null;
 
 					Long subnet = null;

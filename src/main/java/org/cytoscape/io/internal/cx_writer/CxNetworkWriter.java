@@ -13,6 +13,7 @@ import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxExporter;
+import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.Settings;
 import org.cytoscape.io.internal.cxio.TimingUtil;
 import org.cytoscape.io.write.CyWriter;
@@ -47,11 +48,27 @@ public class CxNetworkWriter implements CyWriter {
 	private final CyGroupManager _group_manager;
 	private final CyApplicationManager _application_manager;
 	
+
+	
+	
 	@Tunable(description="Write all networks in the collection")
     public Boolean writeSiblings = WRITE_SIBLINGS_DEFAULT;
 	
-	@Tunable(description="Use CX ID")
-    public Boolean useCxId = USE_CXID_DEFAULT;
+	public Boolean useCxId = USE_CXID_DEFAULT;
+	
+	@Tunable(description="Use CX ID", dependsOn="writeSiblings=false", listenForChange="writeSiblings")
+    public Boolean getUseCxId() {
+		if (writeSiblings) {
+			return false;
+		}
+		if (!CxUtil.hasCxIds(_application_manager.getCurrentNetwork())) {
+			return false;
+		}
+		return useCxId;
+	}
+	public void setUseCxId(Boolean useCxId) {
+		this.useCxId = useCxId;
+	}
 	
 	
 
