@@ -39,7 +39,7 @@ public final class CxUtil {
     public static final String NODE_CUSTOM_GRAPHICS_SIZE_SYNC = "nodeCustomGraphicsSizeSync";
     public static final String ARROW_COLOR_MATCHES_EDGE       = "arrowColorMatchesEdge";
     
-    public static final String CX_ID_MAPPING				  = "CX ID";
+    public static final String CX_ID_MAPPING				  = "CX Element ID";
     public static final String CX_METADATA				  	  = "CX MetaData";
 	public static final String OPAQUE_ASPECT_PREFIX 		  = "CX_OPAQUE::";
     
@@ -178,7 +178,7 @@ public final class CxUtil {
 		return row.get(CxUtil.CX_ID_MAPPING, Long.class);
 	}
 	
-	static boolean hasCxIds(CyNetwork network) {
+	public static boolean hasCxIds(CyNetwork network) {
 		CyTable hidden_table = network.getTable(CyNode.class, CyNetwork.HIDDEN_ATTRS);
 		return hidden_table.getColumn(CxUtil.CX_ID_MAPPING) != null;
 	}
