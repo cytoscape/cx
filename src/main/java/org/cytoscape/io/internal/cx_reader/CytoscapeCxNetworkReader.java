@@ -22,6 +22,7 @@ import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.presentation.RenderingEngineManager;
+import org.cytoscape.view.presentation.annotations.AnnotationManager;
 import org.cytoscape.view.vizmap.VisualMappingFunctionFactory;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.view.vizmap.VisualStyleFactory;
@@ -48,6 +49,9 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     private final VisualMappingFunctionFactory _vmf_factory_p;
     private final CyGroupFactory               _group_factory;
     
+    private final AnnotationManager _annotation_manager;
+    private final AnnotationFactoryManager _annotation_factory_manager;
+    
     public CytoscapeCxNetworkReader(final String network_collection_name,
                                     final InputStream input_stream,
                                     final CyApplicationManager application_manager,
@@ -60,7 +64,8 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                                     final RenderingEngineManager rendering_engine_manager,
                                     final CyNetworkViewFactory networkview_factory,
                                     final CyNetworkViewManager networkview_manager,
-                          
+                                    final AnnotationManager annotation_manager,
+                                    final AnnotationFactoryManager annotation_factory_manager,
                                     final CyLayoutAlgorithmManager layout_manager,
                                     final DialogTaskManager task_manager,
                                     final VisualMappingFunctionFactory vmf_factory_c,
@@ -78,6 +83,8 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
         _visual_mapping_manager = visual_mapping_manager;
         _rendering_engine_manager = rendering_engine_manager;
         _networkview_manager = networkview_manager;
+        _annotation_manager = annotation_manager;
+        _annotation_factory_manager = annotation_factory_manager;
         _layout_manager = layout_manager;
         _task_manager = task_manager;
         _group_factory = group_factory;
@@ -117,6 +124,8 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                     _networkview_manager,
                     _visual_mapping_manager,
                     _visual_style_factory,
+                    _annotation_manager,
+                    _annotation_factory_manager,
                     _vmf_factory_c,
                     _vmf_factory_d,
                     _vmf_factory_p);

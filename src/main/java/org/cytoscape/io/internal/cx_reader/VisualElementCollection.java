@@ -1,9 +1,12 @@
 package org.cytoscape.io.internal.cx_reader;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
+import org.ndexbio.cxio.aspects.datamodels.CyAnnotationsElement;
 import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.ndexbio.cxio.aspects.datamodels.SubNetworkElement;
 import org.cytoscape.model.CyEdge;
@@ -19,7 +22,10 @@ public class VisualElementCollection {
     private final Map<CyNode, CartesianLayoutElement>    _layout_elements_map;
     private SubNetworkElement                            _subnetwork_element;
     private String                                       _property_of;
-
+    private final List<CyAnnotationsElement> _annotation_elements_list;
+    private final List<CyAnnotationsElement> _arrow_annotation_elements_list;
+    private final List<CyAnnotationsElement> _group_annotation_elements_list;
+    
     VisualElementCollection() {
         _property_of = null;
         _node_vpe_map = new HashMap<CyNode, CyVisualPropertiesElement>();
@@ -28,6 +34,9 @@ public class VisualElementCollection {
         _nodes_default_vpe = null;
         _edges_default_vpe = null;
         _subnetwork_element = null;
+        _annotation_elements_list = new ArrayList<CyAnnotationsElement>();
+        _arrow_annotation_elements_list = new ArrayList<CyAnnotationsElement>();
+        _group_annotation_elements_list = new ArrayList<CyAnnotationsElement>();
         _network_vpe = null;
 
     }
@@ -93,7 +102,19 @@ public class VisualElementCollection {
     public Map<CyNode, CartesianLayoutElement> getCartesianLayoutElementsMap() {
         return _layout_elements_map;
     }
+    
+    public List<CyAnnotationsElement> getAnnotationElementsList() {
+    	return _annotation_elements_list;
+    }
 
+    public List<CyAnnotationsElement> getArrowAnnotationElementsList() {
+    	return _arrow_annotation_elements_list;
+    }
+    
+    public List<CyAnnotationsElement> getGroupAnnotationElementsList() {
+    	return _group_annotation_elements_list;
+    }
+    
     public String getPropertyOf() {
         return _property_of;
     }

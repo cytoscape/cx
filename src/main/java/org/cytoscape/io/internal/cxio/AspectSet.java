@@ -7,6 +7,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.ndexbio.cxio.aspects.readers.CartesianLayoutFragmentReader;
+import org.ndexbio.cxio.aspects.readers.CyAnnotationsFragmentReader;
 import org.ndexbio.cxio.aspects.readers.CyGroupsFragmentReader;
 import org.ndexbio.cxio.aspects.readers.CyTableColumnFragmentReader;
 import org.ndexbio.cxio.aspects.readers.CyVisualPropertiesFragmentReader;
@@ -173,6 +174,9 @@ public final class AspectSet {
         }
         if (_aspects.contains(Aspect.VISUAL_PROPERTIES)) {
             readers.add(CyVisualPropertiesFragmentReader.createInstance());
+        }
+        if (_aspects.contains(Aspect.ANNOTATIONS)) {
+            readers.add(CyAnnotationsFragmentReader.createInstance());
         }
         if (_aspects.contains(Aspect.SUBNETWORKS)) {
             readers.add(SubNetworkFragmentReader.createInstance());

@@ -83,6 +83,7 @@ public final class CxToCy {
     private Map<Long, Long>            _view_to_subnet_map;
     private Map<Long, List<Long>>      _subnet_to_views_map;
     
+    private List<Map<String, String>> _annotation_arg_maps;
     
     /* Getters */
     
@@ -105,6 +106,10 @@ public final class CxToCy {
     public Map<Long, Long> getNetworkSuidToNetworkRelationsMap() {
 		return _suid_to_cxid_map;
 	}
+    
+    public List<Map<String, String>> getAnnotationArgMaps() {
+    	return _annotation_arg_maps;
+    }
     
 	private CySubNetwork buildNetwork(CyRootNetwork root_network,
 						            final CyNetworkFactory network_factory,
@@ -299,7 +304,7 @@ public final class CxToCy {
 	  		addGroups(group_factory, aspect.getValue(), cx_network_map);
 	  		break;
 	  	case CyAnnotationsElement.ASPECT_NAME:
-	  		System.out.println("CyAnnotations!");
+	  		addAnnotations(aspect.getValue());
 	  		break;
 	  	case NamespacesElement.ASPECT_NAME:
 	  		CyTable net_table = cx_network_map.get(DEFAULT_SUBNET).getDefaultNetworkTable();
@@ -590,10 +595,21 @@ public final class CxToCy {
 //    		if (!ge.isCollapsed()) {
 //    			grp.collapse(sub_network);
 //    		}
-        }
-                
+        }        
     }
 
+	private void addAnnotations(final Collection<AspectElement> annotationElements) {
+
+		for (final AspectElement a : annotationElements) {
+			Map<String, String> argMap = new HashMap<String, String>();
+			CyAnnotationsElement ae = (CyAnnotationsElement) a;
+			
+			_visual_element_collections.addAnnotationsElement(ae.getView(), ae);
+			
+			//_annotation_arg_maps.add(arg0);
+		}
+	}
+    
     public Set<CyEdge> getEdgesWithVisualProperties() {
         return _edges_with_visual_properties;
     }

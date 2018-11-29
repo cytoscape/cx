@@ -8,6 +8,7 @@ import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.group.CyGroupFactory;
 import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.DataCategory;
+import org.cytoscape.io.internal.cx_reader.AnnotationFactoryManager;
 import org.cytoscape.io.internal.cx_reader.CytoscapeCxFileFilter;
 import org.cytoscape.io.internal.cx_reader.CytoscapeCxNetworkReaderFactory;
 import org.cytoscape.io.internal.cx_writer.CxNetworkWriterFactory;
@@ -21,6 +22,7 @@ import org.cytoscape.view.layout.CyLayoutAlgorithmManager;
 import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.presentation.RenderingEngineManager;
+import org.cytoscape.view.presentation.annotations.AnnotationFactory;
 import org.cytoscape.view.presentation.annotations.AnnotationManager;
 import org.cytoscape.view.vizmap.VisualMappingFunctionFactory;
 import org.cytoscape.view.vizmap.VisualMappingManager;
@@ -94,7 +96,9 @@ public class CyActivator extends AbstractCyActivator {
         final VisualMappingFunctionFactory vmfFactoryP = getService(bc,
                                                                     VisualMappingFunctionFactory.class,
                                                                     "(mapping.type=passthrough)");
-
+        
+        AnnotationFactoryManager annotationFactoryManager = new AnnotationFactoryManager();
+        registerServiceListener(bc, annotationFactoryManager::addAnnotationFactory, annotationFactoryManager::removeAnnotationFactory, AnnotationFactory.class);
         
         final CytoscapeCxNetworkReaderFactory cx_reader_factory = new CytoscapeCxNetworkReaderFactory(cx_filter,
                                                                                                       application_manager,
@@ -107,7 +111,7 @@ public class CyActivator extends AbstractCyActivator {
                                                                                                       rendering_engine_manager,
                                                                                                       network_view_factory,
                                                                                                       networkview_manager,
-                                                                                                      vmfFactoryC,
+                                                                                                      annotation_manager, annotationFactoryManager, vmfFactoryC,
                                                                                                       vmfFactoryD,
                                                                                                       vmfFactoryP,
                                                                                                       layoutManager,
