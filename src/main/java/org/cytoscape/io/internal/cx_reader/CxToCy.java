@@ -9,7 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Consumer;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -18,7 +17,7 @@ import org.ndexbio.cxio.aspects.datamodels.AbstractAttributesAspectElement;
 import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.ndexbio.cxio.aspects.datamodels.CyGroupsElement;
 import org.ndexbio.cxio.aspects.datamodels.CyTableColumnElement;
-import org.ndexbio.cxio.aspects.datamodels.CyViewsElement;
+
 import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.ndexbio.cxio.aspects.datamodels.EdgeAttributesElement;
 import org.ndexbio.cxio.aspects.datamodels.EdgesElement;
@@ -48,18 +47,19 @@ import org.cytoscape.model.CyRow;
 import org.cytoscape.model.CyTable;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CySubNetwork;
-import org.ndexbio.model.cx.NamespacesElement;
 import org.ndexbio.model.cx.NdexNetworkStatus;
 import org.ndexbio.model.cx.NiceCXNetwork;
-import org.ndexbio.model.cx.Provenance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.deser.std.JsonNodeDeserializer;
 
+import org.ndexbio.cxio.aspects.datamodels.CyViewsElement;
+import org.ndexbio.model.cx.NamespacesElement;
+import org.ndexbio.model.cx.Provenance;
+
+@SuppressWarnings("deprecation")
 public final class CxToCy {
     
 	private static final Logger logger = LoggerFactory.getLogger(CxToCy.class);

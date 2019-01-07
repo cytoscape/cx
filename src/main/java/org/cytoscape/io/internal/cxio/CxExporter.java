@@ -185,9 +185,7 @@ public final class CxExporter {
 
 		Set<Long> groupNodeIds = this.getGroupNodeIds(network, write_siblings);
 
-		MetaDataCollection pre_meta_data = new MetaDataCollection();
-		pre_meta_data.add(new MetaDataElement(NodesElement.ASPECT_NAME, "1.0"));
-		w.addPreMetaData(pre_meta_data);
+		MetaDataCollection meta_data = writePreMetaData(w, network);
 		
 		w.start();
 		
@@ -214,8 +212,8 @@ public final class CxExporter {
 
 			final AspectElementCounts aspects_counts = w.getAspectElementCounts();
 			
-			MetaDataCollection mdc = addPostMetadata(w, aspects_counts, write_siblings, network);
-			CxUtil.setMetaData(network, mdc);
+			addPostMetadata(w, meta_data, aspects_counts, write_siblings, network);
+			CxUtil.setMetaData(network, meta_data);
 
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -237,6 +235,18 @@ public final class CxExporter {
 		return success;
 	}
 	
+	private MetaDataCollection writePreMetaData(CxWriter w, CyNetwork network) {
+		
+		MetaDataCollection pre_meta_data = CxUtil.getMetaData(network);;
+		if (pre_meta_data.isEmpty()) {
+			for (AspectFragmentWriter aspect : AspectSet.getCytoscapeAspectSet().getAspectFragmentWriters()) {
+				addDataToMetaDataCollection(pre_meta_data, aspect.getAspectName(), null, null);
+			}
+		}
+		w.addPreMetaData(pre_meta_data);
+		return pre_meta_data;
+	}
+
 	private void writeCxIds(CyNetwork network, CxWriter w) throws IOException {
 		if (!CxUtil.hasCxIds(network)) {
 			return;
@@ -600,25 +610,25 @@ public final class CxExporter {
 		}
 	}
 
-	private final MetaDataCollection addPostMetadata(final CxWriter w, final AspectElementCounts aspects_counts,
+	private final void addPostMetadata(final CxWriter w, final MetaDataCollection meta_data, final AspectElementCounts aspects_counts,
 			boolean write_siblings, CyNetwork network) {
 
-		MetaDataCollection post_meta_data = CxUtil.getMetaData(network);
-		if (post_meta_data == null) {
-			post_meta_data = new MetaDataCollection();
+		if (meta_data == null) {
+			throw new IllegalArgumentException("Cannot populate null post metaData");
 		}
 		
+		//TODO: Add proper idCounter for nodes and edges in collections AND subnetworks
 		for (String name : aspects_counts.getAllAspectNames()) {
 			long count = (long) aspects_counts.getAspectElementCount(name);
 			Long idCounter = null;
 			switch(name) {
 			case NodesElement.ASPECT_NAME:
 				count = (long) network.getNodeList().size();
-				idCounter = (write_siblings ? SUIDFactory.getNextSUID() : null);
+				idCounter = SUIDFactory.getNextSUID();
 				break;
 			case EdgesElement.ASPECT_NAME:
 				count = (long) network.getEdgeList().size();
-				idCounter = (write_siblings ? SUIDFactory.getNextSUID() : null);
+				idCounter = SUIDFactory.getNextSUID();
 				break;
 			case NetworkRelationsElement.ASPECT_NAME:
 			case SubNetworkElement.ASPECT_NAME:
@@ -626,16 +636,15 @@ public final class CxExporter {
 					continue;
 				}
 			}
-			addDataToMetaDataCollection(post_meta_data, name, count, idCounter);
+			addDataToMetaDataCollection(meta_data, name, count, idCounter);
 		}
 		
 		
 		final long t0 = System.currentTimeMillis();
-		w.addPostMetaData(post_meta_data);
+		w.addPostMetaData(meta_data);
 		if (Settings.INSTANCE.isTiming()) {
 			TimingUtil.reportTimeDifference(t0, "post meta-data", -1);
 		}
-		return post_meta_data;
 	}
 
 	private final static void writeEdgeAttributes(final CyNetwork network, final CxWriter w, final boolean write_siblings, boolean use_cxId,
@@ -696,8 +705,10 @@ public final class CxExporter {
 						
 						EdgeAttributesElement e = null;
 						final Long subnet = writeSiblings ? my_network.getSUID() : null;
-						if (column_name.equals(CxUtil.SHARED_NAME_COL))
-							column_name = "name";
+						
+//						if (column_name.equals(CxUtil.SHARED_NAME_COL))
+//							column_name = "name";
+						
 						long edge_id = getElementId(cy_edge, my_network, use_cxId);
 						if (value instanceof List) {
 							final List<String> attr_values = new ArrayList<>();

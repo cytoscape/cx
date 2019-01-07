@@ -155,6 +155,10 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
             }
         }
         
+        //TODO: Throw an error if trying to import CX network into existing collection.
+        if (getRootNetwork() != null) {
+        	throw new IllegalArgumentException("Cannot import CX network into existing collection.");
+        }
         final CyRootNetwork root_network = getRootNetwork();
         
         // Select Network Collection

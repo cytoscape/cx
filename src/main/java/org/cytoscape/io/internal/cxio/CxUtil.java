@@ -58,7 +58,7 @@ public final class CxUtil {
 				}
 			}
 		}
-		return null;
+		return new MetaDataCollection();
     }
     
     public static void setMetaData(CyNetwork network, MetaDataCollection metaData) {
