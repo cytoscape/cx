@@ -18,7 +18,8 @@ public class CytoscapeCxFileFilter extends BasicCyFileFilter {
     private static final Logger logger            = LoggerFactory.getLogger(CytoscapeCxFileFilter.class);
     public static final Pattern CX_HEADER_PATTERN = Pattern
     													.compile("\\s*\\{\\s*\"\\s*metaData\"\\s*:");
-//                                                          .compile("\\s*\\[\\s*\\{\\s*\"\\s*numberVerification\"\\s*:");
+    public static final Pattern CX_HEADER_PATTERN_OLD = Pattern
+                                                          .compile("\\s*\\[\\s*\\{\\s*\"\\s*numberVerification\"\\s*:");
 
     public CytoscapeCxFileFilter(final Set<String> extensions,
                                  final Set<String> contentTypes,
@@ -78,6 +79,13 @@ public class CytoscapeCxFileFilter extends BasicCyFileFilter {
 
         if (matcher.find()) {
             root = matcher.group(0);
+        }
+        if (root == null) {
+        	final Matcher matcher_old = CX_HEADER_PATTERN_OLD.matcher(header);
+            
+            if (matcher_old.find()) {
+                root = matcher_old.group(0);
+            }
         }
 
         return root;
