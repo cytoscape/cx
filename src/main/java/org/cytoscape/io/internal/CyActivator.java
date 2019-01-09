@@ -7,7 +7,6 @@ import java.util.Properties;
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.group.CyGroupFactory;
 import org.cytoscape.group.CyGroupManager;
-import org.cytoscape.io.DataCategory;
 import org.cytoscape.io.internal.cx_reader.CytoscapeCxFileFilter;
 import org.cytoscape.io.internal.cx_reader.CytoscapeCxNetworkReaderFactory;
 import org.cytoscape.io.internal.cx_writer.CxNetworkWriterFactory;
@@ -42,11 +41,7 @@ public class CyActivator extends AbstractCyActivator {
         final StreamUtil streamUtil = getService(bc, StreamUtil.class);
         final CyLayoutAlgorithmManager layoutManager = getService(bc, CyLayoutAlgorithmManager.class);
 
-        final CytoscapeCxFileFilter cx_filter = new CytoscapeCxFileFilter(new String[] { "cx" },
-                                                                          new String[] { "application/json" },
-                                                                           "CX JSON",
-                                                                          DataCategory.NETWORK,
-                                                                          streamUtil);
+        final CytoscapeCxFileFilter cx_filter = new CytoscapeCxFileFilter(streamUtil);
 
         
         // Writer:
@@ -75,11 +70,6 @@ public class CyActivator extends AbstractCyActivator {
         final RenderingEngineManager rendering_engine_manager = getService(bc, RenderingEngineManager.class);
         final VisualStyleFactory visual_style_factory = getService(bc, VisualStyleFactory.class);
         final CyGroupFactory group_factory = getService(bc, CyGroupFactory.class);
-//        final CytoscapeCxFileFilter cxfilter = new CytoscapeCxFileFilter(new String[] { "cx" },
-//                                                                                   new String[] { "application/json" },
-//                                                                                  "CX JSON",
-//                                                                                   DataCategory.NETWORK,
-//                                                                                   streamUtil);
 
         final VisualMappingFunctionFactory vmfFactoryC = getService(bc,
                                                                     VisualMappingFunctionFactory.class,

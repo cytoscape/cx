@@ -117,6 +117,7 @@ public final class CxToCy {
         }
         else {
             sub_network = (CySubNetwork) network_factory.createNetwork();
+            
             root_network = sub_network.getRootNetwork();
             if (!CxioUtil.isEmpty(collection_name)) {
                 root_network.getRow(root_network).set(CyNetwork.NAME,
