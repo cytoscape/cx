@@ -98,14 +98,14 @@ public final class CxImporter {
         
     }
 
-    /**
+    /*
      * This creates a new CxImporter
      *
      * @return a new CxImporter
      */
-    public final static CxImporter createInstance() {
+   /* public final static CxImporter createInstance() {
         return new CxImporter();
-    } 
+    } */ 
 
     /**
      * To use custom readers for other aspects than the standard nodes, edges,
@@ -176,7 +176,7 @@ public final class CxImporter {
   
     public NiceCXNetwork getCXNetworkFromStream( final InputStream in) throws IOException {
     	CxElementReader2 r = new CxElementReader2(in, all_readers, true);
-        Long t0 = System.currentTimeMillis();
+        long t0 = System.currentTimeMillis();
         MetaDataCollection metadata = r.getPreMetaData();
 		
         long nodeIdCounter = 0;
@@ -211,7 +211,7 @@ public final class CxImporter {
      					break;
      				case CartesianLayoutElement.ASPECT_NAME: // cartesian layout
      					CartesianLayoutElement e = (CartesianLayoutElement)elmt;
-     					niceCX.addNodeAssociatedAspectElement(Long.valueOf(e.getNode()), e);
+     					niceCX.addNodeAssociatedAspectElement(e.getNode(), e);
      					break;
      				default:    // opaque aspect
      					niceCX.addOpapqueAspect(elmt);
