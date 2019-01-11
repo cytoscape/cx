@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 public class CytoscapeCxFileFilter extends BasicCyFileFilter {
 
-    private static final Logger logger            = LoggerFactory.getLogger(CytoscapeCxFileFilter.class);
+    private static final Logger locallogger            = LoggerFactory.getLogger(CytoscapeCxFileFilter.class);
     public static final Pattern CX_HEADER_PATTERN = Pattern
     													.compile("\\s*\\{\\s*\"\\s*metaData\"\\s*:");
     public static final Pattern CX_HEADER_PATTERN_OLD = Pattern
@@ -39,8 +39,8 @@ public class CytoscapeCxFileFilter extends BasicCyFileFilter {
 
     @Override
     public boolean accepts(final InputStream stream,
-                           final DataCategory category) {
-        if (!category.equals(DataCategory.NETWORK)) {
+                           final DataCategory dataCategory) {
+        if (!dataCategory.equals(DataCategory.NETWORK)) {
             return false;
         }
         try {
@@ -56,12 +56,12 @@ public class CytoscapeCxFileFilter extends BasicCyFileFilter {
 
     @Override
     public boolean accepts(final URI uri,
-                           final DataCategory category) {
+                           final DataCategory dataCategory) {
         try (InputStream is = uri.toURL().openStream()) {
-			return accepts(is, category);
+			return accepts(is, dataCategory);
         }
         catch (final IOException e) {
-            logger.error("Error while opening stream: " + uri,
+            locallogger.error("Error while opening stream: " + uri,
                          e);
             return false;
         }

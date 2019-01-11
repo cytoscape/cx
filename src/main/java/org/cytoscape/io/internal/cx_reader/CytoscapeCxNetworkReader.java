@@ -1,6 +1,5 @@
 package org.cytoscape.io.internal.cx_reader;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +63,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
                                     final VisualMappingFunctionFactory vmf_factory_c,
                                     final VisualMappingFunctionFactory vmf_factory_d,
                                     final VisualMappingFunctionFactory vmf_factory_p
-                                    ) throws IOException {
+                                    ) {
 
         super(input_stream, networkview_factory, network_factory, network_manager, root_network_manager);
 
@@ -93,12 +92,12 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
     	if (!suid_to_cxid_map.containsKey(network.getSUID())) {
     		throw new IllegalArgumentException("Failed to build view for " + network + ". Was the network created successfully?");
     	}
-    	long cxid = suid_to_cxid_map.get(network.getSUID());
+    	Long cxid = suid_to_cxid_map.get(network.getSUID());
     	
     	int num_views = _cx_to_cy.getSubNetworkToViewsMap().get(cxid).size();
     	Settings.INSTANCE.debug(String.format("Building %s views for %s", num_views, network));
     	
-    	List<CyNetworkView> views = new ArrayList<CyNetworkView>();
+    	List<CyNetworkView> views = new ArrayList<>();
     	for (Long cx_view_id : _cx_to_cy.getSubNetworkToViewsMap().get(cxid)) {
     		CyNetworkView view = cyNetworkViewFactory.createNetworkView(network);
     		views.add(view);
@@ -178,11 +177,11 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
             }
         }
         
-        List<CyNetwork> networks = _cx_to_cy.createNetwork(niceCX, root_network, cyNetworkFactory, _group_factory,
+        List<CyNetwork> newNetworks = _cx_to_cy.createNetwork(niceCX, root_network, cyNetworkFactory, _group_factory,
         		_network_collection_name);
         
-        _networks = new CyNetwork[networks.size()];
-        networks.toArray(_networks);
+        _networks = new CyNetwork[newNetworks.size()];
+        newNetworks.toArray(_networks);
         
 
         if (Settings.INSTANCE.isTiming()) {
