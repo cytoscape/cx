@@ -22,9 +22,9 @@ public class VisualElementCollection {
 
     VisualElementCollection() {
         _property_of = null;
-        _node_vpe_map = new HashMap<CyNode, CyVisualPropertiesElement>();
-        _edge_vpe_map = new HashMap<CyEdge, CyVisualPropertiesElement>();
-        _layout_elements_map = new HashMap<CyNode, CartesianLayoutElement>();
+        _node_vpe_map = new HashMap<>();
+        _edge_vpe_map = new HashMap<>();
+        _layout_elements_map = new HashMap<>();
         _nodes_default_vpe = null;
         _edges_default_vpe = null;
         _subnetwork_element = null;

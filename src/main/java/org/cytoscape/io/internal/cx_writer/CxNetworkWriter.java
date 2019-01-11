@@ -50,12 +50,12 @@ public class CxNetworkWriter implements CyWriter {
 	
 	
 	@Tunable(description="Write all networks in the collection")
-    public Boolean writeSiblings = WRITE_SIBLINGS_DEFAULT;
+    public boolean writeSiblings = WRITE_SIBLINGS_DEFAULT;
 	
-	public Boolean useCxId = USE_CXID_DEFAULT;
+	public boolean useCxId = USE_CXID_DEFAULT;
 	
 	@Tunable(description="Use CX ID", dependsOn="writeSiblings=false", listenForChange="writeSiblings")
-    public Boolean getUseCxId() {
+    public boolean getUseCxId() {
 		if (writeSiblings) {
 			return false;
 		}
@@ -64,7 +64,8 @@ public class CxNetworkWriter implements CyWriter {
 		}
 		return useCxId;
 	}
-	public void setUseCxId(Boolean useCxId) {
+	
+	public void setUseCxId(boolean useCxId) {
 		this.useCxId = useCxId;
 	}
 	

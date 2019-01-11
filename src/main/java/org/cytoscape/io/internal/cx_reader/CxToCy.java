@@ -111,15 +111,16 @@ public final class CxToCy {
 						            final Long cx_id) {
 		// Build a subnetwork in the specified collection, or create a new collection with the given name if it doesn't exist
 		CySubNetwork sub_network;
+		CyRootNetwork newRootNetwork = root_network;
         if (root_network != null) {
             // Root network exists
             sub_network = root_network.addSubNetwork();
         }
         else {
             sub_network = (CySubNetwork) network_factory.createNetwork();
-            root_network = sub_network.getRootNetwork();
+            newRootNetwork = sub_network.getRootNetwork();
             if (!CxioUtil.isEmpty(collection_name)) {
-                root_network.getRow(root_network).set(CyNetwork.NAME,
+            	newRootNetwork.getRow(newRootNetwork).set(CyNetwork.NAME,
                                                       collection_name);
             }
         }
@@ -151,13 +152,11 @@ public final class CxToCy {
 		_view_to_subnet_map.put(view_id, subnet_id);
 	}
 	
-	private final CyRootNetwork processNetworkRelation(NetworkRelationsElement nre,
-			CyRootNetwork root_network,
-			Map<Long, CyNetwork> networks,
-			CyNetworkFactory network_factory,
-			String collection_name) throws IOException {
-		switch(nre.getRelationshipType()) {
-		case SUBNETWORK :
+	private final CyRootNetwork processNetworkRelation(NetworkRelationsElement nre, CyRootNetwork root_network,
+			Map<Long, CyNetwork> networks, CyNetworkFactory network_factory, String collection_name)
+			throws IOException {
+		switch (nre.getRelationshipType()) {
+		case SUBNETWORK:
 			Long cx_id = nre.getChild();
 			CySubNetwork network = buildNetwork(root_network, network_factory, collection_name, cx_id);
 			if (root_network == null) {
@@ -175,7 +174,7 @@ public final class CxToCy {
 			processViewRelation(nre);
 			break;
 		default:
-            throw new IOException("Unknown relationshipType: " + nre.getRelationshipType());
+			throw new IOException("Unknown relationshipType: " + nre.getRelationshipType());
 		}
 		return root_network;
 	}
@@ -334,8 +333,8 @@ public final class CxToCy {
 			Iterator<String> names = node.fieldNames();
 			while(names.hasNext()) {
 				String suid_str = names.next();
-				long suid = Long.valueOf(suid_str);
-				Long cxId = node.get(suid_str).asLong(-1);
+				Long suid = Long.valueOf(suid_str);
+				long cxId = node.get(suid_str).asLong(-1);
 				if (cxId >= 0) {
 					System.out.printf("%s->%s", suid, cxId);
 				}
@@ -344,7 +343,7 @@ public final class CxToCy {
 		
 	}
 
-	private void processTableColumns(Collection<AspectElement> collection, Map<Long, CyNetwork> cx_network_map,
+	private static void processTableColumns(Collection<AspectElement> collection, Map<Long, CyNetwork> cx_network_map,
 			boolean isCollection) {
 		if (collection == null) {
 			return;
@@ -369,7 +368,7 @@ public final class CxToCy {
 		}
     }
     
-    private void processTableColumnHelper(CyTableColumnElement tce, CyNetwork network, String namespace) {
+    private static void processTableColumnHelper(CyTableColumnElement tce, CyNetwork network, String namespace) {
         final String name = tce.getName();
         if (name == null || name.equals(CxUtil.SUID)) {
         	return;
@@ -701,7 +700,7 @@ public final class CxToCy {
     }
     
 
-    private final void addHiddenAttributeData(final HiddenAttributesElement element,
+    private final static void addHiddenAttributeData(final HiddenAttributesElement element,
                                               final CyNetwork network) {
     	
     	CyTable table = network.getTable(CyNetwork.class, CyNetwork.HIDDEN_ATTRS);
@@ -717,7 +716,7 @@ public final class CxToCy {
         }
     }
 
-	private final void addNetworkAttributeData(
+	private final static void addNetworkAttributeData(
 			final Collection<NetworkAttributesElement> elements, final CyNetwork network,
 			final CyTable table) {
 		if (table == null) {
@@ -912,7 +911,7 @@ public final class CxToCy {
         }
     }
 
-	private void processNetworkAttributes(
+	private static void processNetworkAttributes(
 			final Collection<NetworkAttributesElement> network_attributes,
 			final Map<Long, CyNetwork> cx_network_map,
 			final boolean isCollection) {
@@ -953,11 +952,12 @@ public final class CxToCy {
 				val = null;
 			}
 			return val;
-		} else {
-			return e.getValues().stream()
+		} 
+			
+		return e.getValues().stream()
 				.map(value -> parseValue(value, column.getListElementType()))
 				.collect(Collectors.toList());
-		}
+		
 	}
 
     private final static Object parseValue(final String value,

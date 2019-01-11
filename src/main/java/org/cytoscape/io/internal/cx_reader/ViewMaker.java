@@ -44,7 +44,7 @@ public final class ViewMaker {
             .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
 
     public final static void makeView(final CyNetworkView view,
-										final long cx_view_id,
+										final Long cx_view_id,
                                         final CxToCy cx_to_cy,
                                         final String network_collection_name,
                                         final RenderingEngineManager rendering_engine_manager,
@@ -157,11 +157,11 @@ public final class ViewMaker {
                     if (e != null) {
                         final View<CyNode> node_view = view.getNodeView(node);
                         if (node_view != null) {
-                            node_view.setVisualProperty(BasicVisualLexicon.NODE_X_LOCATION, Double.valueOf(e.getX()));
-                            node_view.setVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION, Double.valueOf(e.getY()));
+                            node_view.setVisualProperty(BasicVisualLexicon.NODE_X_LOCATION, e.getX());
+                            node_view.setVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION, e.getY());
                             if (e.isZset()) {
                                 node_view.setVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION,
-                                                            Double.valueOf(e.getZ()));
+                                                            e.getZ());
                             }
                         }
                     }
@@ -590,10 +590,10 @@ public final class ViewMaker {
             return s;
         }
         else if (type.equals("integer")) {
-            return Double.valueOf(s).intValue();
+            return Integer.valueOf(s);
         }
         else if (type.equals("long")) {
-            return Double.valueOf(s).longValue();
+            return Long.valueOf(s);
         }
         else if (type.equals("double") || type.equals("float")) {
             return Double.valueOf(s);
