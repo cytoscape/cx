@@ -1,6 +1,5 @@
 package org.cytoscape.io.internal.cx_reader;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -197,5 +196,4 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 		// _suid_to_cxid_map.put(sub_network.getSUID(), cx_id);
 		return sub_network;
 	}
-
 }

@@ -61,7 +61,7 @@ public final class CxUtil {
 		return new MetaDataCollection();
     }
     
-    public static void setMetaData(CyNetwork network, MetaDataCollection metaData) {
+    public static void setMetaData(CyNetwork network, MetaDataCollection metaData) throws JsonProcessingException {
     	CyTable hidden_table = network.getTable(CyNetwork.class, CyNetwork.HIDDEN_ATTRS);
     	if (hidden_table.getColumn(CxUtil.CX_METADATA) == null) {
     		hidden_table.createColumn(CxUtil.CX_METADATA, String.class, true);
@@ -69,13 +69,13 @@ public final class CxUtil {
     	CyRow row = hidden_table.getRow(network.getSUID());
     	ObjectMapper mapper = new ObjectMapper();
     	String metaDataStr;
-		try {
+	//	try {
 			metaDataStr = mapper.writeValueAsString(metaData);
 			row.set(CxUtil.CX_METADATA, metaDataStr);
-		} catch (JsonProcessingException e) {
+	/*	} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		} */
     	
     }
 
@@ -134,7 +134,7 @@ public final class CxUtil {
 		return counter;
 	}
 	
-	private static void updateCxIdCounter(Class<? extends CyIdentifiable> type, CyNetwork network, Long counter) {
+	private static void updateCxIdCounter(Class<? extends CyIdentifiable> type, CyNetwork network, Long counter) throws JsonProcessingException {
 		MetaDataCollection metadata = CxUtil.getMetaData(network);
 		String aspect = type.equals(CyNode.class) ? NodesElement.ASPECT_NAME : EdgesElement.ASPECT_NAME;
 		if (metadata == null) {
@@ -146,7 +146,7 @@ public final class CxUtil {
 		CxUtil.setMetaData(network, metadata);
 	}
 	
-	final static void populateCxIdColumn(Class<? extends CyIdentifiable> type, CyNetwork network) {
+	final static void populateCxIdColumn(Class<? extends CyIdentifiable> type, CyNetwork network) throws JsonProcessingException {
 		// Populate the CX ID column in a hidden node/edge table
 		// Uses the metadata idCounter if it exists otherwise uses SUIDs
 		

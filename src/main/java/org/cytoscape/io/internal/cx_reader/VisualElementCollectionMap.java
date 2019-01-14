@@ -16,8 +16,8 @@ final public class VisualElementCollectionMap {
     
 
     public VisualElementCollectionMap() {
-    	view_data = new HashMap<Long, VisualElementCollection>();
-    	subnet_data = new HashMap<Long, VisualElementCollection>();
+    	view_data = new HashMap<>();
+    	subnet_data = new HashMap<>();
         
     }
 

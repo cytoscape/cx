@@ -9,6 +9,9 @@ import java.util.Set;
 import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.ndexbio.cxio.core.interfaces.AspectElement;
 import org.ndexbio.cxio.util.CxioUtil;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import org.cytoscape.io.internal.cxio.CxExporter;
 import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.VisualPropertyType;
@@ -57,13 +60,14 @@ public final class VisualPropertiesGatherer {
      *            to gather
      *
      * @return a List of AspectElement
+     * @throws JsonProcessingException 
      */
     public static final List<AspectElement> gatherVisualPropertiesAsAspectElements(final CyNetworkView view,
                                                                                    final VisualMappingManager visual_mapping_manager,
                                                                                    final VisualLexicon lexicon,
                                                                                    final Set<VisualPropertyType> types,
                                                                                    boolean writeSiblings,
-                                                                                   boolean use_cxId) {
+                                                                                   boolean use_cxId) throws JsonProcessingException {
 
         final List<AspectElement> elements = new ArrayList<>();
         final VisualStyle current_visual_style = visual_mapping_manager.getVisualStyle(view);
@@ -356,7 +360,7 @@ public final class VisualPropertiesGatherer {
     private static void gatherEdgeVisualProperties(final CyNetworkView view,
                                                    final List<AspectElement> visual_properties,
                                                    final Set<VisualProperty<?>> all_visual_properties,
-                                                   boolean writeSiblings, boolean use_cxId) {
+                                                   boolean writeSiblings, boolean use_cxId) throws JsonProcessingException {
         for (final CyEdge edge : view.getModel().getEdgeList()) {
             final View<CyEdge> edge_view = view.getEdgeView(edge);
             final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.EDGES.asString(),
@@ -431,7 +435,7 @@ public final class VisualPropertiesGatherer {
                                                    final List<AspectElement> visual_properties,
                                                    final Set<VisualProperty<?>> all_visual_properties,
                                                    boolean writeSiblings,
-                                                   boolean use_cxId) {
+                                                   boolean use_cxId) throws JsonProcessingException {
         for (final CyNode cy_node : view.getModel().getNodeList()) {
             final View<CyNode> node_view = view.getNodeView(cy_node);
             final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.NODES.asString(),
@@ -494,9 +498,9 @@ public final class VisualPropertiesGatherer {
                                                        + "' (from table column "+ col_name + ")");
                 }
             }
-            else {
-                throw new IllegalStateException("failed to obtain type for mapping from table");
-            }
+            
+            throw new IllegalStateException("failed to obtain type for mapping from table");
+            
         }
         else {
             throw new IllegalArgumentException("don't know how to deal with type '" + attr_class + "' for column " + col_name);

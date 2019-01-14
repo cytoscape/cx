@@ -1,6 +1,5 @@
 package org.cytoscape.io.internal.cx_reader;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import org.cytoscape.application.CyApplicationManager;
@@ -75,7 +74,7 @@ public class CytoscapeCxNetworkReaderFactory extends AbstractInputStreamTaskFact
     @Override
     public TaskIterator createTaskIterator(final InputStream is, final String collection_name) {
     	
-        try {
+       // try {
             return new TaskIterator(new CytoscapeCxNetworkReader(collection_name,
                                                                  is,
                                                                  _application_manager,
@@ -93,11 +92,11 @@ public class CytoscapeCxNetworkReaderFactory extends AbstractInputStreamTaskFact
                                                                  _vmf_factory_c,
                                                                  _vmf_factory_d,
                                                                  _vmf_factory_p));
-        }
+       /* }
         catch (final IOException e) {
 
             e.printStackTrace();
             return null;
-        }
+        } */
     }
 }
