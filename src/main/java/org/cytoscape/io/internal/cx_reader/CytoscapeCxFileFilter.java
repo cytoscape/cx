@@ -3,7 +3,6 @@ package org.cytoscape.io.internal.cx_reader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,6 +13,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class CytoscapeCxFileFilter extends BasicCyFileFilter {
+	
+	private static final String[] extensions = new String[] { "cx" };
+    private static final String[] types = new String[] { "application/json" };
+    private static final String description = "CX JSON";
+    private static final DataCategory category = DataCategory.NETWORK;
+    
 
     private static final Logger locallogger            = LoggerFactory.getLogger(CytoscapeCxFileFilter.class);
     public static final Pattern CX_HEADER_PATTERN = Pattern
@@ -21,20 +26,16 @@ public class CytoscapeCxFileFilter extends BasicCyFileFilter {
     public static final Pattern CX_HEADER_PATTERN_OLD = Pattern
                                                           .compile("\\s*\\[\\s*\\{\\s*\"\\s*numberVerification\"\\s*:");
 
-    public CytoscapeCxFileFilter(final Set<String> extensions,
-                                 final Set<String> contentTypes,
-                                 final String description,
-                                 final DataCategory category,
-                                 final StreamUtil streamUtil) {
-        super(extensions, contentTypes, description, category, streamUtil);
-    }
-
     public CytoscapeCxFileFilter(final String[] extensions,
-                                 final String[] contentTypes,
-                                 final String description,
-                                 final DataCategory category,
-                                 final StreamUtil streamUtil) {
-        super(extensions, contentTypes, description, category, streamUtil);
+            final String[] contentTypes,
+            final String description,
+            final DataCategory category,
+            final StreamUtil streamUtil) {
+		super(extensions, contentTypes, description, category, streamUtil);
+	}
+    
+    public CytoscapeCxFileFilter(final StreamUtil streamUtil) {
+        this(extensions, types, description, category, streamUtil);
     }
 
     @Override
@@ -89,17 +90,6 @@ public class CytoscapeCxFileFilter extends BasicCyFileFilter {
         }
 
         return root;
-    }
-   
-    public static void main(String [] args)
-    {
-        final String str = "\t[\n{\n   \"numberVerification\"    \n:   [{\"longNumber\"     :    281474976710655} ]}, {";
-        final Matcher matcher = CX_HEADER_PATTERN.matcher(str);
-        
-        String root = null;if (matcher.find()) {
-            root = matcher.group(0);
-        }
-        System.out.println(root);
     }
     
 }
