@@ -15,7 +15,6 @@ import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CyRootNetworkManager;
-import org.cytoscape.model.subnetwork.CySubNetwork;
 import org.cytoscape.view.layout.CyLayoutAlgorithmManager;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewFactory;
@@ -27,8 +26,6 @@ import org.cytoscape.view.vizmap.VisualStyleFactory;
 import org.cytoscape.work.TaskMonitor;
 import org.cytoscape.work.swing.DialogTaskManager;
 import org.cytoscape.work.util.ListSingleSelection;
-import org.ndexbio.cxio.aspects.datamodels.NetworkRelationsElement;
-import org.ndexbio.cxio.util.CxioUtil;
 import org.ndexbio.model.cx.NiceCXNetwork;
 
 public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
@@ -57,7 +54,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 			final CyNetworkViewFactory networkview_factory, final CyNetworkViewManager networkview_manager,
 			final CyLayoutAlgorithmManager layout_manager, final DialogTaskManager task_manager,
 			final VisualMappingFunctionFactory vmf_factory_c, final VisualMappingFunctionFactory vmf_factory_d,
-			final VisualMappingFunctionFactory vmf_factory_p) throws IOException {
+			final VisualMappingFunctionFactory vmf_factory_p) {
 
 		super(input_stream, networkview_factory, network_factory, network_manager, root_network_manager);
 
@@ -173,27 +170,4 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 		}
 	}
 
-	private CySubNetwork buildNetwork(CyRootNetwork root_network, final CyNetworkFactory network_factory,
-			final String collection_name, final Long cx_id) {
-		// Build a subnetwork in the specified collection, or create a new collection
-		// with the given name if it doesn't exist
-		CySubNetwork sub_network;
-		if (root_network != null) {
-			// Root network exists
-			sub_network = root_network.addSubNetwork();
-		} else {
-			sub_network = (CySubNetwork) network_factory.createNetwork();
-
-			root_network = sub_network.getRootNetwork();
-			if (!CxioUtil.isEmpty(collection_name)) {
-				root_network.getRow(root_network).set(CyNetwork.NAME, collection_name);
-			}
-		}
-		if (sub_network == null) {
-			throw new IllegalArgumentException("Failed to create subnetwork for root " + root_network);
-		}
-		Settings.INSTANCE.debug(String.format("Adding %s to root %s", sub_network, root_network));
-		// _suid_to_cxid_map.put(sub_network.getSUID(), cx_id);
-		return sub_network;
-	}
 }
