@@ -1,11 +1,13 @@
 package org.cytoscape.io.internal.cx_reader;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.group.CyGroupFactory;
+import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cxio.CxImporter;
 import org.cytoscape.io.internal.cxio.Settings;
 import org.cytoscape.io.internal.cxio.TimingUtil;
@@ -34,27 +36,14 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 	private String _network_collection_name;
 	private CxToCy _cx_to_cy;
 	private final InputStream _in;
-	private final VisualMappingManager _visual_mapping_manager;
-	private final RenderingEngineManager _rendering_engine_manager;
-	private final CyNetworkViewManager _networkview_manager;
-	private final CyLayoutAlgorithmManager _layout_manager;
-	private final DialogTaskManager _task_manager;
 
-	private final VisualStyleFactory _visual_style_factory;
-	private final VisualMappingFunctionFactory _vmf_factory_c;
-	private final VisualMappingFunctionFactory _vmf_factory_d;
-	private final VisualMappingFunctionFactory _vmf_factory_p;
-	private final CyGroupFactory _group_factory;
-
-	public CytoscapeCxNetworkReader(final String network_collection_name, final InputStream input_stream,
-			final CyApplicationManager application_manager, final CyNetworkFactory network_factory,
-			final CyNetworkManager network_manager, final CyRootNetworkManager root_network_manager,
-			final CyGroupFactory group_factory, final VisualMappingManager visual_mapping_manager,
-			final VisualStyleFactory visual_style_factory, final RenderingEngineManager rendering_engine_manager,
-			final CyNetworkViewFactory networkview_factory, final CyNetworkViewManager networkview_manager,
-			final CyLayoutAlgorithmManager layout_manager, final DialogTaskManager task_manager,
-			final VisualMappingFunctionFactory vmf_factory_c, final VisualMappingFunctionFactory vmf_factory_d,
-			final VisualMappingFunctionFactory vmf_factory_p) {
+	public CytoscapeCxNetworkReader(
+			final InputStream input_stream,
+			final String network_collection_name,
+			final CyNetworkViewFactory networkview_factory,
+			final CyNetworkFactory network_factory,
+			final CyNetworkManager network_manager,
+			final CyRootNetworkManager root_network_manager) {
 
 		super(input_stream, networkview_factory, network_factory, network_manager, root_network_manager);
 
@@ -63,16 +52,6 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 		}
 		_in = input_stream;
 		_network_collection_name = network_collection_name;
-		_visual_mapping_manager = visual_mapping_manager;
-		_rendering_engine_manager = rendering_engine_manager;
-		_networkview_manager = networkview_manager;
-		_layout_manager = layout_manager;
-		_task_manager = task_manager;
-		_group_factory = group_factory;
-		_visual_style_factory = visual_style_factory;
-		_vmf_factory_c = vmf_factory_c;
-		_vmf_factory_d = vmf_factory_d;
-		_vmf_factory_p = vmf_factory_p;
 
 	}
 
@@ -94,10 +73,8 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 			views.add(view);
 
 			try {
-				ViewMaker.makeView(view, cx_view_id, _cx_to_cy, _network_collection_name, _rendering_engine_manager,
-						_layout_manager, _task_manager, _networkview_manager, _visual_mapping_manager,
-						_visual_style_factory, _vmf_factory_c, _vmf_factory_d, _vmf_factory_p);
-			} catch (Exception e) {
+				ViewMaker.makeView(view, cx_view_id, _cx_to_cy, _network_collection_name);
+			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
 		}
@@ -134,7 +111,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 			}
 		}
 
-		// TODO: Throw an error if trying to import CX network into existing collection.
+		// Throw an error if trying to import CX network into existing collection.
 		if (getRootNetwork() != null) {
 			throw new IllegalArgumentException("Cannot import CX network into existing collection.");
 		}
@@ -157,6 +134,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 			}
 		}
 		
+		CyGroupFactory _group_factory = CyServiceModule.getService(CyGroupFactory.class);
 		List<CyNetwork> networks = _cx_to_cy.createNetwork(niceCX, root_network, cyNetworkFactory, _group_factory,
 				_network_collection_name);
 

@@ -44,6 +44,7 @@ import org.cytoscape.application.NetworkViewRenderer;
 import org.cytoscape.group.CyGroup;
 import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.cx.Aspect;
+import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cx_writer.VisualPropertiesGatherer;
 import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyEdge;
@@ -92,11 +93,6 @@ import org.cytoscape.view.vizmap.VisualMappingManager;
  */
 public final class CxExporter {
 
-	private VisualMappingManager _visual_mapping_manager;
-	private CyNetworkViewManager _networkview_manager;
-	private CyGroupManager _group_manager;
-	private CyApplicationManager _application_manager;
-
 	private final static Set<String> ADDITIONAL_IGNORE_FOR_EDGE_ATTRIBUTES = new HashSet<>();
 	private final static Set<String> ADDITIONAL_IGNORE_FOR_NODE_ATTRIBUTES = new HashSet<>();
 	private final static Set<String> ADDITIONAL_IGNORE_FOR_NETWORK_ATTRIBUTES = new HashSet<>();
@@ -122,22 +118,7 @@ public final class CxExporter {
 		return AspectSet.getCytoscapeAspectSet().getAspectFragmentWriters();
 	}
 
-	public void setGroupManager(final CyGroupManager group_manager) {
-		_group_manager = group_manager;
-	}
-
-	public void setApplicationManager(final CyApplicationManager application_manager) {
-		_application_manager = application_manager;
-	}
-
-	public void setNetworkViewManager(final CyNetworkViewManager networkview_manager) {
-		_networkview_manager = networkview_manager;
-	}
-
-	public void setVisualMappingManager(final VisualMappingManager visual_mapping_manager) {
-		_visual_mapping_manager = visual_mapping_manager;
-	}
-
+	
 	/**
 	 * This is a method for serializing a Cytoscape network and associated table
 	 * data as CX formatted OutputStream. <br>
@@ -152,8 +133,7 @@ public final class CxExporter {
 	 *            the set of aspects to serialize
 	 * @param out
 	 *            the stream to write to
-	 * @return a CxOutput object which contains the output stream as well as a
-	 *         status
+	 * @return whether or not the export was successful
 	 * @throws IOException
 	 *
 	 *
@@ -163,8 +143,9 @@ public final class CxExporter {
 	 *
 	 */
 
-	public final boolean writeNetwork(final CyNetwork network, final boolean write_siblings, final boolean use_cxId, 
+	public final void writeNetwork(final CyNetwork network, final boolean write_siblings, final boolean use_cxId, 
 			final AspectSet aspects, final OutputStream out) throws IOException {
+		
 		if (write_siblings && use_cxId) {
 			throw new IllegalArgumentException("Cannot export a collection with CX IDs.");
 		}
@@ -232,8 +213,6 @@ public final class CxExporter {
 			}
 
 		}
-
-		return success;
 	}
 	
 	private static MetaDataCollection writePreMetaData(CxWriter w, CyNetwork network) {
@@ -491,6 +470,7 @@ public final class CxExporter {
 	private final void writeNetworkRelations(final CyNetwork network, final CxWriter w,
 			final boolean ignore_nameless_sub_networks) throws IOException {
 		
+		final CyNetworkViewManager _networkview_manager = CyServiceModule.getService(CyNetworkViewManager.class);
 		
 		final CySubNetwork as_subnet = (CySubNetwork) network;
 		final CyRootNetwork root = as_subnet.getRootNetwork();
@@ -752,6 +732,7 @@ public final class CxExporter {
 	}
 
 	private void getGroupNodeIdsInSubNet(Set<Long> resultHolder, CyNetwork subnet) {
+		CyGroupManager _group_manager = CyServiceModule.getService(CyGroupManager.class);
 		final Set<CyGroup> groups = _group_manager.getGroupSet(subnet);
 		for (final CyGroup group : groups) {
 			resultHolder.add(group.getGroupNode().getSUID());
@@ -760,7 +741,8 @@ public final class CxExporter {
 
 	private final void writeGroups(final CyNetwork network, final CxWriter w, boolean writeSiblings, boolean use_cxId)
 			throws IOException {
-		
+		CyGroupManager _group_manager = CyServiceModule.getService(CyGroupManager.class);
+
 		final CySubNetwork my_subnet = (CySubNetwork) network;
 		final CyRootNetwork my_root = my_subnet.getRootNetwork();
 
@@ -836,7 +818,8 @@ public final class CxExporter {
 	@SuppressWarnings("rawtypes")
 	private static void writeHiddenAttributesHelper(final String namespace, final CyNetwork my_network,
 			final CxWriter w, boolean writeSiblings) throws IOException {
-
+		List<AspectElement> hiddenElements = new ArrayList<AspectElement>();
+		
 		final CyRow row = my_network.getRow(my_network, namespace);
 		if (row != null) {
 			final Map<String, Object> values = row.getAllValues();
@@ -872,13 +855,18 @@ public final class CxExporter {
 								AttributesAspectUtils.determineDataType(value));
 					}
 					if (e != null) {
-						w.startAspectFragment(column_name);
-						w.writeAspectElement(e);
-						w.endAspectFragment();
+						hiddenElements.add(e);
+//						w.startAspectFragment(column_name);
+//						w.writeAspectElement(e);
+//						w.endAspectFragment();
 					}
 				}
 			}
-
+			
+			
+		}
+		if (!hiddenElements.isEmpty()) {
+			w.writeAspectElements(hiddenElements);
 		}
 	}
 
@@ -1058,6 +1046,7 @@ public final class CxExporter {
 	}
 	
 	private VisualLexicon getLexicon(CyNetworkView view) {
+		CyApplicationManager _application_manager = CyServiceModule.getService(CyApplicationManager.class);
     	NetworkViewRenderer renderer = _application_manager.getNetworkViewRenderer(view.getRendererId());
 
 		RenderingEngineFactory<CyNetwork> factory = renderer == null ? null
@@ -1075,10 +1064,13 @@ public final class CxExporter {
 		final CySubNetwork my_subnet = (CySubNetwork) network;
 		final CyRootNetwork my_root = my_subnet.getRootNetwork();
 		final List<CySubNetwork> subnets = makeSubNetworkList(write_siblings, my_subnet, my_root, true);
-
+		final CyNetworkViewManager _networkview_manager = CyServiceModule.getService(CyNetworkViewManager.class);
+		final VisualMappingManager _visual_mapping_manager = CyServiceModule.getService(VisualMappingManager.class);
+		
 		// write the visual properties and coordinates
 		for (final CySubNetwork subnet : subnets) {
 			final Collection<CyNetworkView> views = _networkview_manager.getNetworkViews(subnet);
+			
 			for (final CyNetworkView view : views) {
 				final VisualLexicon _lexicon = getLexicon(view);
 				writeCartesianLayout(view, w, write_siblings, use_cxId);

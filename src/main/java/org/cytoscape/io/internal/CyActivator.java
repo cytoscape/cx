@@ -35,28 +35,43 @@ public class CyActivator extends AbstractCyActivator {
         super();
     }
 
+    private <S> S cacheService(final BundleContext bc, Class<S> cls) {
+    	S service = getService(bc, cls);
+    	CyServiceModule.setService(cls, service);
+    	return service;
+    }
+    
     @Override
     public void start(final BundleContext bc) {
 
-        final StreamUtil streamUtil = getService(bc, StreamUtil.class);
-        final CyLayoutAlgorithmManager layoutManager = getService(bc, CyLayoutAlgorithmManager.class);
-
+    	StreamUtil streamUtil = cacheService(bc, StreamUtil.class);
         final CytoscapeCxFileFilter cx_filter = new CytoscapeCxFileFilter(streamUtil);
 
-        
+        cacheService(bc, CyLayoutAlgorithmManager.class);
         // Writer:
-        final VisualMappingManager visual_mapping_manager = getService(bc, VisualMappingManager.class);
-        final CyApplicationManager application_manager = getService(bc, CyApplicationManager.class);
-        final CyNetworkViewManager networkview_manager = getService(bc, CyNetworkViewManager.class);
-        final CyNetworkManager network_manager = getService(bc, CyNetworkManager.class);
-        final CyGroupManager group_manager = getService(bc, CyGroupManager.class);
-        final CyNetworkViewFactory network_view_factory = getService(bc, CyNetworkViewFactory.class);
-        final DialogTaskManager task_manager = getService(bc, DialogTaskManager.class);
-        final CxNetworkWriterFactory network_writer_factory = new CxNetworkWriterFactory(cx_filter,
-                                                                                         visual_mapping_manager,
-                                                                                         application_manager,
-                                                                                         networkview_manager,
-                                                                                         group_manager);
+        cacheService(bc, VisualMappingManager.class);
+        cacheService(bc, CyApplicationManager.class);
+        cacheService(bc, CyNetworkViewManager.class);
+        cacheService(bc, CyNetworkManager.class);
+        cacheService(bc, CyGroupManager.class);
+        cacheService(bc, CyNetworkViewFactory.class);
+        cacheService(bc, DialogTaskManager.class);
+     // Reader:
+        cacheService(bc, CyNetworkFactory.class);
+        cacheService(bc, CyRootNetworkManager.class);
+        cacheService(bc, RenderingEngineManager.class);
+        cacheService(bc, VisualStyleFactory.class);
+        cacheService(bc, CyGroupFactory.class);
+        
+//        final VisualMappingManager visual_mapping_manager = getService(bc, VisualMappingManager.class);
+//        final CyApplicationManager application_manager = getService(bc, CyApplicationManager.class);
+//        final CyNetworkViewManager networkview_manager = getService(bc, CyNetworkViewManager.class);
+//        final CyNetworkManager network_manager = getService(bc, CyNetworkManager.class);
+//        final CyGroupManager group_manager = getService(bc, CyGroupManager.class);
+//        final CyNetworkViewFactory network_view_factory = getService(bc, CyNetworkViewFactory.class);
+//        final DialogTaskManager task_manager = getService(bc, DialogTaskManager.class);
+        
+        final CxNetworkWriterFactory network_writer_factory = new CxNetworkWriterFactory(cx_filter);
 
         final Properties cx_writer_factory_properties = new Properties();
 
@@ -64,42 +79,32 @@ public class CyActivator extends AbstractCyActivator {
 
         registerAllServices(bc, network_writer_factory, cx_writer_factory_properties);
 
-        // Reader:
-        final CyNetworkFactory network_factory = getService(bc, CyNetworkFactory.class);
-        final CyRootNetworkManager root_network_manager = getService(bc, CyRootNetworkManager.class);
-        final RenderingEngineManager rendering_engine_manager = getService(bc, RenderingEngineManager.class);
-        final VisualStyleFactory visual_style_factory = getService(bc, VisualStyleFactory.class);
-        final CyGroupFactory group_factory = getService(bc, CyGroupFactory.class);
+        
+        
+//        final CyNetworkFactory network_factory = getService(bc, CyNetworkFactory.class);
+//        final CyRootNetworkManager root_network_manager = getService(bc, CyRootNetworkManager.class);
+//        final RenderingEngineManager rendering_engine_manager = getService(bc, RenderingEngineManager.class);
+//        final VisualStyleFactory visual_style_factory = getService(bc, VisualStyleFactory.class);
+//        final CyGroupFactory group_factory = getService(bc, CyGroupFactory.class);
 
         final VisualMappingFunctionFactory vmfFactoryC = getService(bc,
                                                                     VisualMappingFunctionFactory.class,
                                                                     "(mapping.type=continuous)");
+        
         final VisualMappingFunctionFactory vmfFactoryD = getService(bc,
                                                                     VisualMappingFunctionFactory.class,
                                                                     "(mapping.type=discrete)");
+        
         final VisualMappingFunctionFactory vmfFactoryP = getService(bc,
                                                                     VisualMappingFunctionFactory.class,
                                                                     "(mapping.type=passthrough)");
+        CyServiceModule.setPassthroughMapping(vmfFactoryP);
+        CyServiceModule.setDiscreteMapping(vmfFactoryD);
+        CyServiceModule.setContinuousMapping(vmfFactoryC);
+        
 
         
-        final CytoscapeCxNetworkReaderFactory cx_reader_factory = new CytoscapeCxNetworkReaderFactory(cx_filter,
-                                                                                                      application_manager,
-                                                                                                      network_factory,
-                                                                                                      network_manager,
-                                                                                                      root_network_manager,
-                                                                                                      visual_mapping_manager,
-                                                                                                      visual_style_factory,
-                                                                                                      group_factory,
-                                                                                                      rendering_engine_manager,
-                                                                                                      network_view_factory,
-                                                                                                      networkview_manager,
-                                                                                                      vmfFactoryC,
-                                                                                                      vmfFactoryD,
-                                                                                                      vmfFactoryP,
-                                                                                                      layoutManager,
-                                                                                                      task_manager
-
-        );
+        final CytoscapeCxNetworkReaderFactory cx_reader_factory = new CytoscapeCxNetworkReaderFactory(cx_filter);
         final Properties reader_factory_properties = new Properties();
 
         // This is the unique identifier for this reader. 3rd party developer

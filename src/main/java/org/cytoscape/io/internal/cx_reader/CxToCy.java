@@ -64,8 +64,8 @@ public final class CxToCy {
     
 	private static final Logger logger = LoggerFactory.getLogger(CxToCy.class);
 
-	private static final Long          DEFAULT_SUBNET = Long.valueOf(-Long.MAX_VALUE);
-	private static final Long          DEFAULT_VIEW = Long.valueOf(-Long.MAX_VALUE);
+	public static final Long          DEFAULT_SUBNET = Long.valueOf(-Long.MAX_VALUE);
+	public static final Long          DEFAULT_VIEW = Long.valueOf(-Long.MAX_VALUE);
     
 
     private Set<CyNode>                _nodes_with_visual_properties;
@@ -198,7 +198,6 @@ public final class CxToCy {
 			for (AspectElement e : aspect) {
 				NetworkRelationsElement nre = (NetworkRelationsElement) e;
 				root_network = processNetworkRelation(nre, root_network, networks, network_factory, collection_name);
-
 			}
 		}
         Settings.INSTANCE.debug(String.format("Found %s network(s). Collection: %s\nNetworks: %s", networks.size(), aspect != null, networks));

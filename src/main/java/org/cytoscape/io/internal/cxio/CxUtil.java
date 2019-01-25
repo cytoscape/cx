@@ -69,14 +69,8 @@ public final class CxUtil {
     	CyRow row = hidden_table.getRow(network.getSUID());
     	ObjectMapper mapper = new ObjectMapper();
     	String metaDataStr;
-	//	try {
-			metaDataStr = mapper.writeValueAsString(metaData);
-			row.set(CxUtil.CX_METADATA, metaDataStr);
-	/*	} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} */
-    	
+    	metaDataStr = mapper.writeValueAsString(metaData);
+		row.set(CxUtil.CX_METADATA, metaDataStr);	
     }
 
 	public static void saveCxId(CyNetwork network, CyIdentifiable cy_ele, Long cx_id) {
@@ -172,7 +166,7 @@ public final class CxUtil {
 		updateCxIdCounter(type, network, counter);
 	}
 	
-	static Long getCxId(CyIdentifiable cyEle, CyNetwork network) {
+	public static Long getCxId(CyIdentifiable cyEle, CyNetwork network) {
 		CyTable hidden_table = network.getTable(cyEle instanceof CyNode ? CyNode.class : CyEdge.class, CyNetwork.HIDDEN_ATTRS);
 		CyRow row = hidden_table.getRow(cyEle.getSUID());
 		return row.get(CxUtil.CX_ID_MAPPING, Long.class);

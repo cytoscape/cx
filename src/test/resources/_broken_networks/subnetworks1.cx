@@ -1,0 +1,77 @@
+[{
+	"numberVerification": [{
+		"longNumber": 281474976710655
+	}]
+}, {
+	"nodes": [{
+		"@id": 1
+	}, {
+		"@id": 2
+	}, {
+		"@id": 3
+	}, {
+		"@id": 4
+	}, {
+		"@id": 5
+	}, {
+		"@id": 6
+	}, {
+		"@id": 7
+	}, {
+		"@id": 8
+	}, {
+		"@id": 9
+	}, {
+		"@id": 10
+	}]
+}, {
+	"edges": [{
+		"@id": 101,
+		"s": 1,
+		"t": 2
+	}, {
+		"@id": 106,
+		"s": 6,
+		"t": 7
+	}]
+}, {
+	"cySubNetworks": [{
+		"@id": 1,
+		"nodes": [1, 2, 3, 4, 5],
+		"edges": [101]
+	}, {
+		"@id": 2,
+		"nodes": [6, 7, 8, 9, 10],
+		"edges": [106]
+	}]
+}, {
+	"cyViews": [{
+		"@id": 1001,
+		"s": 1
+	}, {
+		"@id": 1002,
+		"s": 2
+	}]
+}, {
+	"cyNetworkRelations": [{
+		"p": 0,
+		"c": 1,
+		"r": "subnetwork",
+		"name": "sub-network 1"
+	}, {
+		"p": 0,
+		"c": 2,
+		"r": "subnetwork",
+		"name": "sub-network 2"
+	}, {
+		"p": 1,
+		"c": 1001,
+		"r": "view",
+		"name": "view 1001"
+	}, {
+		"p": 2,
+		"c": 1002,
+		"r": "view",
+		"name": "view 1002"
+	}]
+}]

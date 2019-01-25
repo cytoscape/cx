@@ -1,0 +1,225 @@
+[
+    {
+        "numberVerification": [
+            {
+                "longNumber": 281474976710655
+            }
+        ]
+    },
+    {
+        "nodes": [
+            {
+                "@id": 1
+            },
+            {
+                "@id": 2
+            },
+            {
+                "@id": 3
+            },
+            {
+                "@id": 4
+            }
+        ]
+    },
+    {
+        "edges": [
+            {
+                "@id": 100000001,
+                "s": 1,
+                "t": 2
+            },
+            {
+                "@id": 100000002,
+                "s": 2,
+                "t": 3
+            },
+            {
+                "@id": 100000003,
+                "s": 3,
+                "t": 4
+            }
+        ]
+    },
+    {
+        "nodeAttributes": [
+            {
+                "po": 1,
+                "n": "name",
+                "v": "Node 1"
+            },
+            {
+                "po": 2,
+                "n": "name",
+                "v": "Node 2"
+            },
+            {
+                "po": 3,
+                "n": "name",
+                "v": "Node 3"
+            },
+            {
+                "po": 4,
+                "n": "Has Name",
+                "v": "false",
+                "d": "boolean"
+            },
+            {
+                "po": 1,
+                "n": "expression",
+                "v": [
+                    "1.1",
+                    "1.2",
+                    "1.3"
+                ],
+                "d": "list_of_double"
+            },
+            {
+                "po": 2,
+                "n": "expression",
+                "v": [
+                    "2.1",
+                    "2.2",
+                    "2.3"
+                ],
+                "d": "list_of_double"
+            },
+            {
+                "po": 3,
+                "n": "expression",
+                "v": [
+                    "3.1",
+                    "3.2",
+                    "3.3"
+                ],
+                "d": "list_of_double"
+            },
+            {
+                "po": 4,
+                "n": "expression",
+                "v": [
+                    "4.1",
+                    "4.2",
+                    "4.3"
+                ],
+                "d": "list_of_double"
+            }
+        ]
+    },
+    {
+        "edgeAttributes": [
+            {
+                "po": 100000001,
+                "n": "name",
+                "v": "Edge 1"
+            },
+            {
+                "po": 100000002,
+                "n": "name",
+                "v": "Edge 2"
+            },
+            {
+                "po": 100000003,
+                "n": "name",
+                "v": "Edge 3"
+            }
+        ]
+    },
+    {
+        "networkAttributes": [
+            {
+                "n": "Source",
+                "v": "made up"
+            }
+        ]
+    },
+    {
+        "cartesianLayout": [
+            {
+                "node": 1,
+                "x": -100,
+                "y": 100
+            },
+            {
+                "node": 2,
+                "x": 100,
+                "y": 100
+            },
+            {
+                "node": 3,
+                "x": 100,
+                "y": -100
+            },
+            {
+                "node": 4,
+                "x": -100,
+                "y": -100
+            }
+        ]
+    },
+    {
+        "cyVisualProperties": [
+            {
+                "properties_of": "nodes",
+                "applies_to": 1,
+                "properties": {
+                    "NODE_CUSTOMGRAPHICS_1": "org.cytoscape.LinearGradient:{\"cy_angle\":45.0,\"cy_gradientFractions\":[0.0,0.47588426,1.0],\"cy_gradientColors\":[\"#0033FF\",\"#FFFFFF\",\"#FFFF00\"]}"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 2,
+                "properties": {
+                    "NODE_CUSTOMGRAPHICS_1": "org.cytoscape.LinearGradient:{\"cy_angle\":90.0,\"cy_gradientFractions\":[0.0,0.47588426,1.0],\"cy_gradientColors\":[\"#0033FF\",\"#FFFFFF\",\"#FFFF00\"]}"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3,
+                "properties": {
+                    "NODE_CUSTOMGRAPHICS_1": "org.cytoscape.LinearGradient:{\"cy_angle\":135.0,\"cy_gradientFractions\":[0.0,0.47588426,1.0],\"cy_gradientColors\":[\"#0033FF\",\"#FFFFFF\",\"#FFFF00\"]}"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 4,
+                "properties": {
+                    "NODE_CUSTOMGRAPHICS_1": "org.cytoscape.LinearGradient:{\"cy_angle\":225.0,\"cy_gradientFractions\":[0.0,0.47588426,1.0],\"cy_gradientColors\":[\"#0033FF\",\"#FFFFFF\",\"#FFFF00\"]}"
+                }
+            },
+            {
+                "properties_of": "edges",
+                "applies_to": 100000001,
+                "properties": {
+                    "EDGE_PAINT": "#FF0000"
+                }
+            },
+            {
+                "properties_of": "edges",
+                "applies_to": 100000003,
+                "properties": {
+                    "EDGE_PAINT": "#00FF00"
+                }
+            },
+            {
+                "properties_of" : "network",
+                "properties" : {
+                    "NETWORK_BACKGROUND_PAINT" : "#0000EE"
+                }    
+            },
+            {
+                "properties_of" : "nodes:default",
+                "properties" : {
+                    "NODE_SHAPE" : "OCTAGON"
+                }    
+            },
+            {
+                "properties_of" : "edges:default",
+                "properties" : {
+                    "EDGE_TARGET_ARROW_SHAPE" : "DELTA_SHORT_1",
+                    "EDGE_WIDTH" : "4.0"
+                }    
+            }
+        ]
+    }
+]

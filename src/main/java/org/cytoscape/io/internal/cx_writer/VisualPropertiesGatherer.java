@@ -71,8 +71,11 @@ public final class VisualPropertiesGatherer {
 
         final List<AspectElement> elements = new ArrayList<>();
         final VisualStyle current_visual_style = visual_mapping_manager.getVisualStyle(view);
+        if (lexicon == null) {
+        	throw new IllegalArgumentException("VisualLexicon is not initialized. This should not happen");
+        }
         final Set<VisualProperty<?>> all_visual_properties = lexicon.getAllVisualProperties();
-
+        
         if (types.contains(VisualPropertyType.NETWORK)) {
             gatherNetworkVisualProperties(view, elements, current_visual_style, all_visual_properties, writeSiblings);
         }

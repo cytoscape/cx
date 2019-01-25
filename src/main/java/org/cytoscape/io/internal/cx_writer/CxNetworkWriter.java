@@ -11,6 +11,7 @@ import java.nio.charset.CharsetEncoder;
 
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.group.CyGroupManager;
+import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxExporter;
 import org.cytoscape.io.internal.cxio.CxUtil;
@@ -40,14 +41,7 @@ public class CxNetworkWriter implements CyWriter {
 
 	private final OutputStream _os;
 	private final CyNetwork _network;
-	private final CharsetEncoder _encoder;
-	private final VisualMappingManager _visual_mapping_manager;
-	private final CyNetworkViewManager _networkview_manager;
-	private final CyGroupManager _group_manager;
-	private final CyApplicationManager _application_manager;
-	
-
-	
+	private final CharsetEncoder _encoder;	
 	
 	@Tunable(description="Write all networks in the collection")
     public boolean writeSiblings = WRITE_SIBLINGS_DEFAULT;
@@ -59,6 +53,8 @@ public class CxNetworkWriter implements CyWriter {
 		if (writeSiblings) {
 			return false;
 		}
+		final CyApplicationManager _application_manager = CyServiceModule.getService(CyApplicationManager.class);
+
 		if (!CxUtil.hasCxIds(_application_manager.getCurrentNetwork())) {
 			return false;
 		}
@@ -73,19 +69,11 @@ public class CxNetworkWriter implements CyWriter {
 
 	public CxNetworkWriter(final OutputStream os, 
 			final CyNetwork network,
-			final VisualMappingManager visual_mapping_manager, 
-			final CyNetworkViewManager networkview_manager,
-			final CyGroupManager group_manager,
-			final CyApplicationManager application_manager,
 			final boolean write_siblings,
 			final boolean use_cxId) {
 
-		_visual_mapping_manager = visual_mapping_manager;
-		_networkview_manager = networkview_manager;
 		_os = os;
 		_network = network;
-		_group_manager = group_manager;
-		_application_manager = application_manager;
 		writeSiblings = write_siblings;
 		useCxId = use_cxId;
 
@@ -108,15 +96,10 @@ public class CxNetworkWriter implements CyWriter {
 		}
 
 		Settings.INSTANCE.debug("Encoding = " + _encoder.charset());
-		
 
 		final AspectSet aspects = AspectSet.getCytoscapeAspectSet();
 
 		final CxExporter exporter = CxExporter.createInstance();
-		exporter.setApplicationManager(_application_manager);
-		exporter.setVisualMappingManager(_visual_mapping_manager);
-		exporter.setNetworkViewManager(_networkview_manager);
-		exporter.setGroupManager(_group_manager);
 
 		final long t0 = System.currentTimeMillis();
 		if (TimingUtil.WRITE_TO_DEV_NULL) {

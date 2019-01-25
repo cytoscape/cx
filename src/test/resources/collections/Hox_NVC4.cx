@@ -1,0 +1,3274 @@
+[ {
+  "numberVerification" : [ {
+    "longNumber" : 281474976710655
+  } ]
+}, {
+  "metaData" : [ {
+    "consistencyGroup" : 1,
+    "elementCount" : 32,
+    "idCounter" : 230,
+    "name" : "nodes",
+    "properties" : [ ],
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : 1,
+    "elementCount" : 33,
+    "idCounter" : 230,
+    "name" : "edges",
+    "properties" : [ ],
+    "version" : "1.0"
+  } ]
+}, {
+  "nodes" : [ {
+    "@id" : 93,
+    "n" : "p(HGNC:HOXB4)"
+  }, {
+    "@id" : 92,
+    "n" : "tscript(p(HGNC:HOXB4))"
+  }, {
+    "@id" : 91,
+    "n" : "p(HGNC:CDKN1B)"
+  }, {
+    "@id" : 90,
+    "n" : "p(HGNC:CDKN1A)"
+  }, {
+    "@id" : 89,
+    "n" : "p(HGNC:PDGFRB)"
+  }, {
+    "@id" : 88,
+    "n" : "kin(p(HGNC:PDGFRB))"
+  }, {
+    "@id" : 87,
+    "n" : "p(HGNC:MEOX2)"
+  }, {
+    "@id" : 86,
+    "n" : "tscript(p(HGNC:MEOX2))"
+  }, {
+    "@id" : 85,
+    "n" : "p(HGNC:CDKN2D)"
+  }, {
+    "@id" : 84,
+    "n" : "p(HGNC:CDKN1C)"
+  }, {
+    "@id" : 83,
+    "n" : "bp(GO:\"cell proliferation\")"
+  }, {
+    "@id" : 82,
+    "n" : "cat(p(HGNC:MMP14))"
+  }, {
+    "@id" : 81,
+    "n" : "cat(complex(p(HGNC:ITGAV),p(HGNC:ITGB3)))"
+  }, {
+    "@id" : 80,
+    "n" : "p(HGNC:MMP14)"
+  }, {
+    "@id" : 79,
+    "n" : "p(HGNC:HOXA3)"
+  }, {
+    "@id" : 78,
+    "n" : "p(HGNC:PLAUR)"
+  }, {
+    "@id" : 77,
+    "n" : "tscript(p(HGNC:HOXA9))"
+  }, {
+    "@id" : 76,
+    "n" : "p(HGNC:JUN)"
+  }, {
+    "@id" : 75,
+    "n" : "p(HGNC:HOXA9)"
+  }, {
+    "@id" : 74,
+    "n" : "complex(p(HGNC:ITGAV),p(HGNC:ITGB3))"
+  }, {
+    "@id" : 73,
+    "n" : "p(HGNC:ITGB3)"
+  }, {
+    "@id" : 72,
+    "n" : "p(HGNC:ITGAV)"
+  }, {
+    "@id" : 71,
+    "n" : "tscript(p(HGNC:HOXA5))"
+  }, {
+    "@id" : 70,
+    "n" : "p(HGNC:PTGS2)"
+  }, {
+    "@id" : 69,
+    "n" : "p(HGNC:KDR)"
+  }, {
+    "@id" : 68,
+    "n" : "p(PFH:\"AKT Family\",pmod(P,S,473))"
+  }, {
+    "@id" : 67,
+    "n" : "p(PFH:\"AKT Family\")"
+  }, {
+    "@id" : 66,
+    "n" : "p(HGNC:HOXA5)"
+  }, {
+    "@id" : 65,
+    "n" : "p(HGNC:HOXD3)"
+  }, {
+    "@id" : 64,
+    "n" : "p(HGNC:PLAU)"
+  }, {
+    "@id" : 63,
+    "n" : "tscript(p(HGNC:HOXD3))"
+  }, {
+    "@id" : 62,
+    "n" : "p(HGNC:ITGA5)"
+  } ]
+}, {
+  "edges" : [ {
+    "@id" : 126,
+    "s" : 93,
+    "t" : 92,
+    "i" : "actsIn"
+  }, {
+    "@id" : 125,
+    "s" : 92,
+    "t" : 91,
+    "i" : "decreases"
+  }, {
+    "@id" : 124,
+    "s" : 92,
+    "t" : 90,
+    "i" : "decreases"
+  }, {
+    "@id" : 123,
+    "s" : 89,
+    "t" : 88,
+    "i" : "actsIn"
+  }, {
+    "@id" : 122,
+    "s" : 87,
+    "t" : 86,
+    "i" : "actsIn"
+  }, {
+    "@id" : 121,
+    "s" : 86,
+    "t" : 85,
+    "i" : "increases"
+  }, {
+    "@id" : 120,
+    "s" : 86,
+    "t" : 84,
+    "i" : "increases"
+  }, {
+    "@id" : 119,
+    "s" : 86,
+    "t" : 83,
+    "i" : "decreases"
+  }, {
+    "@id" : 118,
+    "s" : 86,
+    "t" : 90,
+    "i" : "directlyIncreases"
+  }, {
+    "@id" : 117,
+    "s" : 82,
+    "t" : 81,
+    "i" : "increases"
+  }, {
+    "@id" : 116,
+    "s" : 80,
+    "t" : 82,
+    "i" : "actsIn"
+  }, {
+    "@id" : 115,
+    "s" : 79,
+    "t" : 78,
+    "i" : "increases"
+  }, {
+    "@id" : 114,
+    "s" : 79,
+    "t" : 80,
+    "i" : "increases"
+  }, {
+    "@id" : 113,
+    "s" : 77,
+    "t" : 76,
+    "i" : "increases"
+  }, {
+    "@id" : 112,
+    "s" : 75,
+    "t" : 83,
+    "i" : "increases"
+  }, {
+    "@id" : 111,
+    "s" : 75,
+    "t" : 77,
+    "i" : "actsIn"
+  }, {
+    "@id" : 110,
+    "s" : 74,
+    "t" : 73,
+    "i" : "hasComponent"
+  }, {
+    "@id" : 109,
+    "s" : 74,
+    "t" : 81,
+    "i" : "actsIn"
+  }, {
+    "@id" : 108,
+    "s" : 74,
+    "t" : 72,
+    "i" : "hasComponent"
+  }, {
+    "@id" : 107,
+    "s" : 71,
+    "t" : 70,
+    "i" : "decreases"
+  }, {
+    "@id" : 106,
+    "s" : 71,
+    "t" : 69,
+    "i" : "decreases"
+  }, {
+    "@id" : 105,
+    "s" : 68,
+    "t" : 67,
+    "i" : "hasModification"
+  }, {
+    "@id" : 104,
+    "s" : 66,
+    "t" : 83,
+    "i" : "increases"
+  }, {
+    "@id" : 103,
+    "s" : 66,
+    "t" : 71,
+    "i" : "actsIn"
+  }, {
+    "@id" : 102,
+    "s" : 66,
+    "t" : 68,
+    "i" : "increases"
+  }, {
+    "@id" : 101,
+    "s" : 65,
+    "t" : 64,
+    "i" : "increases"
+  }, {
+    "@id" : 100,
+    "s" : 65,
+    "t" : 72,
+    "i" : "increases"
+  }, {
+    "@id" : 99,
+    "s" : 65,
+    "t" : 73,
+    "i" : "increases"
+  }, {
+    "@id" : 98,
+    "s" : 65,
+    "t" : 63,
+    "i" : "actsIn"
+  }, {
+    "@id" : 97,
+    "s" : 64,
+    "t" : 88,
+    "i" : "increases"
+  }, {
+    "@id" : 96,
+    "s" : 63,
+    "t" : 62,
+    "i" : "directlyIncreases"
+  }, {
+    "@id" : 95,
+    "s" : 63,
+    "t" : 73,
+    "i" : "directlyIncreases"
+  }, {
+    "@id" : 94,
+    "s" : 63,
+    "t" : 64,
+    "i" : "increases"
+  } ]
+}, {
+  "cyTableColumn" : [ {
+    "s" : 52,
+    "applies_to" : "node_table",
+    "n" : "shared name"
+  }, {
+    "s" : 52,
+    "applies_to" : "node_table",
+    "n" : "name"
+  }, {
+    "s" : 52,
+    "applies_to" : "node_table",
+    "n" : "selected",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "applies_to" : "node_table",
+    "n" : "canonicalName"
+  }, {
+    "s" : 52,
+    "applies_to" : "node_table",
+    "n" : "function"
+  }, {
+    "s" : 52,
+    "applies_to" : "edge_table",
+    "n" : "shared name"
+  }, {
+    "s" : 52,
+    "applies_to" : "edge_table",
+    "n" : "shared interaction"
+  }, {
+    "s" : 52,
+    "applies_to" : "edge_table",
+    "n" : "name"
+  }, {
+    "s" : 52,
+    "applies_to" : "edge_table",
+    "n" : "selected",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "applies_to" : "edge_table",
+    "n" : "interaction"
+  }, {
+    "s" : 52,
+    "applies_to" : "edge_table",
+    "n" : "canonicalName"
+  }, {
+    "s" : 52,
+    "applies_to" : "network_table",
+    "n" : "shared name"
+  }, {
+    "s" : 52,
+    "applies_to" : "network_table",
+    "n" : "name"
+  }, {
+    "s" : 52,
+    "applies_to" : "network_table",
+    "n" : "selected",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "applies_to" : "network_table",
+    "n" : "networkMetadata"
+  }, {
+    "s" : 52,
+    "applies_to" : "network_table",
+    "n" : "comment"
+  }, {
+    "s" : 52,
+    "applies_to" : "network_table",
+    "n" : "description"
+  }, {
+    "s" : 52,
+    "applies_to" : "network_table",
+    "n" : "species"
+  }, {
+    "s" : 52,
+    "applies_to" : "network_table",
+    "n" : "uri"
+  }, {
+    "s" : 52,
+    "applies_to" : "network_table",
+    "n" : "__Annotations",
+    "d" : "list_of_string"
+  } ]
+}, {
+  "networkAttributes" : [ {
+    "n" : "name",
+    "v" : "Hox NVC4"
+  }, {
+    "s" : 52,
+    "n" : "species",
+    "v" : "None"
+  }, {
+    "s" : 52,
+    "n" : "name",
+    "v" : "Hox_NVC4"
+  }, {
+    "s" : 52,
+    "n" : "description",
+    "v" : "Renamed r() nodes and removed sec() nodes on network edge"
+  }, {
+    "s" : 52,
+    "n" : "comment",
+    "v" : "optimized layout"
+  }, {
+    "s" : 52,
+    "n" : "uri",
+    "v" : "https://sdpdemo.selventa.com/api/models/51fbe61142bc1d5daeea23e2"
+  }, {
+    "s" : 52,
+    "n" : "selected",
+    "v" : "true",
+    "d" : "boolean"
+  } ]
+}, {
+  "cyHiddenAttributes" : [ {
+    "s" : 52,
+    "n" : "__layoutAlgorithm",
+    "v" : "Edge-Weighted Force-Directed AllegroLayout"
+  } ]
+}, {
+  "nodeAttributes" : [ {
+    "s" : 52,
+    "po" : 93,
+    "n" : "name",
+    "v" : "p(HGNC:HOXB4)"
+  }, {
+    "s" : 52,
+    "po" : 93,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 93,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:HOXB4)"
+  }, {
+    "s" : 52,
+    "po" : 93,
+    "n" : "function",
+    "v" : "proteinAbundance"
+  }, {
+    "s" : 52,
+    "po" : 92,
+    "n" : "name",
+    "v" : "tscript(p(HGNC:HOXB4))"
+  }, {
+    "s" : 52,
+    "po" : 92,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 92,
+    "n" : "canonicalName",
+    "v" : "tscript(p(HGNC:HOXB4))"
+  }, {
+    "s" : 52,
+    "po" : 92,
+    "n" : "function",
+    "v" : "transcriptionalActivity"
+  }, {
+    "s" : 52,
+    "po" : 91,
+    "n" : "name",
+    "v" : "p(HGNC:CDKN1B)"
+  }, {
+    "s" : 52,
+    "po" : 91,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 91,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:CDKN1B)"
+  }, {
+    "s" : 52,
+    "po" : 91,
+    "n" : "function",
+    "v" : "proteinAbundance"
+  }, {
+    "s" : 52,
+    "po" : 90,
+    "n" : "name",
+    "v" : "p(HGNC:CDKN1A)"
+  }, {
+    "s" : 52,
+    "po" : 90,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 90,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:CDKN1A)"
+  }, {
+    "s" : 52,
+    "po" : 90,
+    "n" : "function",
+    "v" : "proteinAbundance"
+  }, {
+    "s" : 52,
+    "po" : 89,
+    "n" : "name",
+    "v" : "p(HGNC:PDGFRB)"
+  }, {
+    "s" : 52,
+    "po" : 89,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 89,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:PDGFRB)"
+  }, {
+    "s" : 52,
+    "po" : 89,
+    "n" : "function",
+    "v" : "proteinAbundance"
+  }, {
+    "s" : 52,
+    "po" : 88,
+    "n" : "name",
+    "v" : "kin(p(HGNC:PDGFRB))"
+  }, {
+    "s" : 52,
+    "po" : 88,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 88,
+    "n" : "canonicalName",
+    "v" : "kin(p(HGNC:PDGFRB))"
+  }, {
+    "s" : 52,
+    "po" : 88,
+    "n" : "function",
+    "v" : "kinaseActivity"
+  }, {
+    "s" : 52,
+    "po" : 87,
+    "n" : "name",
+    "v" : "p(HGNC:MEOX2)"
+  }, {
+    "s" : 52,
+    "po" : 87,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 87,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:MEOX2)"
+  }, {
+    "s" : 52,
+    "po" : 87,
+    "n" : "function",
+    "v" : "proteinAbundance"
+  }, {
+    "s" : 52,
+    "po" : 86,
+    "n" : "name",
+    "v" : "tscript(p(HGNC:MEOX2))"
+  }, {
+    "s" : 52,
+    "po" : 86,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 86,
+    "n" : "canonicalName",
+    "v" : "tscript(p(HGNC:MEOX2))"
+  }, {
+    "s" : 52,
+    "po" : 86,
+    "n" : "function",
+    "v" : "transcriptionalActivity"
+  }, {
+    "s" : 52,
+    "po" : 85,
+    "n" : "name",
+    "v" : "p(HGNC:CDKN2D)"
+  }, {
+    "s" : 52,
+    "po" : 85,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 85,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:CDKN2D)"
+  }, {
+    "s" : 52,
+    "po" : 85,
+    "n" : "function",
+    "v" : "proteinAbundance"
+  }, {
+    "s" : 52,
+    "po" : 84,
+    "n" : "name",
+    "v" : "p(HGNC:CDKN1C)"
+  }, {
+    "s" : 52,
+    "po" : 84,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 84,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:CDKN1C)"
+  }, {
+    "s" : 52,
+    "po" : 84,
+    "n" : "function",
+    "v" : "proteinAbundance"
+  }, {
+    "s" : 52,
+    "po" : 83,
+    "n" : "name",
+    "v" : "bp(GO:\"cell proliferation\")"
+  }, {
+    "s" : 52,
+    "po" : 83,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 83,
+    "n" : "canonicalName",
+    "v" : "bp(GO:\"cell proliferation\")"
+  }, {
+    "s" : 52,
+    "po" : 83,
+    "n" : "function",
+    "v" : "biologicalProcess"
+  }, {
+    "s" : 52,
+    "po" : 82,
+    "n" : "name",
+    "v" : "cat(p(HGNC:MMP14))"
+  }, {
+    "s" : 52,
+    "po" : 82,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 82,
+    "n" : "canonicalName",
+    "v" : "cat(p(HGNC:MMP14))"
+  }, {
+    "s" : 52,
+    "po" : 82,
+    "n" : "function",
+    "v" : "catalyticActivity"
+  }, {
+    "s" : 52,
+    "po" : 81,
+    "n" : "name",
+    "v" : "cat(complex(p(HGNC:ITGAV),p(HGNC:ITGB3)))"
+  }, {
+    "s" : 52,
+    "po" : 81,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 81,
+    "n" : "canonicalName",
+    "v" : "cat(complex(p(HGNC:ITGAV),p(HGNC:ITGB3)))"
+  }, {
+    "s" : 52,
+    "po" : 81,
+    "n" : "function",
+    "v" : "catalyticActivity"
+  }, {
+    "s" : 52,
+    "po" : 80,
+    "n" : "name",
+    "v" : "p(HGNC:MMP14)"
+  }, {
+    "s" : 52,
+    "po" : 80,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 80,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:MMP14)"
+  }, {
+    "s" : 52,
+    "po" : 80,
+    "n" : "function",
+    "v" : "proteinAbundance"
+  }, {
+    "s" : 52,
+    "po" : 79,
+    "n" : "name",
+    "v" : "p(HGNC:HOXA3)"
+  }, {
+    "s" : 52,
+    "po" : 79,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 79,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:HOXA3)"
+  }, {
+    "s" : 52,
+    "po" : 79,
+    "n" : "function",
+    "v" : "proteinAbundance"
+  }, {
+    "s" : 52,
+    "po" : 78,
+    "n" : "name",
+    "v" : "p(HGNC:PLAUR)"
+  }, {
+    "s" : 52,
+    "po" : 78,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 78,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:PLAUR)"
+  }, {
+    "s" : 52,
+    "po" : 78,
+    "n" : "function",
+    "v" : "proteinAbundance"
+  }, {
+    "s" : 52,
+    "po" : 77,
+    "n" : "name",
+    "v" : "tscript(p(HGNC:HOXA9))"
+  }, {
+    "s" : 52,
+    "po" : 77,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 77,
+    "n" : "canonicalName",
+    "v" : "tscript(p(HGNC:HOXA9))"
+  }, {
+    "s" : 52,
+    "po" : 77,
+    "n" : "function",
+    "v" : "transcriptionalActivity"
+  }, {
+    "s" : 52,
+    "po" : 76,
+    "n" : "name",
+    "v" : "p(HGNC:JUN)"
+  }, {
+    "s" : 52,
+    "po" : 76,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 76,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:JUN)"
+  }, {
+    "s" : 52,
+    "po" : 76,
+    "n" : "function",
+    "v" : "proteinAbundance"
+  }, {
+    "s" : 52,
+    "po" : 75,
+    "n" : "name",
+    "v" : "p(HGNC:HOXA9)"
+  }, {
+    "s" : 52,
+    "po" : 75,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 75,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:HOXA9)"
+  }, {
+    "s" : 52,
+    "po" : 75,
+    "n" : "function",
+    "v" : "proteinAbundance"
+  }, {
+    "s" : 52,
+    "po" : 74,
+    "n" : "name",
+    "v" : "complex(p(HGNC:ITGAV),p(HGNC:ITGB3))"
+  }, {
+    "s" : 52,
+    "po" : 74,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 74,
+    "n" : "canonicalName",
+    "v" : "complex(p(HGNC:ITGAV),p(HGNC:ITGB3))"
+  }, {
+    "s" : 52,
+    "po" : 74,
+    "n" : "function",
+    "v" : "complexAbundance"
+  }, {
+    "s" : 52,
+    "po" : 73,
+    "n" : "name",
+    "v" : "p(HGNC:ITGB3)"
+  }, {
+    "s" : 52,
+    "po" : 73,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 73,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:ITGB3)"
+  }, {
+    "s" : 52,
+    "po" : 73,
+    "n" : "function",
+    "v" : "proteinAbundance"
+  }, {
+    "s" : 52,
+    "po" : 72,
+    "n" : "name",
+    "v" : "p(HGNC:ITGAV)"
+  }, {
+    "s" : 52,
+    "po" : 72,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 72,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:ITGAV)"
+  }, {
+    "s" : 52,
+    "po" : 72,
+    "n" : "function",
+    "v" : "proteinAbundance"
+  }, {
+    "s" : 52,
+    "po" : 71,
+    "n" : "name",
+    "v" : "tscript(p(HGNC:HOXA5))"
+  }, {
+    "s" : 52,
+    "po" : 71,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 71,
+    "n" : "canonicalName",
+    "v" : "tscript(p(HGNC:HOXA5))"
+  }, {
+    "s" : 52,
+    "po" : 71,
+    "n" : "function",
+    "v" : "transcriptionalActivity"
+  }, {
+    "s" : 52,
+    "po" : 70,
+    "n" : "name",
+    "v" : "p(HGNC:PTGS2)"
+  }, {
+    "s" : 52,
+    "po" : 70,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 70,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:PTGS2)"
+  }, {
+    "s" : 52,
+    "po" : 70,
+    "n" : "function",
+    "v" : "proteinAbundance"
+  }, {
+    "s" : 52,
+    "po" : 69,
+    "n" : "name",
+    "v" : "p(HGNC:KDR)"
+  }, {
+    "s" : 52,
+    "po" : 69,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 69,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:KDR)"
+  }, {
+    "s" : 52,
+    "po" : 69,
+    "n" : "function",
+    "v" : "proteinAbundance"
+  }, {
+    "s" : 52,
+    "po" : 68,
+    "n" : "name",
+    "v" : "p(PFH:\"AKT Family\",pmod(P,S,473))"
+  }, {
+    "s" : 52,
+    "po" : 68,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 68,
+    "n" : "canonicalName",
+    "v" : "p(PFH:\"AKT Family\",pmod(P,S,473))"
+  }, {
+    "s" : 52,
+    "po" : 68,
+    "n" : "function",
+    "v" : "proteinAbundance"
+  }, {
+    "s" : 52,
+    "po" : 67,
+    "n" : "name",
+    "v" : "p(PFH:\"AKT Family\")"
+  }, {
+    "s" : 52,
+    "po" : 67,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 67,
+    "n" : "canonicalName",
+    "v" : "p(PFH:\"AKT Family\")"
+  }, {
+    "s" : 52,
+    "po" : 67,
+    "n" : "function",
+    "v" : "proteinAbundance"
+  }, {
+    "s" : 52,
+    "po" : 66,
+    "n" : "name",
+    "v" : "p(HGNC:HOXA5)"
+  }, {
+    "s" : 52,
+    "po" : 66,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 66,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:HOXA5)"
+  }, {
+    "s" : 52,
+    "po" : 66,
+    "n" : "function",
+    "v" : "proteinAbundance"
+  }, {
+    "s" : 52,
+    "po" : 65,
+    "n" : "name",
+    "v" : "p(HGNC:HOXD3)"
+  }, {
+    "s" : 52,
+    "po" : 65,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 65,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:HOXD3)"
+  }, {
+    "s" : 52,
+    "po" : 65,
+    "n" : "function",
+    "v" : "proteinAbundance"
+  }, {
+    "s" : 52,
+    "po" : 64,
+    "n" : "name",
+    "v" : "p(HGNC:PLAU)"
+  }, {
+    "s" : 52,
+    "po" : 64,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 64,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:PLAU)"
+  }, {
+    "s" : 52,
+    "po" : 64,
+    "n" : "function",
+    "v" : "proteinAbundance"
+  }, {
+    "s" : 52,
+    "po" : 63,
+    "n" : "name",
+    "v" : "tscript(p(HGNC:HOXD3))"
+  }, {
+    "s" : 52,
+    "po" : 63,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 63,
+    "n" : "canonicalName",
+    "v" : "tscript(p(HGNC:HOXD3))"
+  }, {
+    "s" : 52,
+    "po" : 63,
+    "n" : "function",
+    "v" : "transcriptionalActivity"
+  }, {
+    "s" : 52,
+    "po" : 62,
+    "n" : "name",
+    "v" : "p(HGNC:ITGA5)"
+  }, {
+    "s" : 52,
+    "po" : 62,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 62,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:ITGA5)"
+  }, {
+    "s" : 52,
+    "po" : 62,
+    "n" : "function",
+    "v" : "proteinAbundance"
+  } ]
+}, {
+  "edgeAttributes" : [ {
+    "s" : 52,
+    "po" : 126,
+    "n" : "shared name",
+    "v" : "p(HGNC:HOXB4) (actsIn) tscript(p(HGNC:HOXB4))"
+  }, {
+    "s" : 52,
+    "po" : 126,
+    "n" : "name",
+    "v" : "p(HGNC:HOXB4) (actsIn) tscript(p(HGNC:HOXB4))"
+  }, {
+    "s" : 52,
+    "po" : 126,
+    "n" : "interaction",
+    "v" : "actsIn"
+  }, {
+    "s" : 52,
+    "po" : 126,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 126,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:HOXB4) (actsIn) tscript(p(HGNC:HOXB4))"
+  }, {
+    "s" : 52,
+    "po" : 125,
+    "n" : "shared name",
+    "v" : "tscript(p(HGNC:HOXB4)) (decreases) p(HGNC:CDKN1B)"
+  }, {
+    "s" : 52,
+    "po" : 125,
+    "n" : "name",
+    "v" : "tscript(p(HGNC:HOXB4)) (decreases) p(HGNC:CDKN1B)"
+  }, {
+    "s" : 52,
+    "po" : 125,
+    "n" : "interaction",
+    "v" : "decreases"
+  }, {
+    "s" : 52,
+    "po" : 125,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 125,
+    "n" : "canonicalName",
+    "v" : "tscript(p(HGNC:HOXB4)) (decreases) p(HGNC:CDKN1B)"
+  }, {
+    "s" : 52,
+    "po" : 124,
+    "n" : "shared name",
+    "v" : "tscript(p(HGNC:HOXB4)) (decreases) p(HGNC:CDKN1A)"
+  }, {
+    "s" : 52,
+    "po" : 124,
+    "n" : "name",
+    "v" : "tscript(p(HGNC:HOXB4)) (decreases) p(HGNC:CDKN1A)"
+  }, {
+    "s" : 52,
+    "po" : 124,
+    "n" : "interaction",
+    "v" : "decreases"
+  }, {
+    "s" : 52,
+    "po" : 124,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 124,
+    "n" : "canonicalName",
+    "v" : "tscript(p(HGNC:HOXB4)) (decreases) p(HGNC:CDKN1A)"
+  }, {
+    "s" : 52,
+    "po" : 123,
+    "n" : "shared name",
+    "v" : "p(HGNC:PDGFRB) (actsIn) kin(p(HGNC:PDGFRB))"
+  }, {
+    "s" : 52,
+    "po" : 123,
+    "n" : "name",
+    "v" : "p(HGNC:PDGFRB) (actsIn) kin(p(HGNC:PDGFRB))"
+  }, {
+    "s" : 52,
+    "po" : 123,
+    "n" : "interaction",
+    "v" : "actsIn"
+  }, {
+    "s" : 52,
+    "po" : 123,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 123,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:PDGFRB) (actsIn) kin(p(HGNC:PDGFRB))"
+  }, {
+    "s" : 52,
+    "po" : 122,
+    "n" : "shared name",
+    "v" : "p(HGNC:MEOX2) (actsIn) tscript(p(HGNC:MEOX2))"
+  }, {
+    "s" : 52,
+    "po" : 122,
+    "n" : "name",
+    "v" : "p(HGNC:MEOX2) (actsIn) tscript(p(HGNC:MEOX2))"
+  }, {
+    "s" : 52,
+    "po" : 122,
+    "n" : "interaction",
+    "v" : "actsIn"
+  }, {
+    "s" : 52,
+    "po" : 122,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 122,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:MEOX2) (actsIn) tscript(p(HGNC:MEOX2))"
+  }, {
+    "s" : 52,
+    "po" : 121,
+    "n" : "shared name",
+    "v" : "tscript(p(HGNC:MEOX2)) (increases) p(HGNC:CDKN2D)"
+  }, {
+    "s" : 52,
+    "po" : 121,
+    "n" : "name",
+    "v" : "tscript(p(HGNC:MEOX2)) (increases) p(HGNC:CDKN2D)"
+  }, {
+    "s" : 52,
+    "po" : 121,
+    "n" : "interaction",
+    "v" : "increases"
+  }, {
+    "s" : 52,
+    "po" : 121,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 121,
+    "n" : "canonicalName",
+    "v" : "tscript(p(HGNC:MEOX2)) (increases) p(HGNC:CDKN2D)"
+  }, {
+    "s" : 52,
+    "po" : 120,
+    "n" : "shared name",
+    "v" : "tscript(p(HGNC:MEOX2)) (increases) p(HGNC:CDKN1C)"
+  }, {
+    "s" : 52,
+    "po" : 120,
+    "n" : "name",
+    "v" : "tscript(p(HGNC:MEOX2)) (increases) p(HGNC:CDKN1C)"
+  }, {
+    "s" : 52,
+    "po" : 120,
+    "n" : "interaction",
+    "v" : "increases"
+  }, {
+    "s" : 52,
+    "po" : 120,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 120,
+    "n" : "canonicalName",
+    "v" : "tscript(p(HGNC:MEOX2)) (increases) p(HGNC:CDKN1C)"
+  }, {
+    "s" : 52,
+    "po" : 119,
+    "n" : "shared name",
+    "v" : "tscript(p(HGNC:MEOX2)) (decreases) bp(GO:\"cell proliferation\")"
+  }, {
+    "s" : 52,
+    "po" : 119,
+    "n" : "name",
+    "v" : "tscript(p(HGNC:MEOX2)) (decreases) bp(GO:\"cell proliferation\")"
+  }, {
+    "s" : 52,
+    "po" : 119,
+    "n" : "interaction",
+    "v" : "decreases"
+  }, {
+    "s" : 52,
+    "po" : 119,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 119,
+    "n" : "canonicalName",
+    "v" : "tscript(p(HGNC:MEOX2)) (decreases) bp(GO:\"cell proliferation\")"
+  }, {
+    "s" : 52,
+    "po" : 118,
+    "n" : "shared name",
+    "v" : "tscript(p(HGNC:MEOX2)) (directlyIncreases) p(HGNC:CDKN1A)"
+  }, {
+    "s" : 52,
+    "po" : 118,
+    "n" : "name",
+    "v" : "tscript(p(HGNC:MEOX2)) (directlyIncreases) p(HGNC:CDKN1A)"
+  }, {
+    "s" : 52,
+    "po" : 118,
+    "n" : "interaction",
+    "v" : "directlyIncreases"
+  }, {
+    "s" : 52,
+    "po" : 118,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 118,
+    "n" : "canonicalName",
+    "v" : "tscript(p(HGNC:MEOX2)) (directlyIncreases) p(HGNC:CDKN1A)"
+  }, {
+    "s" : 52,
+    "po" : 117,
+    "n" : "shared name",
+    "v" : "cat(p(HGNC:MMP14)) (increases) cat(complex(p(HGNC:ITGAV),p(HGNC:ITGB3)))"
+  }, {
+    "s" : 52,
+    "po" : 117,
+    "n" : "name",
+    "v" : "cat(p(HGNC:MMP14)) (increases) cat(complex(p(HGNC:ITGAV),p(HGNC:ITGB3)))"
+  }, {
+    "s" : 52,
+    "po" : 117,
+    "n" : "interaction",
+    "v" : "increases"
+  }, {
+    "s" : 52,
+    "po" : 117,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 117,
+    "n" : "canonicalName",
+    "v" : "cat(p(HGNC:MMP14)) (increases) cat(complex(p(HGNC:ITGAV),p(HGNC:ITGB3)))"
+  }, {
+    "s" : 52,
+    "po" : 116,
+    "n" : "shared name",
+    "v" : "p(HGNC:MMP14) (actsIn) cat(p(HGNC:MMP14))"
+  }, {
+    "s" : 52,
+    "po" : 116,
+    "n" : "name",
+    "v" : "p(HGNC:MMP14) (actsIn) cat(p(HGNC:MMP14))"
+  }, {
+    "s" : 52,
+    "po" : 116,
+    "n" : "interaction",
+    "v" : "actsIn"
+  }, {
+    "s" : 52,
+    "po" : 116,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 116,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:MMP14) (actsIn) cat(p(HGNC:MMP14))"
+  }, {
+    "s" : 52,
+    "po" : 115,
+    "n" : "shared name",
+    "v" : "p(HGNC:HOXA3) (increases) p(HGNC:PLAUR)"
+  }, {
+    "s" : 52,
+    "po" : 115,
+    "n" : "name",
+    "v" : "p(HGNC:HOXA3) (increases) p(HGNC:PLAUR)"
+  }, {
+    "s" : 52,
+    "po" : 115,
+    "n" : "interaction",
+    "v" : "increases"
+  }, {
+    "s" : 52,
+    "po" : 115,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 115,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:HOXA3) (increases) p(HGNC:PLAUR)"
+  }, {
+    "s" : 52,
+    "po" : 114,
+    "n" : "shared name",
+    "v" : "p(HGNC:HOXA3) (increases) p(HGNC:MMP14)"
+  }, {
+    "s" : 52,
+    "po" : 114,
+    "n" : "name",
+    "v" : "p(HGNC:HOXA3) (increases) p(HGNC:MMP14)"
+  }, {
+    "s" : 52,
+    "po" : 114,
+    "n" : "interaction",
+    "v" : "increases"
+  }, {
+    "s" : 52,
+    "po" : 114,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 114,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:HOXA3) (increases) p(HGNC:MMP14)"
+  }, {
+    "s" : 52,
+    "po" : 113,
+    "n" : "shared name",
+    "v" : "tscript(p(HGNC:HOXA9)) (increases) p(HGNC:JUN)"
+  }, {
+    "s" : 52,
+    "po" : 113,
+    "n" : "name",
+    "v" : "tscript(p(HGNC:HOXA9)) (increases) p(HGNC:JUN)"
+  }, {
+    "s" : 52,
+    "po" : 113,
+    "n" : "interaction",
+    "v" : "increases"
+  }, {
+    "s" : 52,
+    "po" : 113,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 113,
+    "n" : "canonicalName",
+    "v" : "tscript(p(HGNC:HOXA9)) (increases) p(HGNC:JUN)"
+  }, {
+    "s" : 52,
+    "po" : 112,
+    "n" : "shared name",
+    "v" : "p(HGNC:HOXA9) (increases) bp(GO:\"cell proliferation\")"
+  }, {
+    "s" : 52,
+    "po" : 112,
+    "n" : "name",
+    "v" : "p(HGNC:HOXA9) (increases) bp(GO:\"cell proliferation\")"
+  }, {
+    "s" : 52,
+    "po" : 112,
+    "n" : "interaction",
+    "v" : "increases"
+  }, {
+    "s" : 52,
+    "po" : 112,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 112,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:HOXA9) (increases) bp(GO:\"cell proliferation\")"
+  }, {
+    "s" : 52,
+    "po" : 111,
+    "n" : "shared name",
+    "v" : "p(HGNC:HOXA9) (actsIn) tscript(p(HGNC:HOXA9))"
+  }, {
+    "s" : 52,
+    "po" : 111,
+    "n" : "name",
+    "v" : "p(HGNC:HOXA9) (actsIn) tscript(p(HGNC:HOXA9))"
+  }, {
+    "s" : 52,
+    "po" : 111,
+    "n" : "interaction",
+    "v" : "actsIn"
+  }, {
+    "s" : 52,
+    "po" : 111,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 111,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:HOXA9) (actsIn) tscript(p(HGNC:HOXA9))"
+  }, {
+    "s" : 52,
+    "po" : 110,
+    "n" : "shared name",
+    "v" : "complex(p(HGNC:ITGAV),p(HGNC:ITGB3)) (hasComponent) p(HGNC:ITGB3)"
+  }, {
+    "s" : 52,
+    "po" : 110,
+    "n" : "name",
+    "v" : "complex(p(HGNC:ITGAV),p(HGNC:ITGB3)) (hasComponent) p(HGNC:ITGB3)"
+  }, {
+    "s" : 52,
+    "po" : 110,
+    "n" : "interaction",
+    "v" : "hasComponent"
+  }, {
+    "s" : 52,
+    "po" : 110,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 110,
+    "n" : "canonicalName",
+    "v" : "complex(p(HGNC:ITGAV),p(HGNC:ITGB3)) (hasComponent) p(HGNC:ITGB3)"
+  }, {
+    "s" : 52,
+    "po" : 109,
+    "n" : "shared name",
+    "v" : "complex(p(HGNC:ITGAV),p(HGNC:ITGB3)) (actsIn) cat(complex(p(HGNC:ITGAV),p(HGNC:ITGB3)))"
+  }, {
+    "s" : 52,
+    "po" : 109,
+    "n" : "name",
+    "v" : "complex(p(HGNC:ITGAV),p(HGNC:ITGB3)) (actsIn) cat(complex(p(HGNC:ITGAV),p(HGNC:ITGB3)))"
+  }, {
+    "s" : 52,
+    "po" : 109,
+    "n" : "interaction",
+    "v" : "actsIn"
+  }, {
+    "s" : 52,
+    "po" : 109,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 109,
+    "n" : "canonicalName",
+    "v" : "complex(p(HGNC:ITGAV),p(HGNC:ITGB3)) (actsIn) cat(complex(p(HGNC:ITGAV),p(HGNC:ITGB3)))"
+  }, {
+    "s" : 52,
+    "po" : 108,
+    "n" : "shared name",
+    "v" : "complex(p(HGNC:ITGAV),p(HGNC:ITGB3)) (hasComponent) p(HGNC:ITGAV)"
+  }, {
+    "s" : 52,
+    "po" : 108,
+    "n" : "name",
+    "v" : "complex(p(HGNC:ITGAV),p(HGNC:ITGB3)) (hasComponent) p(HGNC:ITGAV)"
+  }, {
+    "s" : 52,
+    "po" : 108,
+    "n" : "interaction",
+    "v" : "hasComponent"
+  }, {
+    "s" : 52,
+    "po" : 108,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 108,
+    "n" : "canonicalName",
+    "v" : "complex(p(HGNC:ITGAV),p(HGNC:ITGB3)) (hasComponent) p(HGNC:ITGAV)"
+  }, {
+    "s" : 52,
+    "po" : 107,
+    "n" : "shared name",
+    "v" : "tscript(p(HGNC:HOXA5)) (decreases) p(HGNC:PTGS2)"
+  }, {
+    "s" : 52,
+    "po" : 107,
+    "n" : "name",
+    "v" : "tscript(p(HGNC:HOXA5)) (decreases) p(HGNC:PTGS2)"
+  }, {
+    "s" : 52,
+    "po" : 107,
+    "n" : "interaction",
+    "v" : "decreases"
+  }, {
+    "s" : 52,
+    "po" : 107,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 107,
+    "n" : "canonicalName",
+    "v" : "tscript(p(HGNC:HOXA5)) (decreases) p(HGNC:PTGS2)"
+  }, {
+    "s" : 52,
+    "po" : 106,
+    "n" : "shared name",
+    "v" : "tscript(p(HGNC:HOXA5)) (decreases) p(HGNC:KDR)"
+  }, {
+    "s" : 52,
+    "po" : 106,
+    "n" : "name",
+    "v" : "tscript(p(HGNC:HOXA5)) (decreases) p(HGNC:KDR)"
+  }, {
+    "s" : 52,
+    "po" : 106,
+    "n" : "interaction",
+    "v" : "decreases"
+  }, {
+    "s" : 52,
+    "po" : 106,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 106,
+    "n" : "canonicalName",
+    "v" : "tscript(p(HGNC:HOXA5)) (decreases) p(HGNC:KDR)"
+  }, {
+    "s" : 52,
+    "po" : 105,
+    "n" : "shared name",
+    "v" : "p(PFH:\"AKT Family\",pmod(P,S,473)) (hasModification) p(PFH:\"AKT Family\")"
+  }, {
+    "s" : 52,
+    "po" : 105,
+    "n" : "name",
+    "v" : "p(PFH:\"AKT Family\",pmod(P,S,473)) (hasModification) p(PFH:\"AKT Family\")"
+  }, {
+    "s" : 52,
+    "po" : 105,
+    "n" : "interaction",
+    "v" : "hasModification"
+  }, {
+    "s" : 52,
+    "po" : 105,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 105,
+    "n" : "canonicalName",
+    "v" : "p(PFH:\"AKT Family\",pmod(P,S,473)) (hasModification) p(PFH:\"AKT Family\")"
+  }, {
+    "s" : 52,
+    "po" : 104,
+    "n" : "shared name",
+    "v" : "p(HGNC:HOXA5) (increases) bp(GO:\"cell proliferation\")"
+  }, {
+    "s" : 52,
+    "po" : 104,
+    "n" : "name",
+    "v" : "p(HGNC:HOXA5) (increases) bp(GO:\"cell proliferation\")"
+  }, {
+    "s" : 52,
+    "po" : 104,
+    "n" : "interaction",
+    "v" : "increases"
+  }, {
+    "s" : 52,
+    "po" : 104,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 104,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:HOXA5) (increases) bp(GO:\"cell proliferation\")"
+  }, {
+    "s" : 52,
+    "po" : 103,
+    "n" : "shared name",
+    "v" : "p(HGNC:HOXA5) (actsIn) tscript(p(HGNC:HOXA5))"
+  }, {
+    "s" : 52,
+    "po" : 103,
+    "n" : "name",
+    "v" : "p(HGNC:HOXA5) (actsIn) tscript(p(HGNC:HOXA5))"
+  }, {
+    "s" : 52,
+    "po" : 103,
+    "n" : "interaction",
+    "v" : "actsIn"
+  }, {
+    "s" : 52,
+    "po" : 103,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 103,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:HOXA5) (actsIn) tscript(p(HGNC:HOXA5))"
+  }, {
+    "s" : 52,
+    "po" : 102,
+    "n" : "shared name",
+    "v" : "p(HGNC:HOXA5) (increases) p(PFH:\"AKT Family\",pmod(P,S,473))"
+  }, {
+    "s" : 52,
+    "po" : 102,
+    "n" : "name",
+    "v" : "p(HGNC:HOXA5) (increases) p(PFH:\"AKT Family\",pmod(P,S,473))"
+  }, {
+    "s" : 52,
+    "po" : 102,
+    "n" : "interaction",
+    "v" : "increases"
+  }, {
+    "s" : 52,
+    "po" : 102,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 102,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:HOXA5) (increases) p(PFH:\"AKT Family\",pmod(P,S,473))"
+  }, {
+    "s" : 52,
+    "po" : 101,
+    "n" : "shared name",
+    "v" : "p(HGNC:HOXD3) (increases) p(HGNC:PLAU)"
+  }, {
+    "s" : 52,
+    "po" : 101,
+    "n" : "name",
+    "v" : "p(HGNC:HOXD3) (increases) p(HGNC:PLAU)"
+  }, {
+    "s" : 52,
+    "po" : 101,
+    "n" : "interaction",
+    "v" : "increases"
+  }, {
+    "s" : 52,
+    "po" : 101,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 101,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:HOXD3) (increases) p(HGNC:PLAU)"
+  }, {
+    "s" : 52,
+    "po" : 100,
+    "n" : "shared name",
+    "v" : "p(HGNC:HOXD3) (increases) p(HGNC:ITGAV)"
+  }, {
+    "s" : 52,
+    "po" : 100,
+    "n" : "name",
+    "v" : "p(HGNC:HOXD3) (increases) p(HGNC:ITGAV)"
+  }, {
+    "s" : 52,
+    "po" : 100,
+    "n" : "interaction",
+    "v" : "increases"
+  }, {
+    "s" : 52,
+    "po" : 100,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 100,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:HOXD3) (increases) p(HGNC:ITGAV)"
+  }, {
+    "s" : 52,
+    "po" : 99,
+    "n" : "shared name",
+    "v" : "p(HGNC:HOXD3) (increases) p(HGNC:ITGB3)"
+  }, {
+    "s" : 52,
+    "po" : 99,
+    "n" : "name",
+    "v" : "p(HGNC:HOXD3) (increases) p(HGNC:ITGB3)"
+  }, {
+    "s" : 52,
+    "po" : 99,
+    "n" : "interaction",
+    "v" : "increases"
+  }, {
+    "s" : 52,
+    "po" : 99,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 99,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:HOXD3) (increases) p(HGNC:ITGB3)"
+  }, {
+    "s" : 52,
+    "po" : 98,
+    "n" : "shared name",
+    "v" : "p(HGNC:HOXD3) (actsIn) tscript(p(HGNC:HOXD3))"
+  }, {
+    "s" : 52,
+    "po" : 98,
+    "n" : "name",
+    "v" : "p(HGNC:HOXD3) (actsIn) tscript(p(HGNC:HOXD3))"
+  }, {
+    "s" : 52,
+    "po" : 98,
+    "n" : "interaction",
+    "v" : "actsIn"
+  }, {
+    "s" : 52,
+    "po" : 98,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 98,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:HOXD3) (actsIn) tscript(p(HGNC:HOXD3))"
+  }, {
+    "s" : 52,
+    "po" : 97,
+    "n" : "shared name",
+    "v" : "p(HGNC:PLAU) (increases) kin(p(HGNC:PDGFRB))"
+  }, {
+    "s" : 52,
+    "po" : 97,
+    "n" : "name",
+    "v" : "p(HGNC:PLAU) (increases) kin(p(HGNC:PDGFRB))"
+  }, {
+    "s" : 52,
+    "po" : 97,
+    "n" : "interaction",
+    "v" : "increases"
+  }, {
+    "s" : 52,
+    "po" : 97,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 97,
+    "n" : "canonicalName",
+    "v" : "p(HGNC:PLAU) (increases) kin(p(HGNC:PDGFRB))"
+  }, {
+    "s" : 52,
+    "po" : 96,
+    "n" : "shared name",
+    "v" : "tscript(p(HGNC:HOXD3)) (directlyIncreases) p(HGNC:ITGA5)"
+  }, {
+    "s" : 52,
+    "po" : 96,
+    "n" : "name",
+    "v" : "tscript(p(HGNC:HOXD3)) (directlyIncreases) p(HGNC:ITGA5)"
+  }, {
+    "s" : 52,
+    "po" : 96,
+    "n" : "interaction",
+    "v" : "directlyIncreases"
+  }, {
+    "s" : 52,
+    "po" : 96,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 96,
+    "n" : "canonicalName",
+    "v" : "tscript(p(HGNC:HOXD3)) (directlyIncreases) p(HGNC:ITGA5)"
+  }, {
+    "s" : 52,
+    "po" : 95,
+    "n" : "shared name",
+    "v" : "tscript(p(HGNC:HOXD3)) (directlyIncreases) p(HGNC:ITGB3)"
+  }, {
+    "s" : 52,
+    "po" : 95,
+    "n" : "name",
+    "v" : "tscript(p(HGNC:HOXD3)) (directlyIncreases) p(HGNC:ITGB3)"
+  }, {
+    "s" : 52,
+    "po" : 95,
+    "n" : "interaction",
+    "v" : "directlyIncreases"
+  }, {
+    "s" : 52,
+    "po" : 95,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 95,
+    "n" : "canonicalName",
+    "v" : "tscript(p(HGNC:HOXD3)) (directlyIncreases) p(HGNC:ITGB3)"
+  }, {
+    "s" : 52,
+    "po" : 94,
+    "n" : "shared name",
+    "v" : "tscript(p(HGNC:HOXD3)) (increases) p(HGNC:PLAU)"
+  }, {
+    "s" : 52,
+    "po" : 94,
+    "n" : "name",
+    "v" : "tscript(p(HGNC:HOXD3)) (increases) p(HGNC:PLAU)"
+  }, {
+    "s" : 52,
+    "po" : 94,
+    "n" : "interaction",
+    "v" : "increases"
+  }, {
+    "s" : 52,
+    "po" : 94,
+    "n" : "selected",
+    "v" : "false",
+    "d" : "boolean"
+  }, {
+    "s" : 52,
+    "po" : 94,
+    "n" : "canonicalName",
+    "v" : "tscript(p(HGNC:HOXD3)) (increases) p(HGNC:PLAU)"
+  } ]
+}, {
+  "cartesianLayout" : [ {
+    "node" : 93,
+    "view" : 127,
+    "x" : 188.0,
+    "y" : 556.0
+  }, {
+    "node" : 92,
+    "view" : 127,
+    "x" : 63.0,
+    "y" : 356.0
+  }, {
+    "node" : 91,
+    "view" : 127,
+    "x" : -37.0,
+    "y" : 531.0
+  }, {
+    "node" : 90,
+    "view" : 127,
+    "x" : 264.0,
+    "y" : 342.0
+  }, {
+    "node" : 89,
+    "view" : 127,
+    "x" : 841.0,
+    "y" : 570.0
+  }, {
+    "node" : 88,
+    "view" : 127,
+    "x" : 826.0,
+    "y" : 337.0
+  }, {
+    "node" : 87,
+    "view" : 127,
+    "x" : 613.0,
+    "y" : 464.0
+  }, {
+    "node" : 86,
+    "view" : 127,
+    "x" : 454.0,
+    "y" : 348.0
+  }, {
+    "node" : 85,
+    "view" : 127,
+    "x" : 347.0,
+    "y" : 124.0
+  }, {
+    "node" : 84,
+    "view" : 127,
+    "x" : 552.0,
+    "y" : 161.0
+  }, {
+    "node" : 83,
+    "view" : 127,
+    "x" : 474.0,
+    "y" : 651.0
+  }, {
+    "node" : 82,
+    "view" : 127,
+    "x" : 1344.0,
+    "y" : 901.0
+  }, {
+    "node" : 81,
+    "view" : 127,
+    "x" : 1413.0,
+    "y" : 678.0
+  }, {
+    "node" : 80,
+    "view" : 127,
+    "x" : 1136.0,
+    "y" : 865.0
+  }, {
+    "node" : 79,
+    "view" : 127,
+    "x" : 978.0,
+    "y" : 930.0
+  }, {
+    "node" : 78,
+    "view" : 127,
+    "x" : 1028.0,
+    "y" : 1124.0
+  }, {
+    "node" : 77,
+    "view" : 127,
+    "x" : 752.0,
+    "y" : 984.0
+  }, {
+    "node" : 76,
+    "view" : 127,
+    "x" : 783.0,
+    "y" : 1192.0
+  }, {
+    "node" : 75,
+    "view" : 127,
+    "x" : 677.0,
+    "y" : 776.0
+  }, {
+    "node" : 74,
+    "view" : 127,
+    "x" : 1230.0,
+    "y" : 533.0
+  }, {
+    "node" : 73,
+    "view" : 127,
+    "x" : 1020.0,
+    "y" : 397.0
+  }, {
+    "node" : 72,
+    "view" : 127,
+    "x" : 1263.0,
+    "y" : 321.0
+  }, {
+    "node" : 71,
+    "view" : 127,
+    "x" : 202.0,
+    "y" : 966.0
+  }, {
+    "node" : 70,
+    "view" : 127,
+    "x" : 75.0,
+    "y" : 818.0
+  }, {
+    "node" : 69,
+    "view" : 127,
+    "x" : 267.0,
+    "y" : 1156.0
+  }, {
+    "node" : 68,
+    "view" : 127,
+    "x" : 498.0,
+    "y" : 1001.0
+  }, {
+    "node" : 67,
+    "view" : 127,
+    "x" : 534.0,
+    "y" : 1197.0
+  }, {
+    "node" : 66,
+    "view" : 127,
+    "x" : 394.0,
+    "y" : 829.0
+  }, {
+    "node" : 65,
+    "view" : 127,
+    "x" : 1087.0,
+    "y" : 233.0
+  }, {
+    "node" : 64,
+    "view" : 127,
+    "x" : 1018.0,
+    "y" : 89.0
+  }, {
+    "node" : 63,
+    "view" : 127,
+    "x" : 866.0,
+    "y" : 123.0
+  }, {
+    "node" : 62,
+    "view" : 127,
+    "x" : 716.0,
+    "y" : -36.0
+  } ]
+}, {
+  "cyVisualProperties" : [ {
+    "properties_of" : "network",
+    "applies_to" : 127,
+    "view" : 127,
+    "properties" : {
+      "NETWORK_BACKGROUND_PAINT" : "#FFFFFF",
+      "NETWORK_CENTER_X_LOCATION" : "0.0",
+      "NETWORK_CENTER_Y_LOCATION" : "0.0",
+      "NETWORK_CENTER_Z_LOCATION" : "0.0",
+      "NETWORK_DEPTH" : "0.0",
+      "NETWORK_EDGE_SELECTION" : "true",
+      "NETWORK_HEIGHT" : "400.0",
+      "NETWORK_NODE_SELECTION" : "true",
+      "NETWORK_SCALE_FACTOR" : "1.0",
+      "NETWORK_SIZE" : "550.0",
+      "NETWORK_WIDTH" : "550.0"
+    }
+  }, {
+    "properties_of" : "nodes:default",
+    "applies_to" : 127,
+    "view" : 127,
+    "properties" : {
+      "COMPOUND_NODE_PADDING" : "10.0",
+      "COMPOUND_NODE_SHAPE" : "ROUND_RECTANGLE",
+      "NODE_BORDER_PAINT" : "#CCCCCC",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_TRANSPARENCY" : "255",
+      "NODE_BORDER_WIDTH" : "0.0",
+      "NODE_CUSTOMGRAPHICS_1" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_2" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_3" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_4" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_5" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_6" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_7" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_8" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_9" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+      "NODE_CUSTOMGRAPHICS_POSITION_1" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_2" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_3" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_4" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_5" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_6" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_7" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_8" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_POSITION_9" : "C,C,c,0.00,0.00",
+      "NODE_CUSTOMGRAPHICS_SIZE_1" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_2" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_3" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_4" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_5" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_6" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_7" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_8" : "50.0",
+      "NODE_CUSTOMGRAPHICS_SIZE_9" : "50.0",
+      "NODE_CUSTOMPAINT_1" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_1, name=Node Custom Paint 1)",
+      "NODE_CUSTOMPAINT_2" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_2, name=Node Custom Paint 2)",
+      "NODE_CUSTOMPAINT_3" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_3, name=Node Custom Paint 3)",
+      "NODE_CUSTOMPAINT_4" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_4, name=Node Custom Paint 4)",
+      "NODE_CUSTOMPAINT_5" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_5, name=Node Custom Paint 5)",
+      "NODE_CUSTOMPAINT_6" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_6, name=Node Custom Paint 6)",
+      "NODE_CUSTOMPAINT_7" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_7, name=Node Custom Paint 7)",
+      "NODE_CUSTOMPAINT_8" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_8, name=Node Custom Paint 8)",
+      "NODE_CUSTOMPAINT_9" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_9, name=Node Custom Paint 9)",
+      "NODE_DEPTH" : "0.0",
+      "NODE_FILL_COLOR" : "#89D0F5",
+      "NODE_HEIGHT" : "35.0",
+      "NODE_LABEL_COLOR" : "#000000",
+      "NODE_LABEL_FONT_FACE" : "SansSerif,plain,12",
+      "NODE_LABEL_FONT_SIZE" : "12",
+      "NODE_LABEL_POSITION" : "C,C,c,0.00,0.00",
+      "NODE_LABEL_TRANSPARENCY" : "255",
+      "NODE_LABEL_WIDTH" : "200.0",
+      "NODE_NESTED_NETWORK_IMAGE_VISIBLE" : "true",
+      "NODE_PAINT" : "#1E90FF",
+      "NODE_SELECTED" : "false",
+      "NODE_SELECTED_PAINT" : "#FFFF00",
+      "NODE_SHAPE" : "ROUND_RECTANGLE",
+      "NODE_SIZE" : "35.0",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_VISIBLE" : "true",
+      "NODE_WIDTH" : "75.0",
+      "NODE_X_LOCATION" : "0.0",
+      "NODE_Y_LOCATION" : "0.0",
+      "NODE_Z_LOCATION" : "0.0"
+    },
+    "dependencies" : {
+      "nodeCustomGraphicsSizeSync" : "true",
+      "nodeSizeLocked" : "false"
+    },
+    "mappings" : {
+      "NODE_LABEL" : {
+        "type" : "PASSTHROUGH",
+        "definition" : "COL=name,T=string"
+      }
+    }
+  }, {
+    "properties_of" : "edges:default",
+    "applies_to" : 127,
+    "view" : 127,
+    "properties" : {
+      "EDGE_CURVED" : "true",
+      "EDGE_LABEL_COLOR" : "#000000",
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LABEL_FONT_SIZE" : "10",
+      "EDGE_LABEL_TRANSPARENCY" : "255",
+      "EDGE_LABEL_WIDTH" : "200.0",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_PAINT" : "#323232",
+      "EDGE_SELECTED" : "false",
+      "EDGE_SELECTED_PAINT" : "#FF0000",
+      "EDGE_SOURCE_ARROW_SELECTED_PAINT" : "#FFFF00",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_SELECTED_PAINT" : "#FF0000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#848484",
+      "EDGE_TARGET_ARROW_SELECTED_PAINT" : "#FFFF00",
+      "EDGE_TARGET_ARROW_SHAPE" : "NONE",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_TRANSPARENCY" : "255",
+      "EDGE_UNSELECTED_PAINT" : "#404040",
+      "EDGE_VISIBLE" : "true",
+      "EDGE_WIDTH" : "2.0"
+    },
+    "dependencies" : {
+      "arrowColorMatchesEdge" : "false"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 93,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#64FFFF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "p(HGNC:HOXB4)",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "75.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 92,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#6464FF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "tscript(p(HGNC:HOXB4))",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_SHAPE" : "HEXAGON",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "110.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 91,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#64FFFF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "p(HGNC:CDKN1B)",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "75.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 90,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#64FFFF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "p(HGNC:CDKN1A)",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "75.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 89,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#64FFFF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "p(HGNC:PDGFRB)",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "75.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 88,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#6464FF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "kin(p(HGNC:PDGFRB))",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_SHAPE" : "HEXAGON",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "110.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 87,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#64FFFF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "p(HGNC:MEOX2)",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "75.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 86,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#6464FF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "tscript(p(HGNC:MEOX2))",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_SHAPE" : "HEXAGON",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "110.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 85,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#64FFFF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "p(HGNC:CDKN2D)",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "75.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 84,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#64FFFF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "p(HGNC:CDKN1C)",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "75.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 83,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#FF64FF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "bp(GO:\"cell proliferation\")",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_SHAPE" : "PARALLELOGRAM",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "125.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 82,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#6464FF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "cat(p(HGNC:MMP14))",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_SHAPE" : "HEXAGON",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "110.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 81,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#6464FF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "cat(complex(p(HGNC:ITGAV),p(HGNC:ITGB3)))",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_SHAPE" : "HEXAGON",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "110.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 80,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#64FFFF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "p(HGNC:MMP14)",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "75.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 79,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#64FFFF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "p(HGNC:HOXA3)",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "75.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 78,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#64FFFF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "p(HGNC:PLAUR)",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "75.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 77,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#6464FF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "tscript(p(HGNC:HOXA9))",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_SHAPE" : "HEXAGON",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "110.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 76,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#64FFFF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "p(HGNC:JUN)",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "75.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 75,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#64FFFF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "p(HGNC:HOXA9)",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "75.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 74,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#6496FF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "complex(p(HGNC:ITGAV),p(HGNC:ITGB3))",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "150.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 73,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#64FFFF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "p(HGNC:ITGB3)",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "75.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 72,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#64FFFF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "p(HGNC:ITGAV)",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "75.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 71,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#6464FF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "tscript(p(HGNC:HOXA5))",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_SHAPE" : "HEXAGON",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "110.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 70,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#64FFFF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "p(HGNC:PTGS2)",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "75.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 69,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#64FFFF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "p(HGNC:KDR)",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "75.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 68,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#64FFFF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "p(PFH:\"AKT Family\",pmod(P,S,473))",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "75.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 67,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#64FFFF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "p(PFH:\"AKT Family\")",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "75.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 66,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#64FFFF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "p(HGNC:HOXA5)",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "75.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 65,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#64FFFF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "p(HGNC:HOXD3)",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "75.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 64,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#64FFFF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "p(HGNC:PLAU)",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "75.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 63,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#6464FF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "tscript(p(HGNC:HOXD3))",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_SHAPE" : "HEXAGON",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "110.0"
+    }
+  }, {
+    "properties_of" : "nodes",
+    "applies_to" : 62,
+    "view" : 127,
+    "properties" : {
+      "NODE_BORDER_PAINT" : "#000000",
+      "NODE_BORDER_STROKE" : "SOLID",
+      "NODE_BORDER_WIDTH" : "1.0",
+      "NODE_FILL_COLOR" : "#64FFFF",
+      "NODE_HEIGHT" : "30.0",
+      "NODE_LABEL" : "p(HGNC:ITGA5)",
+      "NODE_LABEL_FONT_FACE" : "Dialog,plain,12",
+      "NODE_TRANSPARENCY" : "255",
+      "NODE_WIDTH" : "75.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 126,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "LONG_DASH",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#999999",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#999999",
+      "EDGE_TARGET_ARROW_SHAPE" : "DIAMOND",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#999999",
+      "EDGE_WIDTH" : "3.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 125,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#000000",
+      "EDGE_TARGET_ARROW_SHAPE" : "CIRCLE",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_WIDTH" : "1.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 124,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#000000",
+      "EDGE_TARGET_ARROW_SHAPE" : "CIRCLE",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_WIDTH" : "1.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 123,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "LONG_DASH",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#999999",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#999999",
+      "EDGE_TARGET_ARROW_SHAPE" : "DIAMOND",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#999999",
+      "EDGE_WIDTH" : "3.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 122,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "LONG_DASH",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#999999",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#999999",
+      "EDGE_TARGET_ARROW_SHAPE" : "DIAMOND",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#999999",
+      "EDGE_WIDTH" : "3.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 121,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#000000",
+      "EDGE_TARGET_ARROW_SHAPE" : "ARROW",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_WIDTH" : "1.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 120,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#000000",
+      "EDGE_TARGET_ARROW_SHAPE" : "ARROW",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_WIDTH" : "1.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 119,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#000000",
+      "EDGE_TARGET_ARROW_SHAPE" : "CIRCLE",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_WIDTH" : "1.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 118,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#000000",
+      "EDGE_TARGET_ARROW_SHAPE" : "ARROW",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_WIDTH" : "3.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 117,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#000000",
+      "EDGE_TARGET_ARROW_SHAPE" : "ARROW",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_WIDTH" : "1.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 116,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "LONG_DASH",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#999999",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#999999",
+      "EDGE_TARGET_ARROW_SHAPE" : "DIAMOND",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#999999",
+      "EDGE_WIDTH" : "3.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 115,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#000000",
+      "EDGE_TARGET_ARROW_SHAPE" : "ARROW",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_WIDTH" : "1.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 114,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#000000",
+      "EDGE_TARGET_ARROW_SHAPE" : "ARROW",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_WIDTH" : "1.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 113,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#000000",
+      "EDGE_TARGET_ARROW_SHAPE" : "ARROW",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_WIDTH" : "1.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 112,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#000000",
+      "EDGE_TARGET_ARROW_SHAPE" : "ARROW",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_WIDTH" : "1.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 111,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "LONG_DASH",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#999999",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#999999",
+      "EDGE_TARGET_ARROW_SHAPE" : "DIAMOND",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#999999",
+      "EDGE_WIDTH" : "3.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 110,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "EQUAL_DASH",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#999999",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#999999",
+      "EDGE_TARGET_ARROW_SHAPE" : "DIAMOND",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#999999",
+      "EDGE_WIDTH" : "3.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 109,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "LONG_DASH",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#999999",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#999999",
+      "EDGE_TARGET_ARROW_SHAPE" : "DIAMOND",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#999999",
+      "EDGE_WIDTH" : "3.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 108,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "EQUAL_DASH",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#999999",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#999999",
+      "EDGE_TARGET_ARROW_SHAPE" : "DIAMOND",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#999999",
+      "EDGE_WIDTH" : "3.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 107,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#000000",
+      "EDGE_TARGET_ARROW_SHAPE" : "CIRCLE",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_WIDTH" : "1.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 106,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#000000",
+      "EDGE_TARGET_ARROW_SHAPE" : "CIRCLE",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_WIDTH" : "1.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 105,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "EQUAL_DASH",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#999999",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#999999",
+      "EDGE_TARGET_ARROW_SHAPE" : "DIAMOND",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#999999",
+      "EDGE_WIDTH" : "3.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 104,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#000000",
+      "EDGE_TARGET_ARROW_SHAPE" : "ARROW",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_WIDTH" : "1.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 103,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "LONG_DASH",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#999999",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#999999",
+      "EDGE_TARGET_ARROW_SHAPE" : "DIAMOND",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#999999",
+      "EDGE_WIDTH" : "3.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 102,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#000000",
+      "EDGE_TARGET_ARROW_SHAPE" : "ARROW",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_WIDTH" : "1.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 101,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#000000",
+      "EDGE_TARGET_ARROW_SHAPE" : "ARROW",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_WIDTH" : "1.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 100,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#000000",
+      "EDGE_TARGET_ARROW_SHAPE" : "ARROW",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_WIDTH" : "1.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 99,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#000000",
+      "EDGE_TARGET_ARROW_SHAPE" : "ARROW",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_WIDTH" : "1.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 98,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "LONG_DASH",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#999999",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#999999",
+      "EDGE_TARGET_ARROW_SHAPE" : "DIAMOND",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#999999",
+      "EDGE_WIDTH" : "3.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 97,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#000000",
+      "EDGE_TARGET_ARROW_SHAPE" : "ARROW",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_WIDTH" : "1.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 96,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#000000",
+      "EDGE_TARGET_ARROW_SHAPE" : "ARROW",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_WIDTH" : "3.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 95,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#000000",
+      "EDGE_TARGET_ARROW_SHAPE" : "ARROW",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_WIDTH" : "3.0"
+    }
+  }, {
+    "properties_of" : "edges",
+    "applies_to" : 94,
+    "view" : 127,
+    "properties" : {
+      "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+      "EDGE_LINE_TYPE" : "SOLID",
+      "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+      "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_STROKE_UNSELECTED_PAINT" : "#000000",
+      "EDGE_TARGET_ARROW_SHAPE" : "ARROW",
+      "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#000000",
+      "EDGE_WIDTH" : "1.0"
+    }
+  } ]
+}, {
+  "cySubNetworks" : [ {
+    "@id" : 52,
+    "nodes" : [ 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 67, 66, 65, 64, 63, 62 ],
+    "edges" : [ 126, 125, 124, 123, 122, 121, 120, 119, 118, 117, 116, 115, 114, 113, 112, 111, 110, 109, 108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 94 ]
+  } ]
+}, {
+  "cyViews" : [ {
+    "@id" : 127,
+    "s" : 52
+  } ]
+}, {
+  "cyNetworkRelations" : [ {
+    "p" : 52,
+    "c" : 127,
+    "r" : "view",
+    "name" : "Hox_NVC4 view"
+  }, {
+    "p" : 36,
+    "c" : 52,
+    "r" : "subnetwork",
+    "name" : "Hox_NVC4"
+  } ]
+}, {
+  "metaData" : [ {
+    "consistencyGroup" : 1,
+    "elementCount" : 7,
+    "name" : "networkAttributes",
+    "properties" : [ ],
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : 1,
+    "elementCount" : 1,
+    "name" : "cyHiddenAttributes",
+    "properties" : [ ],
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : 1,
+    "elementCount" : 128,
+    "name" : "nodeAttributes",
+    "properties" : [ ],
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : 1,
+    "elementCount" : 165,
+    "name" : "edgeAttributes",
+    "properties" : [ ],
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : 1,
+    "elementCount" : 32,
+    "name" : "cartesianLayout",
+    "properties" : [ ],
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : 1,
+    "elementCount" : 68,
+    "name" : "cyVisualProperties",
+    "properties" : [ ],
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : 1,
+    "elementCount" : 1,
+    "name" : "cySubNetworks",
+    "properties" : [ ],
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : 1,
+    "elementCount" : 1,
+    "name" : "cyViews",
+    "properties" : [ ],
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : 1,
+    "elementCount" : 0,
+    "name" : "cyGroups",
+    "properties" : [ ],
+    "version" : "1.0"
+  }, {
+    "consistencyGroup" : 1,
+    "elementCount" : 2,
+    "name" : "cyNetworkRelations",
+    "properties" : [ ],
+    "version" : "1.0"
+  } ]
+}, {
+  "status" : [ {
+    "error" : "",
+    "success" : true
+  } ]
+} ]

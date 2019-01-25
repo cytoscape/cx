@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.ndexbio.cxio.aspects.datamodels.Mapping;
+import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.Settings;
 import org.cytoscape.io.internal.cxio.TimingUtil;
@@ -25,7 +26,9 @@ import org.cytoscape.view.model.View;
 import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.model.VisualProperty;
 import org.cytoscape.view.presentation.RenderingEngineManager;
+import org.cytoscape.view.presentation.property.ArrowShapeVisualProperty;
 import org.cytoscape.view.presentation.property.BasicVisualLexicon;
+import org.cytoscape.view.presentation.property.values.ArrowShape;
 import org.cytoscape.view.vizmap.VisualMappingFunctionFactory;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.view.vizmap.VisualPropertyDependency;
@@ -46,26 +49,21 @@ public final class ViewMaker {
     public final static void makeView(final CyNetworkView view,
 										final Long cx_view_id,
                                         final CxToCy cx_to_cy,
-                                        final String network_collection_name,
-                                        final RenderingEngineManager rendering_engine_manager,
-                                        final CyLayoutAlgorithmManager layout_manager,
-                                        final DialogTaskManager task_manager,
-                                        final CyNetworkViewManager networkview_manager,
-                                        final VisualMappingManager visual_mapping_manager,
-                                        final VisualStyleFactory visual_style_factory,
-                                        final VisualMappingFunctionFactory vmf_factory_c,
-                                        final VisualMappingFunctionFactory vmf_factory_d,
-                                        final VisualMappingFunctionFactory vmf_factory_p) 
+                                        final String network_collection_name) 
                                         		throws IOException {
     		
-        
+    	
+    	final VisualMappingManager visual_mapping_manager = CyServiceModule.getService(VisualMappingManager.class);
+    	final VisualStyleFactory visual_style_factory = CyServiceModule.getService(VisualStyleFactory.class);
+    	final RenderingEngineManager rendering_engine_manager = CyServiceModule.getService(RenderingEngineManager.class);
+    	
     	final long t0 = System.currentTimeMillis();
     	String doLayout = view.getEdgeViews().size() < 10000 ? "force-directed" : "grid";
     	final VisualElementCollectionMap collection = cx_to_cy.getVisualElementCollectionMap();
     	
     	if ((collection == null) || collection.isEmpty()) {
     		Settings.INSTANCE.debug("Default style for " + view);
-            ViewMaker.applyStyle(visual_mapping_manager.getDefaultVisualStyle(), view, layout_manager, task_manager, networkview_manager, doLayout);
+            ViewMaker.applyStyle(visual_mapping_manager.getDefaultVisualStyle(), view, doLayout);
             return ;
         }
     	
@@ -96,30 +94,21 @@ public final class ViewMaker {
             ViewMaker.setDefaultVisualPropertiesAndMappings(lexicon,
                                                             collection.getNetworkVisualPropertiesElement(cx_view_id),
                                                             new_visual_style,
-                                                            CyNetwork.class,
-                                                            vmf_factory_c,
-                                                            vmf_factory_d,
-                                                            vmf_factory_p);
+                                                            CyNetwork.class);
         }
         
         if (collection.getNodesDefaultVisualPropertiesElement(cx_view_id) != null) {
             ViewMaker.setDefaultVisualPropertiesAndMappings(lexicon,
                                                             collection.getNodesDefaultVisualPropertiesElement(cx_view_id),
                                                             new_visual_style,
-                                                            CyNode.class,
-                                                            vmf_factory_c,
-                                                            vmf_factory_d,
-                                                            vmf_factory_p);
+                                                            CyNode.class);
         }
         
         if (collection.getEdgesDefaultVisualPropertiesElement(cx_view_id) != null) {
             ViewMaker.setDefaultVisualPropertiesAndMappings(lexicon,
                                                             collection.getEdgesDefaultVisualPropertiesElement(cx_view_id),
                                                             new_visual_style,
-                                                            CyEdge.class,
-                                                            vmf_factory_c,
-                                                            vmf_factory_d,
-                                                            vmf_factory_p);
+                                                            CyEdge.class);
         }
         
         ViewMaker.setNodeVisualProperties(view, lexicon, collection, cx_view_id, cx_to_cy.getNodesWithVisualProperties());
@@ -141,7 +130,7 @@ public final class ViewMaker {
             
         }
         
-        ViewMaker.applyStyle(new_visual_style, view, layout_manager, task_manager, networkview_manager, doLayout);
+        ViewMaker.applyStyle(new_visual_style, view, doLayout);
         
         if (Settings.INSTANCE.isTiming()) {
             TimingUtil.reportTimeDifference(t0, "time to make view", -1);
@@ -174,16 +163,15 @@ public final class ViewMaker {
     
     private static CyNetworkView applyStyle (
     		VisualStyle style, 
-    		CyNetworkView network_view, 
-    		CyLayoutAlgorithmManager layout_manager,
-    		DialogTaskManager task_manager,
-    		CyNetworkViewManager view_manager,
+    		CyNetworkView network_view,
     		String layout) {
         
         if( layout != null )
         {
+        	CyLayoutAlgorithmManager layout_manager = CyServiceModule.getService(CyLayoutAlgorithmManager.class);
             CyLayoutAlgorithm algorithm = layout_manager.getLayout(layout);
             TaskIterator ti = algorithm.createTaskIterator(network_view, algorithm.getDefaultLayoutContext(), CyLayoutAlgorithm.ALL_NODE_VIEWS, "");
+            DialogTaskManager task_manager = CyServiceModule.getService(DialogTaskManager.class);
             task_manager.execute(ti);
             network_view.updateView();
         }
@@ -191,6 +179,7 @@ public final class ViewMaker {
         style.apply(network_view);
         network_view.updateView();
         
+        CyNetworkViewManager view_manager = CyServiceModule.getService(CyNetworkViewManager.class);
         view_manager.addNetworkView(network_view);
         if (!network_view.isSet(BasicVisualLexicon.NETWORK_CENTER_X_LOCATION)
 				&& !network_view.isSet(BasicVisualLexicon.NETWORK_CENTER_Y_LOCATION)
@@ -265,12 +254,14 @@ public final class ViewMaker {
                 }
                 final String v = sp.get("V=" + counter);
                 if (v != null) {
+                    Object key = ViewMaker.toTypeValue(k, type);
                     final Object pv = vp.parseSerializableString(v);
+                 
                     if (pv != null) {
-                        dmf.putMapValue(ViewMaker.toTypeValue(k, type), pv);
+                        dmf.putMapValue(key, pv);
                     }
                     else {
-                        System.out.println("could not parse serializable string from discrete mapping value '" + v
+                        System.out.println("Could not parse serializable string from discrete mapping value '" + v
                                 + "'");
                     }
                 }
@@ -292,10 +283,12 @@ public final class ViewMaker {
                                                   final String col,
                                                   final Class<?> type_class,
                                                   final VisualMappingFunctionFactory vmf_factory_p) throws IOException {
-        final PassthroughMapping pmf = (PassthroughMapping) vmf_factory_p.createVisualMappingFunction(col,
+        
+    	final PassthroughMapping pmf = (PassthroughMapping) vmf_factory_p.createVisualMappingFunction(col,
                                                                                                       type_class,
                                                                                                       vp);
         if (pmf != null) {
+//        	System.out.println(pmf.getVisualProperty());
             style.addVisualMappingFunction(pmf);
         }
         else {
@@ -347,12 +340,14 @@ public final class ViewMaker {
     public final static void setDefaultVisualPropertiesAndMappings(final VisualLexicon lexicon,
                                                                    final CyVisualPropertiesElement cy_visual_properties_element,
                                                                    final VisualStyle style,
-                                                                   final Class my_class,
-                                                                   final VisualMappingFunctionFactory vmf_factory_c,
-                                                                   final VisualMappingFunctionFactory vmf_factory_d,
-                                                                   final VisualMappingFunctionFactory vmf_factory_p)
+                                                                   final Class my_class)
                                                                            throws IOException {
 
+
+        final VisualMappingFunctionFactory vmf_factory_c = CyServiceModule.getContinuousMapping();
+        final VisualMappingFunctionFactory vmf_factory_d = CyServiceModule.getDiscreteMapping();
+        final VisualMappingFunctionFactory vmf_factory_p = CyServiceModule.getPassthroughMapping();
+    	
         final SortedMap<String, String> props = cy_visual_properties_element.getProperties();
         final SortedMap<String, Mapping> maps = cy_visual_properties_element.getMappings();
         final SortedMap<String, String> dependencies = cy_visual_properties_element.getDependencies();
@@ -419,13 +414,13 @@ public final class ViewMaker {
                         final VisualProperty vp = lexicon.lookup(my_class, key);
                         if (vp != null) {
                             Object parsed_value = null;
-                            try {
+//                            try {
                                 parsed_value = vp.parseSerializableString(entry.getValue());
-                            }
-                            catch (final Exception e) {
-                                throw new IOException("could not parse serializable string from '" + entry.getValue()
-                                        + "' for '" + key + "'");
-                            }
+//                            }
+//                            catch (final Exception e) {
+//                                throw new IOException("could not parse serializable string from '" + entry.getValue()
+//                                        + "' for '" + key + "'");
+//                            }
                             if (parsed_value != null) {
                                 style.setDefaultValue(vp, parsed_value);
                             }

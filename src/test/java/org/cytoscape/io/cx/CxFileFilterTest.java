@@ -3,8 +3,10 @@ package org.cytoscape.io.cx;
 import org.cytoscape.io.DataCategory;
 import org.cytoscape.io.internal.cx_reader.CytoscapeCxFileFilter;
 import org.cytoscape.io.util.StreamUtil;
+import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -18,6 +20,8 @@ import java.io.InputStream;
 
 public class CxFileFilterTest {
 	
+	private CytoscapeCxFileFilter filter;
+	
 	final String[] valid = new String[] {
 			"simple1"
 	};
@@ -25,32 +29,33 @@ public class CxFileFilterTest {
 			"empty"
 	};
 	
+	@Before
+	public void init() {
+		StreamUtil streamUtil = mock(StreamUtil.class);
+		filter = new CytoscapeCxFileFilter(streamUtil);
+	}
+	
 	@Test
 	public void FileFilterTest() throws FileNotFoundException {
-		StreamUtil streamUtil = mock(StreamUtil.class);
-		CytoscapeCxFileFilter filter = new CytoscapeCxFileFilter(streamUtil);
 		
-		File dir = new File("src/test/resources/testData");
+		File dir = new File("src/test/resources/subnets");
+		checkFiles(dir, true);
+
+		dir = new File("src/test/resources/invalid");
+		checkFiles(dir, false);
+		
+	}
+	
+	public void checkFiles(File dir, boolean valid) throws FileNotFoundException {
 		File [] files = dir.listFiles(new FilenameFilter() {
 		    @Override
 		    public boolean accept(File dir, String name) {
 		        return name.endsWith(".cx");
 		    }
 		});
-
 		for (File xmlfile : files) {
 			InputStream stream = new FileInputStream(xmlfile);
-			assertTrue(filter.accepts(stream, DataCategory.NETWORK));
-		}
-		
-		for (String str : valid) {
-			InputStream stream = new FileInputStream("src/test/resources/valid/" + str + ".cx");
-			assertTrue(filter.accepts(stream, DataCategory.NETWORK));
-		}
-		
-		for (String str : invalid) {
-			InputStream stream = new FileInputStream("src/test/resources/invalid/" + str + ".cx");
-			assertFalse(filter.accepts(stream, DataCategory.NETWORK));
+			assertEquals(filter.accepts(stream, DataCategory.NETWORK), valid);
 		}
 	}
 }
