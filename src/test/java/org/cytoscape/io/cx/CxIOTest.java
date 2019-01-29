@@ -1,10 +1,14 @@
 package org.cytoscape.io.cx;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxImporter;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
+import org.cytoscape.model.CyNetworkFactory;
+import org.cytoscape.model.CyNetworkManager;
+import org.cytoscape.model.CyNode;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +29,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -48,6 +51,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 @SuppressWarnings("deprecation")
@@ -94,23 +98,9 @@ public class CxIOTest {
 //		}
 //	}
 
-//	@Test
-//	public void testSubnets() {
-//		File path = getPath("subnets");
-//		for (File f : path.listFiles()) {
-//			if (f.getName().endsWith(".cx")) {
-//				try {
-//					run(f, null, true);
-//				} catch (IOException e) {
-//					fail("Failed to run CX IO test on " + path.getName() + ": " + e.getMessage());
-//				}
-//			}
-//		}
-//	}
-	
 	@Test
-	public void testAnnotations() {
-		File path = getPath("annotations");
+	public void testSubnets() {
+		File path = getPath("subnets");
 		for (File f : path.listFiles()) {
 			if (f.getName().endsWith(".cx")) {
 				try {
@@ -119,8 +109,44 @@ public class CxIOTest {
 					fail("Failed to run CX IO test on " + path.getName() + ": " + e.getMessage());
 				}
 			}
-			break;
 		}
+	}
+	
+	@Test
+	public void testSUIDs() throws IOException {
+		CyNetworkManager network_manager = CyServiceModule.getService(CyNetworkManager.class);
+		CyNetworkFactory network_factory = CyServiceModule.getService(CyNetworkFactory.class);
+		
+		CyNetwork network = network_factory.createNetwork();
+		int nodeCount = 10;
+		CyNode[] nodes = new CyNode[nodeCount];
+		for (int i = 0; i < nodeCount; i++) {
+			nodes[i] = network.addNode();
+		}
+		for (int j = 0; j < 10; j++) {
+			int source = (int)(Math.random() * nodeCount);
+			int target = (int)(Math.random() * nodeCount);
+			network.addEdge(nodes[source], nodes[target], true);
+		}
+		network_manager.addNetwork(network);
+		
+		final CxImporter cx_importer = new CxImporter();
+		final AspectSet aspects = AspectSet.getCytoscapeAspectSet();
+		ByteArrayOutputStream out_stream = new ByteArrayOutputStream();
+		TestUtil.doExport(network, false, false, aspects, out_stream);
+		InputStream export_input_stream = pipe(out_stream);
+		NiceCXNetwork exportedCX = cx_importer.getCXNetworkFromStream(export_input_stream);
+		
+		Set<Long> nodeIDs = exportedCX.getNodes().keySet();
+		Set<Long> suids = new HashSet<Long>();
+		network.getNodeList().forEach(el -> {
+			suids.add(el.getSUID());
+		});
+		
+		nodeIDs.removeAll(suids);
+		assertTrue(nodeIDs.isEmpty());
+		SetView<Long> diff = Sets.difference(nodeIDs, suids);
+		System.out.println(diff.size());
 	}
 
 	public void run(File path, String collection_name, boolean use_cxId) throws IOException {
@@ -340,7 +366,8 @@ public class CxIOTest {
 		keys.forEach(name -> {
 			switch (name) {
 			case CyVisualPropertiesElement.ASPECT_NAME:
-				compareVisualProperties(leftOpaqueAspectTable.get(name), rightOpaqueAspectTable.get(name));
+				System.out.println("Not comparing visual properties");
+//				compareVisualProperties(leftOpaqueAspectTable.get(name), rightOpaqueAspectTable.get(name));
 				break;
 			default:
 				compareOpaqueAspect(leftOpaqueAspectTable.get(name), rightOpaqueAspectTable.get(name));
@@ -348,18 +375,7 @@ public class CxIOTest {
 		});
 
 	}
-
-	private void compareVisualProperties(Collection<AspectElement> leftVisProps, Collection<AspectElement> rightVisProps) {
-		System.out.println(leftVisProps.size());
-		System.out.println(rightVisProps.size());
-		JsonElement left_vis = gson.toJsonTree(leftVisProps);
-		JsonElement right_vis = gson.toJsonTree(rightVisProps);
-		JsonArray left_arr = left_vis.getAsJsonArray();
-		JsonArray right_arr = right_vis.getAsJsonArray();
-		System.out.println(left_arr);
-		System.out.println(right_arr);
-		
-	}
+	
 
 	private void compareOpaqueAspect(Collection<? extends AspectElement> leftAttrs,
 			Collection<? extends AspectElement> rightAttrs) {
@@ -400,7 +416,6 @@ public class CxIOTest {
 			String ele_name = obj.get("_name").getAsString();
 			assertTrue("Cytoscape added unexpected attribute: " + obj,
 					ArrayUtils.contains(CY_ADDED_ATTRIBUTES, ele_name));
-
 		});
 	}
 

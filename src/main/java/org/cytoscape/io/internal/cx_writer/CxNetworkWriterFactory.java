@@ -2,15 +2,11 @@ package org.cytoscape.io.internal.cx_writer;
 
 import java.io.OutputStream;
 
-import org.cytoscape.application.CyApplicationManager;
-import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.CyFileFilter;
 import org.cytoscape.io.write.CyNetworkViewWriterFactory;
 import org.cytoscape.io.write.CyWriter;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.view.model.CyNetworkView;
-import org.cytoscape.view.model.CyNetworkViewManager;
-import org.cytoscape.view.vizmap.VisualMappingManager;
 
 public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
     private final CyFileFilter          _filter;

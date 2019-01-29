@@ -5,26 +5,20 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
-
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.ding.NetworkViewTestSupport;
 import org.cytoscape.event.CyEventHelper;
 import org.cytoscape.group.CyGroupFactory;
 import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.internal.CyServiceModule;
-import org.cytoscape.io.internal.cx_reader.CxToCy;
 import org.cytoscape.io.internal.cx_reader.CytoscapeCxNetworkReader;
 import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxExporter;
-import org.cytoscape.io.internal.cxio.Settings;
-import org.cytoscape.io.internal.cxio.TimingUtil;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
@@ -40,7 +34,6 @@ import org.cytoscape.view.vizmap.internal.mappings.ContinuousMappingFactory;
 import org.cytoscape.view.vizmap.internal.mappings.DiscreteMappingFactory;
 import org.cytoscape.view.vizmap.internal.mappings.PassthroughMappingFactory;
 import org.cytoscape.work.SynchronousTaskManager;
-import org.ndexbio.model.cx.NiceCXNetwork;
 
 public class TestUtil {
 	

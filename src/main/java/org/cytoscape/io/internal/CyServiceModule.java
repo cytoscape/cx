@@ -19,22 +19,22 @@ import org.cytoscape.work.swing.DialogTaskManager;
 
 public class CyServiceModule {
 
-	public CyServiceModule(
-			CyApplicationManager application_manager,
-			CyNetworkManager network_manager,
-	        CyNetworkFactory network_factory,
-	        CyRootNetworkManager root_network_manager,
-			CyNetworkViewManager networkview_manager,
-	        CyNetworkViewFactory networkview_factory,
-	        CyGroupManager group_manager,
-	        CyGroupFactory group_factory,
-	        CyLayoutAlgorithmManager layout_manager,
-	        VisualMappingManager visual_mapping_manager,
-	        RenderingEngineManager rendering_engine_manager,
-	        VisualStyleFactory visual_style_factory,
-	        DialogTaskManager task_manager) {
-		
-	}
+//	public CyServiceModule(
+//			CyApplicationManager application_manager,
+//			CyNetworkManager network_manager,
+//	        CyNetworkFactory network_factory,
+//	        CyRootNetworkManager root_network_manager,
+//			CyNetworkViewManager networkview_manager,
+//	        CyNetworkViewFactory networkview_factory,
+//	        CyGroupManager group_manager,
+//	        CyGroupFactory group_factory,
+//	        CyLayoutAlgorithmManager layout_manager,
+//	        VisualMappingManager visual_mapping_manager,
+//	        RenderingEngineManager rendering_engine_manager,
+//	        VisualStyleFactory visual_style_factory,
+//	        DialogTaskManager task_manager) {
+//		
+//	}
 	
 	
 	private static HashMap<Class<?>, Object> services = new HashMap<Class<?>, Object>();

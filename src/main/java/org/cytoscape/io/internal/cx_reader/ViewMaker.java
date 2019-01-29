@@ -26,9 +26,7 @@ import org.cytoscape.view.model.View;
 import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.model.VisualProperty;
 import org.cytoscape.view.presentation.RenderingEngineManager;
-import org.cytoscape.view.presentation.property.ArrowShapeVisualProperty;
 import org.cytoscape.view.presentation.property.BasicVisualLexicon;
-import org.cytoscape.view.presentation.property.values.ArrowShape;
 import org.cytoscape.view.vizmap.VisualMappingFunctionFactory;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.view.vizmap.VisualPropertyDependency;
@@ -537,7 +535,7 @@ public final class ViewMaker {
                             view.setLockedValue(vp, parsed_value);
                         }
                         else {
-                            view.setVisualProperty(vp, parsed_value);
+                        	view.setVisualProperty(vp, parsed_value);
                         }
                     }
                 }
