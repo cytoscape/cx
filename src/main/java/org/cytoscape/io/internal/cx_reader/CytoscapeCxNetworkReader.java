@@ -3,19 +3,24 @@ package org.cytoscape.io.internal.cx_reader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.cytoscape.group.CyGroupFactory;
+
 import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cxio.CxImporter;
+import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.Settings;
 import org.cytoscape.io.internal.cxio.TimingUtil;
+import org.cytoscape.io.internal.nicecy.NiceCyRootNetwork;
+import org.cytoscape.io.internal.nicecy.NiceCyNetwork.NiceCySubNetwork;
 import org.cytoscape.io.read.AbstractCyNetworkReader;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CyRootNetworkManager;
+import org.cytoscape.model.subnetwork.CySubNetwork;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.work.TaskMonitor;
@@ -27,6 +32,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 	private CyNetwork[] _networks;
 	private String _network_collection_name;
 	private CxToCy _cx_to_cy;
+	private NiceCyRootNetwork niceCy;
 	private final InputStream _in;
 
 	public CytoscapeCxNetworkReader(
@@ -44,33 +50,38 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 		}
 		_in = input_stream;
 		_network_collection_name = network_collection_name;
-
 	}
 
 	@Override
 	public CyNetworkView buildCyNetworkView(final CyNetwork network) {
-		Map<Long, Long> suid_to_cxid_map = _cx_to_cy.getNetworkSuidToNetworkRelationsMap();
-		if (!suid_to_cxid_map.containsKey(network.getSUID())) {
-			throw new IllegalArgumentException(
-					"Failed to build view for " + network + ". Was the network created successfully?");
-		}
-		long cxid = suid_to_cxid_map.get(network.getSUID());
+		
+		System.out.println("Creating view for " + network);
+		
+//		Map<Long, Long> suid_to_cxid_map = _cx_to_cy.getNetworkSuidToNetworkRelationsMap();
+//		if (!suid_to_cxid_map.containsKey(network.getSUID())) {
+//			throw new IllegalArgumentException(
+//					"Failed to build view for " + network + ". Was the network created successfully?");
+//		}
+//		long cxid = suid_to_cxid_map.get(network.getSUID());
+//
+//		int num_views = _cx_to_cy.getSubNetworkToViewsMap().get(cxid).size();
+//		Settings.INSTANCE.debug(String.format("Building %s views for %s", num_views, network));
+//
+//		List<CyNetworkView> views = new ArrayList<CyNetworkView>();
+//		
+//		for (Long cx_view_id : _cx_to_cy.getSubNetworkToViewsMap().get(cxid)) {
+//			CyNetworkView view = cyNetworkViewFactory.createNetworkView(network);
+//			views.add(view);
+//			
+//			try {
+//				ViewMaker.makeView(view, cx_view_id, _cx_to_cy, _network_collection_name);
+//			} catch (IOException e) {
+//				throw new RuntimeException(e);
+//			}
+//		}
+//		_cx_to_cy.updateGroups(network);
 
-		int num_views = _cx_to_cy.getSubNetworkToViewsMap().get(cxid).size();
-		Settings.INSTANCE.debug(String.format("Building %s views for %s", num_views, network));
-
-		List<CyNetworkView> views = new ArrayList<CyNetworkView>();
-		for (Long cx_view_id : _cx_to_cy.getSubNetworkToViewsMap().get(cxid)) {
-			CyNetworkView view = cyNetworkViewFactory.createNetworkView(network);
-			views.add(view);
-
-			try {
-				ViewMaker.makeView(view, cx_view_id, _cx_to_cy, _network_collection_name);
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-		}
-
+		List<CyNetworkView> views = niceCy.createViews();
 		return views.get(0);
 
 	}
@@ -105,34 +116,35 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
 		// Throw an error if trying to import CX network into existing collection.
 		if (getRootNetwork() != null) {
-			throw new IllegalArgumentException("Cannot import CX network into existing collection.");
-		}
-		final CyRootNetwork root_network = getRootNetwork();
-
-		// Select Network Collection
-		// 1. Check from Tunable
-		// 2. If not available, use optional parameter
-
-		if (root_network == null) {
-			// Need to create new network with new root.
-			if (Settings.INSTANCE.isAllowToUseNetworkCollectionNameFromNetworkAttributes()) {
-				final String collection_name_from_network_attributes = CxToCy
-						.getCollectionNameFromNetworkAttributes(niceCX.getNetworkAttributes());
-				if (collection_name_from_network_attributes != null) {
-					_network_collection_name = collection_name_from_network_attributes;
-					Settings.INSTANCE.debug("collection name from network attributes: " + _network_collection_name);
-
-				}
-			}
+			throw new IllegalArgumentException("CX Support is changing to disallow import into existing collections");
 		}
 		
-		CyGroupFactory _group_factory = CyServiceModule.getService(CyGroupFactory.class);
-		List<CyNetwork> networks = _cx_to_cy.createNetwork(niceCX, root_network, cyNetworkFactory, _group_factory,
-				_network_collection_name);
-
+//		List<CyNetwork> networks = _cx_to_cy.createNetwork(niceCX, root_network,
+//				_network_collection_name);
+		Long t1 = System.currentTimeMillis();
+		niceCy = new NiceCyRootNetwork(niceCX);
+		if (Settings.INSTANCE.isDebug()) {
+			TimingUtil.reportTimeDifference(t1, "Time to create NiceCyNetwork", -1);
+		}
+		
+		t1 = System.currentTimeMillis();
+		List<CyNetwork> networks = niceCy.apply();
+		if (Settings.INSTANCE.isDebug()) {
+			TimingUtil.reportTimeDifference(t1, "Time to create networks in Cytoscape", -1);
+		}
 		_networks = new CyNetwork[networks.size()];
 		networks.toArray(_networks);
 
+		if (CxUtil.isCollection(niceCX)) {
+			_network_collection_name = niceCX.getNetworkName();
+		}
+		// Set the collection name
+		if (_network_collection_name != null) {
+			CyRootNetwork root = ((CySubNetwork) _networks[0]).getRootNetwork();
+			root.getRow(root).set(CyNetwork.NAME, _network_collection_name);
+			root.getRow(root).set(CyRootNetwork.SHARED_NAME, _network_collection_name);
+		}
+		
 		if (Settings.INSTANCE.isTiming()) {
 			System.out.println();
 			TimingUtil.reportTimeDifference(t0, "total time to build network(s) (not views)", -1);

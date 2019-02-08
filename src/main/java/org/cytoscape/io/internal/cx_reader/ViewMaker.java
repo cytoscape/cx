@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
@@ -40,10 +41,12 @@ import org.cytoscape.work.TaskIterator;
 import org.cytoscape.work.swing.DialogTaskManager;
 
 public final class ViewMaker {
-
+	private static final Logger logger = Logger.getLogger("CX ViewMaker");
     public static final Pattern DIRECT_NET_PROPS_PATTERN = Pattern
             .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
 
+    // TODO: Cannot handle passthrough (or other?) mappings to list columns
+    
     public final static void makeView(final CyNetworkView view,
 										final Long cx_view_id,
                                         final CxToCy cx_to_cy,
@@ -59,11 +62,12 @@ public final class ViewMaker {
     	String doLayout = view.getEdgeViews().size() < 10000 ? "force-directed" : "grid";
     	final VisualElementCollectionMap collection = cx_to_cy.getVisualElementCollectionMap();
     	
-    	if ((collection == null) || collection.isEmpty()) {
-    		Settings.INSTANCE.debug("Default style for " + view);
-            ViewMaker.applyStyle(visual_mapping_manager.getDefaultVisualStyle(), view, doLayout);
-            return ;
-        }
+//    	System.out.println(collection.isEmpty() + " " + collection.isEmptySubnets() + collection.isEmptyViews());
+//    	if ((collection == null) || collection.isEmpty()) {
+//    		Settings.INSTANCE.debug("Default style for " + view);
+//            ViewMaker.applyStyle(visual_mapping_manager.getDefaultVisualStyle(), view, doLayout);
+//            return ;
+//        }
     	
         final boolean have_default_visual_properties = ((collection.getNetworkVisualPropertiesElement(cx_view_id) != null)
                 || (collection.getNodesDefaultVisualPropertiesElement(cx_view_id) != null) || (collection
@@ -113,6 +117,7 @@ public final class ViewMaker {
 
         ViewMaker.setEdgeVisualProperties(view, lexicon, collection, cx_view_id, cx_to_cy.getEdgesWithVisualProperties());
         
+        
         // If there is a Cartesian layout for the view, do not apply a layout
         if (applyCartesianLayout(view, collection
                 .getCartesianLayoutElements(cx_view_id))) {
@@ -122,10 +127,9 @@ public final class ViewMaker {
         
         
         if (have_default_visual_properties) {
-        	// Simply add & assign style.  VMM automatically apply this later. 
+        	// Simply add & assign style.  VMM automatically apply this later.
             visual_mapping_manager.addVisualStyle(new_visual_style);
             visual_mapping_manager.setVisualStyle(new_visual_style, view);
-            
         }
         
         ViewMaker.applyStyle(new_visual_style, view, doLayout);
@@ -137,26 +141,28 @@ public final class ViewMaker {
     }
     
     private static boolean applyCartesianLayout(CyNetworkView view, Map<CyNode, CartesianLayoutElement> position_map_for_view) {
-        if ((position_map_for_view != null) && (view != null)) {
-            for (final CyNode node : position_map_for_view.keySet()) {
-                if (node != null) {
-                    final CartesianLayoutElement e = position_map_for_view.get(node);
-                    if (e != null) {
-                        final View<CyNode> node_view = view.getNodeView(node);
-                        if (node_view != null) {
-                            node_view.setVisualProperty(BasicVisualLexicon.NODE_X_LOCATION, e.getX());
-                            node_view.setVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION, e.getY());
-                            if (e.isZset()) {
-                                node_view.setVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION,
-                                                            e.getZ());
-                            }
-                        }
+        
+        if (position_map_for_view == null || view == null) {
+        	return false;
+        }
+    	for (final CyNode node : position_map_for_view.keySet()) {
+            if (node == null) {
+            	continue;
+            }
+            final CartesianLayoutElement e = position_map_for_view.get(node);
+            if (e != null) {
+                final View<CyNode> node_view = view.getNodeView(node);
+                if (node_view != null) {
+                    node_view.setVisualProperty(BasicVisualLexicon.NODE_X_LOCATION, e.getX());
+                    node_view.setVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION, e.getY());
+                    if (e.isZset()) {
+                        node_view.setVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION,
+                                                    e.getZ());
                     }
                 }
             }
-            return true;
         }
-        return false;
+        return true;
     }
     
     private static CyNetworkView applyStyle (
@@ -168,7 +174,9 @@ public final class ViewMaker {
         {
         	CyLayoutAlgorithmManager layout_manager = CyServiceModule.getService(CyLayoutAlgorithmManager.class);
             CyLayoutAlgorithm algorithm = layout_manager.getLayout(layout);
+            
             TaskIterator ti = algorithm.createTaskIterator(network_view, algorithm.getDefaultLayoutContext(), CyLayoutAlgorithm.ALL_NODE_VIEWS, "");
+            
             DialogTaskManager task_manager = CyServiceModule.getService(DialogTaskManager.class);
             task_manager.execute(ti);
             network_view.updateView();
@@ -214,9 +222,17 @@ public final class ViewMaker {
                     final Object lp = vp.parseSerializableString(l);
                     final Object ep = vp.parseSerializableString(e);
                     final Object gp = vp.parseSerializableString(g);
-                    if ((lp != null) && (ep != null) && (gp != null)) {
+                    
+                    // Some integer values exported as double
+                    Object value = vp.parseSerializableString(ov);
+                    try {
+                    	value = ViewMaker.toTypeValue(ov, type);
+                    }catch(NumberFormatException err) {
+                    	
+                    }
+                    if ((lp != null) && (ep != null) && (gp != null) && (value != null)) {
                         final BoundaryRangeValues point = new BoundaryRangeValues(lp, ep, gp);
-                        cmf.addPoint(ViewMaker.toTypeValue(ov, type), point);
+                        cmf.addPoint(value, point);
                     }
                     else {
                         System.out.println("could not parse from string in continuous mapping for col '" + col + "'");
@@ -243,35 +259,40 @@ public final class ViewMaker {
                                                 final Class<?> type_class,
                                                 final VisualMappingFunctionFactory vmf_factory_d) {
         final DiscreteMapping dmf = (DiscreteMapping) vmf_factory_d.createVisualMappingFunction(col, type_class, vp);
-        if (dmf != null) {
-            int counter = 0;
-            while (true) {
-                final String k = sp.get("K=" + counter);
-                if (k == null) {
-                    break;
+        try {
+        	if (dmf == null) {
+        		throw new RuntimeException("createVisualMappingFunction returned null");
+        	}
+	        int counter = 0;
+	        while (true) {
+	            final String k = sp.get("K=" + counter);
+	            if (k == null) {
+	                break;
+	            }
+	            final String v = sp.get("V=" + counter);
+            
+                if (v == null) {
+                	logger.info("error: discrete mapping function string is corrupt for ");
                 }
-                final String v = sp.get("V=" + counter);
-                if (v != null) {
-                    Object key = ViewMaker.toTypeValue(k, type);
-                    final Object pv = vp.parseSerializableString(v);
-                 
-                    if (pv != null) {
+                Object key = ViewMaker.toTypeValue(k, type);
+                try {
+                	final Object pv = vp.parseSerializableString(v);
+                	if (pv != null) {
                         dmf.putMapValue(key, pv);
                     }
                     else {
-                        System.out.println("Could not parse serializable string from discrete mapping value '" + v
+                        logger.info("Could not parse serializable string from discrete mapping value '" + v
                                 + "'");
                     }
+                }catch(NullPointerException e) {
+                	throw new RuntimeException("Unable to parse serializable string " + key + " " + type + " from " + v);
                 }
-                else {
-                    System.out.println("error: discrete mapping function string is corrupt");
-                }
-                counter++;
-            }
-            style.addVisualMappingFunction(dmf);
-        }
-        else {
-            System.out.println("could not create discrete mapping for col '" + col + "'");
+            	
+	            counter++;
+	        }
+	        style.addVisualMappingFunction(dmf);
+        }catch(RuntimeException e) {
+        	logger.info("Failed to create discrete mapping for " + col + ": " + e.getMessage());
         }
     }
 
@@ -349,10 +370,9 @@ public final class ViewMaker {
         final SortedMap<String, String> props = cy_visual_properties_element.getProperties();
         final SortedMap<String, Mapping> maps = cy_visual_properties_element.getMappings();
         final SortedMap<String, String> dependencies = cy_visual_properties_element.getDependencies();
-
+        
         if (props != null) {
             for (final Map.Entry<String, String> entry : props.entrySet()) {
-
                 final String key = entry.getKey();
                 // vvvvvvvvvvvvvvvvvvvvvvvvvvv remove me
                 boolean is_mapping = false;
@@ -412,15 +432,15 @@ public final class ViewMaker {
                         final VisualProperty vp = lexicon.lookup(my_class, key);
                         if (vp != null) {
                             Object parsed_value = null;
-//                            try {
+                            try {
                                 parsed_value = vp.parseSerializableString(entry.getValue());
-//                            }
-//                            catch (final Exception e) {
-//                                throw new IOException("could not parse serializable string from '" + entry.getValue()
-//                                        + "' for '" + key + "'");
-//                            }
-                            if (parsed_value != null) {
-                                style.setDefaultValue(vp, parsed_value);
+                                if (parsed_value != null) {
+                                	style.setDefaultValue(vp, parsed_value);
+                                }
+                            }
+                            catch (final Exception e) {
+                                logger.info("Could not parse serializable string from '" + entry.getValue()
+                                        + "' for '" + key + "'");
                             }
                         }
                     }
@@ -480,12 +500,15 @@ public final class ViewMaker {
                                                      final Long cx_view_id,
                                                      final Collection<CyEdge> edges_with_visual_properties) {
 
+    	final Map<CyEdge, CyVisualPropertiesElement> evpm = collection
+                .getEdgeVisualPropertiesElementsMap(cx_view_id);
+    	if (evpm == null) {
+    		return;
+    	}
+    	
         if (edges_with_visual_properties != null) {
             for (final CyEdge edge : edges_with_visual_properties) {
-                final Map<CyEdge, CyVisualPropertiesElement> evpm = collection
-                        .getEdgeVisualPropertiesElementsMap(cx_view_id);
                 final CyVisualPropertiesElement vpe = evpm.get(edge);
-
                 if (vpe != null) {
                     final SortedMap<String, String> props = vpe.getProperties();
                     if (props != null) {
@@ -503,10 +526,14 @@ public final class ViewMaker {
                                                      final Long cx_view_id,
                                                      final Collection<CyNode> nodes_with_visual_properties) {
     	
+    	final Map<CyNode, CyVisualPropertiesElement> nvpm = collection
+                .getNodeVisualPropertiesElementsMap(cx_view_id);
+    	if (nvpm == null) {
+    		return;
+    	}
+    	
         if (nodes_with_visual_properties != null) {
             for (final CyNode node : nodes_with_visual_properties) {
-                final Map<CyNode, CyVisualPropertiesElement> nvpm = collection
-                        .getNodeVisualPropertiesElementsMap(cx_view_id);
                 final CyVisualPropertiesElement vpe = nvpm.get(node);                
                 if (vpe != null) {
                     final SortedMap<String, String> props = vpe.getProperties();
@@ -529,15 +556,19 @@ public final class ViewMaker {
                 final VisualProperty vp = lexicon.lookup(my_class, entry.getKey());
 
                 if (vp != null) {
-                    final Object parsed_value = vp.parseSerializableString(entry.getValue());
-                    if (parsed_value != null) {
-                        if (ViewMaker.shouldSetAsLocked(vp)) {
-                            view.setLockedValue(vp, parsed_value);
-                        }
-                        else {
-                        	view.setVisualProperty(vp, parsed_value);
-                        }
-                    }
+                	try	{
+	                    final Object parsed_value = vp.parseSerializableString(entry.getValue());
+	                    if (parsed_value != null) {
+	                        if (ViewMaker.shouldSetAsLocked(vp)) {
+	                            view.setLockedValue(vp, parsed_value);
+	                        }
+	                        else {
+	                        	view.setVisualProperty(vp, parsed_value);
+	                        }
+	                    }
+                	}catch(NullPointerException e) {
+                		logger.info("Failed to parse string for " + entry.getKey() + ": " + entry.getValue());
+                	}
                 }
             }
         }
@@ -578,7 +609,7 @@ public final class ViewMaker {
         }
     }
 
-    public final static Object toTypeValue(final String s, final String type) {
+    public final static Object toTypeValue(final String s, final String type) throws NumberFormatException {
         if (type.equals("string")) {
             return s;
         }

@@ -10,7 +10,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 
 import org.cytoscape.application.CyApplicationManager;
-import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxExporter;
@@ -19,8 +18,6 @@ import org.cytoscape.io.internal.cxio.Settings;
 import org.cytoscape.io.internal.cxio.TimingUtil;
 import org.cytoscape.io.write.CyWriter;
 import org.cytoscape.model.CyNetwork;
-import org.cytoscape.view.model.CyNetworkViewManager;
-import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.work.TaskMonitor;
 import org.cytoscape.work.Tunable;
 import org.slf4j.Logger;
@@ -36,7 +33,7 @@ public class CxNetworkWriter implements CyWriter {
 
 	private final static Logger logger = LoggerFactory.getLogger(CxNetworkWriter.class);
 	private static final boolean WRITE_SIBLINGS_DEFAULT = false;
-	private static final boolean USE_CXID_DEFAULT = false;
+	private static final boolean USE_CXID_DEFAULT = true;
 	private final static String ENCODING = "UTF-8";
 
 	private final OutputStream _os;
@@ -69,13 +66,13 @@ public class CxNetworkWriter implements CyWriter {
 
 	public CxNetworkWriter(final OutputStream os, 
 			final CyNetwork network,
-			final boolean write_siblings,
+			final boolean writeSiblings,
 			final boolean use_cxId) {
 
 		_os = os;
 		_network = network;
-		writeSiblings = write_siblings;
-		useCxId = use_cxId;
+		this.writeSiblings = writeSiblings;
+		setUseCxId(use_cxId);
 
 		if (Charset.isSupported(ENCODING)) {
 			// UTF-8 is supported by system
@@ -99,15 +96,15 @@ public class CxNetworkWriter implements CyWriter {
 
 		final AspectSet aspects = AspectSet.getCytoscapeAspectSet();
 
-		final CxExporter exporter = CxExporter.createInstance();
+		final CxExporter exporter = new CxExporter(_network, writeSiblings, useCxId);
 
 		final long t0 = System.currentTimeMillis();
 		if (TimingUtil.WRITE_TO_DEV_NULL) {
-			exporter.writeNetwork(_network, writeSiblings, useCxId, aspects, new FileOutputStream(new File("/dev/null")));
+			exporter.writeNetwork(aspects, new FileOutputStream(new File("/dev/null")));
 		} else if (TimingUtil.WRITE_TO_BYTE_ARRAY_OUTPUTSTREAM) {
-			exporter.writeNetwork(_network, writeSiblings, useCxId, aspects, new ByteArrayOutputStream());
+			exporter.writeNetwork(aspects, new ByteArrayOutputStream());
 		} else {
-			exporter.writeNetwork(_network, writeSiblings, useCxId, aspects, _os);
+			exporter.writeNetwork(aspects, _os);
 			_os.close();
 
 		}
