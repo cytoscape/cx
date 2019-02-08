@@ -117,6 +117,10 @@ public abstract class NiceCyNetwork extends Identifiable{
 		this.network = network;
 		addElements();
 		addAttributes();
+		
+		if (network.getRow(network).get(CyNetwork.NAME, String.class) == null) {
+			network.getRow(network).set(CyNetwork.NAME, "Unnamed Network");
+		}
 	}
 	public abstract void addElements();
 	

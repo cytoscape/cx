@@ -63,7 +63,7 @@ public class CxIOTest {
 		}
 	}
 	
-//	@Test
+	@Test
 	public void testCollections() {
 		File path = getPath("collections");
 		for (File f : path.listFiles()) {
@@ -73,7 +73,7 @@ public class CxIOTest {
 		}
 	}
 
-	@Test
+//	@Test
 	public void testSubnets() {
 		File path = getPath("subnets");
 		for (File f : path.listFiles()) {
@@ -125,7 +125,7 @@ public class CxIOTest {
 			FileOutputStream out_stream = new FileOutputStream(f);
 			TestUtil.doExport(networks[0], collection, use_cxId, aspects, out_stream);
 			export_input_stream = new FileInputStream(f);
-//			f.deleteOnExit();
+			f.deleteOnExit();
 		} else {
 			ByteArrayOutputStream out_stream = new ByteArrayOutputStream();
 			TestUtil.doExport(networks[0], collection, use_cxId, aspects, out_stream);

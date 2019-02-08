@@ -51,6 +51,7 @@ public class NiceCxComparator {
 	private static final String[] CY_ADDED_ASPECTS = new String[] { 
 			CyTableColumnElement.ASPECT_NAME,
 			NetworkRelationsElement.ASPECT_NAME,
+			CyVisualPropertiesElement.ASPECT_NAME
 		};
 
 	private static final String[] CY_REMOVED_ASPECTS = new String[] { 
