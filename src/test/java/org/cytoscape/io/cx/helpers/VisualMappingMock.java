@@ -78,6 +78,7 @@ public class VisualMappingMock{
 		public Integer size;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public VisualMappingMock() {
 		CyLayoutAlgorithm def = mock(CyLayoutAlgorithm.class);
 		DummyLayoutContext dummyLayoutContext = mock(DummyLayoutContext.class);

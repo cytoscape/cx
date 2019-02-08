@@ -80,7 +80,7 @@ public class CxIOTest {
 		}
 	}
 	
-//	@Test
+	@Test
 	public void testSpecialCases() {
 		File path = getPath("specialCases");
 		for (File f : path.listFiles()) {
@@ -89,10 +89,10 @@ public class CxIOTest {
 	}
 	
 //	@Test
-	public void testTemp() {
-		File path = new File("/Users/bsettle/Desktop/collapsed.cx");
-		testFile(path, true);
-	}
+//	public void testTemp() {
+//		File path = new File("/Users/bsettle/Desktop/collapsed.cx");
+//		testFile(path, true);
+//	}
 	
 	
 	public void run(File path, String collection_name, boolean use_cxId) throws IOException {
