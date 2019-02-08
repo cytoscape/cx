@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.cytoscape.io.internal.CyServiceModule;
-import org.cytoscape.io.internal.cx_reader.CxToCy;
 import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
@@ -58,7 +57,7 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 	protected final Map<Long, NiceCyGroup> root_groups;
 	
 	public NiceCyRootNetwork(NiceCXNetwork niceCX) {
-		super(CxToCy.DEFAULT_SUBNET);
+		super(CxUtil.DEFAULT_SUBNET);
 		subnetworks = new HashMap<Long, NiceCySubNetwork>();
 		root_nodes = new HashMap<Long, NiceCyNode>();
 		root_edges = new HashMap<Long, NiceCyEdge>();
@@ -358,9 +357,9 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 		
 		//Add a default subnetwork if the aspect doesn't exist or lists no subnets
 		if (subnetworks.isEmpty()) {
-			NiceCySubNetwork subnet = new NiceCySubNetwork(CxToCy.DEFAULT_SUBNET, this);
-			subnet.views.put(CxToCy.DEFAULT_VIEW, new NiceCyView(CxToCy.DEFAULT_VIEW, subnet));
-			subnetworks.put(CxToCy.DEFAULT_SUBNET, subnet);
+			NiceCySubNetwork subnet = new NiceCySubNetwork(CxUtil.DEFAULT_SUBNET, this);
+			subnet.views.put(CxUtil.DEFAULT_VIEW, new NiceCyView(CxUtil.DEFAULT_VIEW, subnet));
+			subnetworks.put(CxUtil.DEFAULT_SUBNET, subnet);
 		}
 		
 	}
@@ -387,7 +386,7 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 	
 	private NiceCyView getViewWithId(Long view) {
 		if (view == null) {
-			view = CxToCy.DEFAULT_VIEW;
+			view = CxUtil.DEFAULT_VIEW;
 		}
 		for (NiceCySubNetwork subnet : subnetworks.values()) {
 			if (subnet.views.containsKey(view)) {

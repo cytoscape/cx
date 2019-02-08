@@ -31,7 +31,6 @@ public class CxIOTest {
 	static CyNetworkFactory network_factory;
 
 	private static final boolean SAVE_CX_FILES = true;
-	private static final String OUTPUT_PREFIX = "OUTPUT_";
 
 	@BeforeClass
 	public static void init() {
@@ -54,7 +53,7 @@ public class CxIOTest {
 		return file;
 	}
 	private void testFile(File f, boolean useCxId) {
-		if (!f.getName().startsWith(OUTPUT_PREFIX) && f.getName().endsWith(".cx")) {
+		if (f.getName().endsWith(".cx")) {
 			try {
 				run(f, null, useCxId);
 			} catch (IOException e) {
@@ -63,7 +62,7 @@ public class CxIOTest {
 		}
 	}
 	
-	@Test
+//	@Test
 	public void testCollections() {
 		File path = getPath("collections");
 		for (File f : path.listFiles()) {
@@ -73,7 +72,7 @@ public class CxIOTest {
 		}
 	}
 
-//	@Test
+	@Test
 	public void testSubnets() {
 		File path = getPath("subnets");
 		for (File f : path.listFiles()) {
@@ -121,7 +120,8 @@ public class CxIOTest {
 		
 		InputStream export_input_stream = null;
 		if (SAVE_CX_FILES) {
-			File f = new File(path.getParentFile(), OUTPUT_PREFIX + path.getName());
+			File f = File.createTempFile("CX_TEST_OUTPUT", path.getName());
+			logger.info("Creating temp file at " + f.getAbsolutePath());
 			FileOutputStream out_stream = new FileOutputStream(f);
 			TestUtil.doExport(networks[0], collection, use_cxId, aspects, out_stream);
 			export_input_stream = new FileInputStream(f);

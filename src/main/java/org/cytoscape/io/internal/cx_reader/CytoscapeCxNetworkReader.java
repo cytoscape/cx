@@ -1,19 +1,12 @@
 package org.cytoscape.io.internal.cx_reader;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-
-import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cxio.CxImporter;
 import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.Settings;
 import org.cytoscape.io.internal.cxio.TimingUtil;
 import org.cytoscape.io.internal.nicecy.NiceCyRootNetwork;
-import org.cytoscape.io.internal.nicecy.NiceCyNetwork.NiceCySubNetwork;
 import org.cytoscape.io.read.AbstractCyNetworkReader;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkFactory;
@@ -31,7 +24,6 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
 	private CyNetwork[] _networks;
 	private String _network_collection_name;
-	private CxToCy _cx_to_cy;
 	private NiceCyRootNetwork niceCy;
 	private final InputStream _in;
 
@@ -54,36 +46,9 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
 	@Override
 	public CyNetworkView buildCyNetworkView(final CyNetwork network) {
-		
 		System.out.println("Creating view for " + network);
-		
-//		Map<Long, Long> suid_to_cxid_map = _cx_to_cy.getNetworkSuidToNetworkRelationsMap();
-//		if (!suid_to_cxid_map.containsKey(network.getSUID())) {
-//			throw new IllegalArgumentException(
-//					"Failed to build view for " + network + ". Was the network created successfully?");
-//		}
-//		long cxid = suid_to_cxid_map.get(network.getSUID());
-//
-//		int num_views = _cx_to_cy.getSubNetworkToViewsMap().get(cxid).size();
-//		Settings.INSTANCE.debug(String.format("Building %s views for %s", num_views, network));
-//
-//		List<CyNetworkView> views = new ArrayList<CyNetworkView>();
-//		
-//		for (Long cx_view_id : _cx_to_cy.getSubNetworkToViewsMap().get(cxid)) {
-//			CyNetworkView view = cyNetworkViewFactory.createNetworkView(network);
-//			views.add(view);
-//			
-//			try {
-//				ViewMaker.makeView(view, cx_view_id, _cx_to_cy, _network_collection_name);
-//			} catch (IOException e) {
-//				throw new RuntimeException(e);
-//			}
-//		}
-//		_cx_to_cy.updateGroups(network);
-
 		List<CyNetworkView> views = niceCy.createViews();
 		return views.get(0);
-
 	}
 
 	@Override
@@ -103,8 +68,6 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 			TimingUtil.reportTimeDifference(t0, "total time parsing", -1);
 		}
 
-		_cx_to_cy = new CxToCy();
-
 		// Select the root collection name from the list.
 		if (_network_collection_name != null) {
 			final ListSingleSelection<String> root_list = getRootNetworkList();
@@ -123,13 +86,13 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 //				_network_collection_name);
 		Long t1 = System.currentTimeMillis();
 		niceCy = new NiceCyRootNetwork(niceCX);
-		if (Settings.INSTANCE.isDebug()) {
+		if (Settings.INSTANCE.isTiming()) {
 			TimingUtil.reportTimeDifference(t1, "Time to create NiceCyNetwork", -1);
 		}
 		
 		t1 = System.currentTimeMillis();
 		List<CyNetwork> networks = niceCy.apply();
-		if (Settings.INSTANCE.isDebug()) {
+		if (Settings.INSTANCE.isTiming()) {
 			TimingUtil.reportTimeDifference(t1, "Time to create networks in Cytoscape", -1);
 		}
 		_networks = new CyNetwork[networks.size()];

@@ -54,6 +54,10 @@ public final class CxUtil {
     public static final String CX_METADATA				  	  = "CX MetaData";
 	public static final String OPAQUE_ASPECT_PREFIX 		  = "CX_OPAQUE::";
 	
+	public static final Long DEFAULT_SUBNET = Long.MIN_VALUE;
+	public static final Long DEFAULT_VIEW = Long.MIN_VALUE;
+	
+	
 	private static String CXID_NAMESPACE = CyNetwork.HIDDEN_ATTRS;
     
     

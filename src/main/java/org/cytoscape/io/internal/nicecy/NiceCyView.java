@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.cytoscape.io.internal.cx_reader.ViewMaker2;
+import org.cytoscape.io.internal.cx_reader.ViewMaker;
 import org.cytoscape.io.internal.nicecy.NiceCyNetwork.NiceCySubNetwork;
 import org.cytoscape.model.subnetwork.CySubNetwork;
 import org.cytoscape.view.model.CyNetworkView;
@@ -55,7 +55,7 @@ public class NiceCyView extends Identifiable {
 	}
 	
 	public void apply(CyNetworkView v) {
-		ViewMaker2.makeView(v, subnet.parent, cartesianLayout, visualProperties, nodeBypass, edgeBypass);
+		ViewMaker.makeView(v, subnet.parent, cartesianLayout, visualProperties, nodeBypass, edgeBypass);
 		subnet.groups.forEach(suid -> {
 			NiceCyGroup group = subnet.parent.root_groups.get(suid);
 			group.updateInView((CySubNetwork)subnet.network);
