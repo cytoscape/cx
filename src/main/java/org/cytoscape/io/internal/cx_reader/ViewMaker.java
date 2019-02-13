@@ -56,7 +56,6 @@ public final class ViewMaker {
 
     // TODO: Cannot handle passthrough (or other?) mappings to list columns
     
-    
     private static boolean applyCartesianLayout(CyNetworkView view, 
     		final CyNode node,
     		final CartesianLayoutElement position) {
@@ -275,75 +274,19 @@ public final class ViewMaker {
     		final Class<? extends CyIdentifiable> my_class) throws IOException {
         
 
-            // vvvvvvvvvvvvvvvvvvvvvvvvvvv remove me
-            boolean is_mapping = false;
-            char mapping = '?';
-            String mapping_key = null;
-            if (key.startsWith(CxUtil.PASSTHROUGH_MAPPING)) {
-                is_mapping = true;
-                mapping = 'p';
-                mapping_key = key.substring(20);
-            }
-            else if (key.startsWith(CxUtil.CONTINUOUS_MAPPING)) {
-                is_mapping = true;
-                mapping = 'c';
-                mapping_key = key.substring(19);
-            }
-            else if (key.startsWith(CxUtil.DISCRETE_MAPPING)) {
-                is_mapping = true;
-                mapping = 'd';
-                mapping_key = key.substring(17);
-            }
-            if (is_mapping) {
-                final VisualProperty vp = lexicon.lookup(my_class, mapping_key);
-                final StringParser sp = new StringParser(value);
-                final String col = sp.get(CxUtil.VM_COL);
-                final String type = sp.get(CxUtil.VM_TYPE);
-                final Class<?> type_class = ViewMaker.toClass(type);
-                if (vp != null) {
-                    if (mapping == 'p') {
-                        addPasstroughMapping(style, vp, col, type_class, vmf_factory_p);
-                    }
-                    else if (mapping == 'c') {
-                        addContinuousMapping(style, vp, sp, col, type, type_class, vmf_factory_c);
-                    }
-                    else if (mapping == 'd') {
-                        addDiscreteMapping(style, vp, sp, col, type, type_class, vmf_factory_d);
-                    }
-                    else {
-                        throw new IllegalStateException("unknown mapping type: " + mapping);
+            
+            final VisualProperty vp = lexicon.lookup(my_class, key);
+            if (vp != null) {
+                Object parsed_value = null;
+                try {
+                    parsed_value = vp.parseSerializableString(value);
+                    if (parsed_value != null) {
+                    	style.setDefaultValue(vp, parsed_value);
                     }
                 }
-                // TODO
-                // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ remove me
-            }
-            else {
-                // vvvvvvvvvvvvvvvvvvvvvvvvvvv remove me
-                if (key.equals(CxUtil.ARROW_COLOR_MATCHES_EDGE)
-                        || key.equals(CxUtil.NODE_CUSTOM_GRAPHICS_SIZE_SYNC) || key.equals(CxUtil.NODE_SIZE_LOCKED)) {
-                    for (final VisualPropertyDependency<?> d : style.getAllVisualPropertyDependencies()) {
-                        if (d.getIdString().equals(key)) {
-                            d.setDependency(Boolean.parseBoolean(value));
-                        }
-                    }
-                }
-                // TODO
-                // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ remove me
-                else {
-                    final VisualProperty vp = lexicon.lookup(my_class, key);
-                    if (vp != null) {
-                        Object parsed_value = null;
-                        try {
-                            parsed_value = vp.parseSerializableString(value);
-                            if (parsed_value != null) {
-                            	style.setDefaultValue(vp, parsed_value);
-                            }
-                        }
-                        catch (final Exception e) {
-                            logger.info("Could not parse serializable string from '" + value
-                                    + "' for '" + key + "'");
-                        }
-                    }
+                catch (final Exception e) {
+                    logger.info("Could not parse serializable string from '" + value
+                            + "' for '" + key + "'");
                 }
             }
         }

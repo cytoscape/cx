@@ -134,7 +134,7 @@ public class VisualMappingMock{
 		
 
 		this.style = generateVisualStyle(lexicon);
-		when(vmm.getVisualStyle(Mockito.any())).thenReturn(style);
+//		when(vmm.getVisualStyle(Mockito.any())).thenReturn(style);
 		setDefaults();
 		setMappings();
 

@@ -8,7 +8,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -40,7 +39,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -66,12 +64,6 @@ public class NiceCxComparator {
 		};
 	
 	private static final boolean COMPARE_VIS_PROPS = false;
-
-	
-	private static final Map<String, String[]> JSON_ARR_KEYS = new HashMap<String, String[]>();
-	{
-		JSON_ARR_KEYS.put("cyVisualProperties", new String[] {"_properties_of", "_applies_to"});
-	}
 	
 	Gson gson = new Gson();
 
@@ -87,7 +79,6 @@ public class NiceCxComparator {
 		 *  Node and edge IDs are stored in an opaque aspect, so there may be a way to write a complex
 		 *  Comparator to match nodes and align collections
 		 */
-		System.out.println("Cannot compare CX Collections yet...");
 	}
 
 
@@ -307,101 +298,12 @@ public class NiceCxComparator {
 
 		JsonElement leftEle = gson.toJsonTree(leftAttrs);
 		JsonElement rightEle = gson.toJsonTree(rightAttrs);
-		
-		compareElements(name, leftEle, rightEle);
+		JsonComparator jc = new JsonComparator(leftEle, rightEle);
+
+		System.out.println(jc.getLeftOnly());
 
 	}
 	
-	private String getKey(JsonObject eleObj, String path) {
-		StringBuilder builder = new StringBuilder();
-		String[] keys = JSON_ARR_KEYS.get(path);
-		for (int i = 0; i < keys.length; i++) {
-			if (i > 0) {
-				builder.append(":");
-			}
-			JsonElement val = eleObj.remove(keys[i]);
-			String v = val == null ? "" : val.getAsString();
-			builder.append(v);
-		}
-		return builder.toString();
-	}
-
-	private void compareElements(String path, JsonElement leftEle, JsonElement rightEle) {
-		if (leftEle == null) {
-			System.out.println(path + " not in left");
-		}else if (rightEle == null) {
-			System.out.println(path + " not in right");
-		}else if (leftEle.isJsonObject() && rightEle.isJsonObject()) {
-			JsonObject leftObj = leftEle.getAsJsonObject();
-			JsonObject rightObj = rightEle.getAsJsonObject();
-
-			for (String key : leftObj.keySet()) {
-				compareElements(path + "/" + key, leftObj.get(key), rightObj.get(key));
-			}
-			
-		}else if (leftEle.isJsonArray() && rightEle.isJsonArray()) {
-			JsonArray leftArr = leftEle.getAsJsonArray();
-			JsonArray rightArr = rightEle.getAsJsonArray();
-			
-			if (JSON_ARR_KEYS.containsKey(path)) {
-				JsonObject newLeft = new JsonObject();
-				JsonObject newRight = new JsonObject();
-				
-				leftArr.forEach(ele -> {
-					JsonObject obj = ele.getAsJsonObject();
-					String key = getKey(obj, path);
-					newLeft.add(key, obj);
-				});
-				
-				rightArr.forEach(ele -> {
-					JsonObject obj = ele.getAsJsonObject();
-					String key = getKey(obj, path);
-					newRight.add(key, obj);
-				});
-				compareElements(path, newLeft, newRight);
-				return;
-			}
-			
-			assertEquals(leftArr.size(), rightArr.size());
-			if (leftArr.equals(rightArr)) {
-				return;
-			}
-			HashSet<Integer> left = new HashSet<Integer>(), right = new HashSet<Integer>();
-			for (int i = 0; i < leftArr.size(); i++) {
-				left.add(i);
-				right.add(i);
-			}
-			for (int i = 0; i < leftArr.size(); i++) {
-				int match = -1;
-				for (int j : right) {
-					try {
-						compareElements(path + "(" + i + "/" + j + ")", leftArr.get(i), rightArr.get(j));
-						match = j;
-						break;
-					}catch(AssertionError e) {
-						
-					}
-				}
-				if (match >= 0) {
-					left.remove(i);
-					right.remove(match);
-				}
-			}
-			if (!left.isEmpty()) {
-				System.out.println("Unmatched in left at " + path + ": ");
-				left.forEach(ind -> {System.out.println(leftArr.get(ind)); });
-			}
-			if (!right.isEmpty()) {
-				System.out.println("Unmatched in right at " + path + ": ");
-				right.forEach(ind -> {System.out.println(rightArr.get(ind)); });
-			}
-			
-		}else {
-			if (!leftEle.equals(rightEle)) {
-				System.out.println(path + " json not equal: " + leftEle + "\n=\\=\n" + rightEle);
-			}
-		}
-	}
 
 	private void getCytoscapeAdditions(Collection<? extends AspectElement> leftAttrs,
 			Collection<? extends AspectElement> rightAttrs) {

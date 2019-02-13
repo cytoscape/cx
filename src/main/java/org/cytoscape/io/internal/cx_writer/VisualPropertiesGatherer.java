@@ -138,6 +138,7 @@ public final class VisualPropertiesGatherer {
                     final String id_string = vp.getIdString();
                     if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")) {
                         // TODO
+                    	throw new RuntimeException("Failed to add property " + vp);
                     }
                     else {
                         cvp.putProperty(id_string, value_str);

@@ -1,0 +1,1925 @@
+[{"numberVerification":[{"longNumber":281474976710655}]},{"metaData":[{"consistencyGroup":1,"elementCount":1,"lastUpdate":1460411849054,"name":"ndexStatus","properties":[],"version":"1.0"},{"consistencyGroup":1,"elementCount":38,"idCounter":4234,"name":"nodes","properties":[],"version":"1.0"},{"consistencyGroup":1,"elementCount":37,"idCounter":4234,"name":"edges","properties":[],"version":"1.0"},{"elementCount":3,"name":"networkAttributes","properties":[]},{"elementCount":1,"name":"hiddenAttributes","properties":[]},{"elementCount":76,"name":"nodeAttributes","properties":[]},{"elementCount":152,"name":"edgeAttributes","properties":[]},{"elementCount":38,"name":"cartesianLayout","properties":[]},{"elementCount":3,"name":"visualProperties","properties":[]},{"elementCount":1,"name":"subNetworks","properties":[]},{"elementCount":1,"name":"cyViews","properties":[]},{"elementCount":2,"name":"networkRelations","properties":[]},{"consistencyGroup":1,"elementCount":1,"lastUpdate":1460058916931,"name":"provenanceHistory","properties":[],"version":"1.0"},{"elementCount":14,"name":"cyTableColumn","properties":[]}]},{"ndexStatus":[{"externalId":"a660984d-fcfa-11e5-b550-06603eb7f303","creationTime":1460058916804,"modificationTime":1460411849054,"visibility":"PUBLIC","published":false,"nodeCount":38,"edgeCount":37,"owner":"decarlin","ndexServerURI":"http://54.214.226.184","readOnly":false}]}, {"provenanceHistory":[{"entity":{"creationEvent":{"inputs":null,"startedAtTime":1460058916931,"endedAtTime":1460058916931,"eventType":"Cytoscape Upload","properties":[{"name":"user","value":"Daniel Carlin"},{"name":"account name","value":"decarlin"}]},"uri":"http://public.ndexbio.org/network/a660984d-fcfa-11e5-b550-06603eb7f303","properties":[{"name":"edge count","value":"37"},{"name":"node count","value":"38"},{"name":"dc:title","value":"Novershtern_dev_clean.sif"},{"name":"description","value":""}]}}]}, {"nodes":[{
+  "@id" : 703,
+  "n" : "Basophils"
+}, {
+  "@id" : 701,
+  "n" : "Eosinophill"
+}, {
+  "@id" : 699,
+  "n" : "Monocyte"
+}, {
+  "@id" : 697,
+  "n" : "Colony Forming Unit-Monocyte"
+}, {
+  "@id" : 695,
+  "n" : "Granulocyte (Neutrophil)"
+}, {
+  "@id" : 693,
+  "n" : "Granulocyte (Neutrophilic Metamyelocyte)"
+}, {
+  "@id" : 691,
+  "n" : "Colony Forming Unit-Granulocyte"
+}, {
+  "@id" : 689,
+  "n" : "Megakaryocyte"
+}, {
+  "@id" : 687,
+  "n" : "Colony Forming Unit-Megakaryocytic"
+}, {
+  "@id" : 685,
+  "n" : "Erythroid CD34- CD71- GlyA+"
+}, {
+  "@id" : 683,
+  "n" : "Erythroid CD34- CD71lo GlyA+"
+}, {
+  "@id" : 681,
+  "n" : "Erythroid CD34- CD71+ GlyA+"
+}, {
+  "@id" : 679,
+  "n" : "Erythroid CD34- CD71+ GlyA-"
+}, {
+  "@id" : 677,
+  "n" : "Erythroid CD34+ CD71+ GlyA-"
+}, {
+  "@id" : 675,
+  "n" : "Megakaryocyte/ erythroid progenitor"
+}, {
+  "@id" : 673,
+  "n" : "Granulocyte/monocyte progenitor"
+}, {
+  "@id" : 671,
+  "n" : "Myeloid Dendritic Cell"
+}, {
+  "@id" : 669,
+  "n" : "Plasmacytoid Dendritic Cell"
+}, {
+  "@id" : 667,
+  "n" : "Mature NK cell CD56- CD16- CD3-"
+}, {
+  "@id" : 665,
+  "n" : "Mature NK cell CD56- CD16+ CD3-"
+}, {
+  "@id" : 663,
+  "n" : "Mature NK cell CD56+ CD16+ CD3-"
+}, {
+  "@id" : 661,
+  "n" : "NKT"
+}, {
+  "@id" : 659,
+  "n" : "CD8+ Effector Memory RA"
+}, {
+  "@id" : 657,
+  "n" : "CD8+ Effector Memory"
+}, {
+  "@id" : 655,
+  "n" : "CD8+ Central Memory"
+}, {
+  "@id" : 653,
+  "n" : "CD4+ Effector Memory"
+}, {
+  "@id" : 651,
+  "n" : "CD4+ Central Memory"
+}, {
+  "@id" : 649,
+  "n" : "Naive CD4+ T-cell"
+}, {
+  "@id" : 647,
+  "n" : "Naive CD8+ T-cell"
+}, {
+  "@id" : 645,
+  "n" : "Mature B-cell class switched"
+}, {
+  "@id" : 643,
+  "n" : "Mature B-cell class able to switch"
+}, {
+  "@id" : 641,
+  "n" : "Mature B-cells"
+}, {
+  "@id" : 639,
+  "n" : "Naïve B-cells"
+}, {
+  "@id" : 637,
+  "n" : "Pro B-cell"
+}, {
+  "@id" : 635,
+  "n" : "Early B-cell"
+}, {
+  "@id" : 633,
+  "n" : "Common myeloid progenitor"
+}, {
+  "@id" : 631,
+  "n" : "Hematopoietic stem cell CD38- CD34+"
+}, {
+  "@id" : 630,
+  "n" : "Hematopoietic stem cell CD133+ CD34dim"
+}]}, {"edges":[{
+  "@id" : 700,
+  "s" : 697,
+  "t" : 699,
+  "i" : "becomes"
+}, {
+  "@id" : 696,
+  "s" : 693,
+  "t" : 695,
+  "i" : "becomes"
+}, {
+  "@id" : 694,
+  "s" : 691,
+  "t" : 693,
+  "i" : "becomes"
+}, {
+  "@id" : 690,
+  "s" : 687,
+  "t" : 689,
+  "i" : "becomes"
+}, {
+  "@id" : 686,
+  "s" : 683,
+  "t" : 685,
+  "i" : "becomes"
+}, {
+  "@id" : 684,
+  "s" : 681,
+  "t" : 683,
+  "i" : "becomes"
+}, {
+  "@id" : 682,
+  "s" : 679,
+  "t" : 681,
+  "i" : "becomes"
+}, {
+  "@id" : 680,
+  "s" : 677,
+  "t" : 679,
+  "i" : "becomes"
+}, {
+  "@id" : 688,
+  "s" : 675,
+  "t" : 687,
+  "i" : "becomes"
+}, {
+  "@id" : 678,
+  "s" : 675,
+  "t" : 677,
+  "i" : "becomes"
+}, {
+  "@id" : 704,
+  "s" : 673,
+  "t" : 703,
+  "i" : "becomes"
+}, {
+  "@id" : 702,
+  "s" : 673,
+  "t" : 701,
+  "i" : "becomes"
+}, {
+  "@id" : 698,
+  "s" : 673,
+  "t" : 697,
+  "i" : "becomes"
+}, {
+  "@id" : 692,
+  "s" : 673,
+  "t" : 691,
+  "i" : "becomes"
+}, {
+  "@id" : 654,
+  "s" : 649,
+  "t" : 653,
+  "i" : "becomes"
+}, {
+  "@id" : 652,
+  "s" : 649,
+  "t" : 651,
+  "i" : "becomes"
+}, {
+  "@id" : 660,
+  "s" : 647,
+  "t" : 659,
+  "i" : "becomes"
+}, {
+  "@id" : 658,
+  "s" : 647,
+  "t" : 657,
+  "i" : "becomes"
+}, {
+  "@id" : 656,
+  "s" : 647,
+  "t" : 655,
+  "i" : "becomes"
+}, {
+  "@id" : 646,
+  "s" : 639,
+  "t" : 645,
+  "i" : "becomes"
+}, {
+  "@id" : 644,
+  "s" : 639,
+  "t" : 643,
+  "i" : "becomes"
+}, {
+  "@id" : 642,
+  "s" : 639,
+  "t" : 641,
+  "i" : "becomes"
+}, {
+  "@id" : 640,
+  "s" : 637,
+  "t" : 639,
+  "i" : "becomes"
+}, {
+  "@id" : 638,
+  "s" : 635,
+  "t" : 637,
+  "i" : "becomes"
+}, {
+  "@id" : 676,
+  "s" : 633,
+  "t" : 675,
+  "i" : "becomes"
+}, {
+  "@id" : 674,
+  "s" : 633,
+  "t" : 673,
+  "i" : "becomes"
+}, {
+  "@id" : 672,
+  "s" : 633,
+  "t" : 671,
+  "i" : "becomes"
+}, {
+  "@id" : 670,
+  "s" : 631,
+  "t" : 669,
+  "i" : "becomes"
+}, {
+  "@id" : 668,
+  "s" : 631,
+  "t" : 667,
+  "i" : "becomes"
+}, {
+  "@id" : 666,
+  "s" : 631,
+  "t" : 665,
+  "i" : "becomes"
+}, {
+  "@id" : 664,
+  "s" : 631,
+  "t" : 663,
+  "i" : "becomes"
+}, {
+  "@id" : 662,
+  "s" : 631,
+  "t" : 661,
+  "i" : "becomes"
+}, {
+  "@id" : 650,
+  "s" : 631,
+  "t" : 649,
+  "i" : "becomes"
+}, {
+  "@id" : 648,
+  "s" : 631,
+  "t" : 647,
+  "i" : "becomes"
+}, {
+  "@id" : 636,
+  "s" : 631,
+  "t" : 635,
+  "i" : "becomes"
+}, {
+  "@id" : 634,
+  "s" : 631,
+  "t" : 633,
+  "i" : "becomes"
+}, {
+  "@id" : 632,
+  "s" : 630,
+  "t" : 631,
+  "i" : "becomes"
+}]}, {"networkAttributes":[{
+  "n" : "name",
+  "v" : "Novershtern_dev_clean.sif"
+}, {
+  "s" : 620,
+  "n" : "name",
+  "v" : "Novershtern_dev_clean.sif"
+}, {
+  "s" : 620,
+  "n" : "selected",
+  "v" : "true",
+  "d" : "boolean"
+}]}, {"hiddenAttributes":[{
+  "s" : 620,
+  "n" : "layoutAlgorithm",
+  "v" : "Hierarchical Layout"
+}]}, {"nodeAttributes":[{
+  "s" : 620,
+  "po" : 703,
+  "n" : "name",
+  "v" : "Basophils"
+}, {
+  "s" : 620,
+  "po" : 703,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 701,
+  "n" : "name",
+  "v" : "Eosinophill"
+}, {
+  "s" : 620,
+  "po" : 701,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 699,
+  "n" : "name",
+  "v" : "Monocyte"
+}, {
+  "s" : 620,
+  "po" : 699,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 697,
+  "n" : "name",
+  "v" : "Colony Forming Unit-Monocyte"
+}, {
+  "s" : 620,
+  "po" : 697,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 695,
+  "n" : "name",
+  "v" : "Granulocyte (Neutrophil)"
+}, {
+  "s" : 620,
+  "po" : 695,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 693,
+  "n" : "name",
+  "v" : "Granulocyte (Neutrophilic Metamyelocyte)"
+}, {
+  "s" : 620,
+  "po" : 693,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 691,
+  "n" : "name",
+  "v" : "Colony Forming Unit-Granulocyte"
+}, {
+  "s" : 620,
+  "po" : 691,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 689,
+  "n" : "name",
+  "v" : "Megakaryocyte"
+}, {
+  "s" : 620,
+  "po" : 689,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 687,
+  "n" : "name",
+  "v" : "Colony Forming Unit-Megakaryocytic"
+}, {
+  "s" : 620,
+  "po" : 687,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 685,
+  "n" : "name",
+  "v" : "Erythroid CD34- CD71- GlyA+"
+}, {
+  "s" : 620,
+  "po" : 685,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 683,
+  "n" : "name",
+  "v" : "Erythroid CD34- CD71lo GlyA+"
+}, {
+  "s" : 620,
+  "po" : 683,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 681,
+  "n" : "name",
+  "v" : "Erythroid CD34- CD71+ GlyA+"
+}, {
+  "s" : 620,
+  "po" : 681,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 679,
+  "n" : "name",
+  "v" : "Erythroid CD34- CD71+ GlyA-"
+}, {
+  "s" : 620,
+  "po" : 679,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 677,
+  "n" : "name",
+  "v" : "Erythroid CD34+ CD71+ GlyA-"
+}, {
+  "s" : 620,
+  "po" : 677,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 675,
+  "n" : "name",
+  "v" : "Megakaryocyte/ erythroid progenitor"
+}, {
+  "s" : 620,
+  "po" : 675,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 673,
+  "n" : "name",
+  "v" : "Granulocyte/monocyte progenitor"
+}, {
+  "s" : 620,
+  "po" : 673,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 671,
+  "n" : "name",
+  "v" : "Myeloid Dendritic Cell"
+}, {
+  "s" : 620,
+  "po" : 671,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 669,
+  "n" : "name",
+  "v" : "Plasmacytoid Dendritic Cell"
+}, {
+  "s" : 620,
+  "po" : 669,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 667,
+  "n" : "name",
+  "v" : "Mature NK cell CD56- CD16- CD3-"
+}, {
+  "s" : 620,
+  "po" : 667,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 665,
+  "n" : "name",
+  "v" : "Mature NK cell CD56- CD16+ CD3-"
+}, {
+  "s" : 620,
+  "po" : 665,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 663,
+  "n" : "name",
+  "v" : "Mature NK cell CD56+ CD16+ CD3-"
+}, {
+  "s" : 620,
+  "po" : 663,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 661,
+  "n" : "name",
+  "v" : "NKT"
+}, {
+  "s" : 620,
+  "po" : 661,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 659,
+  "n" : "name",
+  "v" : "CD8+ Effector Memory RA"
+}, {
+  "s" : 620,
+  "po" : 659,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 657,
+  "n" : "name",
+  "v" : "CD8+ Effector Memory"
+}, {
+  "s" : 620,
+  "po" : 657,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 655,
+  "n" : "name",
+  "v" : "CD8+ Central Memory"
+}, {
+  "s" : 620,
+  "po" : 655,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 653,
+  "n" : "name",
+  "v" : "CD4+ Effector Memory"
+}, {
+  "s" : 620,
+  "po" : 653,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 651,
+  "n" : "name",
+  "v" : "CD4+ Central Memory"
+}, {
+  "s" : 620,
+  "po" : 651,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 649,
+  "n" : "name",
+  "v" : "Naive CD4+ T-cell"
+}, {
+  "s" : 620,
+  "po" : 649,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 647,
+  "n" : "name",
+  "v" : "Naive CD8+ T-cell"
+}, {
+  "s" : 620,
+  "po" : 647,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 645,
+  "n" : "name",
+  "v" : "Mature B-cell class switched"
+}, {
+  "s" : 620,
+  "po" : 645,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 643,
+  "n" : "name",
+  "v" : "Mature B-cell class able to switch"
+}, {
+  "s" : 620,
+  "po" : 643,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 641,
+  "n" : "name",
+  "v" : "Mature B-cells"
+}, {
+  "s" : 620,
+  "po" : 641,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 639,
+  "n" : "name",
+  "v" : "Naïve B-cells"
+}, {
+  "s" : 620,
+  "po" : 639,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 637,
+  "n" : "name",
+  "v" : "Pro B-cell"
+}, {
+  "s" : 620,
+  "po" : 637,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 635,
+  "n" : "name",
+  "v" : "Early B-cell"
+}, {
+  "s" : 620,
+  "po" : 635,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 633,
+  "n" : "name",
+  "v" : "Common myeloid progenitor"
+}, {
+  "s" : 620,
+  "po" : 633,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 631,
+  "n" : "name",
+  "v" : "Hematopoietic stem cell CD38- CD34+"
+}, {
+  "s" : 620,
+  "po" : 631,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 630,
+  "n" : "name",
+  "v" : "Hematopoietic stem cell CD133+ CD34dim"
+}, {
+  "s" : 620,
+  "po" : 630,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}]}, {"edgeAttributes":[{
+  "s" : 620,
+  "po" : 700,
+  "n" : "shared name",
+  "v" : "Colony Forming Unit-Monocyte (becomes) Monocyte"
+}, {
+  "s" : 620,
+  "po" : 700,
+  "n" : "name",
+  "v" : "Colony Forming Unit-Monocyte (becomes) Monocyte"
+}, {
+  "s" : 620,
+  "po" : 700,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 700,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 696,
+  "n" : "shared name",
+  "v" : "Granulocyte (Neutrophilic Metamyelocyte) (becomes) Granulocyte (Neutrophil)"
+}, {
+  "s" : 620,
+  "po" : 696,
+  "n" : "name",
+  "v" : "Granulocyte (Neutrophilic Metamyelocyte) (becomes) Granulocyte (Neutrophil)"
+}, {
+  "s" : 620,
+  "po" : 696,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 696,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 694,
+  "n" : "shared name",
+  "v" : "Colony Forming Unit-Granulocyte (becomes) Granulocyte (Neutrophilic Metamyelocyte)"
+}, {
+  "s" : 620,
+  "po" : 694,
+  "n" : "name",
+  "v" : "Colony Forming Unit-Granulocyte (becomes) Granulocyte (Neutrophilic Metamyelocyte)"
+}, {
+  "s" : 620,
+  "po" : 694,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 694,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 690,
+  "n" : "shared name",
+  "v" : "Colony Forming Unit-Megakaryocytic (becomes) Megakaryocyte"
+}, {
+  "s" : 620,
+  "po" : 690,
+  "n" : "name",
+  "v" : "Colony Forming Unit-Megakaryocytic (becomes) Megakaryocyte"
+}, {
+  "s" : 620,
+  "po" : 690,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 690,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 686,
+  "n" : "shared name",
+  "v" : "Erythroid CD34- CD71lo GlyA+ (becomes) Erythroid CD34- CD71- GlyA+"
+}, {
+  "s" : 620,
+  "po" : 686,
+  "n" : "name",
+  "v" : "Erythroid CD34- CD71lo GlyA+ (becomes) Erythroid CD34- CD71- GlyA+"
+}, {
+  "s" : 620,
+  "po" : 686,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 686,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 684,
+  "n" : "shared name",
+  "v" : "Erythroid CD34- CD71+ GlyA+ (becomes) Erythroid CD34- CD71lo GlyA+"
+}, {
+  "s" : 620,
+  "po" : 684,
+  "n" : "name",
+  "v" : "Erythroid CD34- CD71+ GlyA+ (becomes) Erythroid CD34- CD71lo GlyA+"
+}, {
+  "s" : 620,
+  "po" : 684,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 684,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 682,
+  "n" : "shared name",
+  "v" : "Erythroid CD34- CD71+ GlyA- (becomes) Erythroid CD34- CD71+ GlyA+"
+}, {
+  "s" : 620,
+  "po" : 682,
+  "n" : "name",
+  "v" : "Erythroid CD34- CD71+ GlyA- (becomes) Erythroid CD34- CD71+ GlyA+"
+}, {
+  "s" : 620,
+  "po" : 682,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 682,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 680,
+  "n" : "shared name",
+  "v" : "Erythroid CD34+ CD71+ GlyA- (becomes) Erythroid CD34- CD71+ GlyA-"
+}, {
+  "s" : 620,
+  "po" : 680,
+  "n" : "name",
+  "v" : "Erythroid CD34+ CD71+ GlyA- (becomes) Erythroid CD34- CD71+ GlyA-"
+}, {
+  "s" : 620,
+  "po" : 680,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 680,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 688,
+  "n" : "shared name",
+  "v" : "Megakaryocyte/ erythroid progenitor (becomes) Colony Forming Unit-Megakaryocytic"
+}, {
+  "s" : 620,
+  "po" : 688,
+  "n" : "name",
+  "v" : "Megakaryocyte/ erythroid progenitor (becomes) Colony Forming Unit-Megakaryocytic"
+}, {
+  "s" : 620,
+  "po" : 688,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 688,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 678,
+  "n" : "shared name",
+  "v" : "Megakaryocyte/ erythroid progenitor (becomes) Erythroid CD34+ CD71+ GlyA-"
+}, {
+  "s" : 620,
+  "po" : 678,
+  "n" : "name",
+  "v" : "Megakaryocyte/ erythroid progenitor (becomes) Erythroid CD34+ CD71+ GlyA-"
+}, {
+  "s" : 620,
+  "po" : 678,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 678,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 704,
+  "n" : "shared name",
+  "v" : "Granulocyte/monocyte progenitor (becomes) Basophils"
+}, {
+  "s" : 620,
+  "po" : 704,
+  "n" : "name",
+  "v" : "Granulocyte/monocyte progenitor (becomes) Basophils"
+}, {
+  "s" : 620,
+  "po" : 704,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 704,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 702,
+  "n" : "shared name",
+  "v" : "Granulocyte/monocyte progenitor (becomes) Eosinophill"
+}, {
+  "s" : 620,
+  "po" : 702,
+  "n" : "name",
+  "v" : "Granulocyte/monocyte progenitor (becomes) Eosinophill"
+}, {
+  "s" : 620,
+  "po" : 702,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 702,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 698,
+  "n" : "shared name",
+  "v" : "Granulocyte/monocyte progenitor (becomes) Colony Forming Unit-Monocyte"
+}, {
+  "s" : 620,
+  "po" : 698,
+  "n" : "name",
+  "v" : "Granulocyte/monocyte progenitor (becomes) Colony Forming Unit-Monocyte"
+}, {
+  "s" : 620,
+  "po" : 698,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 698,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 692,
+  "n" : "shared name",
+  "v" : "Granulocyte/monocyte progenitor (becomes) Colony Forming Unit-Granulocyte"
+}, {
+  "s" : 620,
+  "po" : 692,
+  "n" : "name",
+  "v" : "Granulocyte/monocyte progenitor (becomes) Colony Forming Unit-Granulocyte"
+}, {
+  "s" : 620,
+  "po" : 692,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 692,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 654,
+  "n" : "shared name",
+  "v" : "Naive CD4+ T-cell (becomes) CD4+ Effector Memory"
+}, {
+  "s" : 620,
+  "po" : 654,
+  "n" : "name",
+  "v" : "Naive CD4+ T-cell (becomes) CD4+ Effector Memory"
+}, {
+  "s" : 620,
+  "po" : 654,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 654,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 652,
+  "n" : "shared name",
+  "v" : "Naive CD4+ T-cell (becomes) CD4+ Central Memory"
+}, {
+  "s" : 620,
+  "po" : 652,
+  "n" : "name",
+  "v" : "Naive CD4+ T-cell (becomes) CD4+ Central Memory"
+}, {
+  "s" : 620,
+  "po" : 652,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 652,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 660,
+  "n" : "shared name",
+  "v" : "Naive CD8+ T-cell (becomes) CD8+ Effector Memory RA"
+}, {
+  "s" : 620,
+  "po" : 660,
+  "n" : "name",
+  "v" : "Naive CD8+ T-cell (becomes) CD8+ Effector Memory RA"
+}, {
+  "s" : 620,
+  "po" : 660,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 660,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 658,
+  "n" : "shared name",
+  "v" : "Naive CD8+ T-cell (becomes) CD8+ Effector Memory"
+}, {
+  "s" : 620,
+  "po" : 658,
+  "n" : "name",
+  "v" : "Naive CD8+ T-cell (becomes) CD8+ Effector Memory"
+}, {
+  "s" : 620,
+  "po" : 658,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 658,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 656,
+  "n" : "shared name",
+  "v" : "Naive CD8+ T-cell (becomes) CD8+ Central Memory"
+}, {
+  "s" : 620,
+  "po" : 656,
+  "n" : "name",
+  "v" : "Naive CD8+ T-cell (becomes) CD8+ Central Memory"
+}, {
+  "s" : 620,
+  "po" : 656,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 656,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 646,
+  "n" : "shared name",
+  "v" : "Naïve B-cells (becomes) Mature B-cell class switched"
+}, {
+  "s" : 620,
+  "po" : 646,
+  "n" : "name",
+  "v" : "Naïve B-cells (becomes) Mature B-cell class switched"
+}, {
+  "s" : 620,
+  "po" : 646,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 646,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 644,
+  "n" : "shared name",
+  "v" : "Naïve B-cells (becomes) Mature B-cell class able to switch"
+}, {
+  "s" : 620,
+  "po" : 644,
+  "n" : "name",
+  "v" : "Naïve B-cells (becomes) Mature B-cell class able to switch"
+}, {
+  "s" : 620,
+  "po" : 644,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 644,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 642,
+  "n" : "shared name",
+  "v" : "Naïve B-cells (becomes) Mature B-cells"
+}, {
+  "s" : 620,
+  "po" : 642,
+  "n" : "name",
+  "v" : "Naïve B-cells (becomes) Mature B-cells"
+}, {
+  "s" : 620,
+  "po" : 642,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 642,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 640,
+  "n" : "shared name",
+  "v" : "Pro B-cell (becomes) Naïve B-cells"
+}, {
+  "s" : 620,
+  "po" : 640,
+  "n" : "name",
+  "v" : "Pro B-cell (becomes) Naïve B-cells"
+}, {
+  "s" : 620,
+  "po" : 640,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 640,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 638,
+  "n" : "shared name",
+  "v" : "Early B-cell (becomes) Pro B-cell"
+}, {
+  "s" : 620,
+  "po" : 638,
+  "n" : "name",
+  "v" : "Early B-cell (becomes) Pro B-cell"
+}, {
+  "s" : 620,
+  "po" : 638,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 638,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 676,
+  "n" : "shared name",
+  "v" : "Common myeloid progenitor (becomes) Megakaryocyte/ erythroid progenitor"
+}, {
+  "s" : 620,
+  "po" : 676,
+  "n" : "ndex_link",
+  "v" : "[TF regulators](a9581fac-fcf5-11e5-b550-06603eb7f303)"
+}, {
+  "s" : 620,
+  "po" : 676,
+  "n" : "ndex_id",
+  "v" : "a9581fac-fcf5-11e5-b550-06603eb7f303"
+}, {
+  "s" : 620,
+  "po" : 676,
+  "n" : "name",
+  "v" : "Common myeloid progenitor (becomes) Megakaryocyte/ erythroid progenitor"
+}, {
+  "s" : 620,
+  "po" : 676,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 676,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 674,
+  "n" : "shared name",
+  "v" : "Common myeloid progenitor (becomes) Granulocyte/monocyte progenitor"
+}, {
+  "s" : 620,
+  "po" : 674,
+  "n" : "name",
+  "v" : "Common myeloid progenitor (becomes) Granulocyte/monocyte progenitor"
+}, {
+  "s" : 620,
+  "po" : 674,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 674,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 672,
+  "n" : "shared name",
+  "v" : "Common myeloid progenitor (becomes) Myeloid Dendritic Cell"
+}, {
+  "s" : 620,
+  "po" : 672,
+  "n" : "name",
+  "v" : "Common myeloid progenitor (becomes) Myeloid Dendritic Cell"
+}, {
+  "s" : 620,
+  "po" : 672,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 672,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 670,
+  "n" : "shared name",
+  "v" : "Hematopoietic stem cell CD38- CD34+ (becomes) Plasmacytoid Dendritic Cell"
+}, {
+  "s" : 620,
+  "po" : 670,
+  "n" : "name",
+  "v" : "Hematopoietic stem cell CD38- CD34+ (becomes) Plasmacytoid Dendritic Cell"
+}, {
+  "s" : 620,
+  "po" : 670,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 670,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 668,
+  "n" : "shared name",
+  "v" : "Hematopoietic stem cell CD38- CD34+ (becomes) Mature NK cell CD56- CD16- CD3-"
+}, {
+  "s" : 620,
+  "po" : 668,
+  "n" : "name",
+  "v" : "Hematopoietic stem cell CD38- CD34+ (becomes) Mature NK cell CD56- CD16- CD3-"
+}, {
+  "s" : 620,
+  "po" : 668,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 668,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 666,
+  "n" : "shared name",
+  "v" : "Hematopoietic stem cell CD38- CD34+ (becomes) Mature NK cell CD56- CD16+ CD3-"
+}, {
+  "s" : 620,
+  "po" : 666,
+  "n" : "name",
+  "v" : "Hematopoietic stem cell CD38- CD34+ (becomes) Mature NK cell CD56- CD16+ CD3-"
+}, {
+  "s" : 620,
+  "po" : 666,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 666,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 664,
+  "n" : "shared name",
+  "v" : "Hematopoietic stem cell CD38- CD34+ (becomes) Mature NK cell CD56+ CD16+ CD3-"
+}, {
+  "s" : 620,
+  "po" : 664,
+  "n" : "name",
+  "v" : "Hematopoietic stem cell CD38- CD34+ (becomes) Mature NK cell CD56+ CD16+ CD3-"
+}, {
+  "s" : 620,
+  "po" : 664,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 664,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 662,
+  "n" : "shared name",
+  "v" : "Hematopoietic stem cell CD38- CD34+ (becomes) NKT"
+}, {
+  "s" : 620,
+  "po" : 662,
+  "n" : "name",
+  "v" : "Hematopoietic stem cell CD38- CD34+ (becomes) NKT"
+}, {
+  "s" : 620,
+  "po" : 662,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 662,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 650,
+  "n" : "shared name",
+  "v" : "Hematopoietic stem cell CD38- CD34+ (becomes) Naive CD4+ T-cell"
+}, {
+  "s" : 620,
+  "po" : 650,
+  "n" : "name",
+  "v" : "Hematopoietic stem cell CD38- CD34+ (becomes) Naive CD4+ T-cell"
+}, {
+  "s" : 620,
+  "po" : 650,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 650,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 648,
+  "n" : "shared name",
+  "v" : "Hematopoietic stem cell CD38- CD34+ (becomes) Naive CD8+ T-cell"
+}, {
+  "s" : 620,
+  "po" : 648,
+  "n" : "name",
+  "v" : "Hematopoietic stem cell CD38- CD34+ (becomes) Naive CD8+ T-cell"
+}, {
+  "s" : 620,
+  "po" : 648,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 648,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 636,
+  "n" : "shared name",
+  "v" : "Hematopoietic stem cell CD38- CD34+ (becomes) Early B-cell"
+}, {
+  "s" : 620,
+  "po" : 636,
+  "n" : "name",
+  "v" : "Hematopoietic stem cell CD38- CD34+ (becomes) Early B-cell"
+}, {
+  "s" : 620,
+  "po" : 636,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 636,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 634,
+  "n" : "shared name",
+  "v" : "Hematopoietic stem cell CD38- CD34+ (becomes) Common myeloid progenitor"
+}, {
+  "s" : 620,
+  "po" : 634,
+  "n" : "ndex_link",
+  "v" : "[TF regulators](893c84ea-fcf5-11e5-b550-06603eb7f303)"
+}, {
+  "s" : 620,
+  "po" : 634,
+  "n" : "ndex_id",
+  "v" : "893c84ea-fcf5-11e5-b550-06603eb7f303"
+}, {
+  "s" : 620,
+  "po" : 634,
+  "n" : "name",
+  "v" : "Hematopoietic stem cell CD38- CD34+ (becomes) Common myeloid progenitor"
+}, {
+  "s" : 620,
+  "po" : 634,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 634,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "po" : 632,
+  "n" : "shared name",
+  "v" : "Hematopoietic stem cell CD133+ CD34dim (becomes) Hematopoietic stem cell CD38- CD34+"
+}, {
+  "s" : 620,
+  "po" : 632,
+  "n" : "name",
+  "v" : "Hematopoietic stem cell CD133+ CD34dim (becomes) Hematopoietic stem cell CD38- CD34+"
+}, {
+  "s" : 620,
+  "po" : 632,
+  "n" : "interaction",
+  "v" : "becomes"
+}, {
+  "s" : 620,
+  "po" : 632,
+  "n" : "selected",
+  "v" : "false",
+  "d" : "boolean"
+}]}, {"cartesianLayout":[{
+  "node" : 703,
+  "view" : 705,
+  "x" : 742.5309489725943,
+  "y" : -75.24693439022967
+}, {
+  "node" : 701,
+  "view" : 705,
+  "x" : 704.2545817850943,
+  "y" : -133.85195300595234
+}, {
+  "node" : 699,
+  "view" : 705,
+  "x" : 628.489872312438,
+  "y" : -116.12932727353045
+}, {
+  "node" : 697,
+  "view" : 705,
+  "x" : 612.166385984313,
+  "y" : -36.69656894223162
+}, {
+  "node" : 695,
+  "view" : 705,
+  "x" : 513.8047832011099,
+  "y" : -167.89804980771015
+}, {
+  "node" : 693,
+  "view" : 705,
+  "x" : 515.204227781188,
+  "y" : -127.48207995907732
+}, {
+  "node" : 691,
+  "view" : 705,
+  "x" : 515.670536374938,
+  "y" : -82.40232989804217
+}, {
+  "node" : 689,
+  "view" : 705,
+  "x" : 176.35177197467132,
+  "y" : -158.57061767578125
+}, {
+  "node" : 687,
+  "view" : 705,
+  "x" : 173.5534168721323,
+  "y" : -25.34371674087758
+}, {
+  "node" : 685,
+  "view" : 705,
+  "x" : 336.45993456829746,
+  "y" : -180.1838836669922
+}, {
+  "node" : 683,
+  "view" : 705,
+  "x" : 338.3254741190787,
+  "y" : -111.31832885742188
+}, {
+  "node" : 681,
+  "view" : 705,
+  "x" : 336.45993456829746,
+  "y" : -46.18388748168945
+}, {
+  "node" : 679,
+  "view" : 705,
+  "x" : 336.45993456829746,
+  "y" : 20.816184997558594
+}, {
+  "node" : 677,
+  "view" : 705,
+  "x" : 336.45993456829746,
+  "y" : 87.81636047363281
+}, {
+  "node" : 675,
+  "view" : 705,
+  "x" : 193.14161682128906,
+  "y" : 157.6144429921565
+}, {
+  "node" : 673,
+  "view" : 705,
+  "x" : 633.153690671813,
+  "y" : 41.030317807035956
+}, {
+  "node" : 671,
+  "view" : 705,
+  "x" : 519.4610311269222,
+  "y" : 290.0926513671875
+}, {
+  "node" : 669,
+  "view" : 705,
+  "x" : 68.51144409179688,
+  "y" : 55.034212279265894
+}, {
+  "node" : 667,
+  "view" : 705,
+  "x" : -341.60614013671875,
+  "y" : -115.82261450296066
+}, {
+  "node" : 665,
+  "view" : 705,
+  "x" : -259.2201781036086,
+  "y" : -43.06639862060547
+}, {
+  "node" : 663,
+  "view" : 705,
+  "x" : -280.1349508046565,
+  "y" : -174.4275665283203
+}, {
+  "node" : 661,
+  "view" : 705,
+  "x" : -380.421205687469,
+  "y" : 29.689790725708008
+}, {
+  "node" : 659,
+  "view" : 705,
+  "x" : -62.135841369628906,
+  "y" : -190.4443033457341
+}, {
+  "node" : 657,
+  "view" : 705,
+  "x" : 100.01544952392578,
+  "y" : -105.40254004007005
+}, {
+  "node" : 655,
+  "view" : 705,
+  "x" : 31.712814331054688,
+  "y" : -152.20068151956224
+}, {
+  "node" : 653,
+  "view" : 705,
+  "x" : -165.34448449606276,
+  "y" : -145.51171875
+}, {
+  "node" : 651,
+  "view" : 705,
+  "x" : -92.69365136617996,
+  "y" : -108.98638916015625
+}, {
+  "node" : 649,
+  "view" : 705,
+  "x" : -112.28200738424636,
+  "y" : -4.675494980865945
+}, {
+  "node" : 647,
+  "view" : 705,
+  "x" : 18.654033660888672,
+  "y" : -48.822599244171606
+}, {
+  "node" : 645,
+  "view" : 705,
+  "x" : -464.88299560546875,
+  "y" : -41.974023985808856
+}, {
+  "node" : 643,
+  "view" : 705,
+  "x" : -524.2784749745784,
+  "y" : -94.36887774456693
+}, {
+  "node" : 641,
+  "view" : 705,
+  "x" : -596.6734376190477,
+  "y" : -4.049561047392398
+}, {
+  "node" : 639,
+  "view" : 705,
+  "x" : -500.38763427734375,
+  "y" : 80.6731317759099
+}, {
+  "node" : 637,
+  "view" : 705,
+  "x" : -498.52218835348464,
+  "y" : 156.06809997558594
+}, {
+  "node" : 635,
+  "view" : 705,
+  "x" : -498.522343015563,
+  "y" : 225.866391968781
+}, {
+  "node" : 633,
+  "view" : 705,
+  "x" : 198.16673278808594,
+  "y" : 267.5220316172185
+}, {
+  "node" : 631,
+  "view" : 705,
+  "x" : -68.45498657226562,
+  "y" : 334.522035765594
+}, {
+  "node" : 630,
+  "view" : 705,
+  "x" : -57.26174304501483,
+  "y" : 428.5724182128906
+}]}, {"visualProperties":[{
+  "properties_of" : "network",
+  "applies_to" : 705,
+  "view" : 705,
+  "properties" : {
+    "NETWORK_BACKGROUND_PAINT" : "#FFFFFF",
+    "NETWORK_CENTER_X_LOCATION" : "0.0",
+    "NETWORK_CENTER_Y_LOCATION" : "0.0",
+    "NETWORK_CENTER_Z_LOCATION" : "0.0",
+    "NETWORK_DEPTH" : "0.0",
+    "NETWORK_EDGE_SELECTION" : "true",
+    "NETWORK_HEIGHT" : "400.0",
+    "NETWORK_NODE_SELECTION" : "true",
+    "NETWORK_SCALE_FACTOR" : "1.0",
+    "NETWORK_SIZE" : "550.0",
+    "NETWORK_WIDTH" : "550.0"
+  }
+}, {
+  "properties_of" : "nodes:default",
+  "applies_to" : 705,
+  "view" : 705,
+  "properties" : {
+    "COMPOUND_NODE_PADDING" : "10.0",
+    "COMPOUND_NODE_SHAPE" : "ROUND_RECTANGLE",
+    "NODE_BORDER_PAINT" : "#CCCCCC",
+    "NODE_BORDER_STROKE" : "SOLID",
+    "NODE_BORDER_TRANSPARENCY" : "255",
+    "NODE_BORDER_WIDTH" : "0.0",
+    "NODE_CUSTOMGRAPHICS_1" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+    "NODE_CUSTOMGRAPHICS_2" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+    "NODE_CUSTOMGRAPHICS_3" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+    "NODE_CUSTOMGRAPHICS_4" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+    "NODE_CUSTOMGRAPHICS_5" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+    "NODE_CUSTOMGRAPHICS_6" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+    "NODE_CUSTOMGRAPHICS_7" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+    "NODE_CUSTOMGRAPHICS_8" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+    "NODE_CUSTOMGRAPHICS_9" : "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+    "NODE_CUSTOMGRAPHICS_POSITION_1" : "C,C,c,0.00,0.00",
+    "NODE_CUSTOMGRAPHICS_POSITION_2" : "C,C,c,0.00,0.00",
+    "NODE_CUSTOMGRAPHICS_POSITION_3" : "C,C,c,0.00,0.00",
+    "NODE_CUSTOMGRAPHICS_POSITION_4" : "C,C,c,0.00,0.00",
+    "NODE_CUSTOMGRAPHICS_POSITION_5" : "C,C,c,0.00,0.00",
+    "NODE_CUSTOMGRAPHICS_POSITION_6" : "C,C,c,0.00,0.00",
+    "NODE_CUSTOMGRAPHICS_POSITION_7" : "C,C,c,0.00,0.00",
+    "NODE_CUSTOMGRAPHICS_POSITION_8" : "C,C,c,0.00,0.00",
+    "NODE_CUSTOMGRAPHICS_POSITION_9" : "C,C,c,0.00,0.00",
+    "NODE_CUSTOMGRAPHICS_SIZE_1" : "50.0",
+    "NODE_CUSTOMGRAPHICS_SIZE_2" : "50.0",
+    "NODE_CUSTOMGRAPHICS_SIZE_3" : "50.0",
+    "NODE_CUSTOMGRAPHICS_SIZE_4" : "50.0",
+    "NODE_CUSTOMGRAPHICS_SIZE_5" : "50.0",
+    "NODE_CUSTOMGRAPHICS_SIZE_6" : "50.0",
+    "NODE_CUSTOMGRAPHICS_SIZE_7" : "50.0",
+    "NODE_CUSTOMGRAPHICS_SIZE_8" : "50.0",
+    "NODE_CUSTOMGRAPHICS_SIZE_9" : "50.0",
+    "NODE_CUSTOMPAINT_1" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_1, name=Node Custom Paint 1)",
+    "NODE_CUSTOMPAINT_2" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_2, name=Node Custom Paint 2)",
+    "NODE_CUSTOMPAINT_3" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_3, name=Node Custom Paint 3)",
+    "NODE_CUSTOMPAINT_4" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_4, name=Node Custom Paint 4)",
+    "NODE_CUSTOMPAINT_5" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_5, name=Node Custom Paint 5)",
+    "NODE_CUSTOMPAINT_6" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_6, name=Node Custom Paint 6)",
+    "NODE_CUSTOMPAINT_7" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_7, name=Node Custom Paint 7)",
+    "NODE_CUSTOMPAINT_8" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_8, name=Node Custom Paint 8)",
+    "NODE_CUSTOMPAINT_9" : "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_9, name=Node Custom Paint 9)",
+    "NODE_DEPTH" : "0.0",
+    "NODE_FILL_COLOR" : "#89D0F5",
+    "NODE_HEIGHT" : "35.0",
+    "NODE_LABEL_COLOR" : "#000000",
+    "NODE_LABEL_FONT_FACE" : "SansSerif,plain,12",
+    "NODE_LABEL_FONT_SIZE" : "12",
+    "NODE_LABEL_POSITION" : "C,C,c,0.00,0.00",
+    "NODE_LABEL_TRANSPARENCY" : "255",
+    "NODE_LABEL_WIDTH" : "200.0",
+    "NODE_NESTED_NETWORK_IMAGE_VISIBLE" : "true",
+    "NODE_PAINT" : "#1E90FF",
+    "NODE_SELECTED" : "false",
+    "NODE_SELECTED_PAINT" : "#FFFF00",
+    "NODE_SHAPE" : "ROUND_RECTANGLE",
+    "NODE_SIZE" : "35.0",
+    "NODE_TRANSPARENCY" : "255",
+    "NODE_VISIBLE" : "true",
+    "NODE_WIDTH" : "75.0",
+    "NODE_X_LOCATION" : "0.0",
+    "NODE_Y_LOCATION" : "0.0",
+    "NODE_Z_LOCATION" : "0.0"
+  },
+  "dependencies" : {
+    "nodeCustomGraphicsSizeSync" : "true",
+    "nodeSizeLocked" : "false"
+  },
+  "mappings" : {
+    "NODE_LABEL" : {
+      "type" : "PASSTHROUGH",
+      "definition" : "COL=name,T=string"
+    }
+  }
+}, {
+  "properties_of" : "edges:default",
+  "applies_to" : 705,
+  "view" : 705,
+  "properties" : {
+    "EDGE_CURVED" : "true",
+    "EDGE_LABEL_COLOR" : "#000000",
+    "EDGE_LABEL_FONT_FACE" : "Dialog,plain,10",
+    "EDGE_LABEL_FONT_SIZE" : "10",
+    "EDGE_LABEL_TRANSPARENCY" : "255",
+    "EDGE_LABEL_WIDTH" : "200.0",
+    "EDGE_LINE_TYPE" : "SOLID",
+    "EDGE_PAINT" : "#323232",
+    "EDGE_SELECTED" : "false",
+    "EDGE_SELECTED_PAINT" : "#FF0000",
+    "EDGE_SOURCE_ARROW_SELECTED_PAINT" : "#FFFF00",
+    "EDGE_SOURCE_ARROW_SHAPE" : "NONE",
+    "EDGE_SOURCE_ARROW_UNSELECTED_PAINT" : "#000000",
+    "EDGE_STROKE_SELECTED_PAINT" : "#FF0000",
+    "EDGE_STROKE_UNSELECTED_PAINT" : "#848484",
+    "EDGE_TARGET_ARROW_SELECTED_PAINT" : "#FFFF00",
+    "EDGE_TARGET_ARROW_SHAPE" : "NONE",
+    "EDGE_TARGET_ARROW_UNSELECTED_PAINT" : "#000000",
+    "EDGE_TRANSPARENCY" : "255",
+    "EDGE_UNSELECTED_PAINT" : "#404040",
+    "EDGE_VISIBLE" : "true",
+    "EDGE_WIDTH" : "2.0"
+  },
+  "dependencies" : {
+    "arrowColorMatchesEdge" : "false"
+  }
+}]}, {"subNetworks":[{
+  "@id" : 620,
+  "nodes" : [ 703, 701, 699, 697, 695, 693, 691, 689, 687, 685, 683, 681, 679, 677, 675, 673, 671, 669, 667, 665, 663, 661, 659, 657, 655, 653, 651, 649, 647, 645, 643, 641, 639, 637, 635, 633, 631, 630 ],
+  "edges" : [ 700, 696, 694, 690, 686, 684, 682, 680, 688, 678, 704, 702, 698, 692, 654, 652, 660, 658, 656, 646, 644, 642, 640, 638, 676, 674, 672, 670, 668, 666, 664, 662, 650, 648, 636, 634, 632 ]
+}]}, {"cyViews":[{
+  "@id" : 705,
+  "s" : 620
+}]}, {"networkRelations":[{
+  "p" : 620,
+  "c" : 705,
+  "r" : "view",
+  "name" : "Novershtern_dev_clean.sif view"
+}, {
+  "p" : 604,
+  "c" : 620,
+  "r" : "subnetwork",
+  "name" : "Novershtern_dev_clean.sif"
+}]}, {"cyTableColumn":[{
+  "s" : 620,
+  "applies_to" : "node_table",
+  "n" : "shared name"
+}, {
+  "s" : 620,
+  "applies_to" : "node_table",
+  "n" : "name"
+}, {
+  "s" : 620,
+  "applies_to" : "node_table",
+  "n" : "selected",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "applies_to" : "edge_table",
+  "n" : "shared name"
+}, {
+  "s" : 620,
+  "applies_to" : "edge_table",
+  "n" : "shared interaction"
+}, {
+  "s" : 620,
+  "applies_to" : "edge_table",
+  "n" : "name"
+}, {
+  "s" : 620,
+  "applies_to" : "edge_table",
+  "n" : "selected",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "applies_to" : "edge_table",
+  "n" : "interaction"
+}, {
+  "s" : 620,
+  "applies_to" : "edge_table",
+  "n" : "ndex_id"
+}, {
+  "s" : 620,
+  "applies_to" : "edge_table",
+  "n" : "ndex_link"
+}, {
+  "s" : 620,
+  "applies_to" : "network_table",
+  "n" : "shared name"
+}, {
+  "s" : 620,
+  "applies_to" : "network_table",
+  "n" : "name"
+}, {
+  "s" : 620,
+  "applies_to" : "network_table",
+  "n" : "selected",
+  "d" : "boolean"
+}, {
+  "s" : 620,
+  "applies_to" : "network_table",
+  "n" : "__Annotations",
+  "d" : "list_of_string"
+}]},{"status":[{"error":"","success":true}]}]
