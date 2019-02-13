@@ -70,7 +70,6 @@ public class JsonComparator {
 				leftObj.getAsJsonArray(NetworkRelationsElement.ASPECT_NAME), 
 				rightObj.getAsJsonArray(NetworkRelationsElement.ASPECT_NAME));
 		
-		
 		compareElements("", leftObj, rightObj);
 	}
 	

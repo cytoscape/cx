@@ -124,8 +124,4 @@ hs_err_pid*
 *.iml
 .idea
 
-src/main/java/org/cytoscape/io/internal/cx_writer/CxNetworkWriter\.java
-
-src/main/java/org/cytoscape/io/internal/cx_writer/CxNetworkWriterFactory\.java
-
-src/main/java/org/cytoscape/io/internal/cxio/CxExporter\.java
+src/test/resources/output
