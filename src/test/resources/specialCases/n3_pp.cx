@@ -1,0 +1,171 @@
+[
+    {
+        "numberVerification": [
+            {
+                "longNumber": 75
+            }
+        ]
+    },
+    {
+        "metaData": [
+            {
+                "name": "nodes",
+                "elementCount": 4
+            }
+        ]
+    },
+    {
+        "nodes": [
+            {
+                "@id": 0,
+                "n": "sp|Q9UUS2|LIDS_GAEGR"
+            },
+            {
+                "@id": 1,
+                "n": "sp|Q9HGE0|FUM6_GIBM7"
+            },
+            {
+                "@id": 2,
+                "n": "sp|Q2UNA2|C505_ASPOR"
+            },
+            {
+                "@id": 3,
+                "n": "sp|Q6RET3|PPOA_EMEND"
+            }
+         ]
+    },
+    {
+        "edges": [
+        ]
+    },
+    {
+        "nodeAttributes": [
+            {
+                "n": "Accessions",
+                "po": 0,
+                "d": "list_of_string",
+                "v": [
+                    "sp|Q9UUS2|LIDS_GAEGR"
+                ]
+            },
+            {
+                "n": "source",
+                "po": 0,
+                "d": "string",
+                "v": "SwissProt"
+            },
+            {
+                "n": "description",
+                "po": 0,
+                "d": "string",
+                "v": "Linoleate diol synthase OS=Gaeumannomyces graminis var. graminis OX=36780 PE=1 SV=3"
+            },
+            {
+                "n": "length",
+                "po": 0,
+                "d": "string",
+                "v": "1165"
+            },
+            {
+                "n": "Accessions",
+                "po": 1,
+                "d": "list_of_string",
+                "v": [
+                    "sp|Q9HGE0|FUM6_GIBM7"
+                ]
+            },
+            {
+                "n": "source",
+                "po": 1,
+                "d": "string",
+                "v": "SwissProt"
+            },
+            {
+                "n": "description",
+                "po": 1,
+                "d": "string",
+                "v": "Bifunctional cytochrome P450/NADPH--P450 reductase OS=Gibberella moniliformis (strain M3125 / FGSC 7600) OX=334819 GN=FUM6 PE=2 SV=1"
+            },
+            {
+                "n": "length",
+                "po": 1,
+                "d": "string",
+                "v": "1115"
+            },
+            {
+                "n": "Accessions",
+                "po": 2,
+                "d": "list_of_string",
+                "v": [
+                    "sp|Q2UNA2|C505_ASPOR"
+                ]
+            },
+            {
+                "n": "source",
+                "po": 2,
+                "d": "string",
+                "v": "SwissProt"
+            },
+            {
+                "n": "description",
+                "po": 2,
+                "d": "string",
+                "v": "Bifunctional cytochrome P450/NADPH--P450 reductase OS=Aspergillus oryzae (strain ATCC 42149 / RIB 40) OX=510516 GN=CYP505A3 PE=2 SV=1"
+            },
+            {
+                "n": "length",
+                "po": 2,
+                "d": "string",
+                "v": "1103"
+            },
+            {
+                "n": "Accessions",
+                "po": 3,
+                "d": "list_of_string",
+                "v": [
+                    "sp|B0Y6R2|PPOA_ASPFC",
+                    "sp|Q4WPX2|PPOA_ASPFU",
+                    "sp|Q6RET3|PPOA_EMEND",
+                    "sp|G5EB19|PPOA_EMENI"
+                ]
+            },
+            {
+                "n": "source",
+                "po": 3,
+                "d": "string",
+                "v": "SwissProt"
+            },
+            {
+                "n": "length",
+                "po": 3,
+                "d": "list_of_integer",
+                "v": [
+                    "1079",
+                    "1081"
+                ]
+            },
+           {
+                "n": "description",
+                "po": 3,
+                "d": "list_of_string",
+                "v": [
+                    "Psi-producing oxygenase A OS=Emericella nidulans OX=162425 GN=ppoA PE=1 SV=1",
+                    "Psi-producing oxygenase A OS=Neosartorya fumigata (strain ATCC MYA-4609 / Af293 / CBS 101355 / FGSC A1100) OX=330879 GN=ppoA PE=2 SV=1",
+                    "Psi-producing oxygenase A OS=Neosartorya fumigata (strain CEA10 / CBS 144.89 / FGSC A1163) OX=451804 GN=ppoA PE=3 SV=1",
+                    "Psi-producing oxygenase A OS=Emericella nidulans (strain FGSC A4 / ATCC 38163 / CBS 112.46 / NRRL 194 / M139) OX=227321 GN=ppoA PE=3 SV=1"
+                ]
+            }
+        ]
+    },
+    {
+        "metaData": [
+
+        ]
+
+    },
+    {
+        "status": [
+            {}
+        ]
+    }
+]

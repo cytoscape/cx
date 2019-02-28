@@ -11,6 +11,8 @@ import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyRow;
+import org.cytoscape.model.CyTable;
+import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CySubNetwork;
 
 public abstract class Identifiable {
@@ -49,6 +51,22 @@ public abstract class Identifiable {
 			this.name = name;
 		}
 		
+		public String getName() {
+			return name;
+		}
+		public List<Long> getNodes() {
+			return nodes;
+		}
+		public List<Long> getInternalEdges() {
+			return internal_edges;
+		}
+		public List<Long> getExternalEdges() {
+			return external_edges;
+		}
+		public boolean getIsCollapsed(){
+			return collapsed;
+		}
+		
 		public void addTo(CySubNetwork network) {
 			CyGroupFactory group_factory = CyServiceModule.getService(CyGroupFactory.class);
 			if (group == null) {
@@ -56,8 +74,8 @@ public abstract class Identifiable {
 				
 				List<CyNode> internal_nodes = nodes.stream().map(suid -> root.getNode(suid)).collect(Collectors.toList());
 				List<CyEdge> int_edges = internal_edges.stream().map(suid -> root.getEdge(suid)).collect(Collectors.toList());
-				
 				List<CyEdge> ext_edges = external_edges.stream().map(suid -> root.getEdge(suid)).collect(Collectors.toList());
+				
 				int_edges.addAll(ext_edges);
 				
 				group = group_factory.createGroup(network, node, internal_nodes, int_edges, true);
@@ -65,7 +83,9 @@ public abstract class Identifiable {
 			}else {
 				group.addGroupToNetwork(network);
 			}
-			CyRow row = network.getDefaultNodeTable().getRow(group.getGroupNode().getSUID());
+			
+			CyRootNetwork root = network.getRootNetwork();
+			CyRow row = root.getRow(group.getGroupNode());
 			row.set(CyNetwork.NAME, name);
 		}
 		
@@ -112,12 +132,17 @@ public abstract class Identifiable {
 			CyRow row = subnet.getDefaultNodeTable().getRow(node.getSUID());
 			if (name != null) {
 				row.set(CyNetwork.NAME, name);
+				row.set(CyRootNetwork.SHARED_NAME, name);
 			}
 			if (represents != null) {
 				CxUtil.createColumn(subnet.getDefaultNodeTable(), CxUtil.REPRESENTS, String.class, true);
 				row.set(CxUtil.REPRESENTS, represents);
 			}
 			return node;
+		}
+		
+		public String getName() {
+			return name;
 		}
 		
 		public CyNode getNode() {
@@ -143,18 +168,26 @@ public abstract class Identifiable {
 		}
 		
 		public CyEdge addTo(CySubNetwork subnet) {
+			CyNode sourceNode  = root.getNode(source);
+			CyNode targetNode = root.getNode(target);
 			if (edge == null) {
-				CyNode sourceNode  = root.getNode(source);
-				CyNode targetNode = root.getNode(target);
 				edge = subnet.addEdge(sourceNode, targetNode, true);
 				CxUtil.saveCxId(edge, subnet, id);
 			}else {
 				subnet.addEdge(edge);
 			}
-			CyRow row = subnet.getDefaultEdgeTable().getRow(edge.getSUID());
+			// Write interaction and default name to network table (collection level)
+			CyTable table = subnet.getTable(CyEdge.class, CyNetwork.DEFAULT_ATTRS);
+			CyRow row = table.getRow(edge.getSUID());
+			
 			if (interaction != null) {
 				row.set(CyEdge.INTERACTION, interaction);
+				row.set(CyRootNetwork.SHARED_INTERACTION, interaction);
 			}
+			
+			String sourceName = subnet.getDefaultNodeTable().getRow(sourceNode.getSUID()).get(CyNetwork.NAME, String.class);
+			String targetName = subnet.getDefaultNodeTable().getRow(targetNode.getSUID()).get(CyNetwork.NAME, String.class);
+			row.set(CyNetwork.NAME, String.format("%s (%s) %s", sourceName, interaction, targetName));
 			return edge;
 		}
 		

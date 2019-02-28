@@ -2,7 +2,6 @@ package org.cytoscape.io.cx;
 
 import static org.junit.Assert.assertEquals;
 
-import org.cytoscape.io.cx.helpers.TestUtil;
 import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.model.CyNetwork;
@@ -21,7 +20,6 @@ public class CxUtilTest {
 	
 	@BeforeClass
 	public static void init() {
-		TestUtil.initServices();
 		network_factory = CyServiceModule.getService(CyNetworkFactory.class);
 	}
 	

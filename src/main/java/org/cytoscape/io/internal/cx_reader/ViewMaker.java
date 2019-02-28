@@ -99,6 +99,7 @@ public final class ViewMaker {
         network_view.updateView();
         
         CyNetworkViewManager view_manager = CyServiceModule.getService(CyNetworkViewManager.class);
+        
         view_manager.addNetworkView(network_view);
         if (!network_view.isSet(BasicVisualLexicon.NETWORK_CENTER_X_LOCATION)
 				&& !network_view.isSet(BasicVisualLexicon.NETWORK_CENTER_Y_LOCATION)
@@ -311,7 +312,7 @@ public final class ViewMaker {
 	        	try {
 					parseVisualProperty(entry.getKey(), entry.getValue(), lexicon, style, my_class);
 				} catch (IOException e) {
-					logger.info("Failed to parse visual property: " + e);
+					logger.warning("Failed to parse visual property: " + e);
 				}
         	}
         }
@@ -322,17 +323,18 @@ public final class ViewMaker {
             	try {
             		parseVisualMapping(entry.getKey(), entry.getValue(), lexicon, style, my_class);
             	}catch (IOException e) {
-            		logger.info("Failed to parse visual mapping: " + e);
+            		logger.warning("Failed to parse visual mapping: " + e);
             	}
                 
             }
         }
+        
         if (dependencies != null) {
             for (final Entry<String, String> entry : dependencies.entrySet()) {
             	try {
-                parseVisualDependency(entry.getKey(), entry.getValue(), style);
+            		parseVisualDependency(entry.getKey(), entry.getValue(), style);
             	} catch(IOException e) {
-            		logger.info("Failed to parse visual dependency: " + e);
+            		logger.warning("Failed to parse visual dependency: " + e);
             	}
             }
         }
@@ -341,15 +343,17 @@ public final class ViewMaker {
     private static void parseVisualDependency(final String k, 
     		final String v, 
     		final VisualStyle style) throws IOException {
-        if ((k != null) && (v != null)) {
-            for (final VisualPropertyDependency<?> d : style.getAllVisualPropertyDependencies()) {
-                if (d.getIdString().equals(k)) {
-                    try {
-                        d.setDependency(Boolean.parseBoolean(v));
-                    }
-                    catch (final Exception e) {
-                        throw new IOException("could not parse boolean from '" + v + "'");
-                    }
+    	
+    	if (k == null || v == null) {
+    		return;
+    	}
+    	for (final VisualPropertyDependency<?> d : style.getAllVisualPropertyDependencies()) {
+            if (d.getIdString().equals(k)) {
+                try {
+                    d.setDependency(Boolean.parseBoolean(v));
+                }
+                catch (final Exception e) {
+                    throw new IOException("could not parse boolean from '" + v + "'");
                 }
             }
         }
@@ -368,19 +372,21 @@ public final class ViewMaker {
         final String col = sp.get(CxUtil.VM_COL);
         final String type = sp.get(CxUtil.VM_TYPE);
         final Class<?> type_class = ViewMaker.toClass(type);
-        if (vp != null) {
-            if (mapping_type.equals(CxUtil.PASSTHROUGH)) {
-                addPasstroughMapping(style, vp, col, type_class, vmf_factory_p);
-            }
-            else if (mapping_type.equals(CxUtil.CONTINUOUS)) {
-                addContinuousMapping(style, vp, sp, col, type, type_class, vmf_factory_c);
-            }
-            else if (mapping_type.equals(CxUtil.DISCRETE)) {
-                addDiscreteMapping(style, vp, sp, col, type, type_class, vmf_factory_d);
-            }
-            else {
-                throw new IOException("unknown mapping type: " + mapping_type);
-            }
+        if (vp == null) {
+        	return;
+        }
+        
+        if (mapping_type.equals(CxUtil.PASSTHROUGH)) {
+            addPasstroughMapping(style, vp, col, type_class, vmf_factory_p);
+        }
+        else if (mapping_type.equals(CxUtil.CONTINUOUS)) {
+            addContinuousMapping(style, vp, sp, col, type, type_class, vmf_factory_c);
+        }
+        else if (mapping_type.equals(CxUtil.DISCRETE)) {
+            addDiscreteMapping(style, vp, sp, col, type, type_class, vmf_factory_d);
+        }
+        else {
+            throw new IOException("unknown mapping type: " + mapping_type);
         }
 	}
 
@@ -431,26 +437,29 @@ public final class ViewMaker {
                                                  final SortedMap<String, String> props,
                                                  final View view,
                                                  final Class my_class) {
-        if (props != null) {
-            for (final Map.Entry<String, String> entry : props.entrySet()) {
-                final VisualProperty vp = lexicon.lookup(my_class, entry.getKey());
+        if (props == null) {
+        	return;
+        }
+        for (final Map.Entry<String, String> entry : props.entrySet()) {
+            final VisualProperty vp = lexicon.lookup(my_class, entry.getKey());
 
-                if (vp != null) {
-                	try	{
-	                    final Object parsed_value = vp.parseSerializableString(entry.getValue());
-	                    if (parsed_value != null) {
-	                        if (ViewMaker.shouldSetAsLocked(vp)) {
-	                            view.setLockedValue(vp, parsed_value);
-	                        }
-	                        else {
-	                        	view.setVisualProperty(vp, parsed_value);
-	                        }
-	                    }
-                	}catch(NullPointerException e) {
-                		logger.info("Failed to parse string for " + entry.getKey() + ": " + entry.getValue());
-                	}
-                }
+            if (vp == null) {
+            	continue;
             }
+//        	try	{
+                final Object parsed_value = vp.parseSerializableString(entry.getValue());
+                if (parsed_value != null) {
+                    if (ViewMaker.shouldSetAsLocked(vp)) {
+                        view.setLockedValue(vp, parsed_value);
+                    }
+                    else {
+                    	view.setVisualProperty(vp, parsed_value);
+                    }
+                }
+//        	}catch(NullPointerException e) {
+//        		e.printStackTrace();
+//        		logger.info("Failed to parse string for " + entry.getKey() + ": " + entry.getValue());
+//        	}
         }
     }
 
@@ -523,7 +532,7 @@ public final class ViewMaker {
     	
     	final long t0 = System.currentTimeMillis();
     	String doLayout = view.getEdgeViews().size() < 10000 ? "force-directed" : "grid";
-    	
+
 //    	System.out.println(collection.isEmpty() + " " + collection.isEmptySubnets() + collection.isEmptyViews());
 //    	if ((collection == null) || collection.isEmpty()) {
 //    		Settings.INSTANCE.debug("Default style for " + view);

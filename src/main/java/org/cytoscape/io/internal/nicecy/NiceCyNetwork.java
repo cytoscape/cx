@@ -9,7 +9,6 @@ import java.util.Map;
 
 import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cxio.CxUtil;
-import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyIdentifiable;
 import org.cytoscape.model.CyNetwork;
@@ -19,6 +18,7 @@ import org.cytoscape.model.CyTable;
 import org.cytoscape.model.subnetwork.CySubNetwork;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewFactory;
+import org.cytoscape.view.model.CyNetworkViewManager;
 import org.ndexbio.cxio.aspects.datamodels.AbstractAttributesAspectElement;
 import org.ndexbio.cxio.aspects.datamodels.CyTableColumnElement;
 import org.ndexbio.cxio.aspects.datamodels.EdgeAttributesElement;
@@ -50,6 +50,18 @@ public abstract class NiceCyNetwork extends Identifiable{
 	}
 	
 	protected abstract String getNamespace();
+	
+	public List<NetworkAttributesElement> getAttributes() {
+		return attributes;
+	}
+	
+	public List<HiddenAttributesElement> getHiddenAttributes() {
+		return hiddenAttributes;
+	}
+	
+	public Map<Long, List<NodeAttributesElement>> getNodeAttributes() {
+		return nodeAttributes;
+	}
 
 	public class NiceCySubNetwork extends NiceCyNetwork {
 
@@ -99,15 +111,57 @@ public abstract class NiceCyNetwork extends Identifiable{
 
 		public Collection<? extends CyNetworkView> createViews() {
 			List<CyNetworkView> cy_views = new ArrayList<CyNetworkView>();
+			CyNetworkViewFactory view_factory = CyServiceModule.getService(CyNetworkViewFactory.class);
+			CyNetworkViewManager view_manager = CyServiceModule.getService(CyNetworkViewManager.class);
 			views.forEach((suid, view) -> {
-				CyNetworkViewFactory view_factory = CyServiceModule.getService(CyNetworkViewFactory.class);
 				CyNetworkView v = view_factory.createNetworkView(network);
 				view.apply(v);
+				view_manager.addNetworkView(v);
 				cy_views.add(v);
 			});
 			return cy_views;
 		}
+
+		public void updateViewIds(NiceCySubNetwork otherNet) {
+			this.id = otherNet.getId();
+			Map<String, NiceCyView> nameMap = new HashMap<String, NiceCyView>();
+			for (NiceCyView view : otherNet.views.values()) {
+				String name = view.getName();
+				if (nameMap.containsKey(name)) {
+					throw new RuntimeException("Cannot align views with duplicate names");
+				}
+				nameMap.put(name, view);
+			}
+			for (NiceCyView view : views.values()) {
+				String name = view.getName();
+				if (!nameMap.containsKey(name)) {
+					throw new RuntimeException("View named " + name + " not in other");
+				}
+				
+				// Replace in subnetwork mapping, update views, and remove from name map to avoid duplicates
+				views.remove(view.getId());
+				NiceCyView otherView = nameMap.get(name);
+				view.updateIds(otherView);
+				views.put(view.getId(), view);
+				nameMap.remove(name);
+			}
+		}
 		
+		public Collection<NiceCyView> getViews() {
+			return views.values();
+		}
+		
+		public List<Long> getNodes() {
+			return nodes;
+		}
+		
+		public List<Long> getEdges() {
+			return edges;
+		}
+		
+		public List<Long> getGroups() {
+			return groups;
+		}
 	}
 	
 	protected void apply(CyNetwork network) {
@@ -115,14 +169,26 @@ public abstract class NiceCyNetwork extends Identifiable{
 			throw new RuntimeException("Subnetwork can not be null");
 		}
 		this.network = network;
+		String name = getNetworkName();
+		if (name == null) {
+			name = "Unnamed CX Network";
+		}
+		network.getRow(network).set(CyNetwork.NAME, name);
+		
 		addElements();
 		addAttributes();
-		
-		if (network.getRow(network).get(CyNetwork.NAME, String.class) == null) {
-			network.getRow(network).set(CyNetwork.NAME, "Unnamed Network");
-		}
 	}
+	
 	public abstract void addElements();
+	
+	public String getNetworkName() {
+		for (NetworkAttributesElement nae : attributes) {
+			if (nae.getName().equals(CyNetwork.NAME)) {
+				return nae.getValue();
+			}
+		}
+		return null;
+	}
 	
 	protected void serializeAspect(String column, Collection<AspectElement> collection) throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
@@ -147,7 +213,6 @@ public abstract class NiceCyNetwork extends Identifiable{
 		CyTable net_table = network.getTable(CyNetwork.class, getNamespace());
 		CyTable hidden_table = network.getTable(CyNetwork.class, CyNetwork.HIDDEN_ATTRS);
 		
-		
 		NiceCyRootNetwork root;
 		if (this instanceof NiceCyRootNetwork) {
 			root = (NiceCyRootNetwork) this;
@@ -169,14 +234,21 @@ public abstract class NiceCyNetwork extends Identifiable{
 	
 	private void addAttributesHelper(CyTable table, CyIdentifiable ele, List<? extends AbstractAttributesAspectElement> attrs) {
 		CyRow row = table.getRow(ele.getSUID());
+		
 		attrs.forEach(attr -> {
 			String name = attr.getName();
 			if (table.getColumn(name) == null) {
 				CxUtil.createColumn(table, name, CxUtil.getDataType(attr.getDataType()), attr.isSingleValue());
 			}
-			CyColumn column = table.getColumn(name);
-			Object value = CxUtil.getValue(attr, column);
-			row.set(name, value);
+			Object value = CxUtil.getValue(attr);
+			
+			try{
+				row.set(name, value);
+			}catch(NullPointerException e) {
+				throw new NullPointerException("NullPointerException setting " + name + " to " + value + ". Is there a null value in a list?");
+			} catch (IllegalArgumentException e) {
+				throw new IllegalArgumentException("Invalid value for " + name + ":" + value + ". " + e.getMessage());
+			}
 		});
 	}
 
@@ -205,5 +277,4 @@ public abstract class NiceCyNetwork extends Identifiable{
 			}
 		});
 	}
-	
 }

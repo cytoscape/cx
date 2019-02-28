@@ -94,7 +94,7 @@ public final class CxUtil {
     }
     
 	public static boolean isCollection(NiceCXNetwork niceCX) {
-		return niceCX.getOpaqueAspectTable().get(NetworkRelationsElement.ASPECT_NAME) != null;
+		return niceCX.getOpaqueAspectTable().containsKey(NetworkRelationsElement.ASPECT_NAME);
 	}
 
     // CX ID mapping in CyRootNetwork hidden node/edge tables
@@ -374,7 +374,7 @@ public final class CxUtil {
 				}
 			}
 			
-			final Object val = getValue(e, col);
+			final Object val = getValue(e);
 			try {
 				row.set(name, val);
 			} catch (Exception ex) {
@@ -383,11 +383,12 @@ public final class CxUtil {
 		}
 	}
 	
-	public final static Object getValue(final AbstractAttributesAspectElement e, final CyColumn column) {
+	public final static Object getValue(final AbstractAttributesAspectElement e) {
+		Class<?> type = getDataType(e.getDataType());
 		if (e.isSingleValue()) {
 			Object val = null;
 			try {
-				val = parseValue(e.getValue(), column.getType());
+				val = parseValue(e.getValue(), type);
 			} catch (Exception ex) {
 				logger.warn("Could not process element: " + e, ex);
 				ex.printStackTrace();
@@ -395,24 +396,56 @@ public final class CxUtil {
 			}
 			return val;
 		} 
-			
-		return e.getValues().stream()
-				.map(value -> parseValue(value, column.getListElementType()))
+		
+		List<Object> values = e.getValues().stream()
+				.map(value -> {
+					return parseValue(value, type);	
+				})
 				.collect(Collectors.toList());
+		
+		return values;
 		
 	}
 
-    private final static Object parseValue(final String value,
+    public final static Object parseValue(String value,
                                            final Class<?> type) {
-        if (type != String.class
-                && (value == null || value.equals("") || value.equals("NaN") || value.equals("nan") || value
-                        .toLowerCase().equals("null"))) {
-            return null;
-        }
+    	
+    	// Strings are unchanged
         if (type == String.class || type == null) {
             return value;
         }
-        else if (type == Long.class) {
+        // nullify str values for number parsers
+        if (value == null || value.equals("") || value.equalsIgnoreCase("null") || value.equals("NaN") || value.equals("nan")){
+    		value = null;
+    	}
+        
+        // Double is special because of NaN values
+        if (type == Double.class) {
+        	if (value == null) {
+        		return Double.NaN;
+        	}
+            try {
+                return Double.valueOf(value);
+            }
+            catch (final NumberFormatException e) {
+                throw new IllegalArgumentException("could not convert '" + value + "' to double");
+            }
+        }else if (type == Boolean.class) {
+        	// Boolean parses null to false
+            try {
+                return Boolean.valueOf(value);
+            }
+            catch (final NumberFormatException e) {
+                throw new IllegalArgumentException("could not convert '" + value + "' to boolean");
+            }
+        }
+        
+        // Long and Integer cannot be null values
+        if (value == null) {
+        	return null;
+        }
+        
+        if (type == Long.class) {
             try {
                 return Long.valueOf(value);
             }
@@ -421,6 +454,7 @@ public final class CxUtil {
             }
         }
         else if (type == Integer.class) {
+        	
             try {
                 return Integer.valueOf(value);
             }
@@ -428,26 +462,10 @@ public final class CxUtil {
                 throw new IllegalArgumentException("could not convert '" + value + "' to integer");
             }
         }
-        else if (type == Double.class) {
-            try {
-                return Double.valueOf(value);
-            }
-            catch (final NumberFormatException e) {
-                throw new IllegalArgumentException("could not convert '" + value + "' to double");
-            }
-        }
-        else if (type == Boolean.class) {
-            try {
-                return Boolean.valueOf(value);
-            }
-            catch (final NumberFormatException e) {
-                throw new IllegalArgumentException("could not convert '" + value + "' to boolean");
-            }
-        }
-        else {
-            throw new IllegalArgumentException("don't know how to deal with type '" + type + "' for value '" + value
-                    + "'");
-        }
+        
+        throw new IllegalArgumentException("don't know how to deal with type '" + type +
+        		"' for value '" + value + "'");
+        
     }
     
 }

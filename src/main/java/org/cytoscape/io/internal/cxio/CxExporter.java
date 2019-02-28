@@ -194,7 +194,7 @@ public final class CxExporter {
 			writeSubNetworks(aspects);
 			
 			// Also handles Opaque aspects
-			writeHiddenAttributes(CyNetwork.HIDDEN_ATTRS); 
+			writeHiddenAttributes(); 
 
 			final AspectElementCounts aspects_counts = writer.getAspectElementCounts();
 
@@ -354,7 +354,7 @@ public final class CxExporter {
 		
 		// Write root table
 		if (writeSiblings) {
-			addNetworkAttributesHelper(CyNetwork.DEFAULT_ATTRS, baseNetwork, elements);
+			addNetworkAttributesHelper(CyRootNetwork.SHARED_ATTRS, baseNetwork, elements);
 		}
 		
 		for (final CySubNetwork subnet : subnetworks) {
@@ -364,12 +364,14 @@ public final class CxExporter {
 		writeAspectElements(elements);
 	}
 	
-	private final void writeHiddenAttributes(final String namespace) throws IOException {
+	private final void writeHiddenAttributes() throws IOException {
 
 		final List<AspectElement> elements = new ArrayList<>();
-
+		if (writeSiblings) {
+			addHiddenAttributesElements(elements, baseNetwork);
+		}
 		for (final CySubNetwork subnet : subnetworks) {
-			addHiddenAttributesElements(elements, namespace, subnet);
+			addHiddenAttributesElements(elements, subnet);
 		}
 
 		writeAspectElements(elements);
@@ -440,7 +442,6 @@ public final class CxExporter {
 				CyRow row = network.getRow(node, CyNetwork.DEFAULT_ATTRS);
 				row.getAllValues().forEach((name, value) -> {
 					if (!shared_cols.contains(name)) {
-						
 						addNodeAttributesElement(nodeAttributes, network, node, name, value);
 					}
 				});
@@ -452,11 +453,11 @@ public final class CxExporter {
 	private void writeEdgeAttributes() throws IOException{
 		List<AspectElement> edgeAttributes = new ArrayList<AspectElement>();
 		
-		List<String> shared_cols = new ArrayList<String>();
+		final List<String> shared_cols = new ArrayList<String>();
 		//Write shared attributes first
 		if (writeSiblings) {
 			CyTable table = baseNetwork.getTable(CyEdge.class, CyRootNetwork.SHARED_ATTRS);
-			table.getColumns().forEach((col) -> {
+			table.getColumns().forEach(col -> {
 				shared_cols.add(col.getName());
 			});
 			
@@ -471,12 +472,13 @@ public final class CxExporter {
 		
 		for (CySubNetwork network : subnetworks) {
 			for (CyEdge edge : network.getEdgeList()) {
-				CyRow row = network.getRow(edge, CyNetwork.DEFAULT_ATTRS);
-				row.getAllValues().forEach((name, value) -> {
-					if (!shared_cols.contains(name)) {
-						addEdgeAttributesElement(edgeAttributes, network, edge, name, value);
-					}
-				});
+				CyRow row = network.getRow(edge);//, CyNetwork.DEFAULT_ATTRS);
+				row.getAllValues().entrySet().stream()
+					.filter(entry -> !shared_cols.contains(entry.getKey()))
+					.forEach(e -> {
+						addEdgeAttributesElement(edgeAttributes, network, edge, e.getKey(), e.getValue());
+						}
+					);
 			}
 		}
 		writeAspectElements(edgeAttributes);
@@ -575,9 +577,19 @@ public final class CxExporter {
 		
 		// PLEASE NOTE: Cytoscape UI currently has only one view per sub-network.
 		final Collection<CyNetworkView> views = _networkview_manager.getNetworkViews(subnetwork);
+		int i = 0;
 		for (final CyNetworkView view : views) {
+			String title = view.getVisualProperty(BasicVisualLexicon.NETWORK_TITLE);
+			if (title == null || title.isEmpty()) {
+				title = name + " view";
+				if (views.size() > 1) {
+					title += " " + ++i;
+				}
+			}
+			
 			elements.add(new NetworkRelationsElement(subnetwork.getSUID(),
-					view.getSUID(), NetworkRelationsElement.TYPE_VIEW, name + " view"));
+					view.getSUID(), NetworkRelationsElement.TYPE_VIEW, title));
+			
 		}
 	}
 	private void addNodesAndGroupsElements(final Map<String, List<AspectElement>> elementMap, CyNode node,
@@ -598,9 +610,9 @@ public final class CxExporter {
 	}
 	private void addGroupElement(List<AspectElement> elements, CyNetwork network, CyGroup group) throws JsonProcessingException {
 		String name = null;
-		final CyRow row = network.getRow(group.getGroupNode(), CyNetwork.DEFAULT_ATTRS);
+		final CyRow row = network.getRow(group.getGroupNode());
 		if (row != null) {
-			name = row.get(CyRootNetwork.SHARED_NAME, String.class);
+			name = row.get(CyNetwork.NAME, String.class);
 		}
 		boolean isCollapsed = collapsed_groups.contains(group);
 		
@@ -680,9 +692,9 @@ public final class CxExporter {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	private void addHiddenAttributesElements(final List<AspectElement> elements, final String namespace, CyNetwork my_network) throws IOException {
+	private void addHiddenAttributesElements(final List<AspectElement> elements, CyNetwork my_network) throws IOException {
 
-		final CyRow row = my_network.getRow(my_network, namespace);
+		final CyRow row = my_network.getRow(my_network, CyNetwork.HIDDEN_ATTRS);
 		if (row != null) {
 			final Map<String, Object> values = row.getAllValues();
 
@@ -822,7 +834,7 @@ public final class CxExporter {
 			}
 		}
 
-		Long viewId = getAspectViewId(view);
+		Long viewId = view.getSUID();
 		for (View<CyNode> node_view : view.getNodeViews()) {
 			Long nodeId = CxUtil.getElementId(node_view.getModel(), network, useCxId);
 			if (z_used) {
@@ -871,7 +883,7 @@ public final class CxExporter {
 		types.add(VisualPropertyType.NODES_DEFAULT);
 		types.add(VisualPropertyType.EDGES_DEFAULT);
 
-		final Long viewId = getAspectViewId(view);
+		final Long viewId = view.getSUID();
 		
 		final List<AspectElement> elements = VisualPropertiesGatherer.gatherVisualPropertiesAsAspectElements(view, lexicon, types, viewId, useCxId);
 		writeAspectElements(elements);
@@ -884,7 +896,17 @@ public final class CxExporter {
 		Long sourceId = CxUtil.getElementId(edge.getSource(), network, useCxId);
 		Long targetId = CxUtil.getElementId(edge.getTarget(), network, useCxId);
 		
-		String interaction = getSharedInteractionFromEdgeTable(edge);
+		String interaction = null;
+		if (writeSiblings) {
+			CyRow row = network.getRow(edge, CyNetwork.DEFAULT_ATTRS);
+			interaction = row.get(CyRootNetwork.SHARED_INTERACTION, String.class);
+		}else{
+			interaction = network.getRow(edge).get(CyEdge.INTERACTION, String.class);
+		}
+		
+		if (interaction == null) {
+			System.out.println("NULL");
+		}
 		
 		EdgesElement element = new EdgesElement(cxId, sourceId, targetId, interaction);
 		return element;
@@ -949,44 +971,7 @@ public final class CxExporter {
 		return null;
 	}
 	
-	/**
-	 * Return the view ID for CX aspects. Is null if there is only one view. Otherwise use SUID
-	 * @param view
-	 * @return
-	 */
-	private Long getAspectViewId(CyNetworkView view) {
-		if (isMultiView()) {
-			return view.getSUID();
-		}
-		return null;
-	}
-	
-	private boolean isMultiView() {
-		int views = 0;
-		for (CyNetwork net: subnetworks) {
-			views += _networkview_manager.getNetworkViews(net).size();
-		}
-		return views > 1;
-	}
-	
 	// Static Helpers
-	private final String getSharedInteractionFromEdgeTable(final CyEdge edge) {
-		String column = CyEdge.INTERACTION;
-		String namespace = CyNetwork.DEFAULT_ATTRS;
-		if (writeSiblings) {
-			column = CyRootNetwork.SHARED_INTERACTION;
-			namespace = CyRootNetwork.SHARED_ATTRS;
-			
-		}
-		final CyTable table = baseNetwork.getTable(CyEdge.class, namespace);
-		
-		final CyRow row = table.getRow(edge.getSUID());
-		if (row != null) {
-			return row.get(column, String.class);
-		}
-		return null;
-	}
-	
 	private List<CyGroup> expandGroups(CyNetwork network) {
 		List<CyGroup> groups = new ArrayList<CyGroup>();
 		group_manager.getGroupSet(network).forEach(group -> {

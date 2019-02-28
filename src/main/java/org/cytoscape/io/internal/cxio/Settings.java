@@ -87,12 +87,14 @@ public final class Settings {
     }
     
     public final static boolean isIgnore(final String column_name, final Set<String> additional_to_ignore, Object value) {
-		switch (column_name) {
+    	
+    	switch (column_name) {
 		case CyNetwork.SUID:
 			return Settings.INSTANCE.isIgnoreSuidColumn();
 		case CyNetwork.SELECTED:
+			Boolean boolVal = value == null ? false : Boolean.valueOf(value.toString());
 			return Settings.INSTANCE.isIgnoreSelectedColumn()
-					|| (value instanceof Boolean && (Boolean) value != true && Settings.INSTANCE.isWriteSelectedOnlyIfTrue());
+					|| (boolVal != true && Settings.INSTANCE.isWriteSelectedOnlyIfTrue());
 		case CxUtil.CX_ID_MAPPING:
 		case CxUtil.CX_METADATA:
 			return true;

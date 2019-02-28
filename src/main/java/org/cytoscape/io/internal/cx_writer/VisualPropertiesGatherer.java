@@ -74,10 +74,14 @@ public final class VisualPropertiesGatherer {
         final List<AspectElement> elements = new ArrayList<>();
         final VisualMappingManager vmm = CyServiceModule.getService(VisualMappingManager.class);
         final VisualStyle current_visual_style = vmm.getVisualStyle(view);
+        
         if (lexicon == null) {
         	throw new IllegalArgumentException("VisualLexicon is not initialized. This should not happen");
         }
         final Set<VisualProperty<?>> all_visual_properties = lexicon.getAllVisualProperties();
+        if (current_visual_style == null) {
+        	throw new IllegalArgumentException("Failed to get Visual Style from view " + view);
+        }
         
         if (types.contains(VisualPropertyType.NETWORK)) {
             gatherNetworkVisualProperties(view, elements, current_visual_style, all_visual_properties, viewId);
@@ -107,22 +111,38 @@ public final class VisualPropertiesGatherer {
     private final static void addProperties(final View view,
                                             final VisualProperty vp,
                                             final CyVisualPropertiesElement cvp) {
-        if (view.isSet(vp) && view.isValueLocked(vp)) {
-            final Object vp_value = view.getVisualProperty(vp);
-            if (vp_value != null) {
-                final String value_str = vp.toSerializableString(vp_value);
-                if (!CxioUtil.isEmpty(value_str)) {
-                    final String id_string = vp.getIdString();
-                    if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")) {
-                        // TODO
-                    	logger.info("Need to add handler for Property: " + id_string + " " + value_str);
-                    }
-                    else {
-                        cvp.putProperty(id_string, value_str);
-                    }
-                }
-            }
+        if (!view.isSet(vp) || !view.isValueLocked(vp)) {
+        	return;
         }
+        
+        Object vp_value = view.getVisualProperty(vp);
+        if (vp_value == null) {
+        	return;
+        }
+        
+        try {
+        	// Sometimes integer values are written as doubles
+        	if (vp.getTargetDataType() == Integer.class && vp_value instanceof Number) {
+        		vp_value = ((Number) vp_value).intValue();
+        	}
+        	
+        	final String value_str = vp.toSerializableString(vp_value);
+        	if (CxioUtil.isEmpty(value_str)) {
+            	return;
+            }
+        	final String id_string = vp.getIdString();
+            if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")) {
+                // TODO
+            	logger.info("Need to add handler for Property: " + id_string + " " + value_str);
+            }
+            else {
+                cvp.putProperty(id_string, value_str);
+            }
+        }catch (IllegalArgumentException e) {
+        	String message = String.format("Writing %s(%s) = %s caused Error:\n%s", vp.getDisplayName(), vp.getTargetDataType(), vp_value, e.getMessage());
+        	throw new RuntimeException(message);
+        }
+        
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -342,7 +362,7 @@ public final class VisualPropertiesGatherer {
         final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.EDGES_DEFAULT.asString(),
         		viewId,
         		viewId);
-     //   e.setApplies_to(view.getSUID());
+        
         for (final VisualProperty visual_property : all_visual_properties) {
             if (visual_property.getTargetDataType() == CyEdge.class) {
                 addDefaultProperties(current_visual_style, visual_property, e);
@@ -439,7 +459,7 @@ public final class VisualPropertiesGatherer {
             final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.NODES.asString(),
             																CxUtil.getElementId(cy_node, (CySubNetwork)view.getModel(), use_cxId),
                                                                             viewId);
-      //      e.setApplies_to(cy_node.getSUID());
+     
             for (final VisualProperty visual_property : all_visual_properties) {
                 if (visual_property.getTargetDataType() == CyNode.class) {
                     addProperties(node_view, visual_property, e);

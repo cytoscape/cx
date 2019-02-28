@@ -38,6 +38,8 @@
   }, {
     "@id" : 159,
     "n" : "Node 6"
+  }, {
+    "@id" : 1501
   } ]
 }, {
   "edges" : [ {
@@ -71,8 +73,8 @@
     "@id" : 1501,
     "n" : "Group One",
     "nodes" : [ 167, 165 ],
-    "external_edges" : [ 172 ],
-    "internal_edges" : [ 171, 170 ]
+    "external_edges" : [ 171, 170 ],
+    "internal_edges" : [ 172 ]
   } ]
 }, {
   "nodeAttributes" : [ {
@@ -325,7 +327,7 @@
 }, {
   "cySubNetworks" : [ {
     "@id" : 147,
-    "nodes" : [ 167, 165, 163, 161, 159 ],
+    "nodes" : [ 167, 165, 163, 161, 159, 1501 ],
     "edges" : [ 172, 178, 171, 170, 176 ]
   } ]
 }, {

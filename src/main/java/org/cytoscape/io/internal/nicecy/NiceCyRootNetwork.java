@@ -9,11 +9,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkFactory;
+import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CySubNetwork;
@@ -42,11 +44,30 @@ import org.ndexbio.model.cx.Provenance;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 @SuppressWarnings("deprecation")
 public class NiceCyRootNetwork extends NiceCyNetwork{
 
+	public static String[] UNSERIALIZED_OPAQUE_ASPECTS = new String[] {
+			NetworkRelationsElement.ASPECT_NAME,
+			MetaDataCollection.NAME,
+			CyViewsElement.ASPECT_NAME,
+			Provenance.ASPECT_NAME,
+			NdexNetworkStatus.ASPECT_NAME,
+			NumberVerification.NAME,
+			CxUtil.CX_ID_MAPPING,
+			CyTableColumnElement.ASPECT_NAME,
+			CyGroupsElement.ASPECT_NAME,
+			HiddenAttributesElement.ASPECT_NAME,
+			SubNetworkElement.ASPECT_NAME,
+			NamespacesElement.ASPECT_NAME,
+			CyVisualPropertiesElement.ASPECT_NAME,
+			"visualProperties",
+	};
+	
 	private Map<Long, Long> suid_to_cxid_map;
 	
 	protected final Map<String, Collection<AspectElement>> opaqueAspects;
@@ -67,7 +88,9 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 		isCollection = opaqueAspects.containsKey(SubNetworkElement.ASPECT_NAME);
 		
 		try {
-			handleOpaqueAspects();
+			// Must run first to detect CX IDs, NetworkRelations, and subnetworks
+			handleCxMapping(opaqueAspects.get(CxUtil.CX_ID_MAPPING));
+			handleNetworkRelations(opaqueAspects.get(NetworkRelationsElement.ASPECT_NAME));
 			
 			handleNetworkAttributes(niceCX.getNetworkAttributes());
 			handleNodes(niceCX.getNodes());
@@ -76,34 +99,26 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 			handleEdgeAttributes(niceCX.getEdgeAttributes());
 			handleNodeAssociatedAspects(niceCX.getNodeAssociatedAspects());
 			handleEdgeAssociatedAspects(niceCX.getEdgeAssociatedAspects());
+			handleOpaqueAspects();
 		}catch (JsonProcessingException e) {
 			throw new RuntimeException("Failed to process JSON in CX: " + e.getMessage());
 		}
 	}
 	
 	private void handleOpaqueAspects() throws JsonProcessingException{
-		handleCxMapping(opaqueAspects.remove(CxUtil.CX_ID_MAPPING));
-		handleNetworkRelations(opaqueAspects.remove(NetworkRelationsElement.ASPECT_NAME));
 		
-		handleCyTableColumns(opaqueAspects.remove(CyTableColumnElement.ASPECT_NAME));
-		handleGroups(opaqueAspects.remove(CyGroupsElement.ASPECT_NAME));		
-		handleHiddenAttributes(opaqueAspects.remove(HiddenAttributesElement.ASPECT_NAME));
-		handleSubNetworks(opaqueAspects.remove(SubNetworkElement.ASPECT_NAME));
-		handleNamespaces(opaqueAspects.remove(NamespacesElement.ASPECT_NAME));
+		handleCyTableColumns(opaqueAspects.get(CyTableColumnElement.ASPECT_NAME));
+		handleGroups(opaqueAspects.get(CyGroupsElement.ASPECT_NAME));		
+		handleHiddenAttributes(opaqueAspects.get(HiddenAttributesElement.ASPECT_NAME));
+		handleSubNetworks(opaqueAspects.get(SubNetworkElement.ASPECT_NAME));
+		handleNamespaces(opaqueAspects.get(NamespacesElement.ASPECT_NAME));
 		
 		//Handle old name for CyVisualProperties
-		Collection<AspectElement> visualProps = opaqueAspects.remove(CyVisualPropertiesElement.ASPECT_NAME);
+		Collection<AspectElement> visualProps = opaqueAspects.get(CyVisualPropertiesElement.ASPECT_NAME);
 		if (visualProps == null) {
-			visualProps = opaqueAspects.remove("visualProperties");
+			visualProps = opaqueAspects.get("visualProperties");
 		}
 		handleCyVisualProperties(visualProps);
-		
-		opaqueAspects.remove(MetaDataCollection.NAME);
-		
-		opaqueAspects.remove(CyViewsElement.ASPECT_NAME);
-		opaqueAspects.remove(Provenance.ASPECT_NAME);
-		opaqueAspects.remove(NdexNetworkStatus.ASPECT_NAME);
-		opaqueAspects.remove(NumberVerification.NAME);
 	}
 	
 	/**
@@ -116,21 +131,28 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 			return;
 		}
 		String contextStr = serializeNamespaces(aspects);
-		boolean hasContextAttribute = attributes.stream().anyMatch(nae -> nae.getName().equals(NamespacesElement.ASPECT_NAME));
+		NiceCyNetwork net = getNetwork(null);
+		boolean hasContextAttribute = net.attributes.stream().anyMatch(nae -> nae.getName().equals(NamespacesElement.ASPECT_NAME));
 		if (!hasContextAttribute) {
 			NetworkAttributesElement value = new NetworkAttributesElement(this.getId(), NamespacesElement.ASPECT_NAME, contextStr);
-			attributes.add(value);
+			net.attributes.add(value);
 		}
 	}
 	
-	private String serializeNamespaces(Collection<AspectElement> collection) throws JsonProcessingException {
-		ObjectMapper mapper = new ObjectMapper();
- 		ArrayList<JsonNode> nodes = new ArrayList<>();
+	public static String serializeNamespaces(Collection<AspectElement> collection) throws JsonProcessingException {
+		JsonObject obj = new JsonObject();
  		for (AspectElement el : collection) {
  			OpaqueElement op = (OpaqueElement) el;
- 			nodes.add(op.getData());
- 		}    	
-    	return mapper.writeValueAsString(nodes);
+ 			JsonNode node = op.getData();
+ 			
+ 			node.fields().forEachRemaining(entry -> {
+ 				JsonNode val_node = entry.getValue();
+ 				JsonPrimitive val = new JsonPrimitive(val_node.asText());
+ 				obj.add(entry.getKey(), val);
+ 			});
+ 		}
+ 		Gson gson = new Gson();
+    	return gson.toJson(obj);
 	}
 
 	private void handleSubNetworks(Collection<AspectElement> aspects) {
@@ -144,6 +166,9 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 			
 			sne.getNodes().forEach(nodeId -> {
 				long id = getCxId(nodeId);
+				if (root_groups.containsKey(id)) {
+					network.groups.add(id);
+				}
 				network.nodes.add(id);
 			});
 			sne.getEdges().forEach(edgeId -> {
@@ -198,7 +223,7 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 					handleCartesianLayout(map);
 					break;
 				default:
-					System.out.println("Node associcated " + name);
+					System.out.println("Not handling node associcated " + name);
 			}
 		});
 	}
@@ -217,7 +242,7 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 
 	private void handleEdgeAssociatedAspects(Map<String, Map<Long, Collection<AspectElement>>> edgeAssociatedAspects) {
 		edgeAssociatedAspects.forEach((name, map) -> {
-			System.out.println("Edge associcated " + name);
+			System.out.println("Not handling edge associcated " + name);
 		});
 	}
 
@@ -228,6 +253,7 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 			attrs.forEach(attr -> { 
 				attr.setPropertyOf(id);
 				NiceCyNetwork net = getNetwork(attr.getSubnetwork());
+				
 				if (!net.nodeAttributes.containsKey(id)) {
 					net.nodeAttributes.put(id, new ArrayList<NodeAttributesElement>());
 				}
@@ -240,16 +266,13 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 			long id = getCxId(suid);
 			
 			attrs.forEach(attr -> {
-				//TODO: unnecessary
-				attr.setPropertyOf(id); 
+//				attr.setPropertyOf(id); 
 				NiceCyNetwork net = getNetwork(attr.getSubnetwork());
 				if (!net.edgeAttributes.containsKey(id)) {
 					net.edgeAttributes.put(id, new ArrayList<EdgeAttributesElement>());
 				}
 				net.edgeAttributes.get(id).add(attr);
 			});
-			
-			
 		});
 	}
 
@@ -332,7 +355,7 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 		
 			// Create subnetworks
 			aspects.stream().filter(aspect -> {
-				return ((NetworkRelationsElement) aspect).getRelationship() == NetworkRelationsElement.TYPE_SUBNETWORK;
+				return ((NetworkRelationsElement) aspect).getRelationship().equals(NetworkRelationsElement.TYPE_SUBNETWORK);
 			}).forEach(aspect -> {
 				NetworkRelationsElement nre = (NetworkRelationsElement) aspect;
 				Long suid = nre.getChild();
@@ -344,13 +367,13 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 			
 			// Create views
 			aspects.stream().filter(aspect -> {
-				return ((NetworkRelationsElement) aspect).getRelationship() == NetworkRelationsElement.TYPE_VIEW;
+				return ((NetworkRelationsElement) aspect).getRelationship().equals(NetworkRelationsElement.TYPE_VIEW);
 			}).forEach(aspect -> {
 				NetworkRelationsElement nre = (NetworkRelationsElement) aspect;
 				Long suid = nre.getChild();
 				Long net = nre.getParent();
 				NiceCySubNetwork subnet = (NiceCySubNetwork) getNetwork(net);
-				NiceCyView view = new NiceCyView(suid, subnet);
+				NiceCyView view = new NiceCyView(suid, subnet, nre.getChildName());
 				subnet.views.put(suid, view);
 			});
 		}
@@ -358,7 +381,7 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 		//Add a default subnetwork if the aspect doesn't exist or lists no subnets
 		if (subnetworks.isEmpty()) {
 			NiceCySubNetwork subnet = new NiceCySubNetwork(CxUtil.DEFAULT_SUBNET, this);
-			subnet.views.put(CxUtil.DEFAULT_VIEW, new NiceCyView(CxUtil.DEFAULT_VIEW, subnet));
+			subnet.views.put(CxUtil.DEFAULT_VIEW, new NiceCyView(CxUtil.DEFAULT_VIEW, subnet, null));
 			subnetworks.put(CxUtil.DEFAULT_SUBNET, subnet);
 		}
 		
@@ -385,14 +408,28 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 	}
 	
 	private NiceCyView getViewWithId(Long view) {
+		
 		if (view == null) {
-			view = CxUtil.DEFAULT_VIEW;
-		}
-		for (NiceCySubNetwork subnet : subnetworks.values()) {
-			if (subnet.views.containsKey(view)) {
-				return subnet.views.get(view);
+			if (!isCollection) {
+				return subnetworks.get(CxUtil.DEFAULT_SUBNET).views.get(CxUtil.DEFAULT_VIEW);
+			}
+			List<NiceCyView> views = new ArrayList<NiceCyView>();
+			for (NiceCySubNetwork subnet : subnetworks.values()) {
+				views.addAll(subnet.views.values());
+			}
+			if (views.size() == 1) {
+				return views.get(0);
+			}
+			
+		}else {
+			for (NiceCySubNetwork subnet : subnetworks.values()) {
+				if (subnet.views.containsKey(view)) {
+					return subnet.views.get(view);
+				}
 			}
 		}
+		
+		
 		throw new RuntimeException("No view found with ID " + view);
 	}
 
@@ -403,11 +440,17 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 		List<CyNetwork> networks = new ArrayList<CyNetwork>();
 		
 		CyNetworkFactory network_factory = CyServiceModule.getService(CyNetworkFactory.class);
+		CyNetworkManager network_manager = CyServiceModule.getService(CyNetworkManager.class);
+		
 		CyNetwork base = network_factory.createNetwork();
 		
 		CyRootNetwork root = ((CySubNetwork)base).getRootNetwork();
-		networks.add(base);
 		
+		networks.add(base);
+		network_manager.addNetwork(base);
+		// Build Root network information
+		super.apply(root);
+				
 		// Build subnetworks
 		Iterator<NiceCySubNetwork> nice_subs = subnetworks.values().iterator();
 		NiceCySubNetwork nice_sub = nice_subs.next();
@@ -416,14 +459,18 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 		while (nice_subs.hasNext()) {
 			nice_sub = nice_subs.next();
 			CyNetwork network = root.addSubNetwork();
+			network_manager.addNetwork(network);
 			nice_sub.apply((CySubNetwork) network);
 			networks.add(network);
 		}
 		
-		// Build Root network information
-		super.apply(root);
+		
 		NiceCyNetwork subnet = getNetwork(null);
 		opaqueAspects.forEach((name, opaque) -> {
+			if (ArrayUtils.contains(UNSERIALIZED_OPAQUE_ASPECTS, name)) {
+				// Do not serialize some opaque aspects
+				return;
+			}
 			try {
 				subnet.serializeAspect(CxUtil.OPAQUE_ASPECT_PREFIX + name, opaque);
 			} catch (IOException e) {
@@ -432,10 +479,6 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 		});
 		
 		return networks;
-	}
-	
-	public Iterator<NiceCySubNetwork> getSubnetworks() {
-		return subnetworks.values().iterator();
 	}
 
 	@Override
@@ -448,12 +491,26 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 		// Nothing to add for root network
 	}
 
-	public List<CyNetworkView> createViews() {
+	public List<CyNetworkView> createViews(CyNetwork network) {
 		List<CyNetworkView> views = new ArrayList<CyNetworkView>();
 		subnetworks.forEach((suid, subnet) -> {
-			views.addAll(subnet.createViews());
+			if (subnet.network.equals(network)) {
+				views.addAll(subnet.createViews());
+			}
 		});
 		return views;
+	}
+	
+	public Collection<NiceCyEdge> getRootEdges() {
+		return root_edges.values();
+	}
+	
+	public Collection<NiceCyNode> getRootNodes() {
+		return root_nodes.values();
+	}
+	
+	public Collection<NiceCyGroup> getRootGroups() {
+		return root_groups.values();
 	}
 
 	public CyNode getNode(Long suid) {
@@ -466,5 +523,43 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 
 	public CyRootNetwork getCollection() {
 		return (CyRootNetwork) network;
+	}
+	
+	
+	public Collection<NiceCySubNetwork> getSubnetworks() {
+		return subnetworks.values();
+	}
+
+	/**
+	 * Apply the network and view IDs of one NiceCyRootNetwork to another,
+	 * using name attributes to map networks and views together.
+	 * 
+	 * @param other
+	 */
+	public void updateNetworkAndViewIds(NiceCyRootNetwork other) {
+		this.id = other.getId();
+		Map<String, NiceCySubNetwork> netNameMap = new HashMap<String, NiceCySubNetwork>();
+		for (NiceCySubNetwork net : other.subnetworks.values()) {
+			String name = net.getNetworkName();
+			if (netNameMap.containsKey(name)) {
+				throw new RuntimeException("Cannot align networks with duplicate names");
+			}
+			netNameMap.put(name, net);
+		}
+		
+		for (NiceCySubNetwork net : subnetworks.values()) {
+			String name = net.getNetworkName();
+			if (!netNameMap.containsKey(name)) {
+				throw new RuntimeException("Network named " + name + " not in other");
+			}
+			
+			// Replace in subnetwork mapping, update views, and remove from name map to avoid duplicates
+			subnetworks.remove(net.getId());
+			NiceCySubNetwork otherNet = netNameMap.get(name);
+			net.updateViewIds(otherNet);
+			subnetworks.put(net.getId(), net);
+			netNameMap.remove(name);
+		}
+		
 	}
 }

@@ -1,0 +1,24 @@
+[
+    {
+        "metaData": [
+            {
+                "name": "nodes"
+            }
+        ]
+    },
+    {
+        "nodes": [
+            {
+                "@id": 0
+            }
+        ]
+    },
+    {
+        "status": [
+            {
+                "error": "",
+                "success": true
+            }
+        ]
+    }
+]
