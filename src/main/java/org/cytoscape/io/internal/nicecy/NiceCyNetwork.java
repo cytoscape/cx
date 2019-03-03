@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cxio.CxUtil;
+import org.cytoscape.io.internal.cxio.TimingUtil;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyIdentifiable;
 import org.cytoscape.model.CyNetwork;
@@ -32,21 +33,16 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class NiceCyNetwork extends Identifiable{
-	protected final List<CyTableColumnElement> tableColumns;
-	protected List<NetworkAttributesElement> attributes;
-	protected List<HiddenAttributesElement> hiddenAttributes;	
-	protected Map<Long, List<NodeAttributesElement>> nodeAttributes;
-	protected Map<Long, List<EdgeAttributesElement>> edgeAttributes;
+	protected final List<CyTableColumnElement> tableColumns = new ArrayList<CyTableColumnElement>();
+	protected List<NetworkAttributesElement> attributes = new ArrayList<NetworkAttributesElement>();
+	protected List<HiddenAttributesElement> hiddenAttributes = new ArrayList<HiddenAttributesElement>();
+	protected Map<Long, List<NodeAttributesElement>> nodeAttributes = new HashMap<Long, List<NodeAttributesElement>>();
+	protected Map<Long, List<EdgeAttributesElement>> edgeAttributes = new HashMap<Long, List<EdgeAttributesElement>>();
 
 	protected CyNetwork network;
 
 	public NiceCyNetwork(long id) {
 		super(id);
-		attributes = new ArrayList<NetworkAttributesElement>();
-		hiddenAttributes = new ArrayList<HiddenAttributesElement>();
-		nodeAttributes = new HashMap<Long, List<NodeAttributesElement>>();
-		edgeAttributes = new HashMap<Long, List<EdgeAttributesElement>>();
-		tableColumns = new ArrayList<CyTableColumnElement>();
 	}
 	
 	protected abstract String getNamespace();
@@ -169,11 +165,6 @@ public abstract class NiceCyNetwork extends Identifiable{
 			throw new RuntimeException("Subnetwork can not be null");
 		}
 		this.network = network;
-		String name = getNetworkName();
-		if (name == null) {
-			name = "Unnamed CX Network";
-		}
-		network.getRow(network).set(CyNetwork.NAME, name);
 		
 		addElements();
 		addAttributes();
@@ -210,7 +201,7 @@ public abstract class NiceCyNetwork extends Identifiable{
 		addTableColumns();
 		CyTable node_table = network.getTable(CyNode.class, getNamespace());
 		CyTable edge_table = network.getTable(CyEdge.class, getNamespace());
-		CyTable net_table = network.getTable(CyNetwork.class, getNamespace());
+		CyTable net_table = network.getTable(CyNetwork.class, CyNetwork.DEFAULT_ATTRS);//getNamespace());
 		CyTable hidden_table = network.getTable(CyNetwork.class, CyNetwork.HIDDEN_ATTRS);
 		
 		NiceCyRootNetwork root;
@@ -220,6 +211,7 @@ public abstract class NiceCyNetwork extends Identifiable{
 			root = ((NiceCySubNetwork) this).parent;
 		}
 		
+		Long t0 = System.currentTimeMillis();
 		addAttributesHelper(net_table, network, attributes);
 		addAttributesHelper(hidden_table, network, hiddenAttributes);
 		nodeAttributes.forEach((suid, attrs) -> {
@@ -230,6 +222,7 @@ public abstract class NiceCyNetwork extends Identifiable{
 			CyEdge edge = root.getEdge(suid);
 			addAttributesHelper(edge_table, edge, attrs);
 		});
+		TimingUtil.reportTimeDifference(t0, "attributes of " + getNetworkName(), -1);
 	}
 	
 	private void addAttributesHelper(CyTable table, CyIdentifiable ele, List<? extends AbstractAttributesAspectElement> attrs) {
@@ -247,7 +240,8 @@ public abstract class NiceCyNetwork extends Identifiable{
 			}catch(NullPointerException e) {
 				throw new NullPointerException("NullPointerException setting " + name + " to " + value + ". Is there a null value in a list?");
 			} catch (IllegalArgumentException e) {
-				throw new IllegalArgumentException("Invalid value for " + name + ":" + value + ". " + e.getMessage());
+				String message = String.format("Cannot set value in column %s(%s) to %s (type %s). %s", name, CxUtil.getDataType(attr.getDataType()), value, value.getClass(), e.getMessage()); 
+				throw new IllegalArgumentException(message);
 			}
 		});
 	}

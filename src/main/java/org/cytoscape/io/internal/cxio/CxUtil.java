@@ -89,7 +89,7 @@ public final class CxUtil {
     	String metaDataStr = mapper.writeValueAsString(metaData);
 		row.set(CxUtil.CX_METADATA, metaDataStr);
     	}catch (JsonProcessingException e) {
-    		System.out.println("Failed to update metaData. This should not happen. " + e);
+    		logger.error("Failed to update metaData. This should not happen. " + e);
     	}
     }
     

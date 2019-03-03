@@ -1,0 +1,3645 @@
+[
+    {
+        "metaData": [
+            {
+                "name": "nodeAttributes",
+                "elementCount": 277,
+                "version": "1.0",
+                "properties": []
+            },
+            {
+                "name": "cyHiddenAttributes",
+                "version": "1.0",
+                "properties": []
+            },
+            {
+                "name": "nodes",
+                "elementCount": 37,
+                "idCounter": 3305,
+                "version": "1.0",
+                "properties": []
+            },
+            {
+                "name": "cyNetworkRelations",
+                "version": "1.0",
+                "properties": []
+            },
+            {
+                "name": "cyGroups",
+                "version": "1.0",
+                "properties": []
+            },
+            {
+                "name": "networkAttributes",
+                "elementCount": 3,
+                "version": "1.0",
+                "properties": []
+            },
+            {
+                "name": "cyTableColumn",
+                "elementCount": 31,
+                "version": "1.0",
+                "properties": []
+            },
+            {
+                "name": "cartesianLayout",
+                "elementCount": 37,
+                "version": "1.0",
+                "properties": []
+            },
+            {
+                "name": "edgeAttributes",
+                "elementCount": 114,
+                "version": "1.0",
+                "properties": []
+            },
+            {
+                "name": "edges",
+                "elementCount": 19,
+                "idCounter": 3304,
+                "version": "1.0",
+                "properties": []
+            },
+            {
+                "name": "cyVisualProperties",
+                "elementCount": 59,
+                "version": "1.0",
+                "properties": []
+            },
+            {
+                "name": "cySubNetworks",
+                "version": "1.0",
+                "properties": []
+            }
+        ]
+    },
+    {
+        "cyTableColumn": [
+            {
+                "applies_to": "node_table",
+                "n": "shared name"
+            },
+            {
+                "applies_to": "node_table",
+                "n": "name"
+            },
+            {
+                "applies_to": "node_table",
+                "n": "GraphID"
+            },
+            {
+                "applies_to": "node_table",
+                "n": "XrefId"
+            },
+            {
+                "applies_to": "node_table",
+                "n": "XrefDatasource"
+            },
+            {
+                "applies_to": "node_table",
+                "n": "Type"
+            },
+            {
+                "applies_to": "node_table",
+                "n": "IsGPMLShape",
+                "d": "boolean"
+            },
+            {
+                "applies_to": "node_table",
+                "n": "Width",
+                "d": "double"
+            },
+            {
+                "applies_to": "node_table",
+                "n": "Height",
+                "d": "double"
+            },
+            {
+                "applies_to": "node_table",
+                "n": "FillColor"
+            },
+            {
+                "applies_to": "node_table",
+                "n": "Color"
+            },
+            {
+                "applies_to": "node_table",
+                "n": "LabelFont"
+            },
+            {
+                "applies_to": "node_table",
+                "n": "LabelSize",
+                "d": "double"
+            },
+            {
+                "applies_to": "node_table",
+                "n": "Transparent"
+            },
+            {
+                "applies_to": "node_table",
+                "n": "BorderThickness",
+                "d": "double"
+            },
+            {
+                "applies_to": "node_table",
+                "n": "BorderStyle"
+            },
+            {
+                "applies_to": "node_table",
+                "n": "Shape"
+            },
+            {
+                "applies_to": "node_table",
+                "n": "Ensembl"
+            },
+            {
+                "applies_to": "edge_table",
+                "n": "shared name"
+            },
+            {
+                "applies_to": "edge_table",
+                "n": "shared interaction"
+            },
+            {
+                "applies_to": "edge_table",
+                "n": "name"
+            },
+            {
+                "applies_to": "edge_table",
+                "n": "interaction"
+            },
+            {
+                "applies_to": "edge_table",
+                "n": "Color"
+            },
+            {
+                "applies_to": "edge_table",
+                "n": "LineStyle"
+            },
+            {
+                "applies_to": "edge_table",
+                "n": "LineThickness",
+                "d": "double"
+            },
+            {
+                "applies_to": "edge_table",
+                "n": "ConnectorType"
+            },
+            {
+                "applies_to": "edge_table",
+                "n": "StartArrow"
+            },
+            {
+                "applies_to": "edge_table",
+                "n": "EndArrow"
+            },
+            {
+                "applies_to": "network_table",
+                "n": "shared name"
+            },
+            {
+                "applies_to": "network_table",
+                "n": "name"
+            },
+            {
+                "applies_to": "network_table",
+                "n": "__Annotations",
+                "d": "list_of_string"
+            }
+        ]
+    },
+    {
+        "networkAttributes": [
+            {
+                "n": "shared name",
+                "v": "WP2868"
+            },
+            {
+                "n": "name",
+                "v": "TCA Cycle Nutrient Utilization and Invasiveness of Ovarian Cancer - Homo sapiens"
+            },
+            {
+                "n": "selected",
+                "v": "true",
+                "d": "boolean"
+            }
+        ]
+    },
+    {
+        "nodes": [
+            {
+                "@id": 3241
+            },
+            {
+                "@id": 3240
+            },
+            {
+                "@id": 3238
+            },
+            {
+                "@id": 3237
+            },
+            {
+                "@id": 3235
+            },
+            {
+                "@id": 3234
+            },
+            {
+                "@id": 3217
+            },
+            {
+                "@id": 3216,
+                "n": "Metabolix flux"
+            },
+            {
+                "@id": 3215,
+                "n": "Serine phosphorylation pathway"
+            },
+            {
+                "@id": 3214,
+                "n": "High-invasive Ovarian Cancer"
+            },
+            {
+                "@id": 3213,
+                "n": "Legend"
+            },
+            {
+                "@id": 3212,
+                "n": "Cancer stage"
+            },
+            {
+                "@id": 3211,
+                "n": "Low-invasive Ovarian Cancer"
+            },
+            {
+                "@id": 3210,
+                "n": "Complex II\nSuccinate-Ubiquinone"
+            },
+            {
+                "@id": 3209,
+                "n": "Complex I\nNADH-Ubiquinone"
+            },
+            {
+                "@id": 3208,
+                "n": "Tyrosine phosphorylation pathway"
+            },
+            {
+                "@id": 3207
+            },
+            {
+                "@id": 3206,
+                "n": "Tyr-P"
+            },
+            {
+                "@id": 3205,
+                "n": "Ser-P"
+            },
+            {
+                "@id": 3204,
+                "n": "Tyr-P"
+            },
+            {
+                "@id": 3201,
+                "n": ""
+            },
+            {
+                "@id": 3199,
+                "n": "STAT3"
+            },
+            {
+                "@id": 3198,
+                "n": "JAK1"
+            },
+            {
+                "@id": 3197,
+                "n": "EGFR"
+            },
+            {
+                "@id": 3196,
+                "n": "Glucose"
+            },
+            {
+                "@id": 3195,
+                "n": "STAT3"
+            },
+            {
+                "@id": 3194,
+                "n": "Glucose"
+            },
+            {
+                "@id": 3193,
+                "n": "TCA Cycle"
+            },
+            {
+                "@id": 3192,
+                "n": "EGFR"
+            },
+            {
+                "@id": 3191,
+                "n": "Glucose"
+            },
+            {
+                "@id": 3190,
+                "n": "Pyruvate"
+            },
+            {
+                "@id": 3189,
+                "n": "ERK2"
+            },
+            {
+                "@id": 3188,
+                "n": "D-Glutamine"
+            },
+            {
+                "@id": 3187,
+                "n": "JAK1"
+            },
+            {
+                "@id": 3186,
+                "n": "ERK1"
+            },
+            {
+                "@id": 3185,
+                "n": "Lactate"
+            },
+            {
+                "@id": 3184,
+                "n": "STAT3"
+            }
+        ]
+    },
+    {
+        "edges": [
+            {
+                "@id": 3242,
+                "s": 3240,
+                "t": 3241
+            },
+            {
+                "@id": 3239,
+                "s": 3237,
+                "t": 3238
+            },
+            {
+                "@id": 3236,
+                "s": 3234,
+                "t": 3235
+            },
+            {
+                "@id": 3223,
+                "s": 3211,
+                "t": 3214
+            },
+            {
+                "@id": 3227,
+                "s": 3207,
+                "t": 3195
+            },
+            {
+                "@id": 3233,
+                "s": 3198,
+                "t": 3199
+            },
+            {
+                "@id": 3232,
+                "s": 3197,
+                "t": 3198
+            },
+            {
+                "@id": 3231,
+                "s": 3196,
+                "t": 3197
+            },
+            {
+                "@id": 3230,
+                "s": 3195,
+                "t": 3193
+            },
+            {
+                "@id": 3219,
+                "s": 3194,
+                "t": 3190
+            },
+            {
+                "@id": 3229,
+                "s": 3193,
+                "t": 3199
+            },
+            {
+                "@id": 3221,
+                "s": 3192,
+                "t": 3187
+            },
+            {
+                "@id": 3228,
+                "s": 3191,
+                "t": 3192
+            },
+            {
+                "@id": 3226,
+                "s": 3190,
+                "t": 3185
+            },
+            {
+                "@id": 3222,
+                "s": 3188,
+                "t": 3207
+            },
+            {
+                "@id": 3220,
+                "s": 3188,
+                "t": 3193
+            },
+            {
+                "@id": 3218,
+                "s": 3187,
+                "t": 3184
+            },
+            {
+                "@id": 3225,
+                "s": 3184,
+                "t": 3217
+            },
+            {
+                "@id": 3224,
+                "s": 3184,
+                "t": 3194
+            }
+        ]
+    },
+    {
+        "nodeAttributes": [
+            {
+                "po": 3216,
+                "n": "shared name",
+                "v": "Metabolix flux"
+            },
+            {
+                "po": 3216,
+                "n": "name",
+                "v": "Metabolix flux"
+            },
+            {
+                "po": 3215,
+                "n": "shared name",
+                "v": "Serine phosphorylation pathway"
+            },
+            {
+                "po": 3215,
+                "n": "name",
+                "v": "Serine phosphorylation pathway"
+            },
+            {
+                "po": 3214,
+                "n": "shared name",
+                "v": "High-invasive Ovarian Cancer"
+            },
+            {
+                "po": 3214,
+                "n": "name",
+                "v": "High-invasive Ovarian Cancer"
+            },
+            {
+                "po": 3213,
+                "n": "shared name",
+                "v": "Legend"
+            },
+            {
+                "po": 3213,
+                "n": "name",
+                "v": "Legend"
+            },
+            {
+                "po": 3212,
+                "n": "shared name",
+                "v": "Cancer stage"
+            },
+            {
+                "po": 3212,
+                "n": "name",
+                "v": "Cancer stage"
+            },
+            {
+                "po": 3211,
+                "n": "shared name",
+                "v": "Low-invasive Ovarian Cancer"
+            },
+            {
+                "po": 3211,
+                "n": "name",
+                "v": "Low-invasive Ovarian Cancer"
+            },
+            {
+                "po": 3210,
+                "n": "shared name",
+                "v": "Complex II\nSuccinate-Ubiquinone"
+            },
+            {
+                "po": 3210,
+                "n": "name",
+                "v": "Complex II\nSuccinate-Ubiquinone"
+            },
+            {
+                "po": 3209,
+                "n": "shared name",
+                "v": "Complex I\nNADH-Ubiquinone"
+            },
+            {
+                "po": 3209,
+                "n": "name",
+                "v": "Complex I\nNADH-Ubiquinone"
+            },
+            {
+                "po": 3208,
+                "n": "shared name",
+                "v": "Tyrosine phosphorylation pathway"
+            },
+            {
+                "po": 3208,
+                "n": "name",
+                "v": "Tyrosine phosphorylation pathway"
+            },
+            {
+                "po": 3206,
+                "n": "shared name",
+                "v": "Tyr-P"
+            },
+            {
+                "po": 3206,
+                "n": "name",
+                "v": "Tyr-P"
+            },
+            {
+                "po": 3205,
+                "n": "shared name",
+                "v": "Ser-P"
+            },
+            {
+                "po": 3205,
+                "n": "name",
+                "v": "Ser-P"
+            },
+            {
+                "po": 3204,
+                "n": "shared name",
+                "v": "Tyr-P"
+            },
+            {
+                "po": 3204,
+                "n": "name",
+                "v": "Tyr-P"
+            },
+            {
+                "po": 3201,
+                "n": "GraphID",
+                "v": "cb2f9"
+            },
+            {
+                "po": 3201,
+                "n": "IsGPMLShape",
+                "v": "true",
+                "d": "boolean"
+            },
+            {
+                "po": 3201,
+                "n": "shared name",
+                "v": ""
+            },
+            {
+                "po": 3201,
+                "n": "name",
+                "v": ""
+            },
+            {
+                "po": 3199,
+                "n": "FillColor",
+                "v": "#ffffff"
+            },
+            {
+                "po": 3199,
+                "n": "Shape",
+                "v": "Rectangle"
+            },
+            {
+                "po": 3199,
+                "n": "BorderThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3199,
+                "n": "Color",
+                "v": "#000000"
+            },
+            {
+                "po": 3199,
+                "n": "GraphID",
+                "v": "a3dd3"
+            },
+            {
+                "po": 3199,
+                "n": "LabelSize",
+                "v": "10.0",
+                "d": "double"
+            },
+            {
+                "po": 3199,
+                "n": "shared name",
+                "v": "STAT3"
+            },
+            {
+                "po": 3199,
+                "n": "XrefDatasource",
+                "v": "Entrez Gene"
+            },
+            {
+                "po": 3199,
+                "n": "LabelFont",
+                "v": "ArialMT"
+            },
+            {
+                "po": 3199,
+                "n": "Type",
+                "v": "GeneProduct"
+            },
+            {
+                "po": 3199,
+                "n": "Transparent",
+                "v": "false"
+            },
+            {
+                "po": 3199,
+                "n": "XrefId",
+                "v": "6774"
+            },
+            {
+                "po": 3199,
+                "n": "name",
+                "v": "STAT3"
+            },
+            {
+                "po": 3199,
+                "n": "Height",
+                "v": "20.0",
+                "d": "double"
+            },
+            {
+                "po": 3199,
+                "n": "Ensembl",
+                "v": "ENSG00000168610"
+            },
+            {
+                "po": 3199,
+                "n": "Width",
+                "v": "80.0",
+                "d": "double"
+            },
+            {
+                "po": 3198,
+                "n": "FillColor",
+                "v": "#ffffff"
+            },
+            {
+                "po": 3198,
+                "n": "Shape",
+                "v": "Rectangle"
+            },
+            {
+                "po": 3198,
+                "n": "BorderThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3198,
+                "n": "Color",
+                "v": "#000000"
+            },
+            {
+                "po": 3198,
+                "n": "GraphID",
+                "v": "b0e72"
+            },
+            {
+                "po": 3198,
+                "n": "LabelSize",
+                "v": "10.0",
+                "d": "double"
+            },
+            {
+                "po": 3198,
+                "n": "shared name",
+                "v": "JAK1"
+            },
+            {
+                "po": 3198,
+                "n": "XrefDatasource",
+                "v": "Entrez Gene"
+            },
+            {
+                "po": 3198,
+                "n": "LabelFont",
+                "v": "ArialMT"
+            },
+            {
+                "po": 3198,
+                "n": "Type",
+                "v": "GeneProduct"
+            },
+            {
+                "po": 3198,
+                "n": "Transparent",
+                "v": "false"
+            },
+            {
+                "po": 3198,
+                "n": "XrefId",
+                "v": "3716"
+            },
+            {
+                "po": 3198,
+                "n": "name",
+                "v": "JAK1"
+            },
+            {
+                "po": 3198,
+                "n": "Height",
+                "v": "20.0",
+                "d": "double"
+            },
+            {
+                "po": 3198,
+                "n": "Ensembl",
+                "v": "ENSG00000162434"
+            },
+            {
+                "po": 3198,
+                "n": "Width",
+                "v": "80.0",
+                "d": "double"
+            },
+            {
+                "po": 3197,
+                "n": "FillColor",
+                "v": "#ffffff"
+            },
+            {
+                "po": 3197,
+                "n": "Shape",
+                "v": "Rectangle"
+            },
+            {
+                "po": 3197,
+                "n": "BorderThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3197,
+                "n": "Color",
+                "v": "#000000"
+            },
+            {
+                "po": 3197,
+                "n": "GraphID",
+                "v": "cda95"
+            },
+            {
+                "po": 3197,
+                "n": "LabelSize",
+                "v": "10.0",
+                "d": "double"
+            },
+            {
+                "po": 3197,
+                "n": "shared name",
+                "v": "EGFR"
+            },
+            {
+                "po": 3197,
+                "n": "XrefDatasource",
+                "v": "Entrez Gene"
+            },
+            {
+                "po": 3197,
+                "n": "LabelFont",
+                "v": "ArialMT"
+            },
+            {
+                "po": 3197,
+                "n": "Type",
+                "v": "GeneProduct"
+            },
+            {
+                "po": 3197,
+                "n": "Transparent",
+                "v": "false"
+            },
+            {
+                "po": 3197,
+                "n": "XrefId",
+                "v": "1956"
+            },
+            {
+                "po": 3197,
+                "n": "name",
+                "v": "EGFR"
+            },
+            {
+                "po": 3197,
+                "n": "Height",
+                "v": "20.0",
+                "d": "double"
+            },
+            {
+                "po": 3197,
+                "n": "Ensembl",
+                "v": "ENSG00000146648"
+            },
+            {
+                "po": 3197,
+                "n": "Width",
+                "v": "80.0",
+                "d": "double"
+            },
+            {
+                "po": 3196,
+                "n": "FillColor",
+                "v": "#ffffff"
+            },
+            {
+                "po": 3196,
+                "n": "Shape",
+                "v": "Rectangle"
+            },
+            {
+                "po": 3196,
+                "n": "BorderThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3196,
+                "n": "Color",
+                "v": "#0000ff"
+            },
+            {
+                "po": 3196,
+                "n": "GraphID",
+                "v": "fd7c3"
+            },
+            {
+                "po": 3196,
+                "n": "LabelSize",
+                "v": "10.0",
+                "d": "double"
+            },
+            {
+                "po": 3196,
+                "n": "shared name",
+                "v": "Glucose"
+            },
+            {
+                "po": 3196,
+                "n": "XrefDatasource",
+                "v": "HMDB"
+            },
+            {
+                "po": 3196,
+                "n": "LabelFont",
+                "v": "ArialMT"
+            },
+            {
+                "po": 3196,
+                "n": "Type",
+                "v": "Metabolite"
+            },
+            {
+                "po": 3196,
+                "n": "Transparent",
+                "v": "false"
+            },
+            {
+                "po": 3196,
+                "n": "XrefId",
+                "v": "HMDB00122"
+            },
+            {
+                "po": 3196,
+                "n": "name",
+                "v": "Glucose"
+            },
+            {
+                "po": 3196,
+                "n": "Height",
+                "v": "20.0",
+                "d": "double"
+            },
+            {
+                "po": 3196,
+                "n": "Width",
+                "v": "80.0",
+                "d": "double"
+            },
+            {
+                "po": 3195,
+                "n": "FillColor",
+                "v": "#ffffff"
+            },
+            {
+                "po": 3195,
+                "n": "Shape",
+                "v": "Rectangle"
+            },
+            {
+                "po": 3195,
+                "n": "BorderThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3195,
+                "n": "Color",
+                "v": "#000000"
+            },
+            {
+                "po": 3195,
+                "n": "GraphID",
+                "v": "dd827"
+            },
+            {
+                "po": 3195,
+                "n": "LabelSize",
+                "v": "10.0",
+                "d": "double"
+            },
+            {
+                "po": 3195,
+                "n": "shared name",
+                "v": "STAT3"
+            },
+            {
+                "po": 3195,
+                "n": "XrefDatasource",
+                "v": "Entrez Gene"
+            },
+            {
+                "po": 3195,
+                "n": "LabelFont",
+                "v": "ArialMT"
+            },
+            {
+                "po": 3195,
+                "n": "Type",
+                "v": "GeneProduct"
+            },
+            {
+                "po": 3195,
+                "n": "Transparent",
+                "v": "false"
+            },
+            {
+                "po": 3195,
+                "n": "XrefId",
+                "v": "6774"
+            },
+            {
+                "po": 3195,
+                "n": "name",
+                "v": "STAT3"
+            },
+            {
+                "po": 3195,
+                "n": "Height",
+                "v": "20.0",
+                "d": "double"
+            },
+            {
+                "po": 3195,
+                "n": "Ensembl",
+                "v": "ENSG00000168610"
+            },
+            {
+                "po": 3195,
+                "n": "Width",
+                "v": "80.0",
+                "d": "double"
+            },
+            {
+                "po": 3194,
+                "n": "FillColor",
+                "v": "#ffffff"
+            },
+            {
+                "po": 3194,
+                "n": "Shape",
+                "v": "Rectangle"
+            },
+            {
+                "po": 3194,
+                "n": "BorderThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3194,
+                "n": "Color",
+                "v": "#0000ff"
+            },
+            {
+                "po": 3194,
+                "n": "GraphID",
+                "v": "c1502"
+            },
+            {
+                "po": 3194,
+                "n": "LabelSize",
+                "v": "10.0",
+                "d": "double"
+            },
+            {
+                "po": 3194,
+                "n": "shared name",
+                "v": "Glucose"
+            },
+            {
+                "po": 3194,
+                "n": "XrefDatasource",
+                "v": "HMDB"
+            },
+            {
+                "po": 3194,
+                "n": "LabelFont",
+                "v": "ArialMT"
+            },
+            {
+                "po": 3194,
+                "n": "Type",
+                "v": "Metabolite"
+            },
+            {
+                "po": 3194,
+                "n": "Transparent",
+                "v": "false"
+            },
+            {
+                "po": 3194,
+                "n": "XrefId",
+                "v": "HMDB00122"
+            },
+            {
+                "po": 3194,
+                "n": "name",
+                "v": "Glucose"
+            },
+            {
+                "po": 3194,
+                "n": "Height",
+                "v": "20.0",
+                "d": "double"
+            },
+            {
+                "po": 3194,
+                "n": "Width",
+                "v": "80.0",
+                "d": "double"
+            },
+            {
+                "po": 3193,
+                "n": "FillColor",
+                "v": "#ffffff"
+            },
+            {
+                "po": 3193,
+                "n": "Shape",
+                "v": "None"
+            },
+            {
+                "po": 3193,
+                "n": "BorderThickness",
+                "v": "0.0",
+                "d": "double"
+            },
+            {
+                "po": 3193,
+                "n": "Color",
+                "v": "#14961e"
+            },
+            {
+                "po": 3193,
+                "n": "GraphID",
+                "v": "f133c"
+            },
+            {
+                "po": 3193,
+                "n": "LabelSize",
+                "v": "12.0",
+                "d": "double"
+            },
+            {
+                "po": 3193,
+                "n": "shared name",
+                "v": "TCA Cycle"
+            },
+            {
+                "po": 3193,
+                "n": "XrefDatasource",
+                "v": "WikiPathways"
+            },
+            {
+                "po": 3193,
+                "n": "LabelFont",
+                "v": "Arial-BoldMT"
+            },
+            {
+                "po": 3193,
+                "n": "Type",
+                "v": "Pathway"
+            },
+            {
+                "po": 3193,
+                "n": "Transparent",
+                "v": "true"
+            },
+            {
+                "po": 3193,
+                "n": "XrefId",
+                "v": "WP78"
+            },
+            {
+                "po": 3193,
+                "n": "name",
+                "v": "TCA Cycle"
+            },
+            {
+                "po": 3193,
+                "n": "Height",
+                "v": "20.0",
+                "d": "double"
+            },
+            {
+                "po": 3193,
+                "n": "Width",
+                "v": "80.0",
+                "d": "double"
+            },
+            {
+                "po": 3192,
+                "n": "FillColor",
+                "v": "#ffffff"
+            },
+            {
+                "po": 3192,
+                "n": "Shape",
+                "v": "Rectangle"
+            },
+            {
+                "po": 3192,
+                "n": "BorderThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3192,
+                "n": "Color",
+                "v": "#000000"
+            },
+            {
+                "po": 3192,
+                "n": "GraphID",
+                "v": "ed313"
+            },
+            {
+                "po": 3192,
+                "n": "LabelSize",
+                "v": "10.0",
+                "d": "double"
+            },
+            {
+                "po": 3192,
+                "n": "shared name",
+                "v": "EGFR"
+            },
+            {
+                "po": 3192,
+                "n": "XrefDatasource",
+                "v": "Entrez Gene"
+            },
+            {
+                "po": 3192,
+                "n": "LabelFont",
+                "v": "ArialMT"
+            },
+            {
+                "po": 3192,
+                "n": "Type",
+                "v": "GeneProduct"
+            },
+            {
+                "po": 3192,
+                "n": "Transparent",
+                "v": "false"
+            },
+            {
+                "po": 3192,
+                "n": "XrefId",
+                "v": "1956"
+            },
+            {
+                "po": 3192,
+                "n": "name",
+                "v": "EGFR"
+            },
+            {
+                "po": 3192,
+                "n": "Height",
+                "v": "20.0",
+                "d": "double"
+            },
+            {
+                "po": 3192,
+                "n": "Ensembl",
+                "v": "ENSG00000146648"
+            },
+            {
+                "po": 3192,
+                "n": "Width",
+                "v": "80.0",
+                "d": "double"
+            },
+            {
+                "po": 3191,
+                "n": "FillColor",
+                "v": "#ffffff"
+            },
+            {
+                "po": 3191,
+                "n": "Shape",
+                "v": "Rectangle"
+            },
+            {
+                "po": 3191,
+                "n": "BorderThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3191,
+                "n": "Color",
+                "v": "#0000ff"
+            },
+            {
+                "po": 3191,
+                "n": "GraphID",
+                "v": "e0064"
+            },
+            {
+                "po": 3191,
+                "n": "LabelSize",
+                "v": "10.0",
+                "d": "double"
+            },
+            {
+                "po": 3191,
+                "n": "shared name",
+                "v": "Glucose"
+            },
+            {
+                "po": 3191,
+                "n": "XrefDatasource",
+                "v": "HMDB"
+            },
+            {
+                "po": 3191,
+                "n": "LabelFont",
+                "v": "ArialMT"
+            },
+            {
+                "po": 3191,
+                "n": "Type",
+                "v": "Metabolite"
+            },
+            {
+                "po": 3191,
+                "n": "Transparent",
+                "v": "false"
+            },
+            {
+                "po": 3191,
+                "n": "XrefId",
+                "v": "HMDB00122"
+            },
+            {
+                "po": 3191,
+                "n": "name",
+                "v": "Glucose"
+            },
+            {
+                "po": 3191,
+                "n": "Height",
+                "v": "20.0",
+                "d": "double"
+            },
+            {
+                "po": 3191,
+                "n": "Width",
+                "v": "80.0",
+                "d": "double"
+            },
+            {
+                "po": 3190,
+                "n": "FillColor",
+                "v": "#ffffff"
+            },
+            {
+                "po": 3190,
+                "n": "Shape",
+                "v": "Rectangle"
+            },
+            {
+                "po": 3190,
+                "n": "BorderThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3190,
+                "n": "Color",
+                "v": "#0000ff"
+            },
+            {
+                "po": 3190,
+                "n": "GraphID",
+                "v": "d632b"
+            },
+            {
+                "po": 3190,
+                "n": "LabelSize",
+                "v": "10.0",
+                "d": "double"
+            },
+            {
+                "po": 3190,
+                "n": "shared name",
+                "v": "Pyruvate"
+            },
+            {
+                "po": 3190,
+                "n": "XrefDatasource",
+                "v": "HMDB"
+            },
+            {
+                "po": 3190,
+                "n": "LabelFont",
+                "v": "ArialMT"
+            },
+            {
+                "po": 3190,
+                "n": "Type",
+                "v": "Metabolite"
+            },
+            {
+                "po": 3190,
+                "n": "Transparent",
+                "v": "false"
+            },
+            {
+                "po": 3190,
+                "n": "XrefId",
+                "v": "HMDB00243"
+            },
+            {
+                "po": 3190,
+                "n": "name",
+                "v": "Pyruvate"
+            },
+            {
+                "po": 3190,
+                "n": "Height",
+                "v": "20.0",
+                "d": "double"
+            },
+            {
+                "po": 3190,
+                "n": "Width",
+                "v": "80.0",
+                "d": "double"
+            },
+            {
+                "po": 3189,
+                "n": "FillColor",
+                "v": "#ffffff"
+            },
+            {
+                "po": 3189,
+                "n": "Shape",
+                "v": "Rectangle"
+            },
+            {
+                "po": 3189,
+                "n": "BorderThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3189,
+                "n": "Color",
+                "v": "#000000"
+            },
+            {
+                "po": 3189,
+                "n": "GraphID",
+                "v": "d3a8b"
+            },
+            {
+                "po": 3189,
+                "n": "LabelSize",
+                "v": "10.0",
+                "d": "double"
+            },
+            {
+                "po": 3189,
+                "n": "shared name",
+                "v": "ERK2"
+            },
+            {
+                "po": 3189,
+                "n": "XrefDatasource",
+                "v": "Entrez Gene"
+            },
+            {
+                "po": 3189,
+                "n": "LabelFont",
+                "v": "ArialMT"
+            },
+            {
+                "po": 3189,
+                "n": "Type",
+                "v": "GeneProduct"
+            },
+            {
+                "po": 3189,
+                "n": "Transparent",
+                "v": "false"
+            },
+            {
+                "po": 3189,
+                "n": "XrefId",
+                "v": "5594"
+            },
+            {
+                "po": 3189,
+                "n": "name",
+                "v": "ERK2"
+            },
+            {
+                "po": 3189,
+                "n": "Height",
+                "v": "20.0",
+                "d": "double"
+            },
+            {
+                "po": 3189,
+                "n": "Ensembl",
+                "v": "ENSG00000100030"
+            },
+            {
+                "po": 3189,
+                "n": "Width",
+                "v": "80.0",
+                "d": "double"
+            },
+            {
+                "po": 3188,
+                "n": "FillColor",
+                "v": "#ffffff"
+            },
+            {
+                "po": 3188,
+                "n": "Shape",
+                "v": "Rectangle"
+            },
+            {
+                "po": 3188,
+                "n": "BorderThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3188,
+                "n": "Color",
+                "v": "#0000ff"
+            },
+            {
+                "po": 3188,
+                "n": "GraphID",
+                "v": "cf7ed"
+            },
+            {
+                "po": 3188,
+                "n": "LabelSize",
+                "v": "10.0",
+                "d": "double"
+            },
+            {
+                "po": 3188,
+                "n": "shared name",
+                "v": "D-Glutamine"
+            },
+            {
+                "po": 3188,
+                "n": "XrefDatasource",
+                "v": "HMDB"
+            },
+            {
+                "po": 3188,
+                "n": "LabelFont",
+                "v": "ArialMT"
+            },
+            {
+                "po": 3188,
+                "n": "Type",
+                "v": "Metabolite"
+            },
+            {
+                "po": 3188,
+                "n": "Transparent",
+                "v": "false"
+            },
+            {
+                "po": 3188,
+                "n": "XrefId",
+                "v": "HMDB03423"
+            },
+            {
+                "po": 3188,
+                "n": "name",
+                "v": "D-Glutamine"
+            },
+            {
+                "po": 3188,
+                "n": "Height",
+                "v": "20.0",
+                "d": "double"
+            },
+            {
+                "po": 3188,
+                "n": "Width",
+                "v": "80.0",
+                "d": "double"
+            },
+            {
+                "po": 3187,
+                "n": "FillColor",
+                "v": "#ffffff"
+            },
+            {
+                "po": 3187,
+                "n": "Shape",
+                "v": "Rectangle"
+            },
+            {
+                "po": 3187,
+                "n": "BorderThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3187,
+                "n": "Color",
+                "v": "#000000"
+            },
+            {
+                "po": 3187,
+                "n": "GraphID",
+                "v": "cc42b"
+            },
+            {
+                "po": 3187,
+                "n": "LabelSize",
+                "v": "10.0",
+                "d": "double"
+            },
+            {
+                "po": 3187,
+                "n": "shared name",
+                "v": "JAK1"
+            },
+            {
+                "po": 3187,
+                "n": "XrefDatasource",
+                "v": "Entrez Gene"
+            },
+            {
+                "po": 3187,
+                "n": "LabelFont",
+                "v": "ArialMT"
+            },
+            {
+                "po": 3187,
+                "n": "Type",
+                "v": "GeneProduct"
+            },
+            {
+                "po": 3187,
+                "n": "Transparent",
+                "v": "false"
+            },
+            {
+                "po": 3187,
+                "n": "XrefId",
+                "v": "3716"
+            },
+            {
+                "po": 3187,
+                "n": "name",
+                "v": "JAK1"
+            },
+            {
+                "po": 3187,
+                "n": "Height",
+                "v": "20.0",
+                "d": "double"
+            },
+            {
+                "po": 3187,
+                "n": "Ensembl",
+                "v": "ENSG00000162434"
+            },
+            {
+                "po": 3187,
+                "n": "Width",
+                "v": "80.0",
+                "d": "double"
+            },
+            {
+                "po": 3186,
+                "n": "FillColor",
+                "v": "#ffffff"
+            },
+            {
+                "po": 3186,
+                "n": "Shape",
+                "v": "Rectangle"
+            },
+            {
+                "po": 3186,
+                "n": "BorderThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3186,
+                "n": "Color",
+                "v": "#000000"
+            },
+            {
+                "po": 3186,
+                "n": "GraphID",
+                "v": "c3e6f"
+            },
+            {
+                "po": 3186,
+                "n": "LabelSize",
+                "v": "10.0",
+                "d": "double"
+            },
+            {
+                "po": 3186,
+                "n": "shared name",
+                "v": "ERK1"
+            },
+            {
+                "po": 3186,
+                "n": "XrefDatasource",
+                "v": "Entrez Gene"
+            },
+            {
+                "po": 3186,
+                "n": "LabelFont",
+                "v": "ArialMT"
+            },
+            {
+                "po": 3186,
+                "n": "Type",
+                "v": "GeneProduct"
+            },
+            {
+                "po": 3186,
+                "n": "Transparent",
+                "v": "false"
+            },
+            {
+                "po": 3186,
+                "n": "XrefId",
+                "v": "5595"
+            },
+            {
+                "po": 3186,
+                "n": "name",
+                "v": "ERK1"
+            },
+            {
+                "po": 3186,
+                "n": "Height",
+                "v": "20.0",
+                "d": "double"
+            },
+            {
+                "po": 3186,
+                "n": "Ensembl",
+                "v": "ENSG00000102882"
+            },
+            {
+                "po": 3186,
+                "n": "Width",
+                "v": "80.0",
+                "d": "double"
+            },
+            {
+                "po": 3185,
+                "n": "FillColor",
+                "v": "#ffffff"
+            },
+            {
+                "po": 3185,
+                "n": "Shape",
+                "v": "Rectangle"
+            },
+            {
+                "po": 3185,
+                "n": "BorderThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3185,
+                "n": "Color",
+                "v": "#0000ff"
+            },
+            {
+                "po": 3185,
+                "n": "GraphID",
+                "v": "c34c9"
+            },
+            {
+                "po": 3185,
+                "n": "LabelSize",
+                "v": "10.0",
+                "d": "double"
+            },
+            {
+                "po": 3185,
+                "n": "shared name",
+                "v": "Lactate"
+            },
+            {
+                "po": 3185,
+                "n": "XrefDatasource",
+                "v": "HMDB"
+            },
+            {
+                "po": 3185,
+                "n": "LabelFont",
+                "v": "ArialMT"
+            },
+            {
+                "po": 3185,
+                "n": "Type",
+                "v": "Metabolite"
+            },
+            {
+                "po": 3185,
+                "n": "Transparent",
+                "v": "false"
+            },
+            {
+                "po": 3185,
+                "n": "XrefId",
+                "v": "HMDB00190"
+            },
+            {
+                "po": 3185,
+                "n": "name",
+                "v": "Lactate"
+            },
+            {
+                "po": 3185,
+                "n": "Height",
+                "v": "20.0",
+                "d": "double"
+            },
+            {
+                "po": 3185,
+                "n": "Width",
+                "v": "80.0",
+                "d": "double"
+            },
+            {
+                "po": 3184,
+                "n": "FillColor",
+                "v": "#ffffff"
+            },
+            {
+                "po": 3184,
+                "n": "Shape",
+                "v": "Rectangle"
+            },
+            {
+                "po": 3184,
+                "n": "BorderThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3184,
+                "n": "Color",
+                "v": "#000000"
+            },
+            {
+                "po": 3184,
+                "n": "GraphID",
+                "v": "a2a4a"
+            },
+            {
+                "po": 3184,
+                "n": "LabelSize",
+                "v": "10.0",
+                "d": "double"
+            },
+            {
+                "po": 3184,
+                "n": "shared name",
+                "v": "STAT3"
+            },
+            {
+                "po": 3184,
+                "n": "XrefDatasource",
+                "v": "Entrez Gene"
+            },
+            {
+                "po": 3184,
+                "n": "LabelFont",
+                "v": "ArialMT"
+            },
+            {
+                "po": 3184,
+                "n": "Type",
+                "v": "GeneProduct"
+            },
+            {
+                "po": 3184,
+                "n": "Transparent",
+                "v": "false"
+            },
+            {
+                "po": 3184,
+                "n": "XrefId",
+                "v": "6774"
+            },
+            {
+                "po": 3184,
+                "n": "name",
+                "v": "STAT3"
+            },
+            {
+                "po": 3184,
+                "n": "Height",
+                "v": "20.0",
+                "d": "double"
+            },
+            {
+                "po": 3184,
+                "n": "Ensembl",
+                "v": "ENSG00000168610"
+            },
+            {
+                "po": 3184,
+                "n": "Width",
+                "v": "80.0",
+                "d": "double"
+            }
+        ]
+    },
+    {
+        "edgeAttributes": [
+            {
+                "po": 3242,
+                "n": "StartArrow",
+                "v": "Line"
+            },
+            {
+                "po": 3242,
+                "n": "EndArrow",
+                "v": "Arrow"
+            },
+            {
+                "po": 3242,
+                "n": "ConnectorType",
+                "v": "Straight"
+            },
+            {
+                "po": 3242,
+                "n": "LineThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3242,
+                "n": "LineStyle",
+                "v": "Solid"
+            },
+            {
+                "po": 3242,
+                "n": "Color",
+                "v": "#000000"
+            },
+            {
+                "po": 3239,
+                "n": "StartArrow",
+                "v": "Line"
+            },
+            {
+                "po": 3239,
+                "n": "EndArrow",
+                "v": "Arrow"
+            },
+            {
+                "po": 3239,
+                "n": "ConnectorType",
+                "v": "Straight"
+            },
+            {
+                "po": 3239,
+                "n": "LineThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3239,
+                "n": "LineStyle",
+                "v": "Solid"
+            },
+            {
+                "po": 3239,
+                "n": "Color",
+                "v": "#00cc66"
+            },
+            {
+                "po": 3236,
+                "n": "StartArrow",
+                "v": "Line"
+            },
+            {
+                "po": 3236,
+                "n": "EndArrow",
+                "v": "Arrow"
+            },
+            {
+                "po": 3236,
+                "n": "ConnectorType",
+                "v": "Straight"
+            },
+            {
+                "po": 3236,
+                "n": "LineThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3236,
+                "n": "LineStyle",
+                "v": "Solid"
+            },
+            {
+                "po": 3236,
+                "n": "Color",
+                "v": "#ff0000"
+            },
+            {
+                "po": 3223,
+                "n": "StartArrow",
+                "v": "Line"
+            },
+            {
+                "po": 3223,
+                "n": "EndArrow",
+                "v": "Arrow"
+            },
+            {
+                "po": 3223,
+                "n": "ConnectorType",
+                "v": "Straight"
+            },
+            {
+                "po": 3223,
+                "n": "LineThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3223,
+                "n": "LineStyle",
+                "v": "Solid"
+            },
+            {
+                "po": 3223,
+                "n": "Color",
+                "v": "#000000"
+            },
+            {
+                "po": 3227,
+                "n": "StartArrow",
+                "v": "Line"
+            },
+            {
+                "po": 3227,
+                "n": "EndArrow",
+                "v": "Arrow"
+            },
+            {
+                "po": 3227,
+                "n": "ConnectorType",
+                "v": "Straight"
+            },
+            {
+                "po": 3227,
+                "n": "LineThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3227,
+                "n": "LineStyle",
+                "v": "Solid"
+            },
+            {
+                "po": 3227,
+                "n": "Color",
+                "v": "#00cc00"
+            },
+            {
+                "po": 3233,
+                "n": "StartArrow",
+                "v": "Line"
+            },
+            {
+                "po": 3233,
+                "n": "EndArrow",
+                "v": "Arrow"
+            },
+            {
+                "po": 3233,
+                "n": "ConnectorType",
+                "v": "Straight"
+            },
+            {
+                "po": 3233,
+                "n": "LineThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3233,
+                "n": "LineStyle",
+                "v": "Solid"
+            },
+            {
+                "po": 3233,
+                "n": "Color",
+                "v": "#ff0000"
+            },
+            {
+                "po": 3232,
+                "n": "StartArrow",
+                "v": "Line"
+            },
+            {
+                "po": 3232,
+                "n": "EndArrow",
+                "v": "Arrow"
+            },
+            {
+                "po": 3232,
+                "n": "ConnectorType",
+                "v": "Straight"
+            },
+            {
+                "po": 3232,
+                "n": "LineThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3232,
+                "n": "LineStyle",
+                "v": "Solid"
+            },
+            {
+                "po": 3232,
+                "n": "Color",
+                "v": "#ff0000"
+            },
+            {
+                "po": 3231,
+                "n": "StartArrow",
+                "v": "Line"
+            },
+            {
+                "po": 3231,
+                "n": "EndArrow",
+                "v": "Arrow"
+            },
+            {
+                "po": 3231,
+                "n": "ConnectorType",
+                "v": "Straight"
+            },
+            {
+                "po": 3231,
+                "n": "LineThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3231,
+                "n": "LineStyle",
+                "v": "Solid"
+            },
+            {
+                "po": 3231,
+                "n": "Color",
+                "v": "#ff0000"
+            },
+            {
+                "po": 3230,
+                "n": "StartArrow",
+                "v": "Line"
+            },
+            {
+                "po": 3230,
+                "n": "EndArrow",
+                "v": "Arrow"
+            },
+            {
+                "po": 3230,
+                "n": "ConnectorType",
+                "v": "Straight"
+            },
+            {
+                "po": 3230,
+                "n": "LineThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3230,
+                "n": "LineStyle",
+                "v": "Solid"
+            },
+            {
+                "po": 3230,
+                "n": "Color",
+                "v": "#00cc00"
+            },
+            {
+                "po": 3219,
+                "n": "StartArrow",
+                "v": "Line"
+            },
+            {
+                "po": 3219,
+                "n": "EndArrow",
+                "v": "Arrow"
+            },
+            {
+                "po": 3219,
+                "n": "ConnectorType",
+                "v": "Straight"
+            },
+            {
+                "po": 3219,
+                "n": "LineThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3219,
+                "n": "LineStyle",
+                "v": "Solid"
+            },
+            {
+                "po": 3219,
+                "n": "Color",
+                "v": "#000000"
+            },
+            {
+                "po": 3229,
+                "n": "StartArrow",
+                "v": "Line"
+            },
+            {
+                "po": 3229,
+                "n": "EndArrow",
+                "v": "Arrow"
+            },
+            {
+                "po": 3229,
+                "n": "ConnectorType",
+                "v": "Straight"
+            },
+            {
+                "po": 3229,
+                "n": "LineThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3229,
+                "n": "LineStyle",
+                "v": "Solid"
+            },
+            {
+                "po": 3229,
+                "n": "Color",
+                "v": "#ff0000"
+            },
+            {
+                "po": 3221,
+                "n": "StartArrow",
+                "v": "Line"
+            },
+            {
+                "po": 3221,
+                "n": "EndArrow",
+                "v": "Arrow"
+            },
+            {
+                "po": 3221,
+                "n": "ConnectorType",
+                "v": "Straight"
+            },
+            {
+                "po": 3221,
+                "n": "LineThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3221,
+                "n": "LineStyle",
+                "v": "Solid"
+            },
+            {
+                "po": 3221,
+                "n": "Color",
+                "v": "#ff0000"
+            },
+            {
+                "po": 3228,
+                "n": "StartArrow",
+                "v": "Line"
+            },
+            {
+                "po": 3228,
+                "n": "EndArrow",
+                "v": "Arrow"
+            },
+            {
+                "po": 3228,
+                "n": "ConnectorType",
+                "v": "Straight"
+            },
+            {
+                "po": 3228,
+                "n": "LineThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3228,
+                "n": "LineStyle",
+                "v": "Solid"
+            },
+            {
+                "po": 3228,
+                "n": "Color",
+                "v": "#ff0000"
+            },
+            {
+                "po": 3226,
+                "n": "StartArrow",
+                "v": "Line"
+            },
+            {
+                "po": 3226,
+                "n": "EndArrow",
+                "v": "Arrow"
+            },
+            {
+                "po": 3226,
+                "n": "ConnectorType",
+                "v": "Straight"
+            },
+            {
+                "po": 3226,
+                "n": "LineThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3226,
+                "n": "LineStyle",
+                "v": "Solid"
+            },
+            {
+                "po": 3226,
+                "n": "Color",
+                "v": "#000000"
+            },
+            {
+                "po": 3222,
+                "n": "StartArrow",
+                "v": "Line"
+            },
+            {
+                "po": 3222,
+                "n": "EndArrow",
+                "v": "Arrow"
+            },
+            {
+                "po": 3222,
+                "n": "ConnectorType",
+                "v": "Straight"
+            },
+            {
+                "po": 3222,
+                "n": "LineThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3222,
+                "n": "LineStyle",
+                "v": "Solid"
+            },
+            {
+                "po": 3222,
+                "n": "Color",
+                "v": "#00cc00"
+            },
+            {
+                "po": 3220,
+                "n": "StartArrow",
+                "v": "Line"
+            },
+            {
+                "po": 3220,
+                "n": "EndArrow",
+                "v": "Arrow"
+            },
+            {
+                "po": 3220,
+                "n": "ConnectorType",
+                "v": "Straight"
+            },
+            {
+                "po": 3220,
+                "n": "LineThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3220,
+                "n": "LineStyle",
+                "v": "Solid"
+            },
+            {
+                "po": 3220,
+                "n": "Color",
+                "v": "#000000"
+            },
+            {
+                "po": 3218,
+                "n": "StartArrow",
+                "v": "Line"
+            },
+            {
+                "po": 3218,
+                "n": "EndArrow",
+                "v": "Arrow"
+            },
+            {
+                "po": 3218,
+                "n": "ConnectorType",
+                "v": "Straight"
+            },
+            {
+                "po": 3218,
+                "n": "LineThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3218,
+                "n": "LineStyle",
+                "v": "Solid"
+            },
+            {
+                "po": 3218,
+                "n": "Color",
+                "v": "#ff0000"
+            },
+            {
+                "po": 3225,
+                "n": "StartArrow",
+                "v": "Line"
+            },
+            {
+                "po": 3225,
+                "n": "EndArrow",
+                "v": "Arrow"
+            },
+            {
+                "po": 3225,
+                "n": "ConnectorType",
+                "v": "Straight"
+            },
+            {
+                "po": 3225,
+                "n": "LineThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3225,
+                "n": "LineStyle",
+                "v": "Solid"
+            },
+            {
+                "po": 3225,
+                "n": "Color",
+                "v": "#ff0000"
+            },
+            {
+                "po": 3224,
+                "n": "StartArrow",
+                "v": "Line"
+            },
+            {
+                "po": 3224,
+                "n": "EndArrow",
+                "v": "Arrow"
+            },
+            {
+                "po": 3224,
+                "n": "ConnectorType",
+                "v": "Straight"
+            },
+            {
+                "po": 3224,
+                "n": "LineThickness",
+                "v": "1.0",
+                "d": "double"
+            },
+            {
+                "po": 3224,
+                "n": "LineStyle",
+                "v": "Solid"
+            },
+            {
+                "po": 3224,
+                "n": "Color",
+                "v": "#ff0000"
+            }
+        ]
+    },
+    {
+        "cartesianLayout": [
+            {
+                "node": 3184,
+                "x": 102.0,
+                "y": 408.0,
+                "z": 32768.0
+            },
+            {
+                "node": 3185,
+                "x": 219.0,
+                "y": 460.0,
+                "z": 32768.0
+            },
+            {
+                "node": 3186,
+                "x": 639.0,
+                "y": 296.25,
+                "z": 32768.0
+            },
+            {
+                "node": 3187,
+                "x": 102.0,
+                "y": 343.0,
+                "z": 32768.0
+            },
+            {
+                "node": 3188,
+                "x": 639.0,
+                "y": 202.0,
+                "z": 32768.0
+            },
+            {
+                "node": 3189,
+                "x": 639.0,
+                "y": 276.25,
+                "z": 32768.0
+            },
+            {
+                "node": 3190,
+                "x": 219.0,
+                "y": 546.0,
+                "z": 32768.0
+            },
+            {
+                "node": 3191,
+                "x": 102.0,
+                "y": 205.0,
+                "z": 32768.0
+            },
+            {
+                "node": 3192,
+                "x": 102.0,
+                "y": 266.0,
+                "z": 32768.0
+            },
+            {
+                "node": 3193,
+                "x": 640.0,
+                "y": 513.0,
+                "z": 32768.0
+            },
+            {
+                "node": 3194,
+                "x": 101.0,
+                "y": 546.0,
+                "z": 32770.0
+            },
+            {
+                "node": 3195,
+                "x": 639.0,
+                "y": 368.0,
+                "z": 32774.0
+            },
+            {
+                "node": 3196,
+                "x": 459.0,
+                "y": 202.0,
+                "z": 32781.0
+            },
+            {
+                "node": 3197,
+                "x": 459.0,
+                "y": 287.0,
+                "z": 32782.0
+            },
+            {
+                "node": 3198,
+                "x": 459.0,
+                "y": 351.0,
+                "z": 32783.0
+            },
+            {
+                "node": 3199,
+                "x": 459.0,
+                "y": 404.0,
+                "z": 32784.0
+            },
+            {
+                "node": 3201,
+                "x": 743.0,
+                "y": 66.5,
+                "z": 16384.0
+            },
+            {
+                "node": 3204,
+                "x": 142.0,
+                "y": 398.0,
+                "z": 32769.0
+            },
+            {
+                "node": 3205,
+                "x": 672.0,
+                "y": 359.0,
+                "z": 32775.0
+            },
+            {
+                "node": 3206,
+                "x": 492.75,
+                "y": 394.0,
+                "z": 32785.0
+            },
+            {
+                "node": 3207,
+                "x": 639.0,
+                "y": 286.25,
+                "z": 4096.0
+            },
+            {
+                "node": 3208,
+                "x": 789.5,
+                "y": 57.0,
+                "z": 28672.0
+            },
+            {
+                "node": 3209,
+                "x": 590.5,
+                "y": 442.0,
+                "z": 28672.0
+            },
+            {
+                "node": 3210,
+                "x": 694.5,
+                "y": 442.0,
+                "z": 28672.0
+            },
+            {
+                "node": 3211,
+                "x": 144.5,
+                "y": 162.0,
+                "z": 28672.0
+            },
+            {
+                "node": 3212,
+                "x": 344.0,
+                "y": 147.0,
+                "z": 28672.0
+            },
+            {
+                "node": 3213,
+                "x": 642.0,
+                "y": 27.0,
+                "z": 28672.0
+            },
+            {
+                "node": 3214,
+                "x": 553.5,
+                "y": 162.0,
+                "z": 32789.0
+            },
+            {
+                "node": 3215,
+                "x": 784.5,
+                "y": 79.0,
+                "z": 32792.0
+            },
+            {
+                "node": 3216,
+                "x": 736.0,
+                "y": 102.0,
+                "z": 32793.0
+            },
+            {
+                "node": 3217,
+                "x": 219.0,
+                "y": 509.6,
+                "z": 10001.5
+            },
+            {
+                "node": 3234,
+                "x": 622.0,
+                "y": 57.0,
+                "z": 10001.5
+            },
+            {
+                "node": 3235,
+                "x": 688.0,
+                "y": 57.0,
+                "z": 10001.5
+            },
+            {
+                "node": 3237,
+                "x": 623.0,
+                "y": 78.0,
+                "z": 10001.5
+            },
+            {
+                "node": 3238,
+                "x": 689.0,
+                "y": 78.0,
+                "z": 10001.5
+            },
+            {
+                "node": 3240,
+                "x": 624.0,
+                "y": 101.0,
+                "z": 10001.5
+            },
+            {
+                "node": 3241,
+                "x": 690.0,
+                "y": 101.0,
+                "z": 10001.5
+            }
+        ]
+    },
+    {
+        "cyVisualProperties": [
+            {
+                "properties_of": "network",
+                "properties": {
+                    "NETWORK_ANNOTATION_SELECTION": "false",
+                    "NETWORK_BACKGROUND_PAINT": "#FFFFFF",
+                    "NETWORK_CENTER_X_LOCATION": "0.0",
+                    "NETWORK_CENTER_Y_LOCATION": "0.0",
+                    "NETWORK_CENTER_Z_LOCATION": "0.0",
+                    "NETWORK_DEPTH": "0.0",
+                    "NETWORK_EDGE_SELECTION": "true",
+                    "NETWORK_HEIGHT": "400.0",
+                    "NETWORK_NODE_SELECTION": "true",
+                    "NETWORK_SCALE_FACTOR": "1.0",
+                    "NETWORK_SIZE": "550.0",
+                    "NETWORK_WIDTH": "550.0"
+                }
+            },
+            {
+                "properties_of": "nodes:default",
+                "properties": {
+                    "COMPOUND_NODE_PADDING": "10.0",
+                    "COMPOUND_NODE_SHAPE": "ROUND_RECTANGLE",
+                    "NODE_BORDER_PAINT": "#CCCCCC",
+                    "NODE_BORDER_STROKE": "SOLID",
+                    "NODE_BORDER_TRANSPARENCY": "255",
+                    "NODE_BORDER_WIDTH": "1.0",
+                    "NODE_CUSTOMGRAPHICS_1": "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+                    "NODE_CUSTOMGRAPHICS_2": "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+                    "NODE_CUSTOMGRAPHICS_3": "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+                    "NODE_CUSTOMGRAPHICS_4": "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+                    "NODE_CUSTOMGRAPHICS_5": "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+                    "NODE_CUSTOMGRAPHICS_6": "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+                    "NODE_CUSTOMGRAPHICS_7": "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+                    "NODE_CUSTOMGRAPHICS_8": "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+                    "NODE_CUSTOMGRAPHICS_9": "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+                    "NODE_CUSTOMGRAPHICS_POSITION_1": "C,C,c,0.00,0.00",
+                    "NODE_CUSTOMGRAPHICS_POSITION_2": "C,C,c,0.00,0.00",
+                    "NODE_CUSTOMGRAPHICS_POSITION_3": "C,C,c,0.00,0.00",
+                    "NODE_CUSTOMGRAPHICS_POSITION_4": "C,C,c,0.00,0.00",
+                    "NODE_CUSTOMGRAPHICS_POSITION_5": "C,C,c,0.00,0.00",
+                    "NODE_CUSTOMGRAPHICS_POSITION_6": "C,C,c,0.00,0.00",
+                    "NODE_CUSTOMGRAPHICS_POSITION_7": "C,C,c,0.00,0.00",
+                    "NODE_CUSTOMGRAPHICS_POSITION_8": "C,C,c,0.00,0.00",
+                    "NODE_CUSTOMGRAPHICS_POSITION_9": "C,C,c,0.00,0.00",
+                    "NODE_CUSTOMGRAPHICS_SIZE_1": "50.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_2": "50.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_3": "50.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_4": "50.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_5": "50.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_6": "50.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_7": "50.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_8": "50.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_9": "50.0",
+                    "NODE_CUSTOMPAINT_1": "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_1, name=Node Custom Paint 1)",
+                    "NODE_CUSTOMPAINT_2": "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_2, name=Node Custom Paint 2)",
+                    "NODE_CUSTOMPAINT_3": "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_3, name=Node Custom Paint 3)",
+                    "NODE_CUSTOMPAINT_4": "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_4, name=Node Custom Paint 4)",
+                    "NODE_CUSTOMPAINT_5": "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_5, name=Node Custom Paint 5)",
+                    "NODE_CUSTOMPAINT_6": "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_6, name=Node Custom Paint 6)",
+                    "NODE_CUSTOMPAINT_7": "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_7, name=Node Custom Paint 7)",
+                    "NODE_CUSTOMPAINT_8": "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_8, name=Node Custom Paint 8)",
+                    "NODE_CUSTOMPAINT_9": "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_9, name=Node Custom Paint 9)",
+                    "NODE_DEPTH": "0.0",
+                    "NODE_FILL_COLOR": "#FFFFFF",
+                    "NODE_HEIGHT": "35.0",
+                    "NODE_LABEL_COLOR": "#000000",
+                    "NODE_LABEL_FONT_FACE": "SansSerif,plain,12",
+                    "NODE_LABEL_FONT_SIZE": "12",
+                    "NODE_LABEL_POSITION": "C,C,c,0.00,0.00",
+                    "NODE_LABEL_TRANSPARENCY": "255",
+                    "NODE_LABEL_WIDTH": "200.0",
+                    "NODE_NESTED_NETWORK_IMAGE_VISIBLE": "true",
+                    "NODE_PAINT": "#1E90FF",
+                    "NODE_SELECTED": "false",
+                    "NODE_SELECTED_PAINT": "#FFFF00",
+                    "NODE_SHAPE": "ELLIPSE",
+                    "NODE_SIZE": "35.0",
+                    "NODE_TRANSPARENCY": "255",
+                    "NODE_VISIBLE": "true",
+                    "NODE_WIDTH": "75.0",
+                    "NODE_X_LOCATION": "0.0",
+                    "NODE_Y_LOCATION": "0.0",
+                    "NODE_Z_LOCATION": "0.0"
+                },
+                "dependencies": {
+                    "nodeCustomGraphicsSizeSync": "true",
+                    "nodeSizeLocked": "false"
+                },
+                "mappings": {
+                    "NODE_BORDER_PAINT": {
+                        "type": "PASSTHROUGH",
+                        "definition": "COL=Color,T=string"
+                    },
+                    "NODE_BORDER_WIDTH": {
+                        "type": "PASSTHROUGH",
+                        "definition": "COL=BorderThickness,T=double"
+                    },
+                    "NODE_FILL_COLOR": {
+                        "type": "PASSTHROUGH",
+                        "definition": "COL=FillColor,T=string"
+                    },
+                    "NODE_HEIGHT": {
+                        "type": "PASSTHROUGH",
+                        "definition": "COL=Height,T=double"
+                    },
+                    "NODE_LABEL": {
+                        "type": "PASSTHROUGH",
+                        "definition": "COL=name,T=string"
+                    },
+                    "NODE_LABEL_COLOR": {
+                        "type": "PASSTHROUGH",
+                        "definition": "COL=Color,T=string"
+                    },
+                    "NODE_LABEL_FONT_FACE": {
+                        "type": "PASSTHROUGH",
+                        "definition": "COL=LabelFont,T=string"
+                    },
+                    "NODE_LABEL_FONT_SIZE": {
+                        "type": "PASSTHROUGH",
+                        "definition": "COL=LabelSize,T=double"
+                    },
+                    "NODE_SHAPE": {
+                        "type": "DISCRETE",
+                        "definition": "COL=Shape,T=string,K=0=Hexagon,V=0=HEXAGON,K=1=Ellipse,V=1=ELLIPSE,K=2=RoundRectangle,V=2=ROUND_RECTANGLE,K=3=Rectangle,V=3=RECTANGLE,K=4=Triangle,V=4=TRIANGLE,K=5=Octagon,V=5=OCTAGON,K=6=Oval,V=6=ELLIPSE,K=7=Pentagon,V=7=HEXAGON,K=8=Organelle,V=8=ROUND_RECTANGLE,K=9=RoundedRectangle,V=9=ROUND_RECTANGLE"
+                    },
+                    "NODE_TRANSPARENCY": {
+                        "type": "DISCRETE",
+                        "definition": "COL=Transparent,T=string,K=0=true,V=0=0,K=1=false,V=1=255"
+                    },
+                    "NODE_WIDTH": {
+                        "type": "PASSTHROUGH",
+                        "definition": "COL=Width,T=double"
+                    }
+                }
+            },
+            {
+                "properties_of": "edges:default",
+                "properties": {
+                    "EDGE_CURVED": "true",
+                    "EDGE_LABEL_COLOR": "#000000",
+                    "EDGE_LABEL_FONT_FACE": "Dialog,plain,10",
+                    "EDGE_LABEL_FONT_SIZE": "10",
+                    "EDGE_LABEL_TRANSPARENCY": "255",
+                    "EDGE_LABEL_WIDTH": "200.0",
+                    "EDGE_LINE_TYPE": "SOLID",
+                    "EDGE_PAINT": "#323232",
+                    "EDGE_SELECTED": "false",
+                    "EDGE_SELECTED_PAINT": "#FF0000",
+                    "EDGE_SOURCE_ARROW_SELECTED_PAINT": "#FFFF00",
+                    "EDGE_SOURCE_ARROW_SHAPE": "NONE",
+                    "EDGE_SOURCE_ARROW_SIZE": "6.0",
+                    "EDGE_SOURCE_ARROW_UNSELECTED_PAINT": "#000000",
+                    "EDGE_STROKE_SELECTED_PAINT": "#FF0000",
+                    "EDGE_STROKE_UNSELECTED_PAINT": "#848484",
+                    "EDGE_TARGET_ARROW_SELECTED_PAINT": "#FFFF00",
+                    "EDGE_TARGET_ARROW_SHAPE": "NONE",
+                    "EDGE_TARGET_ARROW_SIZE": "6.0",
+                    "EDGE_TARGET_ARROW_UNSELECTED_PAINT": "#000000",
+                    "EDGE_TRANSPARENCY": "255",
+                    "EDGE_UNSELECTED_PAINT": "#404040",
+                    "EDGE_VISIBLE": "true",
+                    "EDGE_WIDTH": "2.0"
+                },
+                "dependencies": {
+                    "arrowColorMatchesEdge": "true"
+                },
+                "mappings": {
+                    "EDGE_LINE_TYPE": {
+                        "type": "DISCRETE",
+                        "definition": "COL=LineStyle,T=string,K=0=Dots,V=0=DOT,K=1=Double,V=1=PARALLEL_LINES,K=2=Solid,V=2=SOLID,K=3=Dashed,V=3=LONG_DASH"
+                    },
+                    "EDGE_SOURCE_ARROW_SHAPE": {
+                        "type": "DISCRETE",
+                        "definition": "COL=StartArrow,T=string,K=0=Arrow,V=0=DELTA,K=1=mim-branching-right,V=1=CROSS_OPEN_DELTA,K=2=mim-covalent-bond,V=2=CROSS_DELTA,K=3=mim-branching-left,V=3=CROSS_DELTA,K=4=mim-transcription-translation,V=4=DELTA,K=5=mim-binding,V=5=ARROW,K=6=Line,V=6=NONE,K=7=mim-cleavage,V=7=DIAMOND,K=8=mim-gap,V=8=DELTA,K=9=mim-stimulation,V=9=OPEN_DELTA,K=10=mim-catalysis,V=10=OPEN_CIRCLE,K=11=mim-inhibition,V=11=T,K=12=TBar,V=12=T,K=13=mim-modification,V=13=DELTA,K=14=mim-necessary-stimulation,V=14=CROSS_OPEN_DELTA,K=15=mim-conversion,V=15=DELTA"
+                    },
+                    "EDGE_TARGET_ARROW_SHAPE": {
+                        "type": "DISCRETE",
+                        "definition": "COL=EndArrow,T=string,K=0=Arrow,V=0=DELTA,K=1=mim-branching-right,V=1=CROSS_OPEN_DELTA,K=2=mim-covalent-bond,V=2=CROSS_DELTA,K=3=mim-branching-left,V=3=CROSS_DELTA,K=4=mim-transcription-translation,V=4=DELTA,K=5=mim-binding,V=5=ARROW,K=6=Line,V=6=NONE,K=7=mim-cleavage,V=7=DIAMOND,K=8=mim-gap,V=8=DELTA,K=9=mim-stimulation,V=9=OPEN_DELTA,K=10=mim-catalysis,V=10=OPEN_CIRCLE,K=11=mim-inhibition,V=11=T,K=12=TBar,V=12=T,K=13=mim-modification,V=13=DELTA,K=14=mim-necessary-stimulation,V=14=CROSS_OPEN_DELTA,K=15=mim-conversion,V=15=DELTA"
+                    },
+                    "EDGE_TOOLTIP": {
+                        "type": "DISCRETE",
+                        "definition": "COL=ConnectorType,T=string,K=0=Elbow,V=0=Elbow,K=1=Curved,V=1=Curved,K=2=Straight,V=2=Straight"
+                    },
+                    "EDGE_UNSELECTED_PAINT": {
+                        "type": "PASSTHROUGH",
+                        "definition": "COL=Color,T=string"
+                    },
+                    "EDGE_WIDTH": {
+                        "type": "PASSTHROUGH",
+                        "definition": "COL=LineThickness,T=double"
+                    }
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3184,
+                "properties": {
+                    "NODE_Z_LOCATION": "32768.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3185,
+                "properties": {
+                    "NODE_Z_LOCATION": "32768.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3186,
+                "properties": {
+                    "NODE_Z_LOCATION": "32768.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3187,
+                "properties": {
+                    "NODE_Z_LOCATION": "32768.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3188,
+                "properties": {
+                    "NODE_Z_LOCATION": "32768.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3189,
+                "properties": {
+                    "NODE_Z_LOCATION": "32768.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3190,
+                "properties": {
+                    "NODE_Z_LOCATION": "32768.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3191,
+                "properties": {
+                    "NODE_Z_LOCATION": "32768.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3192,
+                "properties": {
+                    "NODE_Z_LOCATION": "32768.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3193,
+                "properties": {
+                    "NODE_Z_LOCATION": "32768.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3194,
+                "properties": {
+                    "NODE_Z_LOCATION": "32770.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3195,
+                "properties": {
+                    "NODE_Z_LOCATION": "32774.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3196,
+                "properties": {
+                    "NODE_Z_LOCATION": "32781.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3197,
+                "properties": {
+                    "NODE_Z_LOCATION": "32782.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3198,
+                "properties": {
+                    "NODE_Z_LOCATION": "32783.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3199,
+                "properties": {
+                    "NODE_Z_LOCATION": "32784.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3201,
+                "properties": {
+                    "NODE_BORDER_PAINT": "#000000",
+                    "NODE_BORDER_WIDTH": "1.0",
+                    "NODE_HEIGHT": "107.0",
+                    "NODE_LABEL_COLOR": "#000000",
+                    "NODE_LABEL_FONT_FACE": "ArialMT,plain,12",
+                    "NODE_LABEL_FONT_SIZE": "10",
+                    "NODE_SELECTED_PAINT": "#FFFFCC",
+                    "NODE_SHAPE": "RECTANGLE",
+                    "NODE_TRANSPARENCY": "0",
+                    "NODE_WIDTH": "278.0",
+                    "NODE_Z_LOCATION": "16384.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3204,
+                "properties": {
+                    "NODE_BORDER_PAINT": "#000000",
+                    "NODE_BORDER_WIDTH": "1.0",
+                    "NODE_FILL_COLOR": "#FFFFFF",
+                    "NODE_HEIGHT": "12.5",
+                    "NODE_LABEL": "Tyr-P",
+                    "NODE_LABEL_COLOR": "#000000",
+                    "NODE_LABEL_FONT_FACE": "ArialMT,plain,12",
+                    "NODE_LABEL_FONT_SIZE": "10",
+                    "NODE_SHAPE": "ELLIPSE",
+                    "NODE_TRANSPARENCY": "255",
+                    "NODE_WIDTH": "35.5",
+                    "NODE_Z_LOCATION": "32769.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3205,
+                "properties": {
+                    "NODE_BORDER_PAINT": "#000000",
+                    "NODE_BORDER_WIDTH": "1.0",
+                    "NODE_FILL_COLOR": "#FFFFFF",
+                    "NODE_HEIGHT": "14.5",
+                    "NODE_LABEL": "Ser-P",
+                    "NODE_LABEL_COLOR": "#000000",
+                    "NODE_LABEL_FONT_FACE": "ArialMT,plain,12",
+                    "NODE_LABEL_FONT_SIZE": "10",
+                    "NODE_SHAPE": "ELLIPSE",
+                    "NODE_TRANSPARENCY": "255",
+                    "NODE_WIDTH": "33.5",
+                    "NODE_Z_LOCATION": "32775.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3206,
+                "properties": {
+                    "NODE_BORDER_PAINT": "#000000",
+                    "NODE_BORDER_WIDTH": "1.0",
+                    "NODE_FILL_COLOR": "#FFFFFF",
+                    "NODE_HEIGHT": "14.5",
+                    "NODE_LABEL": "Tyr-P",
+                    "NODE_LABEL_COLOR": "#000000",
+                    "NODE_LABEL_FONT_FACE": "ArialMT,plain,12",
+                    "NODE_LABEL_FONT_SIZE": "10",
+                    "NODE_SHAPE": "ELLIPSE",
+                    "NODE_TRANSPARENCY": "255",
+                    "NODE_WIDTH": "29.5",
+                    "NODE_Z_LOCATION": "32785.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3207,
+                "properties": {
+                    "NODE_BORDER_PAINT": "#AAAAAA",
+                    "NODE_BORDER_STROKE": "LONG_DASH",
+                    "NODE_BORDER_WIDTH": "0.0",
+                    "NODE_FILL_COLOR": "#FFFFFF",
+                    "NODE_HEIGHT": "56.0",
+                    "NODE_LABEL_COLOR": "#AAAAAA",
+                    "NODE_SELECTED_PAINT": "#FFFFCC",
+                    "NODE_SHAPE": "RECTANGLE",
+                    "NODE_TRANSPARENCY": "25",
+                    "NODE_WIDTH": "96.0",
+                    "NODE_Z_LOCATION": "4096.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3208,
+                "properties": {
+                    "NODE_BORDER_PAINT": "#000000",
+                    "NODE_BORDER_WIDTH": "0.0",
+                    "NODE_HEIGHT": "20.0",
+                    "NODE_LABEL_COLOR": "#000000",
+                    "NODE_LABEL_FONT_FACE": "ArialMT,plain,12",
+                    "NODE_LABEL_FONT_SIZE": "12",
+                    "NODE_SELECTED_PAINT": "#FFFFCC",
+                    "NODE_TRANSPARENCY": "0",
+                    "NODE_WIDTH": "179.0",
+                    "NODE_Z_LOCATION": "28672.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3209,
+                "properties": {
+                    "NODE_BORDER_PAINT": "#000000",
+                    "NODE_BORDER_WIDTH": "1.0",
+                    "NODE_HEIGHT": "32.0",
+                    "NODE_LABEL_COLOR": "#000000",
+                    "NODE_LABEL_FONT_FACE": "ArialMT,plain,12",
+                    "NODE_LABEL_FONT_SIZE": "10",
+                    "NODE_SELECTED_PAINT": "#FFFFCC",
+                    "NODE_SHAPE": "RECTANGLE",
+                    "NODE_TRANSPARENCY": "255",
+                    "NODE_WIDTH": "93.0",
+                    "NODE_Z_LOCATION": "28672.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3210,
+                "properties": {
+                    "NODE_BORDER_PAINT": "#000000",
+                    "NODE_BORDER_WIDTH": "1.0",
+                    "NODE_HEIGHT": "32.0",
+                    "NODE_LABEL_COLOR": "#000000",
+                    "NODE_LABEL_FONT_FACE": "ArialMT,plain,12",
+                    "NODE_LABEL_FONT_SIZE": "10",
+                    "NODE_SELECTED_PAINT": "#FFFFCC",
+                    "NODE_SHAPE": "RECTANGLE",
+                    "NODE_TRANSPARENCY": "255",
+                    "NODE_WIDTH": "105.0",
+                    "NODE_Z_LOCATION": "28672.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3211,
+                "properties": {
+                    "NODE_BORDER_PAINT": "#000000",
+                    "NODE_BORDER_WIDTH": "0.0",
+                    "NODE_HEIGHT": "20.0",
+                    "NODE_LABEL_COLOR": "#000000",
+                    "NODE_LABEL_FONT_FACE": "Arial-BoldMT,bold,12",
+                    "NODE_LABEL_FONT_SIZE": "12",
+                    "NODE_SELECTED_PAINT": "#FFFFCC",
+                    "NODE_TRANSPARENCY": "0",
+                    "NODE_WIDTH": "191.0",
+                    "NODE_Z_LOCATION": "28672.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3212,
+                "properties": {
+                    "NODE_BORDER_PAINT": "#000000",
+                    "NODE_BORDER_WIDTH": "0.0",
+                    "NODE_HEIGHT": "20.0",
+                    "NODE_LABEL_COLOR": "#000000",
+                    "NODE_LABEL_FONT_FACE": "ArialMT,plain,12",
+                    "NODE_LABEL_FONT_SIZE": "12",
+                    "NODE_SELECTED_PAINT": "#FFFFCC",
+                    "NODE_TRANSPARENCY": "0",
+                    "NODE_WIDTH": "80.0",
+                    "NODE_Z_LOCATION": "28672.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3213,
+                "properties": {
+                    "NODE_BORDER_PAINT": "#000000",
+                    "NODE_BORDER_WIDTH": "0.0",
+                    "NODE_HEIGHT": "20.0",
+                    "NODE_LABEL_COLOR": "#000000",
+                    "NODE_LABEL_FONT_FACE": "ArialMT,plain,12",
+                    "NODE_LABEL_FONT_SIZE": "12",
+                    "NODE_SELECTED_PAINT": "#FFFFCC",
+                    "NODE_TRANSPARENCY": "0",
+                    "NODE_WIDTH": "80.0",
+                    "NODE_Z_LOCATION": "28672.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3214,
+                "properties": {
+                    "NODE_BORDER_PAINT": "#000000",
+                    "NODE_BORDER_WIDTH": "0.0",
+                    "NODE_HEIGHT": "20.0",
+                    "NODE_LABEL_COLOR": "#000000",
+                    "NODE_LABEL_FONT_FACE": "Arial-BoldMT,bold,12",
+                    "NODE_LABEL_FONT_SIZE": "12",
+                    "NODE_SELECTED_PAINT": "#FFFFCC",
+                    "NODE_TRANSPARENCY": "0",
+                    "NODE_WIDTH": "191.0",
+                    "NODE_Z_LOCATION": "32789.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3215,
+                "properties": {
+                    "NODE_BORDER_PAINT": "#000000",
+                    "NODE_BORDER_WIDTH": "0.0",
+                    "NODE_HEIGHT": "20.0",
+                    "NODE_LABEL_COLOR": "#000000",
+                    "NODE_LABEL_FONT_FACE": "ArialMT,plain,12",
+                    "NODE_LABEL_FONT_SIZE": "12",
+                    "NODE_SELECTED_PAINT": "#FFFFCC",
+                    "NODE_TRANSPARENCY": "0",
+                    "NODE_WIDTH": "179.0",
+                    "NODE_Z_LOCATION": "32792.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3216,
+                "properties": {
+                    "NODE_BORDER_PAINT": "#000000",
+                    "NODE_BORDER_WIDTH": "0.0",
+                    "NODE_HEIGHT": "20.0",
+                    "NODE_LABEL_COLOR": "#000000",
+                    "NODE_LABEL_FONT_FACE": "ArialMT,plain,12",
+                    "NODE_LABEL_FONT_SIZE": "12",
+                    "NODE_SELECTED_PAINT": "#FFFFCC",
+                    "NODE_TRANSPARENCY": "0",
+                    "NODE_WIDTH": "84.0",
+                    "NODE_Z_LOCATION": "32793.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3217,
+                "properties": {
+                    "NODE_CUSTOMGRAPHICS_SIZE_1": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_2": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_3": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_4": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_5": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_6": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_7": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_8": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_9": "1.0",
+                    "NODE_DEPTH": "1.0",
+                    "NODE_HEIGHT": "1.0",
+                    "NODE_SHAPE": "RECTANGLE",
+                    "NODE_SIZE": "1.0",
+                    "NODE_WIDTH": "1.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3234,
+                "properties": {
+                    "NODE_CUSTOMGRAPHICS_SIZE_1": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_2": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_3": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_4": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_5": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_6": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_7": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_8": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_9": "1.0",
+                    "NODE_DEPTH": "1.0",
+                    "NODE_HEIGHT": "1.0",
+                    "NODE_SHAPE": "RECTANGLE",
+                    "NODE_SIZE": "1.0",
+                    "NODE_WIDTH": "1.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3235,
+                "properties": {
+                    "NODE_CUSTOMGRAPHICS_SIZE_1": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_2": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_3": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_4": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_5": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_6": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_7": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_8": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_9": "1.0",
+                    "NODE_DEPTH": "1.0",
+                    "NODE_HEIGHT": "1.0",
+                    "NODE_SHAPE": "RECTANGLE",
+                    "NODE_SIZE": "1.0",
+                    "NODE_WIDTH": "1.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3237,
+                "properties": {
+                    "NODE_CUSTOMGRAPHICS_SIZE_1": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_2": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_3": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_4": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_5": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_6": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_7": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_8": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_9": "1.0",
+                    "NODE_DEPTH": "1.0",
+                    "NODE_HEIGHT": "1.0",
+                    "NODE_SHAPE": "RECTANGLE",
+                    "NODE_SIZE": "1.0",
+                    "NODE_WIDTH": "1.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3238,
+                "properties": {
+                    "NODE_CUSTOMGRAPHICS_SIZE_1": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_2": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_3": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_4": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_5": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_6": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_7": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_8": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_9": "1.0",
+                    "NODE_DEPTH": "1.0",
+                    "NODE_HEIGHT": "1.0",
+                    "NODE_SHAPE": "RECTANGLE",
+                    "NODE_SIZE": "1.0",
+                    "NODE_WIDTH": "1.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3240,
+                "properties": {
+                    "NODE_CUSTOMGRAPHICS_SIZE_1": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_2": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_3": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_4": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_5": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_6": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_7": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_8": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_9": "1.0",
+                    "NODE_DEPTH": "1.0",
+                    "NODE_HEIGHT": "1.0",
+                    "NODE_SHAPE": "RECTANGLE",
+                    "NODE_SIZE": "1.0",
+                    "NODE_WIDTH": "1.0"
+                }
+            },
+            {
+                "properties_of": "nodes",
+                "applies_to": 3241,
+                "properties": {
+                    "NODE_CUSTOMGRAPHICS_SIZE_1": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_2": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_3": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_4": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_5": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_6": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_7": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_8": "1.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_9": "1.0",
+                    "NODE_DEPTH": "1.0",
+                    "NODE_HEIGHT": "1.0",
+                    "NODE_SHAPE": "RECTANGLE",
+                    "NODE_SIZE": "1.0",
+                    "NODE_WIDTH": "1.0"
+                }
+            },
+            {
+                "properties_of": "edges",
+                "applies_to": 3218,
+                "properties": {
+                    "EDGE_WIDTH": "1.0"
+                }
+            },
+            {
+                "properties_of": "edges",
+                "applies_to": 3219,
+                "properties": {
+                    "EDGE_WIDTH": "1.0"
+                }
+            },
+            {
+                "properties_of": "edges",
+                "applies_to": 3220,
+                "properties": {
+                    "EDGE_BEND": "0.003215417461517403,-0.9999948305319124,0.25723339692139224|0.003215417461517403,-0.9999948305319124,0.25723339692139224|0.9692675019607787,-0.24600916576971646,1.03254960248032|0.9692675019607787,-0.24600916576971646,1.03254960248032",
+                    "EDGE_WIDTH": "1.0"
+                }
+            },
+            {
+                "properties_of": "edges",
+                "applies_to": 3221,
+                "properties": {
+                    "EDGE_WIDTH": "1.0"
+                }
+            },
+            {
+                "properties_of": "edges",
+                "applies_to": 3222,
+                "properties": {
+                    "EDGE_WIDTH": "1.0"
+                }
+            },
+            {
+                "properties_of": "edges",
+                "applies_to": 3223,
+                "properties": {
+                    "EDGE_WIDTH": "1.0"
+                }
+            },
+            {
+                "properties_of": "edges",
+                "applies_to": 3224,
+                "properties": {
+                    "EDGE_WIDTH": "1.0"
+                }
+            },
+            {
+                "properties_of": "edges",
+                "applies_to": 3225,
+                "properties": {
+                    "EDGE_BEND": "0.6556672924281974,0.7550499332096365,0.6556672924281974|0.6556672924281974,0.7550499332096365,0.6556672924281974",
+                    "EDGE_WIDTH": "1.0"
+                }
+            },
+            {
+                "properties_of": "edges",
+                "applies_to": 3226,
+                "properties": {
+                    "EDGE_WIDTH": "1.0"
+                }
+            },
+            {
+                "properties_of": "edges",
+                "applies_to": 3227,
+                "properties": {
+                    "EDGE_WIDTH": "1.0"
+                }
+            },
+            {
+                "properties_of": "edges",
+                "applies_to": 3228,
+                "properties": {
+                    "EDGE_WIDTH": "1.0"
+                }
+            },
+            {
+                "properties_of": "edges",
+                "applies_to": 3229,
+                "properties": {
+                    "EDGE_BEND": "0.8566565765354343,-0.5158871096263112,0.37863274101013666|0.8566565765354343,-0.5158871096263112,0.37863274101013666|0.9227628149853472,0.38536837867204143,0.6399236379783442|0.9227628149853472,0.38536837867204143,0.6399236379783442",
+                    "EDGE_WIDTH": "1.0"
+                }
+            },
+            {
+                "properties_of": "edges",
+                "applies_to": 3230,
+                "properties": {
+                    "EDGE_WIDTH": "1.0"
+                }
+            },
+            {
+                "properties_of": "edges",
+                "applies_to": 3231,
+                "properties": {
+                    "EDGE_WIDTH": "1.0"
+                }
+            },
+            {
+                "properties_of": "edges",
+                "applies_to": 3232,
+                "properties": {
+                    "EDGE_WIDTH": "1.0"
+                }
+            },
+            {
+                "properties_of": "edges",
+                "applies_to": 3233,
+                "properties": {
+                    "EDGE_WIDTH": "1.0"
+                }
+            },
+            {
+                "properties_of": "edges",
+                "applies_to": 3236,
+                "properties": {
+                    "EDGE_WIDTH": "1.0"
+                }
+            },
+            {
+                "properties_of": "edges",
+                "applies_to": 3239,
+                "properties": {
+                    "EDGE_WIDTH": "1.0"
+                }
+            },
+            {
+                "properties_of": "edges",
+                "applies_to": 3242,
+                "properties": {
+                    "EDGE_WIDTH": "1.0"
+                }
+            }
+        ]
+    },
+    {
+        "metaData": [
+            {
+                "name": "nodeAttributes",
+                "elementCount": 277,
+                "version": "1.0",
+                "properties": []
+            },
+            {
+                "name": "cyHiddenAttributes",
+                "version": "1.0",
+                "properties": []
+            },
+            {
+                "name": "nodes",
+                "elementCount": 37,
+                "idCounter": 3338,
+                "version": "1.0",
+                "properties": []
+            },
+            {
+                "name": "cyNetworkRelations",
+                "version": "1.0",
+                "properties": []
+            },
+            {
+                "name": "cyGroups",
+                "version": "1.0",
+                "properties": []
+            },
+            {
+                "name": "networkAttributes",
+                "elementCount": 3,
+                "version": "1.0",
+                "properties": []
+            },
+            {
+                "name": "cyTableColumn",
+                "elementCount": 31,
+                "version": "1.0",
+                "properties": []
+            },
+            {
+                "name": "cartesianLayout",
+                "elementCount": 37,
+                "version": "1.0",
+                "properties": []
+            },
+            {
+                "name": "edgeAttributes",
+                "elementCount": 114,
+                "version": "1.0",
+                "properties": []
+            },
+            {
+                "name": "edges",
+                "elementCount": 19,
+                "idCounter": 3337,
+                "version": "1.0",
+                "properties": []
+            },
+            {
+                "name": "cyVisualProperties",
+                "elementCount": 59,
+                "version": "1.0",
+                "properties": []
+            },
+            {
+                "name": "cySubNetworks",
+                "version": "1.0",
+                "properties": []
+            }
+        ]
+    },
+    {
+        "status": [
+            {
+                "error": "",
+                "success": true
+            }
+        ]
+    }
+]

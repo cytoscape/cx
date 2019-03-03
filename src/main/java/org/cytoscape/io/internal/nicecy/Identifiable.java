@@ -11,7 +11,6 @@ import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyRow;
-import org.cytoscape.model.CyTable;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CySubNetwork;
 
@@ -84,9 +83,9 @@ public abstract class Identifiable {
 				group.addGroupToNetwork(network);
 			}
 			
-			CyRootNetwork root = network.getRootNetwork();
-			CyRow row = root.getRow(group.getGroupNode());
+			CyRow row = network.getRow(group.getGroupNode());
 			row.set(CyNetwork.NAME, name);
+			row.set(CyRootNetwork.SHARED_NAME, name);
 		}
 		
 		public CyGroup getGroup() {
@@ -176,18 +175,19 @@ public abstract class Identifiable {
 			}else {
 				subnet.addEdge(edge);
 			}
-			// Write interaction and default name to network table (collection level)
-			CyTable table = subnet.getTable(CyEdge.class, CyNetwork.DEFAULT_ATTRS);
-			CyRow row = table.getRow(edge.getSUID());
 			
 			if (interaction != null) {
-				row.set(CyEdge.INTERACTION, interaction);
-				row.set(CyRootNetwork.SHARED_INTERACTION, interaction);
+				subnet.getRow(edge).set(CyEdge.INTERACTION, interaction);
+				subnet.getRow(edge).set(CyRootNetwork.SHARED_INTERACTION, interaction);
 			}
 			
 			String sourceName = subnet.getDefaultNodeTable().getRow(sourceNode.getSUID()).get(CyNetwork.NAME, String.class);
 			String targetName = subnet.getDefaultNodeTable().getRow(targetNode.getSUID()).get(CyNetwork.NAME, String.class);
-			row.set(CyNetwork.NAME, String.format("%s (%s) %s", sourceName, interaction, targetName));
+			String name = String.format("%s (%s) %s", sourceName, interaction, targetName);
+			
+			subnet.getRow(edge).set(CyNetwork.NAME, name);
+			subnet.getRow(edge).set(CyRootNetwork.SHARED_NAME, name);
+			
 			return edge;
 		}
 		

@@ -39,6 +39,7 @@ import org.cytoscape.group.internal.CyGroupManagerImpl;
 import org.cytoscape.group.internal.LockedVisualPropertiesManager;
 import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cx_reader.CytoscapeCxNetworkReader;
+import org.cytoscape.io.internal.cx_reader.StringParser;
 import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxExporter;
 import org.cytoscape.io.internal.cxio.CxUtil;
@@ -118,7 +119,10 @@ public class TestUtil {
 
 	final SynchronousTaskManager<?> synchronousTaskManager = mock(SynchronousTaskManager.class);
 	
-	public static TestUtil INSTANCE = new TestUtil();
+	public static TestUtil INSTANCE;
+	public static void init() {
+		INSTANCE = new TestUtil();
+	}
 	
 	public static class CxReaderWrapper extends CytoscapeCxNetworkReader {
 
@@ -194,7 +198,9 @@ public class TestUtil {
 
 		reader.run(null);
 		
+		CyNetworkManager network_manager = CyServiceModule.getService(CyNetworkManager.class);
 		for (CyNetwork net : reader.getNetworks()) {
+			network_manager.addNetwork(net);
 			reader.buildCyNetworkView(net);
 		}
 		
@@ -235,7 +241,10 @@ public class TestUtil {
 	public static void doExport(CyNetwork network, boolean writeSiblings, boolean useCxId, AspectSet aspects,
 			OutputStream out) {
 		CxExporter cx_exporter = new CxExporter(network, writeSiblings, useCxId);
-
+		if (aspects == null) {
+			aspects = TestUtil.aspects;
+		}
+		
 		try {
 			cx_exporter.writeNetwork(aspects, out);
 		} catch (IOException e) {
@@ -357,7 +366,7 @@ public class TestUtil {
 		in_nres.forEach(ae -> {
 			NetworkRelationsElement nre = (NetworkRelationsElement) ae;
 			if (in_map.containsKey(nre.getChildName())) {
-				fail("Duplicate network/view names in input: " + nre.getChildName());
+				fail("Duplicate " + nre.getRelationship() + " names in input: " + nre.getChildName());
 			}
 			in_map.put(nre.getChildName(), nre);
 		});
@@ -365,7 +374,7 @@ public class TestUtil {
 		out_nres.forEach(ae -> {
 			NetworkRelationsElement nre = (NetworkRelationsElement) ae;
 			if (out_map.containsKey(nre.getChildName())) {
-				fail("Duplicate network/view names in output: " + nre.getChildName());
+				fail("Duplicate " + nre.getRelationship() + " names in output: " + nre.getChildName());
 			}
 			out_map.put(nre.getChildName(), nre);
 		});
@@ -374,7 +383,7 @@ public class TestUtil {
 			NetworkRelationsElement nre = in_map.get(key);
 			Long idValue = nre.getChild();
 			if (!out_map.containsKey(key)) {
-				fail("No name mapping for network/view " + key);
+				fail("No name mapping for " + nre.getRelationship() + " " + key);
 			}
 			Long idKey = out_map.get(key).getChild();
 			map.put(idKey, idValue);
@@ -468,8 +477,6 @@ public class TestUtil {
 					compareUnordered(in_cge.getExternalEdges(), out_cge.getExternalEdges());
 					
 		}
-		System.out.println(in);
-		System.out.println(out);
 		
 		return false;
 	}
@@ -538,17 +545,78 @@ public class TestUtil {
 			if (ArrayUtils.contains(VALID_INCONSISTENT_VIS_PROPS, key)) {
 				continue;
 			}
-			
-			String inDef = in.getDefinition();
-			String outDef = out.getDefinition();
-			// Mappings mismatch when ints become doubles
-			String inDefInts = inDef.replaceAll("\\.0([^0-9]|$)", "$1");
-			if (!(inDef.equals(outDef) || inDefInts.equals(outDef))) {
-				logger.error("Mapping " + key + " definition mismatch:\n< " +  in.getDefinition() + "\n> " + out.getDefinition());
+			try {
+				if (!compareMappingDefinition(in.getDefinition(), out.getDefinition(), in.getType())) {
+					logger.error("Mapping " + key + " definition mismatch:\n< " +  in.getDefinition() + "\n> " + out.getDefinition());
+					return false;
+				}
+			}catch (IOException e) {
+				logger.error("Unable to build StringParser");
+				
 				return false;
 			}
 		}
+			
 		return true;
+	}
+	
+	private boolean compareMappingDefinition(String in, String out, String type) throws IOException {
+		StringParser inParser = new StringParser(in);
+		StringParser outParser = new StringParser(out);
+		
+//		if (inParser.get("COL=").equals(outParser.get("COL="))) {
+//			return false;
+//		}
+//		if (inParser.get("T=").equals(outParser.get("T="))) {
+//			return false;
+//		}
+		ArrayList<ArrayList<String>> inMap = new ArrayList<ArrayList<String>>();
+		ArrayList<ArrayList<String>> outMap = new ArrayList<ArrayList<String>>();
+		
+		String[] keys;
+		switch(type) {
+		case "DISCRETE":
+			keys = new String[] {"K=", "V="};
+			break;
+		case "CONTINUOUS":
+			keys = new String[] {"L=", "E=", "G=", "OV="};
+			break;
+		default:
+			keys = new String[0];
+		}
+		
+		int counter = 0;
+		while (true) {
+			ArrayList<String> ins = new ArrayList<String>();
+			ArrayList<String> outs = new ArrayList<String>();
+			
+			
+			for (String k : keys) {
+				String inVal = inParser.get(k + counter);
+				if (inVal == null) {
+					break;
+				}
+				String outVal = outParser.get(k + counter);
+				
+				// Remove .0 from mappings so Integer/Double alignment matches
+				inVal = inVal.replaceAll("\\.0([^0-9]|$)", "$1");
+				outVal = outVal.replaceAll("\\.0([^0-9]|$)", "$1");
+				
+				ins.add(inVal);
+				outs.add(outVal);
+			}
+			counter++;
+			if (ins.isEmpty()) {
+				break;
+			}
+
+			if (!ins.equals(outs)) {
+				inMap.add(ins);
+				outMap.add(outs);
+			}
+		}
+		
+		return compareUnordered(inMap, outMap);
 	}
 
 	private boolean isValidRemovedVisProp(CyVisualPropertiesElement cvpe) {
@@ -871,6 +939,9 @@ public class TestUtil {
 	}
 
 	private void updateCyVisualPropertyIds(Collection<AspectElement> visProps, Map<Long, Long> cxMapping) {
+		if (visProps == null) {
+			return;
+		}
 		for (AspectElement visProp : visProps) {
 			CyVisualPropertiesElement cvpe = (CyVisualPropertiesElement) visProp;
 			cvpe.setApplies_to(cxMapping.get(cvpe.getApplies_to()));

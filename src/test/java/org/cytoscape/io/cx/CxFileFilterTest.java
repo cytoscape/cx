@@ -1,6 +1,7 @@
 package org.cytoscape.io.cx;
 
 import org.cytoscape.io.DataCategory;
+import org.cytoscape.io.cx.helpers.TestUtil;
 import org.cytoscape.io.internal.cx_reader.CytoscapeCxFileFilter;
 import org.cytoscape.io.util.StreamUtil;
 import org.junit.Before;
@@ -36,12 +37,16 @@ public class CxFileFilterTest {
 	@Test
 	public void FileFilterTest() throws FileNotFoundException {
 		
-		File dir = new File("src/test/resources/subnets");
+		File dir = TestUtil.getResource("subnets");
 		checkFiles(dir, true);
 
-		dir = new File("src/test/resources/invalid");
-		checkFiles(dir, false);
+		checkFile(TestUtil.getResource("specialCases", "empty.cx"), false);
 		
+	}
+	
+	public void checkFile(File f, boolean valid) throws FileNotFoundException {
+		InputStream stream = new FileInputStream(f);
+		assertEquals(f.getName() + " incorrectly read by CxFileFilter", valid, filter.accepts(stream, DataCategory.NETWORK));
 	}
 	
 	public void checkFiles(File dir, boolean valid) throws FileNotFoundException {
@@ -51,9 +56,8 @@ public class CxFileFilterTest {
 		        return name.endsWith(".cx");
 		    }
 		});
-		for (File xmlfile : files) {
-			InputStream stream = new FileInputStream(xmlfile);
-			assertEquals(filter.accepts(stream, DataCategory.NETWORK), valid);
+		for (File file : files) {
+			checkFile(file, valid);
 		}
 	}
 }

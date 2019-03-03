@@ -92,7 +92,6 @@ public final class CxExporter {
 	private final CyNetworkViewManager _networkview_manager;
 	
 	private CxWriter writer;
-	
 
 	final static Set<AspectFragmentWriter> getCySupportedAspectFragmentWriters() {
 		return AspectSet.getCytoscapeAspectSet().getAspectFragmentWriters();
@@ -146,7 +145,6 @@ public final class CxExporter {
 	 */
 
 	public final void writeNetwork(final AspectSet aspects, final OutputStream out) throws IOException {
-
 		
 		Settings.INSTANCE.debug("Exporting network as " + (writeSiblings ? "collection" : "subnetwork"));
 		if (!aspects.contains(Aspect.SUBNETWORKS)) {
@@ -586,9 +584,9 @@ public final class CxExporter {
 					title += " " + ++i;
 				}
 			}
-			
+			Long viewId = getViewId(view);
 			elements.add(new NetworkRelationsElement(subnetwork.getSUID(),
-					view.getSUID(), NetworkRelationsElement.TYPE_VIEW, title));
+					viewId, NetworkRelationsElement.TYPE_VIEW, title));
 			
 		}
 	}
@@ -608,11 +606,15 @@ public final class CxExporter {
 		}
 
 	}
+	
 	private void addGroupElement(List<AspectElement> elements, CyNetwork network, CyGroup group) throws JsonProcessingException {
 		String name = null;
 		final CyRow row = network.getRow(group.getGroupNode());
 		if (row != null) {
 			name = row.get(CyNetwork.NAME, String.class);
+		}
+		if (name == null) {
+			name = " ";
 		}
 		boolean isCollapsed = collapsed_groups.contains(group);
 		
@@ -797,8 +799,11 @@ public final class CxExporter {
 				writeVisualProperties(view, _lexicon);
 			}
 			
-			if (writeSiblings) {
+			// Required for all networks, subnets can have multiple views
+			if (writeSiblings || views.size() > 1) {
 				addNetworkRelationsElements(networkRelationsElements, subnet);
+			}
+			if (writeSiblings) {
 				final SubNetworkElement subnetwork_element = new SubNetworkElement(subnet.getSUID());
 				for (final CyEdge edgeview : subnet.getEdgeList()) {
 					subnetwork_element.addEdge(edgeview.getSUID());
@@ -831,10 +836,11 @@ public final class CxExporter {
 			Double z = node_view.getVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION);
 			if (z != null && Math.abs(z) > 0.000000001) {
 				z_used = true;
+				break;
 			}
 		}
 
-		Long viewId = view.getSUID();
+		Long viewId = getViewId(view);
 		for (View<CyNode> node_view : view.getNodeViews()) {
 			Long nodeId = CxUtil.getElementId(node_view.getModel(), network, useCxId);
 			if (z_used) {
@@ -849,27 +855,6 @@ public final class CxExporter {
 				elements.add(new CartesianLayoutElement(nodeId, viewId, x.toString(), y.toString()));
 			}
 		}
-//		for (final CyNode cy_node : network.getNodeList()) {
-//			Long nodeId = CxUtil.getElementId(cy_node, network, useCxId);
-//			final View<CyNode> node_view = view.getNodeView(cy_node);
-//			if (node_view == null) {
-//				System.out.println("Node " + cy_node + " has null view in " + viewId);
-//				System.out.println(network.getRow(cy_node));
-//				continue;
-//			}
-//			if (z_used) {
-//				elements.add(new CartesianLayoutElement(nodeId, viewId,
-//						node_view.getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION),
-//						node_view.getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION),
-//						node_view.getVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION)));
-//			} else {
-//				Double x = node_view.getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION);
-//				Double y = node_view.getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION);
-//
-//				elements.add(new CartesianLayoutElement(nodeId, viewId, x.toString(), y.toString()));
-//			}
-//
-//		}
 
 		writeAspectElements(elements);
 	}
@@ -883,7 +868,7 @@ public final class CxExporter {
 		types.add(VisualPropertyType.NODES_DEFAULT);
 		types.add(VisualPropertyType.EDGES_DEFAULT);
 
-		final Long viewId = view.getSUID();
+		final Long viewId = getViewId(view);
 		
 		final List<AspectElement> elements = VisualPropertiesGatherer.gatherVisualPropertiesAsAspectElements(view, lexicon, types, viewId, useCxId);
 		writeAspectElements(elements);
@@ -902,10 +887,6 @@ public final class CxExporter {
 			interaction = row.get(CyRootNetwork.SHARED_INTERACTION, String.class);
 		}else{
 			interaction = network.getRow(edge).get(CyEdge.INTERACTION, String.class);
-		}
-		
-		if (interaction == null) {
-			System.out.println("NULL");
 		}
 		
 		EdgesElement element = new EdgesElement(cxId, sourceId, targetId, interaction);
@@ -959,6 +940,7 @@ public final class CxExporter {
 		}
 		return subnets;
 	}
+	
 	/**
 	 * Return the network SUID for CX Aspects. Is null for singletons or collection aspects
 	 * @param subnet
@@ -967,6 +949,20 @@ public final class CxExporter {
 	private Long getAspectSubnetworkId(CyNetwork net) {
 		if (writeSiblings && !(net instanceof CyRootNetwork)) {
 			return net.getSUID();
+		}
+		return null;
+	}
+	
+	/**
+	 * Return the network SUID for CX Aspects. Is null for singletons or collection aspects
+	 * @param subnet
+	 * @return
+	 */
+	private Long getViewId(CyNetworkView view) {
+		CyNetwork network = view.getModel();
+		CyNetworkViewManager view_manager = CyServiceModule.getService(CyNetworkViewManager.class);
+		if (writeSiblings || view_manager.getNetworkViews(network).size() > 1) {
+			return view.getSUID();
 		}
 		return null;
 	}

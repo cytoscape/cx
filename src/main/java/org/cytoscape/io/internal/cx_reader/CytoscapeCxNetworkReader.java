@@ -3,6 +3,8 @@ package org.cytoscape.io.internal.cx_reader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+
+import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cxio.CxImporter;
 import org.cytoscape.io.internal.cxio.Settings;
 import org.cytoscape.io.internal.cxio.TimingUtil;
@@ -11,9 +13,7 @@ import org.cytoscape.io.read.AbstractCyNetworkReader;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
-import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CyRootNetworkManager;
-import org.cytoscape.model.subnetwork.CySubNetwork;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.work.TaskMonitor;
@@ -46,6 +46,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 		} catch (IOException e){
 			throw new IllegalArgumentException("Failed to import file as CX");
 		}
+		
 		_network_collection_name = network_collection_name;
 	}
 
@@ -54,7 +55,8 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 		System.out.println("Creating view for " + network);
 		List<CyNetworkView> views = niceCy.createViews(network);
 		if (views.isEmpty()) {
-			return null;
+			CyNetworkViewFactory view_factory = CyServiceModule.getService(CyNetworkViewFactory.class);
+			return view_factory.createNetworkView(network);
 		}
 		return views.get(0);
 	}
@@ -78,10 +80,19 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 			throw new IllegalArgumentException("CX Support is changing to disallow import into existing collections");
 		}
 		
+		
 		Long t1 = System.currentTimeMillis();
 		niceCy = new NiceCyRootNetwork(niceCX);
 		if (Settings.INSTANCE.isTiming()) {
 			TimingUtil.reportTimeDifference(t1, "Time to create NiceCyNetwork", -1);
+		}
+		
+		if (niceCy.getNetworkName() == null) {
+			// Set the name of collection/network to be imported
+			if (_network_collection_name == null) {
+				_network_collection_name = "Unnamed CX Network";
+			}
+			niceCy.setNetworkName(_network_collection_name);
 		}
 		
 		t1 = System.currentTimeMillis();
@@ -91,18 +102,9 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 		}
 		_networks = new CyNetwork[networks.size()];
 		networks.toArray(_networks);
-
-		// Set the collection name
-		if (_network_collection_name != null) {
-			CyRootNetwork root = ((CySubNetwork) _networks[0]).getRootNetwork();
-			root.getRow(root).set(CyNetwork.NAME, _network_collection_name);
-			root.getRow(root).set(CyRootNetwork.SHARED_NAME, _network_collection_name);
-		}
 		
 		if (Settings.INSTANCE.isTiming()) {
-			System.out.println();
 			TimingUtil.reportTimeDifference(t0, "total time to build network(s) (not views)", -1);
-			System.out.println();
 		}
 	}
 

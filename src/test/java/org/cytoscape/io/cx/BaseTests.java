@@ -6,6 +6,7 @@ import java.util.Arrays;
 import org.cytoscape.io.cx.helpers.TestUtil;
 import org.cytoscape.io.cx.helpers.TestUtil.CxReaderWrapper;
 import org.cytoscape.model.CyNetwork;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ndexbio.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
 import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
@@ -22,6 +23,11 @@ import org.slf4j.LoggerFactory;
 
 public class BaseTests {
 	Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	@BeforeClass
+	public static void init() {
+		TestUtil.init();
+	}
 	
 	private CxReaderWrapper getBaseSubNetwork(NodesElement...nodes) {
 		return TestUtil.getSubNetwork(TestUtil.getResource("base", "subnetwork.cx"), nodes);
@@ -94,11 +100,6 @@ public class BaseTests {
 		CxReaderWrapper reader = getBaseSubNetwork(nodes);
 		
 		TestUtil.withAspects(reader, nodes);
-		
-//		NiceCXNetwork output = getOutput(reader);
-//		for (NodesElement node : nodes) {
-//			assertTrue("Missing " + node, containsAspect(output, node));
-//		}
 	}
 	
 	
@@ -153,7 +154,6 @@ public class BaseTests {
 	}
 	
 	
-//	@Test
 	@Test
 	public void testEdgeAttributes() throws IOException{
 		CxReaderWrapper reader = getBaseSubNetwork();

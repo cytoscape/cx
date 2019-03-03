@@ -1,7 +1,13 @@
 package org.cytoscape.io.cx;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.cytoscape.io.cx.helpers.TestUtil;
+import org.cytoscape.io.cx.helpers.TestUtil.CxReaderWrapper;
 import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.model.CyNetwork;
@@ -16,16 +22,25 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class CxUtilTest {
 
-	static CyNetworkFactory network_factory;
 	
 	@BeforeClass
 	public static void init() {
-		network_factory = CyServiceModule.getService(CyNetworkFactory.class);
+		TestUtil.init();
 	}
 	
 	@Test
-	public void testSUIDasCXID() throws JsonProcessingException {
+	public void testIsCollection() throws IOException {
+		File f = TestUtil.getResource("collections", "groups_1.cx");
+		CxReaderWrapper reader = TestUtil.getSubNetwork(f);
+		assertTrue(CxUtil.isCollection(reader.getNiceCX()));
+		
+		TestUtil.withAspects(reader);
+	}
+	
+	@Test
+	public void testSUIDasCXID() {
 		// If no CX IDs are set, use SUIDs
+		CyNetworkFactory network_factory = CyServiceModule.getService(CyNetworkFactory.class);
 		CyNetwork network1 = network_factory.createNetwork();
 		CyNode node = network1.addNode();
 		CyRootNetwork root = ((CySubNetwork) network1).getRootNetwork();
@@ -38,6 +53,7 @@ public class CxUtilTest {
 	@Test
 	public void testCXIDCounter() throws JsonProcessingException {
 		// If one CX ID is set and a node is added, increment the counter
+		CyNetworkFactory network_factory = CyServiceModule.getService(CyNetworkFactory.class);
 		CyNetwork network1 = network_factory.createNetwork();
 		CyNode node = network1.addNode();
 		CyRootNetwork root = ((CySubNetwork) network1).getRootNetwork();

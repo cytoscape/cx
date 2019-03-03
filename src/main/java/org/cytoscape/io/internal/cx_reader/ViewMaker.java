@@ -6,12 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.ndexbio.cxio.aspects.datamodels.Mapping;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.Settings;
@@ -45,7 +46,7 @@ import org.cytoscape.work.TaskIterator;
 import org.cytoscape.work.swing.DialogTaskManager;
 
 public final class ViewMaker {
-	private static final Logger logger = Logger.getLogger("CX ViewMaker");
+	private static final Logger logger = LoggerFactory.getLogger("CX ViewMaker");
 	
     public static final Pattern DIRECT_NET_PROPS_PATTERN = Pattern
             .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
@@ -85,10 +86,11 @@ public final class ViewMaker {
         
         if( layout != null )
         {
+        	
         	CyLayoutAlgorithmManager layout_manager = CyServiceModule.getService(CyLayoutAlgorithmManager.class);
             CyLayoutAlgorithm algorithm = layout_manager.getLayout(layout);
-
-            TaskIterator ti = algorithm.createTaskIterator(network_view, algorithm.getDefaultLayoutContext(), CyLayoutAlgorithm.ALL_NODE_VIEWS, "");
+            
+            TaskIterator ti = algorithm.createTaskIterator(network_view, algorithm.getDefaultLayoutContext(), CyLayoutAlgorithm.ALL_NODE_VIEWS, null);
             
             DialogTaskManager task_manager = CyServiceModule.getService(DialogTaskManager.class);
             task_manager.execute(ti);
@@ -149,18 +151,18 @@ public final class ViewMaker {
                         cmf.addPoint(value, point);
                     }
                     else {
-                        System.out.println("could not parse from string in continuous mapping for col '" + col + "'");
+                        logger.warn("could not parse from string in continuous mapping for col '" + col + "'");
                     }
                 }
                 else {
-                    System.out.println("could not get expected values in continuous mapping for col '" + col + "'");
+                    logger.warn("could not get expected values in continuous mapping for col '" + col + "'");
                 }
                 counter++;
             }
             style.addVisualMappingFunction(cmf);
         }
         else {
-            System.out.println("could not create continuous mapping for col '" + col + "'");
+            logger.warn("could not create continuous mapping for col '" + col + "'");
         }
     }
 
@@ -197,6 +199,7 @@ public final class ViewMaker {
                     else {
                         logger.info("Could not parse serializable string from discrete mapping value '" + v
                                 + "'");
+                        dmf.putMapValue(key, pv);
                     }
                 }catch(NullPointerException e) {
                 	throw new RuntimeException("Unable to parse serializable string " + key + " " + type + " from " + v);
@@ -222,7 +225,7 @@ public final class ViewMaker {
     				vmf_factory_p.createVisualMappingFunction(col, type_class, vp);
             style.addVisualMappingFunction(pmf);
     	} catch (NullPointerException e){
-            System.out.println("could not create passthrough mapping for col '" + col + "'");
+            logger.warn("could not create passthrough mapping for col '" + col + "'");
 
         }
     }
@@ -312,7 +315,7 @@ public final class ViewMaker {
 	        	try {
 					parseVisualProperty(entry.getKey(), entry.getValue(), lexicon, style, my_class);
 				} catch (IOException e) {
-					logger.warning("Failed to parse visual property: " + e);
+					logger.warn("Failed to parse visual property: " + e);
 				}
         	}
         }
@@ -323,7 +326,7 @@ public final class ViewMaker {
             	try {
             		parseVisualMapping(entry.getKey(), entry.getValue(), lexicon, style, my_class);
             	}catch (IOException e) {
-            		logger.warning("Failed to parse visual mapping: " + e);
+            		logger.warn("Failed to parse visual mapping: " + e);
             	}
                 
             }
@@ -334,7 +337,7 @@ public final class ViewMaker {
             	try {
             		parseVisualDependency(entry.getKey(), entry.getValue(), style);
             	} catch(IOException e) {
-            		logger.warning("Failed to parse visual dependency: " + e);
+            		logger.warn("Failed to parse visual dependency: " + e);
             	}
             }
         }
@@ -532,13 +535,6 @@ public final class ViewMaker {
     	
     	final long t0 = System.currentTimeMillis();
     	String doLayout = view.getEdgeViews().size() < 10000 ? "force-directed" : "grid";
-
-//    	System.out.println(collection.isEmpty() + " " + collection.isEmptySubnets() + collection.isEmptyViews());
-//    	if ((collection == null) || collection.isEmpty()) {
-//    		Settings.INSTANCE.debug("Default style for " + view);
-//            ViewMaker.applyStyle(visual_mapping_manager.getDefaultVisualStyle(), view, doLayout);
-//            return ;
-//        }
     	
         final boolean have_default_visual_properties = 
         		(visualProperties != null) ||

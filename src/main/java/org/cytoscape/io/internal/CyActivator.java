@@ -102,8 +102,6 @@ public class CyActivator extends AbstractCyActivator {
         CyServiceModule.setDiscreteMapping(vmfFactoryD);
         CyServiceModule.setContinuousMapping(vmfFactoryC);
         
-
-        
         final CytoscapeCxNetworkReaderFactory cx_reader_factory = new CytoscapeCxNetworkReaderFactory(cx_filter);
         final Properties reader_factory_properties = new Properties();
 
