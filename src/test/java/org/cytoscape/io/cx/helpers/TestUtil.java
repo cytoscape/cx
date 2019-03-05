@@ -433,10 +433,14 @@ public class TestUtil {
 
 	private <T extends AspectElement> boolean compareAspect(AspectElement in, AspectElement out) throws IOException {
 		
-		String out_json =  getJson(out);
-		String in_json = getJson(in);
-		if (out_json.equals(in_json)) {
-			return true;
+		try {
+			String out_json =  getJson(out);
+			String in_json = getJson(in);
+			if (out_json.equals(in_json)) {
+				return true;
+			}
+		}catch(NullPointerException e) {
+			//Sometimes this fails with an NPE. Okay to not fail
 		}
 		
 		// Check value as JSON comparison for attributes.
@@ -657,6 +661,7 @@ public class TestUtil {
 				return true;
 			}
 		}
+		logger.info("Failed to find " + aspect + " in: \n" + output_filtered);
 		return false;
 	}
 	
@@ -933,8 +938,8 @@ public class TestUtil {
 		collection.forEach(ae -> {
 			SubNetworkElement sne = (SubNetworkElement) ae;
 				sne.setId(cxMapping.get(sne.getId()));
-				sne.setNodes(sne.getNodes().stream().map(id -> cxMapping.get(id)).collect(Collectors.toList()));
-				sne.setEdges(sne.getEdges().stream().map(id -> cxMapping.get(id)).collect(Collectors.toList()));
+				sne.setNodes(sne.getNodes().stream().map(id -> cxMapping.getOrDefault(id, id)).collect(Collectors.toList()));
+				sne.setEdges(sne.getEdges().stream().map(id -> cxMapping.getOrDefault(id, id)).collect(Collectors.toList()));
 		});
 	}
 

@@ -85,7 +85,7 @@ public final class CxExporter {
 	private final CyNetwork baseNetwork;
 	private final List<CySubNetwork> subnetworks;
 	
-	private List<CyGroup> collapsed_groups;
+	private Set<CyGroup> collapsed_groups;
 	
 	//Services needed to export
 	private final CyGroupManager group_manager;
@@ -170,7 +170,7 @@ public final class CxExporter {
 		boolean success = true;
 		
 		// Must expand all groups beforehand to reveal nodes
-		collapsed_groups = expandGroups(baseNetwork);
+		collapsed_groups = expandGroups();
 		
 		try {
 			
@@ -205,7 +205,11 @@ public final class CxExporter {
 			success = false;
 		} finally {
 			collapsed_groups.forEach(group -> {
-				group.collapse(baseNetwork);
+				for (CyNetwork net : group.getNetworkSet()) {
+					if (net instanceof CySubNetwork) {
+						group.collapse(net);
+					}
+				}
 			});
 		}
 		
@@ -563,11 +567,7 @@ public final class CxExporter {
 		}
 	}
 	private void addNetworkRelationsElements(final List<AspectElement> elements, CySubNetwork subnetwork) throws IOException {
-		final String name = CxUtil.getNetworkName(subnetwork);
-		if (Settings.INSTANCE.isIgnoreNamelessSubnetworks() && (name == null)) {
-			return;
-		}
-
+		String name = CxUtil.getNetworkName(subnetwork);
 		// Subnetworks does not need root ID since it's not used in CX.
 		elements.add(new NetworkRelationsElement(null, subnetwork.getSUID(),
 				NetworkRelationsElement.TYPE_SUBNETWORK, name));
@@ -614,8 +614,9 @@ public final class CxExporter {
 			name = row.get(CyNetwork.NAME, String.class);
 		}
 		if (name == null) {
-			name = " ";
+			name = row.get(CyRootNetwork.SHARED_NAME, String.class);
 		}
+		
 		boolean isCollapsed = collapsed_groups.contains(group);
 		
 		Long subnetId = getAspectSubnetworkId(network);
@@ -791,12 +792,24 @@ public final class CxExporter {
 		
 		// write the visual properties and coordinates
 		for (final CySubNetwork subnet : subnetworks) {
+			
 			final Collection<CyNetworkView> views = _networkview_manager.getNetworkViews(subnet);
+			
+			// Use node/edge in views, instead of from subnetwork to avoid hidden/group elements
+			HashSet<Long> edge_suids = new HashSet<Long>();
+			HashSet<Long> node_suids = new HashSet<Long>();
 			
 			for (final CyNetworkView view : views) {
 				final VisualLexicon _lexicon = CxUtil.getLexicon(view);
 				writeCartesianLayout(view);
 				writeVisualProperties(view, _lexicon);
+				
+				view.getEdgeViews().forEach(ev -> {
+					edge_suids.add(ev.getModel().getSUID());
+				});
+				view.getNodeViews().forEach(nv -> {
+					node_suids.add(nv.getModel().getSUID());
+				});
 			}
 			
 			// Required for all networks, subnets can have multiple views
@@ -805,12 +818,15 @@ public final class CxExporter {
 			}
 			if (writeSiblings) {
 				final SubNetworkElement subnetwork_element = new SubNetworkElement(subnet.getSUID());
-				for (final CyEdge edgeview : subnet.getEdgeList()) {
-					subnetwork_element.addEdge(edgeview.getSUID());
-				}
-				for (final CyNode nodeview : subnet.getNodeList()) {
-					subnetwork_element.addNode(nodeview.getSUID());
-				}
+				subnetwork_element.setEdges(new ArrayList<Long>(edge_suids));
+				subnetwork_element.setNodes(new ArrayList<Long>(node_suids));
+//				for (final CyEdge edgeview : subnet.getEdgeList()) {
+//					subnetwork_element.addEdge(edgeview.getSUID());
+//				}
+//				
+//				for (final CyNode nodeview : subnet.getNodeList()) {
+//					subnetwork_element.addNode(nodeview.getSUID());
+//				}
 				cySubnetworkElements.add(subnetwork_element);
 			}
 		}
@@ -928,15 +944,16 @@ public final class CxExporter {
 		if (writeSiblings) {
 			CyRootNetwork root = subnet.getRootNetwork();
 			for (final CySubNetwork s : root.getSubNetworkList()) {
-				if (!Settings.INSTANCE.isIgnoreNamelessSubnetworks() || (CxUtil.getNetworkName(s) != null)) {
-					subnets.add(s);
+				String name = CxUtil.getNetworkName(s);
+				// CyGroups are created with null-named networks. DO NOT write these
+				if (name == null) {
+					continue;
 				}
+				subnets.add(s);
 			}
 		} else {
 			subnets = new ArrayList<>();
-			if (!Settings.INSTANCE.isIgnoreNamelessSubnetworks() || (CxUtil.getNetworkName(subnet) != null)) {
-				subnets.add(subnet);
-			}
+			subnets.add(subnet);
 		}
 		return subnets;
 	}
@@ -968,14 +985,23 @@ public final class CxExporter {
 	}
 	
 	// Static Helpers
-	private List<CyGroup> expandGroups(CyNetwork network) {
-		List<CyGroup> groups = new ArrayList<CyGroup>();
-		group_manager.getGroupSet(network).forEach(group -> {
-			if (group.isCollapsed(network)) {
+	private Set<CyGroup> expandGroups() {
+		Set<CyGroup> groups = new HashSet<CyGroup>();
+		for (CySubNetwork net : subnetworks) {
+			group_manager.getGroupSet(net).forEach(group -> {
+				if (group.isCollapsed(net)) {
+					groups.add(group);
+					group.expand(net);
+				}
+			});
+		}
+		group_manager.getGroupSet(baseNetwork).forEach(group -> {
+			if (group.isCollapsed(baseNetwork)) {
 				groups.add(group);
-				group.expand(network);
+				group.expand(baseNetwork);
 			}
 		});
+		
 		return groups;
 	}
 

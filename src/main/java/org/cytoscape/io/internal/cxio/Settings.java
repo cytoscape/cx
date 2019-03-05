@@ -14,7 +14,6 @@ public final class Settings {
     private static final boolean WRITE_SELECTED_ONLY_IF_TRUE_DEFAULT                                   = true;
     private static final boolean DEBUG_DEFAULT                                                         = false;
     private static final boolean TIMING_DEFAULT                                                        = true;
-    private static final boolean IGNORE_NAMELESS_SUBNETWORKS_DEFAULT								   = true;
 
 	public final static Set<String> IGNORE_EDGE_ATTRIBUTES = new HashSet<>();
 	public final static Set<String> IGNORE_NODE_ATTRIBUTES = new HashSet<>();
@@ -30,7 +29,6 @@ public final class Settings {
     private boolean              _ignore_selected_column                                               = IGNORE_SELECTED_COLUMN_DEFAULT;
     private boolean              _write_selected_only_if_true                                          = WRITE_SELECTED_ONLY_IF_TRUE_DEFAULT;
     private boolean              _ignore_suid_column                                                   = IGNORE_SUID_COLUMN_DEFAULT;
-    private boolean				 _ignore_nameless_subnetworks										   = IGNORE_NAMELESS_SUBNETWORKS_DEFAULT;
     
     public boolean isDebug() {
     	return _debug;
@@ -57,10 +55,6 @@ public final class Settings {
     public boolean isWriteSelectedOnlyIfTrue() {
         return _write_selected_only_if_true;
     }
-    
-    public boolean isIgnoreNamelessSubnetworks() {
-		return _ignore_nameless_subnetworks;
-	}
 
     public void setDebug(final boolean debug) {
         _debug = debug;
@@ -80,10 +74,6 @@ public final class Settings {
 
     public void setWriteSelectedOnlyIfTrue(final boolean write_selected_only_if_true) {
         _write_selected_only_if_true = write_selected_only_if_true;
-    }
-    
-    public void setIgnoreNamelessSubnetworks(final boolean ignore_nameless_subnetworks) {
-    	_ignore_nameless_subnetworks = ignore_nameless_subnetworks;
     }
     
     public final static boolean isIgnore(final String column_name, final Set<String> additional_to_ignore, Object value) {

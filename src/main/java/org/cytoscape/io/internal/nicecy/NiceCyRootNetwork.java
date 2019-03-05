@@ -257,16 +257,22 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 	private void handleNodeAttributes(Map<Long, Collection<NodeAttributesElement>> nodeAttributes) {
 		nodeAttributes.forEach((suid, attrs) -> {
 			long id = getCxId(suid);
-
-			attrs.forEach(attr -> { 
-				attr.setPropertyOf(id);
-				NiceCyNetwork net = getNetwork(attr.getSubnetwork());
-				
-				if (!net.nodeAttributes.containsKey(id)) {
-					net.nodeAttributes.put(id, new ArrayList<NodeAttributesElement>());
+			attrs.forEach(attr -> {
+				try {
+					attr.setPropertyOf(id);
+					NiceCyNetwork net = getNetwork(attr.getSubnetwork());
+					if (net == null) {
+						throw new RuntimeException("No network found for SUID " + attr.getSubnetwork() + ". Check your CX attribute " + attr);
+					}
+					if (!net.nodeAttributes.containsKey(id)) {
+						net.nodeAttributes.put(id, new ArrayList<NodeAttributesElement>());
+					}
+					net.nodeAttributes.get(id).add(attr);
+				}catch (NullPointerException e) {
+					throw new RuntimeException("Error processing attribute: " + attr);
 				}
-				net.nodeAttributes.get(id).add(attr);
 			});
+			
 		});
 	}
 	private void handleEdgeAttributes(Map<Long, Collection<EdgeAttributesElement>> edgeAttributes) {
@@ -276,6 +282,7 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 			attrs.forEach(attr -> {
 //				attr.setPropertyOf(id); 
 				NiceCyNetwork net = getNetwork(attr.getSubnetwork());
+				
 				if (!net.edgeAttributes.containsKey(id)) {
 					net.edgeAttributes.put(id, new ArrayList<EdgeAttributesElement>());
 				}
@@ -432,7 +439,7 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 			return suid;
 		}
 		if (!suid_to_cxid_map.containsKey(suid)) {
-			throw new RuntimeException("Unable to find suid " + suid + " in CX ID Mapping.");
+			throw new IllegalArgumentException("Unable to find suid " + suid + " in CX ID Mapping.");
 		}
 		return suid_to_cxid_map.get(suid);
 	}

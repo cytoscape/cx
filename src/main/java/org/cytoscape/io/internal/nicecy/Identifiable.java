@@ -100,8 +100,8 @@ public abstract class Identifiable {
 		}
 
 		public void updateInView(CySubNetwork network) {
-//			group.collapse(network);
-//			group.expand(network);
+			group.collapse(network);
+			group.expand(network);
 			
 			if (isCollapsed()) {
 				group.collapse(network);
@@ -176,17 +176,18 @@ public abstract class Identifiable {
 				subnet.addEdge(edge);
 			}
 			
+			// if interaction is present, use it to set edge name
 			if (interaction != null) {
 				subnet.getRow(edge).set(CyEdge.INTERACTION, interaction);
 				subnet.getRow(edge).set(CyRootNetwork.SHARED_INTERACTION, interaction);
+				
+				String sourceName = subnet.getDefaultNodeTable().getRow(sourceNode.getSUID()).get(CyNetwork.NAME, String.class);
+				String targetName = subnet.getDefaultNodeTable().getRow(targetNode.getSUID()).get(CyNetwork.NAME, String.class);
+				String name = String.format("%s (%s) %s", sourceName, interaction, targetName);
+				
+				subnet.getRow(edge).set(CyNetwork.NAME, name);
+				subnet.getRow(edge).set(CyRootNetwork.SHARED_NAME, name);
 			}
-			
-			String sourceName = subnet.getDefaultNodeTable().getRow(sourceNode.getSUID()).get(CyNetwork.NAME, String.class);
-			String targetName = subnet.getDefaultNodeTable().getRow(targetNode.getSUID()).get(CyNetwork.NAME, String.class);
-			String name = String.format("%s (%s) %s", sourceName, interaction, targetName);
-			
-			subnet.getRow(edge).set(CyNetwork.NAME, name);
-			subnet.getRow(edge).set(CyRootNetwork.SHARED_NAME, name);
 			
 			return edge;
 		}
