@@ -56,9 +56,20 @@ public class NiceCyView extends Identifiable {
 	
 	public void addVisualProperties(CyVisualPropertiesElement cvpe){
 		if (visualProperties.containsKey(cvpe.getProperties_of())) {
-			throw new IllegalArgumentException("Duplicate visual property in CX: " + cvpe.getProperties_of());
+			cvpe.getDependencies().forEach((k, v) -> {
+				visualProperties.get(cvpe.getProperties_of()).putDependency(k, v);
+			});
+			cvpe.getMappings().forEach((k, v) -> {
+				visualProperties.get(cvpe.getProperties_of()).putMapping(k, v);
+			});
+			cvpe.getProperties().forEach((k, v) -> {
+				visualProperties.get(cvpe.getProperties_of()).putProperty(k, v);
+			});
+//			throw new IllegalArgumentException("Duplicate visual property in CX: " + cvpe.getProperties_of());
+			
+		}else {
+			visualProperties.put(cvpe.getProperties_of(), cvpe);
 		}
-		visualProperties.put(cvpe.getProperties_of(), cvpe);
 	}
 	
 	public void apply(CyNetworkView v) {
