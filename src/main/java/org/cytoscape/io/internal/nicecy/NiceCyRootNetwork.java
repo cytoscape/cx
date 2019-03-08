@@ -426,7 +426,7 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 	
 	private NiceCyNetwork getNetwork(Long suid) {
 		if (suid == null) {
-			if (!isCollection || subnetworks.size() == 1) {
+			if (!isCollection){// || subnetworks.size() == 1) {
 				return subnetworks.values().iterator().next();
 			}
 			return this;
@@ -485,9 +485,9 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 		networks.add(base);
 		
 		// Build Root network information
-		super.apply(root);
+		this.network = root;
 		
-		// Build subnetworks
+		// Build subnetworks (this builds all nodes and edges)
 		Iterator<NiceCySubNetwork> nice_subs = subnetworks.values().iterator();
 		NiceCySubNetwork nice_sub = nice_subs.next();
 		nice_sub.apply((CySubNetwork) root.getBaseNetwork());
@@ -499,6 +499,8 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 			networks.add(network);
 		}
 		
+		//add collection level attributes (must be done after nodes/edges are created)
+		addAttributes();
 		serializeOpaqueAspects();
 		
 		TimingUtil.reportTimeDifference(t0, "time to build cynetwork(s)", -1);
@@ -526,11 +528,6 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 	@Override
 	protected String getNamespace() {
 		return CyRootNetwork.SHARED_ATTRS;
-	}
-	
-	@Override
-	public void addElements() {
-		// Nothing to add for root network
 	}
 
 	public List<CyNetworkView> createViews(CyNetwork network) {

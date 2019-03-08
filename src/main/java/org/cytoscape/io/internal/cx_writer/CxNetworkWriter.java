@@ -35,7 +35,6 @@ public class CxNetworkWriter implements CyWriter {
 	private static final boolean WRITE_SIBLINGS_DEFAULT = false;
 	private static final boolean USE_CXID_DEFAULT = true;
 	private final static String ENCODING = "UTF-8";
-
 	private final OutputStream _os;
 	private final CyNetwork _network;
 	private final CharsetEncoder _encoder;	

@@ -1,4 +1,4 @@
-package org.cytoscape.io.cx;
+ package org.cytoscape.io.cx;
 
 import static org.junit.Assert.assertEquals;
 import java.io.ByteArrayOutputStream;
@@ -25,6 +25,9 @@ import org.cytoscape.view.vizmap.VisualStyle;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
+import org.ndexbio.cxio.aspects.datamodels.NetworkAttributesElement;
+import org.ndexbio.cxio.aspects.datamodels.NetworkRelationsElement;
+import org.ndexbio.cxio.aspects.datamodels.SubNetworkElement;
 import org.ndexbio.cxio.core.interfaces.AspectElement;
 import org.ndexbio.model.cx.NiceCXNetwork;
 
@@ -159,5 +162,23 @@ public class SpecialTest {
 		
 		CxReaderWrapper reader2 = TestUtil.INSTANCE.getReader(export_in, null);
 		TestUtil.withAspects(reader2);
+	}
+	
+	@Test
+	public void testCollectionName() throws IOException {
+		CxReaderWrapper reader = TestUtil.getSubNetwork(TestUtil.getResource("base", "subnetwork.cx"));
+		NiceCXNetwork niceCx = reader.getNiceCX();
+		niceCx.addNetworkAttribute(new NetworkAttributesElement(null, CyNetwork.NAME, "Collection"));
+		niceCx.addNetworkAttribute(new NetworkAttributesElement(1l, CyNetwork.NAME, "Network"));
+
+		SubNetworkElement subnet = new SubNetworkElement(1l);
+		subnet.addNode(0l);
+		subnet.setId(1l);
+		NetworkRelationsElement nre = new NetworkRelationsElement(1l, "subnetwork", "Network");
+		NetworkRelationsElement nre2 = new NetworkRelationsElement(1l, 2l, "view", "Network view");
+		
+		
+		TestUtil.withAspects(reader, subnet, nre, nre2);
+		
 	}
 }

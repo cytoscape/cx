@@ -20,13 +20,7 @@ import java.io.InputStream;
 public class CxFileFilterTest {
 	
 	private CytoscapeCxFileFilter filter;
-	
-	final String[] valid = new String[] {
-			"simple1"
-	};
-	final String[] invalid = new String[] {
-			"empty"
-	};
+
 	
 	@Before
 	public void init() {

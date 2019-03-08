@@ -275,6 +275,9 @@ public class TestUtil {
 		
 		NiceCXNetwork niceCX = reader.getNiceCX();
 		
+		Map<Long, Long> idMap = INSTANCE.getCxIdMapping(niceCX.getOpaqueAspectTable());
+		INSTANCE.applyCxMapping(niceCX, idMap);
+		
 		if (aspects.length == 0) {
 			aspects = INSTANCE.getAllAspects(niceCX);
 		}else {
@@ -282,7 +285,6 @@ public class TestUtil {
 				INSTANCE.addAspect(niceCX, el);
 			}
 		}
-
 		NiceCXNetwork output = getOutput(reader);
 		
 		String aspectName = null;
@@ -383,6 +385,8 @@ public class TestUtil {
 			NetworkRelationsElement nre = in_map.get(key);
 			Long idValue = nre.getChild();
 			if (!out_map.containsKey(key)) {
+				System.out.println(out_map);
+				System.out.println(in_map);
 				fail("No name mapping for " + nre.getRelationship() + " " + key);
 			}
 			Long idKey = out_map.get(key).getChild();
@@ -423,7 +427,9 @@ public class TestUtil {
 		aspects.addAll(niceCX.getCitations().values());
 		
 		for (Collection<AspectElement> op : niceCX.getOpaqueAspectTable().values()) {
-			aspects.addAll(op);
+			// Only include the first 50 opaque elements
+			List<AspectElement> limited = op.stream().limit(50).collect(Collectors.toList());
+			aspects.addAll(limited);
 		}
 		
 		AspectElement[] arr = new AspectElement[aspects.size()];
@@ -432,6 +438,10 @@ public class TestUtil {
 	}
 
 	private <T extends AspectElement> boolean compareAspect(AspectElement in, AspectElement out) throws IOException {
+		if (out == null && in != null) {
+			System.out.println(in);
+			return false;
+		}
 		
 		try {
 			String out_json =  getJson(out);
@@ -859,6 +869,8 @@ public class TestUtil {
 		ByteArrayOutputStream out = saveNetwork(networks[0], collection, useCxId);
 		
 		File outf = TestUtil.saveOutputStreamToFile(out, name + "_test_output.cx");
+		// TODO: Delete test files on exit
+		outf.deleteOnExit();
 		FileInputStream export_in = new FileInputStream(outf);
 		
 		CxReaderWrapper out_reader = INSTANCE.getReader(export_in, null);
@@ -937,7 +949,7 @@ public class TestUtil {
 	private void updateSubNetworkIds(Collection<AspectElement> collection, Map<Long, Long> cxMapping) {
 		collection.forEach(ae -> {
 			SubNetworkElement sne = (SubNetworkElement) ae;
-				sne.setId(cxMapping.get(sne.getId()));
+				sne.setId(cxMapping.getOrDefault(sne.getId(), sne.getId()));
 				sne.setNodes(sne.getNodes().stream().map(id -> cxMapping.getOrDefault(id, id)).collect(Collectors.toList()));
 				sne.setEdges(sne.getEdges().stream().map(id -> cxMapping.getOrDefault(id, id)).collect(Collectors.toList()));
 		});

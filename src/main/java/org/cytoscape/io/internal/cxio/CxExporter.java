@@ -36,8 +36,12 @@ import org.ndexbio.cxio.misc.OpaqueElement;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import org.cytoscape.group.CyGroup;
 import org.cytoscape.group.CyGroupManager;
@@ -50,9 +54,9 @@ import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyRow;
 import org.cytoscape.model.CyTable;
-import org.cytoscape.model.SUIDFactory;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CySubNetwork;
+import org.cytoscape.session.CySessionManager;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.model.View;
@@ -85,6 +89,8 @@ public final class CxExporter {
 	private final CyNetwork baseNetwork;
 	private final List<CySubNetwork> subnetworks;
 	
+	private HashMap<String, Long> idCounters = new HashMap<String, Long>();
+	
 	private Set<CyGroup> collapsed_groups;
 	
 	//Services needed to export
@@ -92,6 +98,7 @@ public final class CxExporter {
 	private final CyNetworkViewManager _networkview_manager;
 	
 	private CxWriter writer;
+	private String ID_STRING = "_id";
 
 	final static Set<AspectFragmentWriter> getCySupportedAspectFragmentWriters() {
 		return AspectSet.getCytoscapeAspectSet().getAspectFragmentWriters();
@@ -145,6 +152,10 @@ public final class CxExporter {
 	 */
 
 	public final void writeNetwork(final AspectSet aspects, final OutputStream out) throws IOException {
+		
+		// Build session info that will be exported with network
+		CySessionManager session_manager = CyServiceModule.getService(CySessionManager.class);
+		session_manager.getCurrentSession();
 		
 		Settings.INSTANCE.debug("Exporting network as " + (writeSiblings ? "collection" : "subnetwork"));
 		if (!aspects.contains(Aspect.SUBNETWORKS)) {
@@ -244,23 +255,9 @@ public final class CxExporter {
 		if (meta_data == null) {
 			throw new IllegalArgumentException("Cannot populate null post metaData");
 		}
-
 		for (String name : aspects_counts.getAllAspectNames()) {
-			long count = (long) aspects_counts.getAspectElementCount(name);
-			Long idCounter = null;
-			switch (name) {
-			case NodesElement.ASPECT_NAME:
-				idCounter = SUIDFactory.getNextSUID();
-				break;
-			case EdgesElement.ASPECT_NAME:
-				idCounter = SUIDFactory.getNextSUID();
-				break;
-			case NetworkRelationsElement.ASPECT_NAME:
-			case SubNetworkElement.ASPECT_NAME:
-				if (!writeSiblings) {
-					continue;
-				}
-			}
+			long count = (long) aspects_counts.getAspectElementCount(name);			
+			Long idCounter = idCounters.getOrDefault(name, null);
 			if (count > 0) {
 				addDataToMetaDataCollection(meta_data, name, count, idCounter);
 			}
@@ -329,6 +326,9 @@ public final class CxExporter {
 			if (Settings.isIgnore(col.getName(), additional_ignore, null)){
 				continue;
 			}
+			if (col.getName().startsWith(CxUtil.OPAQUE_ASPECT_PREFIX)) {
+				continue;
+			}
 			ATTRIBUTE_DATA_TYPE type = ATTRIBUTE_DATA_TYPE.STRING;
 			if (col.getType() != List.class) {
 				type = CxUtil.toAttributeType(col.getType());
@@ -356,7 +356,7 @@ public final class CxExporter {
 		
 		// Write root table
 		if (writeSiblings) {
-			addNetworkAttributesHelper(CyRootNetwork.SHARED_ATTRS, baseNetwork, elements);
+			addNetworkAttributesHelper(CyRootNetwork.DEFAULT_ATTRS, baseNetwork, elements);
 		}
 		
 		for (final CySubNetwork subnet : subnetworks) {
@@ -386,7 +386,13 @@ public final class CxExporter {
 		
 		writer.startAspectFragment(column);
 		while (iter.hasNext()) {
-			writer.writeOpaqueAspectElement(iter.next());
+			OpaqueElement el = iter.next();
+			JsonNode node = el.getData().get("@id");
+			if (node != null) {
+				Long max = Long.max(node.asLong(), idCounters.getOrDefault(column, 0l));
+				idCounters.put(column, max);
+			}
+			writer.writeOpaqueAspectElement(el);
 		}
 		writer.endAspectFragment();
 	}
@@ -925,6 +931,19 @@ public final class CxExporter {
 	private void writeAspectElements(List<AspectElement> elements) throws IOException {
 		if (elements == null || elements.isEmpty()) {
 			return;
+		}
+		Gson gson = new Gson();
+		for (AspectElement el : elements) {
+			JsonElement json_el = gson.toJsonTree(el);
+			JsonObject obj = json_el.getAsJsonObject();
+			
+			if (!obj.has(ID_STRING)) {
+				break;
+			}
+			Long id = obj.get(ID_STRING).getAsLong();
+			
+			Long max = Math.max(id, idCounters.getOrDefault(el.getAspectName(), 0l));
+			idCounters.put(el.getAspectName(), max);
 		}
 		final long t0 = System.currentTimeMillis();
 		writer.writeAspectElements(elements);

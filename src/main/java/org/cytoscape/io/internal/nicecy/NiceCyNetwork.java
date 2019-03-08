@@ -76,8 +76,17 @@ public abstract class NiceCyNetwork extends Identifiable{
 			groups = new ArrayList<Long>();
 		}
 		
-		@Override
-		public void addElements() {
+		protected void apply(CyNetwork network) {
+			if (network == null) {
+				throw new RuntimeException("Subnetwork can not be null");
+			}
+			this.network = network;
+			
+			addElements();
+			addAttributes();
+		}
+		
+		private void addElements() {
 			// If the parent was created from a singleton, add all nodes to the network
 			if (!parent.isCollection) {
 				nodes.addAll(parent.root_nodes.keySet());
@@ -160,18 +169,6 @@ public abstract class NiceCyNetwork extends Identifiable{
 		}
 	}
 	
-	protected void apply(CyNetwork network) {
-		if (network == null) {
-			throw new RuntimeException("Subnetwork can not be null");
-		}
-		this.network = network;
-		
-		addElements();
-		addAttributes();
-	}
-	
-	public abstract void addElements();
-	
 	public String getNetworkName() {
 		for (NetworkAttributesElement nae : attributes) {
 			if (nae.getName().equals(CyNetwork.NAME)) {
@@ -197,7 +194,7 @@ public abstract class NiceCyNetwork extends Identifiable{
  		
  	}
 	
-	public void addAttributes() {
+	protected void addAttributes() {
 		addTableColumns();
 		CyTable node_table = network.getTable(CyNode.class, getNamespace());
 		CyTable edge_table = network.getTable(CyEdge.class, getNamespace());
@@ -216,6 +213,7 @@ public abstract class NiceCyNetwork extends Identifiable{
 		addAttributesHelper(hidden_table, network, hiddenAttributes);
 		nodeAttributes.forEach((suid, attrs) -> {
 			CyNode node = root.getNode(suid);
+			
 			addAttributesHelper(node_table, node, attrs);
 		});
 		edgeAttributes.forEach((suid, attrs) -> {

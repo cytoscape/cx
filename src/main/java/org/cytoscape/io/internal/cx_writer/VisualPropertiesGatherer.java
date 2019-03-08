@@ -18,6 +18,7 @@ import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.VisualPropertyType;
 import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyEdge;
+import org.cytoscape.model.CyIdentifiable;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyTable;
@@ -107,23 +108,15 @@ public final class VisualPropertiesGatherer {
 
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    private  final static <T> void addProperties(final View view,
+    private  final static <T> void addProperties(final View<? extends CyIdentifiable> view,
                                             final VisualProperty<T> vp,
                                             final CyVisualPropertiesElement cvp) {
         if (!view.isSet(vp) || !view.isValueLocked(vp)) {
         	return;
         }
         
-        
-        T vp_value = (T) view.getVisualProperty(vp);
-        
-        if (vp_value == null) {
-        	return;
-        }
-        
         try {
-        	final String value_str = vp.toSerializableString(vp_value);
+        	final String value_str = getSerializableVisualProperty(view, vp);
         	if (CxioUtil.isEmpty(value_str)) {
             	return;
             }
@@ -135,54 +128,58 @@ public final class VisualPropertiesGatherer {
             else {
                 cvp.putProperty(id_string, value_str);
             }
-        } catch(ClassCastException e) {
-        	System.out.println(vp_value);
-        	System.out.println(vp_value.getClass());
-        	System.out.println(vp.getTargetDataType());
-        	String message = String.format("Class cast exception for %s: %s(%s) = %s. Error: %s\n", vp.getClass(), vp.getDisplayName(), vp.getTargetDataType(), vp_value, e.getMessage());
-        	throw new ClassCastException(message);
         }catch (IllegalArgumentException e) {
-        	String message = String.format("Writing %s(%s) = %s caused Error:\n%s", vp.getDisplayName(), vp.getTargetDataType(), vp_value, e.getMessage());
+        	String message = String.format("Writing %s(%s) = %s caused Error:\n%s", vp.getDisplayName(), vp.getTargetDataType(), view.getVisualProperty(vp), e.getMessage());
         	throw new IllegalArgumentException(message);
         }
         
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    private final static <T> void addPropertiesNetwork(final View view,
+    private static <T> String getSerializableVisualProperty(View<? extends CyIdentifiable> view, VisualProperty<T> vp) {
+    	T prop = view.getVisualProperty(vp);
+		if (prop == null) {
+			return null;
+		}
+		String val = null;
+		try {
+			val = vp.toSerializableString(prop);
+		}catch (ClassCastException e) {
+			val = String.valueOf(prop);
+			String message = String.format("Class cast exception for %s: %s(%s) = %s. Error: %s\n", vp.getClass(), vp.getDisplayName(), vp.getTargetDataType(), view.getVisualProperty(vp), e.getMessage());
+			logger.info(message);
+//        	throw new ClassCastException(message);
+		}
+		
+		return val;
+	}
+
+    private final static <T> void addPropertiesNetwork(final View<? extends CyIdentifiable> view,
                                                    final VisualStyle style,
                                                    final VisualProperty<T> vp,
                                                    final CyVisualPropertiesElement cvp) {
+    	String value_str = getSerializableVisualProperty(view, vp);
+        if (CxioUtil.isEmpty(value_str)) {
+        	return;
+        }
+        final String id_string = vp.getIdString();
+        // TODO: Why is this conditional here?
         if (view.isSet(vp) && view.isValueLocked(vp)) {
-            final T vp_value = (T) view.getVisualProperty(vp);
-            if (vp_value != null) {
-                final String value_str = vp.toSerializableString(vp_value);
-                if (!CxioUtil.isEmpty(value_str)) {
-                    final String id_string = vp.getIdString();
-                    if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")) {
-                        // TODO
-                    	throw new RuntimeException("Failed to add property " + vp);
-                    }
-                    else {
-                        cvp.putProperty(id_string, value_str);
-                    }
-                }
+            if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")) {
+                // TODO
+            	throw new RuntimeException("Failed to add property " + vp);
             }
+            else {
+                cvp.putProperty(id_string, value_str);
+            }
+        
         }
         else {
-            final T vp_value = style.getDefaultValue(vp);
-            if (vp_value != null) {
-                final String value_str = vp.toSerializableString(vp_value);
-                if (!CxioUtil.isEmpty(value_str)) {
-                    final String id_string = vp.getIdString();
-                    if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")
-                            || id_string.startsWith("NODE_CUSTOM")) {
-                        // TODO
-                    }
-                    else {
-                        cvp.putProperty(id_string, value_str);
-                    }
-                }
+            if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")
+                    || id_string.startsWith("NODE_CUSTOM")) {
+                // TODO
+            }
+            else {
+                cvp.putProperty(id_string, value_str);
             }
         }
     }
@@ -229,7 +226,6 @@ public final class VisualPropertiesGatherer {
         return result.toString();
       }
 
-//    @SuppressWarnings({ "unchecked" })
     // Note: ',' in column name and value are escaped by ',,' 
     private final static <T> void addMappings(final VisualStyle style,
                                           final VisualProperty<T> vp,

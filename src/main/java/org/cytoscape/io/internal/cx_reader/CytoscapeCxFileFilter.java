@@ -1,7 +1,9 @@
 package org.cytoscape.io.internal.cx_reader;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -73,8 +75,7 @@ public class CytoscapeCxFileFilter extends BasicCyFileFilter {
      * @return null if not an CX file
      */
     protected String getCXstartElement(final InputStream stream) {
-        final String header = this.getHeader(stream,
-                                             20);
+        final String header = getHeaderCharacters(stream, 400);
         final Matcher matcher = CX_HEADER_PATTERN.matcher(header);
         String root = null;
 
@@ -91,5 +92,33 @@ public class CytoscapeCxFileFilter extends BasicCyFileFilter {
 
         return root;
     }
+    
+    protected String getHeaderCharacters(InputStream stream, int numCharacters) {
+
+		String header;
+		BufferedReader br = new BufferedReader(new InputStreamReader(stream));
+
+		try {
+			StringBuilder builder = new StringBuilder();
+			for (int i = 0; i < numCharacters; i++) {
+				char[] c = new char[1];
+				br.read(c);
+				builder.append(c);
+			}
+			header = builder.toString();
+		} catch (IOException ioe) {
+			header = "";
+		} finally {
+			if (br != null)
+				try {
+					br.close();
+				} catch (IOException e) {
+				}
+
+			br = null;
+		}
+
+		return header;
+	}
     
 }

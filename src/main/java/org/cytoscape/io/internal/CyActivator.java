@@ -16,6 +16,7 @@ import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.subnetwork.CyRootNetworkManager;
 import org.cytoscape.service.util.AbstractCyActivator;
+import org.cytoscape.session.CySessionManager;
 import org.cytoscape.view.layout.CyLayoutAlgorithmManager;
 import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.view.model.CyNetworkViewManager;
@@ -62,14 +63,7 @@ public class CyActivator extends AbstractCyActivator {
         cacheService(bc, RenderingEngineManager.class);
         cacheService(bc, VisualStyleFactory.class);
         cacheService(bc, CyGroupFactory.class);
-        
-//        final VisualMappingManager visual_mapping_manager = getService(bc, VisualMappingManager.class);
-//        final CyApplicationManager application_manager = getService(bc, CyApplicationManager.class);
-//        final CyNetworkViewManager networkview_manager = getService(bc, CyNetworkViewManager.class);
-//        final CyNetworkManager network_manager = getService(bc, CyNetworkManager.class);
-//        final CyGroupManager group_manager = getService(bc, CyGroupManager.class);
-//        final CyNetworkViewFactory network_view_factory = getService(bc, CyNetworkViewFactory.class);
-//        final DialogTaskManager task_manager = getService(bc, DialogTaskManager.class);
+        cacheService(bc, CySessionManager.class);
         
         final CxNetworkWriterFactory network_writer_factory = new CxNetworkWriterFactory(cx_filter);
 
@@ -79,13 +73,6 @@ public class CyActivator extends AbstractCyActivator {
 
         registerAllServices(bc, network_writer_factory, cx_writer_factory_properties);
 
-        
-        
-//        final CyNetworkFactory network_factory = getService(bc, CyNetworkFactory.class);
-//        final CyRootNetworkManager root_network_manager = getService(bc, CyRootNetworkManager.class);
-//        final RenderingEngineManager rendering_engine_manager = getService(bc, RenderingEngineManager.class);
-//        final VisualStyleFactory visual_style_factory = getService(bc, VisualStyleFactory.class);
-//        final CyGroupFactory group_factory = getService(bc, CyGroupFactory.class);
 
         final VisualMappingFunctionFactory vmfFactoryC = getService(bc,
                                                                     VisualMappingFunctionFactory.class,
