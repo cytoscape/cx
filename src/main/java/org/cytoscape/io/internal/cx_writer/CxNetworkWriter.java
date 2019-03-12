@@ -10,6 +10,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 
 import org.cytoscape.application.CyApplicationManager;
+import org.cytoscape.io.cx.Aspect;
 import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxExporter;
@@ -20,6 +21,7 @@ import org.cytoscape.io.write.CyWriter;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.work.TaskMonitor;
 import org.cytoscape.work.Tunable;
+import org.cytoscape.work.util.ListMultipleSelection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,14 +39,39 @@ public class CxNetworkWriter implements CyWriter {
 	private final static String ENCODING = "UTF-8";
 	private final OutputStream _os;
 	private final CyNetwork _network;
-	private final CharsetEncoder _encoder;	
+	private final CharsetEncoder _encoder;
+	
+	public ListMultipleSelection<String> aspectFilter = new ListMultipleSelection<>();
+	public ListMultipleSelection<String> nodeColFilter = new ListMultipleSelection<>();
+	public ListMultipleSelection<String> edgeColFilter = new ListMultipleSelection<>();
+	public ListMultipleSelection<String> networkColFilter = new ListMultipleSelection<>();
+	
+	@Tunable(description="Aspects")
+	public ListMultipleSelection<String> getAspectFilter() {
+		return aspectFilter;
+	}
+
+	@Tunable(description="Node Columns")
+	public ListMultipleSelection<String> getNodeColFilter() {
+		return nodeColFilter;
+	}
+	
+	@Tunable(description="Edge Columns")
+	public ListMultipleSelection<String> getEdgeColFilter() {
+		return edgeColFilter;
+	}
+	
+	@Tunable(description="Network Columns")
+	public ListMultipleSelection<String> getNetworkColFilter() {
+		return networkColFilter;
+	}
 	
 	@Tunable(description="Write all networks in the collection")
     public boolean writeSiblings = WRITE_SIBLINGS_DEFAULT;
 	
 	public boolean useCxId = USE_CXID_DEFAULT;
 	
-	@Tunable(description="Use CX ID", dependsOn="writeSiblings=false", listenForChange="writeSiblings")
+	@Tunable(description="Use CX ID (recommended)", dependsOn="writeSiblings=false", listenForChange="writeSiblings")
     public boolean getUseCxId() {
 		if (writeSiblings) {
 			return false;
@@ -56,12 +83,6 @@ public class CxNetworkWriter implements CyWriter {
 		}
 		return useCxId;
 	}
-	
-	public void setUseCxId(boolean useCxId) {
-		this.useCxId = useCxId;
-	}
-	
-	
 
 	public CxNetworkWriter(final OutputStream os, 
 			final CyNetwork network,
@@ -90,13 +111,19 @@ public class CxNetworkWriter implements CyWriter {
 			taskMonitor.setTitle("Exporting to CX");
 			taskMonitor.setStatusMessage("Exporting current network as CX...");
 		}
-
+		String network_type = writeSiblings ? "collection" : "subnetwork";
+		String id_type = useCxId ? "CX IDs" : "SUIDs";
+		logger.info("Exporting network " + _network + " as " + network_type + " with " + id_type);
 		Settings.INSTANCE.debug("Encoding = " + _encoder.charset());
-
-		final AspectSet aspects = AspectSet.getCytoscapeAspectSet();
 
 		final CxExporter exporter = new CxExporter(_network, writeSiblings, useCxId);
 
+		AspectSet aspects = getAspects();
+		exporter.setNodeColumnFilter(nodeColFilter.getSelectedValues());
+		exporter.setEdgeColumnFilter(edgeColFilter.getSelectedValues());
+		exporter.setNetworkColumnFilter(networkColFilter.getSelectedValues());
+		
+		
 		final long t0 = System.currentTimeMillis();
 		if (TimingUtil.WRITE_TO_DEV_NULL) {
 			exporter.writeNetwork(aspects, new FileOutputStream(new File("/dev/null")));
@@ -112,7 +139,31 @@ public class CxNetworkWriter implements CyWriter {
 			TimingUtil.reportTimeDifference(t0, "total time", -1);
 		}
 	}
+	
+	private AspectSet getAspects() {
+		if (aspectFilter == null || aspectFilter.getSelectedValues().size() == 0) {
+			return null;
+		}
+		AspectSet set = new AspectSet();
+		try {
+			for (String aspectStr : aspectFilter.getSelectedValues()) {
+				Aspect aspect = Aspect.valueOf(aspectStr);
+				set.addAspect(aspect);
+			}
+		}catch(Exception e) {
+			throw new IllegalArgumentException(e.getMessage());
+		}
+		
+		return set;
+	}
 
+	public void setWriteSiblings(final boolean write_siblings) {
+		writeSiblings = write_siblings;
+	}
+	public void setUseCxId(boolean useCxId) {
+		this.useCxId = useCxId;
+	}
+	
 	@Override
 	public void cancel() {
 		if (_os == null) {
@@ -124,10 +175,6 @@ public class CxNetworkWriter implements CyWriter {
 		} catch (final IOException e) {
 			logger.error("Could not close Outputstream for CxNetworkWriter.", e);
 		}
-	}
-
-	public void setWriteSiblings(final boolean write_siblings) {
-		writeSiblings = write_siblings;
 	}
 
 }

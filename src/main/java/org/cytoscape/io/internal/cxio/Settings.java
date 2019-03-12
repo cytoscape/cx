@@ -1,6 +1,7 @@
 package org.cytoscape.io.internal.cxio;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.cytoscape.model.CyNetwork;
@@ -77,6 +78,13 @@ public final class Settings {
     }
     
     public final static boolean isIgnore(final String column_name, final Set<String> additional_to_ignore, Object value) {
+    	
+    	if (value instanceof String && ((String) value).isEmpty()) {
+    		return true;
+    	}
+    	if (value instanceof List<?> && ((List<?>) value).isEmpty()) {
+    		return true;
+    	}
     	
     	switch (column_name) {
 		case CyNetwork.SUID:

@@ -40,7 +40,6 @@ import org.cytoscape.group.internal.LockedVisualPropertiesManager;
 import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cx_reader.CytoscapeCxNetworkReader;
 import org.cytoscape.io.internal.cx_reader.StringParser;
-import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxExporter;
 import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.Settings;
@@ -51,6 +50,7 @@ import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.NetworkTestSupport;
 import org.cytoscape.model.subnetwork.CyRootNetworkManager;
 import org.cytoscape.service.util.CyServiceRegistrar;
+import org.cytoscape.session.CySessionManager;
 import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.model.internal.CyNetworkViewManagerImpl;
@@ -94,6 +94,7 @@ public class TestUtil {
 	private String[] VALID_INCONSISTENT_VIS_PROPS = new String[] {
 			BasicVisualLexicon.NODE_LABEL_FONT_FACE.getIdString(),
 			BasicVisualLexicon.EDGE_LABEL_FONT_FACE.getIdString(),
+			BasicVisualLexicon.NETWORK_TITLE.getIdString(),
 			DVisualLexicon.NODE_CUSTOMGRAPHICS_1.getIdString(),
 			DVisualLexicon.NODE_CUSTOMGRAPHICS_2.getIdString(),
 			DVisualLexicon.NODE_CUSTOMGRAPHICS_3.getIdString(),
@@ -107,9 +108,7 @@ public class TestUtil {
 	private String[] VALID_REMOVED_VIS_PROPS = new String[] {
 			BasicVisualLexicon.NODE_Z_LOCATION.getIdString(),
 	};
-	
-	private static final AspectSet aspects = AspectSet.getCytoscapeAspectSet();
-	
+		
 	private NetworkTestSupport nts = new NetworkTestSupport();
 	private CyNetworkFactory network_factory = nts.getNetworkFactory();
 	private NetworkViewTestSupport nvts = new NetworkViewTestSupport();
@@ -162,13 +161,16 @@ public class TestUtil {
 	}
 	
 	public TestUtil() {
+		CyServiceRegistrar reg = mock(CyServiceRegistrar.class);
+		CyServiceModule.setServiceRegistrar(reg);
+		
+		CyServiceModule.setService(CySessionManager.class, mock(CySessionManager.class));
 		CyServiceModule.setService(CyNetworkViewFactory.class, networkview_factory);
 		CyServiceModule.setService(CyNetworkFactory.class, network_factory);
 		CyServiceModule.setService(CyNetworkManager.class, nts.getNetworkManager());
 		CyServiceModule.setService(CyRootNetworkManager.class, nts.getRootNetworkFactory());
 		
 		CyServiceModule.setService(SynchronousTaskManager.class, mock(SynchronousTaskManager.class));
-		
 		CyServiceModule.setService(DialogTaskManager.class, mock(DialogTaskManager.class));
 		
 		VisualMappingMock.init();
@@ -221,7 +223,7 @@ public class TestUtil {
 		}
 		
 		ByteArrayOutputStream out_stream = new ByteArrayOutputStream();
-		TestUtil.doExport(network, collection, useCxId, aspects, out_stream);
+		TestUtil.doExport(network, collection, useCxId, out_stream);
 		
 		return out_stream;
 	}
@@ -238,15 +240,12 @@ public class TestUtil {
 		return f;
 	}
 
-	public static void doExport(CyNetwork network, boolean writeSiblings, boolean useCxId, AspectSet aspects,
+	public static void doExport(CyNetwork network, boolean writeSiblings, boolean useCxId,
 			OutputStream out) {
 		CxExporter cx_exporter = new CxExporter(network, writeSiblings, useCxId);
-		if (aspects == null) {
-			aspects = TestUtil.aspects;
-		}
 		
 		try {
-			cx_exporter.writeNetwork(aspects, out);
+			cx_exporter.writeNetwork(null, out);
 		} catch (IOException e) {
 			fail("Failed to export network to CX: " + e.getMessage());
 		}

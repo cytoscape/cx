@@ -28,6 +28,7 @@ public class CxUtilTest {
 		TestUtil.init();
 	}
 	
+	
 	@Test
 	public void testIsCollection() throws IOException {
 		File f = TestUtil.getResource("collections", "groups_1.cx");

@@ -89,6 +89,9 @@ public final class CxExporter {
 	private final CyNetwork baseNetwork;
 	private final List<CySubNetwork> subnetworks;
 	
+	private boolean omitOpaqueAspects = false;
+	private List<String> nodeColumns, edgeColumns, networkColumns;
+	
 	private HashMap<String, Long> idCounters = new HashMap<String, Long>();
 	
 	private Set<CyGroup> collapsed_groups;
@@ -100,9 +103,6 @@ public final class CxExporter {
 	private CxWriter writer;
 	private String ID_STRING = "_id";
 
-	final static Set<AspectFragmentWriter> getCySupportedAspectFragmentWriters() {
-		return AspectSet.getCytoscapeAspectSet().getAspectFragmentWriters();
-	}
 	/**
 	 * Constructor for CxExporter to write network (and it's collection) to CX. Specify 
 	 * if the exporter should attempt to use CX IDs from a previous import
@@ -151,13 +151,23 @@ public final class CxExporter {
 	 *
 	 */
 
-	public final void writeNetwork(final AspectSet aspects, final OutputStream out) throws IOException {
+	public final void writeNetwork(AspectSet aspects, final OutputStream out) throws IOException {
+		// If aspect filter is specified, filter opaque aspects as well
+		omitOpaqueAspects = aspects != null;
+		
+		if (aspects == null || aspects.getAspectFragmentWriters().isEmpty()) {
+			aspects = AspectSet.getCytoscapeAspectSet();
+		}
+		
+		String net_type = writeSiblings ? "collection" : "subnetwork";
+		String id_type = useCxId ? "CX IDs" : "SUIDs";
+		Settings.INSTANCE.debug("Exporting network as " + net_type + " with " + id_type);
+		Settings.INSTANCE.debug("Aspect filter: " + aspects);
 		
 		// Build session info that will be exported with network
 		CySessionManager session_manager = CyServiceModule.getService(CySessionManager.class);
 		session_manager.getCurrentSession();
 		
-		Settings.INSTANCE.debug("Exporting network as " + (writeSiblings ? "collection" : "subnetwork"));
 		if (!aspects.contains(Aspect.SUBNETWORKS)) {
 			if (aspects.contains(Aspect.VISUAL_PROPERTIES)) {
 				throw new IllegalArgumentException("need to write sub-networks in order to write visual properties");
@@ -168,8 +178,8 @@ public final class CxExporter {
 		}
 
 		writer = CxWriter.createInstance(out, false);
-
-		for (final AspectFragmentWriter aspect_writer : getCySupportedAspectFragmentWriters()) {
+		
+		for (final AspectFragmentWriter aspect_writer : aspects.getAspectFragmentWriters()) {
 			writer.addAspectFragmentWriter(aspect_writer);
 		}
 
@@ -200,7 +210,7 @@ public final class CxExporter {
 				writeCxIds();
 			}
 			// Writes Cartesian layout and visual props, only writes subnets for collections
-			writeSubNetworks(aspects);
+			writeSubNetworks();
 			
 			// Also handles Opaque aspects
 			writeHiddenAttributes(); 
@@ -381,6 +391,9 @@ public final class CxExporter {
 
 	private void writeOpaqueElement(String column, String value)
 			throws JsonParseException, IOException {
+		if (omitOpaqueAspects) {
+			return;
+		}
 		InputStream in = new ByteArrayInputStream(value.getBytes());
 		OpaqueAspectIterator iter = new OpaqueAspectIterator(in);
 		
@@ -542,12 +555,11 @@ public final class CxExporter {
 					if (Settings.isIgnore(column_name, Settings.IGNORE_NETWORK_ATTRIBUTES, value)) {
 						continue;
 					}
-					// Ignore empty values
-					if (value instanceof String && ((String) value).isEmpty()) {
-						continue;
-					}else if (value instanceof List && ((List<?>) value).isEmpty()) {
-						continue;
+					
+					if (networkColumns != null && !networkColumns.contains(column_name)) {
+						return;
 					}
+					
 					if (column_name.startsWith(CxUtil.OPAQUE_ASPECT_PREFIX)) {
 						writeOpaqueElement(column_name.substring(CxUtil.OPAQUE_ASPECT_PREFIX.length()), (String) value);
 						continue;
@@ -653,6 +665,10 @@ public final class CxExporter {
 		if (Settings.isIgnore(name, Settings.IGNORE_NODE_ATTRIBUTES, value)) {
 			return;
 		}
+		if (nodeColumns != null && !nodeColumns.contains(name)) {
+			return;
+		}
+		
 		Long nodeId = CxUtil.getElementId(node, network, useCxId);
 		Long subnetworkId = getAspectSubnetworkId(network);
 		ATTRIBUTE_DATA_TYPE type = AttributesAspectUtils.determineDataType(value);
@@ -682,7 +698,10 @@ public final class CxExporter {
 		if (Settings.isIgnore(name, Settings.IGNORE_EDGE_ATTRIBUTES, value)) {
 			return;
 		}
-
+		
+		if (edgeColumns != null && !edgeColumns.contains(name)) {
+			return;
+		}
 		Long edgeId = CxUtil.getElementId(edge, network, useCxId);
 		Long subnetworkId = getAspectSubnetworkId(network);
 		if (value instanceof List) {
@@ -715,6 +734,9 @@ public final class CxExporter {
 					}
 					if (Settings.isIgnore(column_name, null, value)) {
 						continue;
+					}
+					if (networkColumns != null && !networkColumns.contains(column_name)) {
+						return;
 					}
 
 					if (column_name.startsWith(CxUtil.OPAQUE_ASPECT_PREFIX)) {
@@ -791,7 +813,7 @@ public final class CxExporter {
 	 * @param aspects
 	 * @throws IOException
 	 */
-	private final void writeSubNetworks(final AspectSet aspects) throws IOException {
+	private final void writeSubNetworks() throws IOException {
 		
 		final List<AspectElement> cySubnetworkElements = new ArrayList<>();
 		final List<AspectElement> networkRelationsElements = new ArrayList<>();
@@ -826,13 +848,7 @@ public final class CxExporter {
 				final SubNetworkElement subnetwork_element = new SubNetworkElement(subnet.getSUID());
 				subnetwork_element.setEdges(new ArrayList<Long>(edge_suids));
 				subnetwork_element.setNodes(new ArrayList<Long>(node_suids));
-//				for (final CyEdge edgeview : subnet.getEdgeList()) {
-//					subnetwork_element.addEdge(edgeview.getSUID());
-//				}
-//				
-//				for (final CyNode nodeview : subnet.getNodeList()) {
-//					subnetwork_element.addNode(nodeview.getSUID());
-//				}
+
 				cySubnetworkElements.add(subnetwork_element);
 			}
 		}
@@ -1038,6 +1054,22 @@ public final class CxExporter {
 			return row.get(colName, type);
 		}
 		return null;
+	}
+	
+	public void setNodeColumnFilter(List<String> selectedValues) {
+		if (selectedValues != null && !selectedValues.isEmpty()) {
+			this.nodeColumns = selectedValues;
+		}
+	}
+	public void setEdgeColumnFilter(List<String> selectedValues) {
+		if (selectedValues != null && !selectedValues.isEmpty()) {
+			this.edgeColumns = selectedValues;
+		}
+	}
+	public void setNetworkColumnFilter(List<String> selectedValues) {
+		if (selectedValues != null && !selectedValues.isEmpty()) {
+			this.networkColumns = selectedValues;
+		}
 	}
 	
 }

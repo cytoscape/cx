@@ -110,7 +110,7 @@ public class SpecialTest {
 		style.addVisualMappingFunction(pm);
 		
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		TestUtil.doExport(networks[0], false, true, null, out);
+		TestUtil.doExport(networks[0], false, true, out);
 	}
 	
 	@Test
@@ -139,7 +139,7 @@ public class SpecialTest {
 		style.addVisualMappingFunction(pm);
 		
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		TestUtil.doExport(networks[0], false, true, null, out);
+		TestUtil.doExport(networks[0], false, true, out);
 	}
 	
 	@Test
@@ -155,7 +155,7 @@ public class SpecialTest {
 		view_manager.addNetworkView(view3);
 				
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		TestUtil.doExport(networks[0], false, true, null, out);
+		TestUtil.doExport(networks[0], false, true, out);
 		
 		File outf = TestUtil.saveOutputStreamToFile(out, "multiview_test_output.cx");
 		FileInputStream export_in = new FileInputStream(outf);

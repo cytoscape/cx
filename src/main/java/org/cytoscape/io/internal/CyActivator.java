@@ -4,27 +4,14 @@ import static org.cytoscape.work.ServiceProperties.ID;
 
 import java.util.Properties;
 
-import org.cytoscape.application.CyApplicationManager;
-import org.cytoscape.group.CyGroupFactory;
-import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.internal.cx_reader.CytoscapeCxFileFilter;
 import org.cytoscape.io.internal.cx_reader.CytoscapeCxNetworkReaderFactory;
 import org.cytoscape.io.internal.cx_writer.CxNetworkWriterFactory;
 import org.cytoscape.io.read.InputStreamTaskFactory;
 import org.cytoscape.io.util.StreamUtil;
-import org.cytoscape.model.CyNetworkFactory;
-import org.cytoscape.model.CyNetworkManager;
-import org.cytoscape.model.subnetwork.CyRootNetworkManager;
 import org.cytoscape.service.util.AbstractCyActivator;
-import org.cytoscape.session.CySessionManager;
-import org.cytoscape.view.layout.CyLayoutAlgorithmManager;
-import org.cytoscape.view.model.CyNetworkViewFactory;
-import org.cytoscape.view.model.CyNetworkViewManager;
-import org.cytoscape.view.presentation.RenderingEngineManager;
+import org.cytoscape.service.util.CyServiceRegistrar;
 import org.cytoscape.view.vizmap.VisualMappingFunctionFactory;
-import org.cytoscape.view.vizmap.VisualMappingManager;
-import org.cytoscape.view.vizmap.VisualStyleFactory;
-import org.cytoscape.work.swing.DialogTaskManager;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -36,35 +23,15 @@ public class CyActivator extends AbstractCyActivator {
         super();
     }
 
-    private <S> S cacheService(final BundleContext bc, Class<S> cls) {
-    	S service = getService(bc, cls);
-    	CyServiceModule.setService(cls, service);
-    	return service;
-    }
     
     @Override
     public void start(final BundleContext bc) {
-
-    	StreamUtil streamUtil = cacheService(bc, StreamUtil.class);
-        final CytoscapeCxFileFilter cx_filter = new CytoscapeCxFileFilter(streamUtil);
-
-        cacheService(bc, CyLayoutAlgorithmManager.class);
-        // Writer:
-        cacheService(bc, VisualMappingManager.class);
-        cacheService(bc, CyApplicationManager.class);
-        cacheService(bc, CyNetworkViewManager.class);
-        cacheService(bc, CyNetworkManager.class);
-        cacheService(bc, CyGroupManager.class);
-        cacheService(bc, CyNetworkViewFactory.class);
-        cacheService(bc, DialogTaskManager.class);
-     // Reader:
-        cacheService(bc, CyNetworkFactory.class);
-        cacheService(bc, CyRootNetworkManager.class);
-        cacheService(bc, RenderingEngineManager.class);
-        cacheService(bc, VisualStyleFactory.class);
-        cacheService(bc, CyGroupFactory.class);
-        cacheService(bc, CySessionManager.class);
+    	CyServiceRegistrar serviceRegistrar = getService(bc, CyServiceRegistrar.class);
+    	CyServiceModule.setServiceRegistrar(serviceRegistrar);
+    	StreamUtil streamUtil = getService(bc, StreamUtil.class);
         
+    	final CytoscapeCxFileFilter cx_filter = new CytoscapeCxFileFilter(streamUtil);
+
         final CxNetworkWriterFactory network_writer_factory = new CxNetworkWriterFactory(cx_filter);
 
         final Properties cx_writer_factory_properties = new Properties();
