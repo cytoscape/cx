@@ -62,8 +62,8 @@ public class FilterTest {
 	}
 	
 	public JsonObject getOutput() throws IOException {
-		writer.setWriteSiblings(false);
-		writer.setUseCxId(true);
+		writer.writeSiblings = false;
+		writer.useCxId = true;
 		writer.run(null);
 		
 		InputStream in = TestUtil.pipe(out);

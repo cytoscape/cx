@@ -78,7 +78,12 @@ public class CxNetworkWriter implements CyWriter {
 
 	public boolean useCxId = USE_CXID_DEFAULT;
 
-	@Tunable(description = "Use CX ID (recommended)", dependsOn = "writeSiblings=false", listenForChange = "writeSiblings")
+	@Tunable(description = "Use CX ID (recommended)", 
+			dependsOn = "writeSiblings=false", 
+			listenForChange = "writeSiblings",
+			tooltip="Element IDs (nodes, edges) do not normally persist when a network is " + 
+				"imported/exported from Cytoscape. Cytoscape uses Session Unique IDs (SUIDs) " +
+				"which are set incrementally. Check this box to persist element IDs (useful for scripting).")
 	public boolean getUseCxId() {
 		if (writeSiblings) {
 			return false;
@@ -92,12 +97,12 @@ public class CxNetworkWriter implements CyWriter {
 	}
 
 	public CxNetworkWriter(final OutputStream os, final CyNetwork network, final boolean writeSiblings,
-			final boolean use_cxId) {
+			final boolean useCxId) {
 
 		_os = os;
 		_network = network;
 		this.writeSiblings = writeSiblings;
-		setUseCxId(use_cxId);
+		this.useCxId = useCxId;
 
 		populateFilters();
 	}
@@ -190,14 +195,6 @@ public class CxNetworkWriter implements CyWriter {
 		if (Settings.INSTANCE.isTiming()) {
 			TimingUtil.reportTimeDifference(t0, "total time", -1);
 		}
-	}
-
-	public void setWriteSiblings(final boolean write_siblings) {
-		writeSiblings = write_siblings;
-	}
-
-	public void setUseCxId(boolean useCxId) {
-		this.useCxId = useCxId;
 	}
 
 	@Override

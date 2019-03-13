@@ -250,8 +250,8 @@ public class TestUtil {
 		CytoscapeCxFileFilter filter = new CytoscapeCxFileFilter(streamUtil);
 		CxNetworkWriterFactory writerFactory = new CxNetworkWriterFactory(filter);
 		CxNetworkWriter writer = (CxNetworkWriter) writerFactory.createWriter(out, network);
-		writer.setUseCxId(useCxId);
-		writer.setWriteSiblings(writeSiblings);
+		writer.useCxId = useCxId;
+		writer.writeSiblings = writeSiblings;
 		try {
 			writer.run(null);
 		} catch (FileNotFoundException e1) {
