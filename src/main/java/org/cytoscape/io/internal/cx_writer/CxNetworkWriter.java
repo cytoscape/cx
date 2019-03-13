@@ -9,14 +9,14 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.cytoscape.application.CyApplicationManager;
-import org.cytoscape.io.cx.Aspect;
+import org.cytoscape.io.internal.AspectSet;
 import org.cytoscape.io.internal.CyServiceModule;
-import org.cytoscape.io.internal.cxio.AspectSet;
 import org.cytoscape.io.internal.cxio.CxExporter;
 import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.Settings;
@@ -31,18 +31,6 @@ import org.cytoscape.model.subnetwork.CySubNetwork;
 import org.cytoscape.work.TaskMonitor;
 import org.cytoscape.work.Tunable;
 import org.cytoscape.work.util.ListMultipleSelection;
-import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
-import org.ndexbio.cxio.aspects.datamodels.CyGroupsElement;
-import org.ndexbio.cxio.aspects.datamodels.CyTableColumnElement;
-import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
-import org.ndexbio.cxio.aspects.datamodels.EdgeAttributesElement;
-import org.ndexbio.cxio.aspects.datamodels.EdgesElement;
-import org.ndexbio.cxio.aspects.datamodels.HiddenAttributesElement;
-import org.ndexbio.cxio.aspects.datamodels.NetworkAttributesElement;
-import org.ndexbio.cxio.aspects.datamodels.NetworkRelationsElement;
-import org.ndexbio.cxio.aspects.datamodels.NodeAttributesElement;
-import org.ndexbio.cxio.aspects.datamodels.NodesElement;
-import org.ndexbio.cxio.aspects.datamodels.SubNetworkElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -125,11 +113,8 @@ public class CxNetworkWriter implements CyWriter {
 		populateFilters();
 	}
 
-	public void populateFilters() {
-		ArrayList<String> aspects = new ArrayList<String>();
-		for (Aspect asp : Aspect.values()) {
-			aspects.add(asp.name());
-		}
+	private void populateFilters() {
+		ArrayList<String> aspects = AspectSet.getAspectNames();
 		aspectFilter.setPossibleValues(aspects);
 
 		// Node Column filter
@@ -177,6 +162,7 @@ public class CxNetworkWriter implements CyWriter {
 			taskMonitor.setTitle("Exporting to CX");
 			taskMonitor.setStatusMessage("Exporting current network as CX...");
 		}
+		
 		String network_type = writeSiblings ? "collection" : "subnetwork";
 		String id_type = useCxId ? "CX IDs" : "SUIDs";
 		logger.info("Exporting network " + _network + " as " + network_type + " with " + id_type);
@@ -184,7 +170,7 @@ public class CxNetworkWriter implements CyWriter {
 
 		final CxExporter exporter = new CxExporter(_network, writeSiblings, useCxId);
 
-		AspectSet aspects = getAspects();
+		List<String> aspects = aspectFilter.getSelectedValues();
 		exporter.setNodeColumnFilter(nodeColFilter.getSelectedValues());
 		exporter.setEdgeColumnFilter(edgeColFilter.getSelectedValues());
 		exporter.setNetworkColumnFilter(networkColFilter.getSelectedValues());
@@ -203,60 +189,6 @@ public class CxNetworkWriter implements CyWriter {
 		if (Settings.INSTANCE.isTiming()) {
 			TimingUtil.reportTimeDifference(t0, "total time", -1);
 		}
-	}
-
-	private Aspect getAspect(String name) {
-		switch (name) {
-		case CartesianLayoutElement.ASPECT_NAME:
-			return Aspect.CARTESIAN_LAYOUT;
-		case EdgeAttributesElement.ASPECT_NAME:
-			return Aspect.EDGE_ATTRIBUTES;
-		case EdgesElement.ASPECT_NAME:
-			return Aspect.EDGES;
-		case NetworkAttributesElement.ASPECT_NAME:
-			return Aspect.NETWORK_ATTRIBUTES;
-		case NodeAttributesElement.ASPECT_NAME:
-			return Aspect.NODE_ATTRIBUTES;
-		case HiddenAttributesElement.ASPECT_NAME:
-			return Aspect.HIDDEN_ATTRIBUTES;
-		case NodesElement.ASPECT_NAME:
-			return Aspect.NODES;
-		case CyVisualPropertiesElement.ASPECT_NAME:
-			return Aspect.VISUAL_PROPERTIES;
-		case SubNetworkElement.ASPECT_NAME:
-			return Aspect.SUBNETWORKS;
-		case CyGroupsElement.ASPECT_NAME:
-			return Aspect.GROUPS;
-		case NetworkRelationsElement.ASPECT_NAME:
-			return Aspect.NETWORK_RELATIONS;
-		case CyTableColumnElement.ASPECT_NAME:
-			return Aspect.TABLE_COLUMN_LABELS;
-		default:
-			return null;
-		}
-	}
-
-	private AspectSet getAspects() {
-		if (aspectFilter == null || aspectFilter.getSelectedValues().size() == 0) {
-			return null;
-		}
-		AspectSet set = new AspectSet();
-		for (String aspectStr : aspectFilter.getSelectedValues()) {
-			// TODO handle aspects by name, not by Aspect String
-			Aspect aspect = null;
-			try {
-				aspect = getAspect(aspectStr);
-				if (aspect == null) {
-					aspect = Aspect.valueOf(aspectStr);
-				}
-			} catch (IllegalArgumentException e) {
-				throw new IllegalArgumentException("Unknown aspect filter: " + aspectStr + ". Must be one of "
-						+ AspectSet.getCytoscapeAspectSet().getAspects());
-			}
-			set.addAspect(aspect);
-		}
-
-		return set;
 	}
 
 	public void setWriteSiblings(final boolean write_siblings) {

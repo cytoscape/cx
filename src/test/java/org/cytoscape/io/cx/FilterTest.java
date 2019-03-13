@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.ndexbio.cxio.aspects.datamodels.EdgeAttributesElement;
 import org.ndexbio.cxio.aspects.datamodels.NetworkAttributesElement;
 import org.ndexbio.cxio.aspects.datamodels.NodeAttributesElement;
+import org.ndexbio.cxio.aspects.datamodels.NodesElement;
 import org.ndexbio.cxio.metadata.MetaDataCollection;
 import org.ndexbio.cxio.misc.NumberVerification;
 import org.ndexbio.model.exceptions.NdexException;
@@ -93,6 +94,21 @@ public class FilterTest {
 	public void testUnknownAspectFilter() {
 		List<String> values = new ArrayList<String>();
 		values.add("INVALID");
+		
+		
+		try {
+			writer.aspectFilter.setSelectedValues(values);
+		} catch(IllegalArgumentException e) {
+			return;
+		}
+		fail();
+	}
+	
+	@Test 
+	public void testUnknownAspectFilter2() {
+		List<String> values = new ArrayList<String>();
+		values.add("INVALID");
+		writer.aspectFilter.setPossibleValues(values);
 		writer.aspectFilter.setSelectedValues(values);
 		
 		try {
@@ -114,7 +130,7 @@ public class FilterTest {
 	public void testAspectFilter() throws IOException, NdexException {
 		
 		List<String> values = new ArrayList<String>();
-		values.add(Aspect.NODES.name());
+		values.add(NodesElement.ASPECT_NAME);
 		writer.aspectFilter.setSelectedValues(values);
 		
 		JsonObject obj = getOutput();

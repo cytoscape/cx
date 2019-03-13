@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.cytoscape.io.internal.AspectSet;
 import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.ndexbio.cxio.aspects.datamodels.EdgeAttributesElement;
 import org.ndexbio.cxio.aspects.datamodels.EdgesElement;
@@ -17,7 +18,6 @@ import org.ndexbio.cxio.core.interfaces.AspectElement;
 import org.ndexbio.cxio.core.interfaces.AspectFragmentReader;
 import org.ndexbio.cxio.metadata.MetaDataCollection;
 import org.ndexbio.cxio.metadata.MetaDataElement;
-import org.cytoscape.io.cx.Aspect;
 import org.ndexbio.model.cx.NdexNetworkStatus;
 import org.ndexbio.model.cx.NiceCXNetwork;
 
@@ -89,10 +89,10 @@ public final class CxImporter {
 
     public CxImporter() {
         
-        AspectSet aspects = AspectSet.getCytoscapeAspectSet();
+        Collection<String> aspects = AspectSet.getAspectNames();
         
         all_readers = new HashSet<>();
-        for (final AspectFragmentReader reader : aspects.getAspectFragmentReaders()) {
+        for (final AspectFragmentReader reader : AspectSet.getAspectFragmentReaders(aspects)) {
             all_readers.add(reader);
         }
         

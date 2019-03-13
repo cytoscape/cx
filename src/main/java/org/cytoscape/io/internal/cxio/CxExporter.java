@@ -18,6 +18,7 @@ import org.ndexbio.cxio.aspects.datamodels.AttributesAspectUtils;
 import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.ndexbio.cxio.aspects.datamodels.CyGroupsElement;
 import org.ndexbio.cxio.aspects.datamodels.CyTableColumnElement;
+import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.ndexbio.cxio.aspects.datamodels.EdgeAttributesElement;
 import org.ndexbio.cxio.aspects.datamodels.EdgesElement;
 import org.ndexbio.cxio.aspects.datamodels.HiddenAttributesElement;
@@ -46,7 +47,7 @@ import com.google.gson.JsonObject;
 
 import org.cytoscape.group.CyGroup;
 import org.cytoscape.group.CyGroupManager;
-import org.cytoscape.io.cx.Aspect;
+import org.cytoscape.io.internal.AspectSet;
 import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cx_writer.VisualPropertiesGatherer;
 import org.cytoscape.model.CyColumn;
@@ -152,12 +153,12 @@ public final class CxExporter {
 	 *
 	 */
 
-	public final void writeNetwork(AspectSet aspects, final OutputStream out) throws IOException {
+	public final void writeNetwork(Collection<String> aspects, final OutputStream out) throws IOException {
 		// If aspect filter is specified, filter opaque aspects as well
 		omitOpaqueAspects = aspects != null;
 		
-		if (aspects == null || aspects.getAspectFragmentWriters().isEmpty()) {
-			aspects = AspectSet.getCytoscapeAspectSet();
+		if (aspects == null || aspects.isEmpty()) {
+			aspects = AspectSet.getAspectNames();
 		}
 		
 		String net_type = writeSiblings ? "collection" : "subnetwork";
@@ -169,22 +170,22 @@ public final class CxExporter {
 		CySessionManager session_manager = CyServiceModule.getService(CySessionManager.class);
 		session_manager.getCurrentSession();
 		
-		if (!aspects.contains(Aspect.SUBNETWORKS)) {
-			if (aspects.contains(Aspect.VISUAL_PROPERTIES)) {
+		if (!aspects.contains(SubNetworkElement.ASPECT_NAME)) {
+			if (aspects.contains(CyVisualPropertiesElement.ASPECT_NAME)) {
 				throw new IllegalArgumentException("need to write sub-networks in order to write visual properties");
 			}
-			if (aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
+			if (aspects.contains(CartesianLayoutElement.ASPECT_NAME)) {
 				throw new IllegalArgumentException("need to write sub-networks in order to write cartesian layout");
 			}
 		}
 
 		writer = CxWriter.createInstance(out, false);
 		
-		for (final AspectFragmentWriter aspect_writer : aspects.getAspectFragmentWriters()) {
+		for (final AspectFragmentWriter aspect_writer : AspectSet.getAspectFragmentWriters(aspects)) {
 			writer.addAspectFragmentWriter(aspect_writer);
 		}
 
-		MetaDataCollection meta_data = writePreMetaData();
+		MetaDataCollection meta_data = writePreMetaData(aspects);
 
 		writer.start();
 
@@ -249,11 +250,11 @@ public final class CxExporter {
 	}
 
 	// MetaData
-	private MetaDataCollection writePreMetaData() {
+	private MetaDataCollection writePreMetaData(Collection<String> aspects) {
 
 		MetaDataCollection pre_meta_data = CxUtil.getMetaData(baseNetwork);
 		if (pre_meta_data.isEmpty()) {
-			for (AspectFragmentWriter aspect : AspectSet.getCytoscapeAspectSet().getAspectFragmentWriters()) {
+			for (AspectFragmentWriter aspect : AspectSet.getAspectFragmentWriters(aspects)) {
 				addDataToMetaDataCollection(pre_meta_data, aspect.getAspectName(), null, null);
 			}
 		}
