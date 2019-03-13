@@ -95,7 +95,7 @@ public class BaseTests {
 	public void testNodes() throws IOException {
 		NodesElement[] nodes = new NodesElement[] {
 				new NodesElement(1, "RED", "r"),
-				new NodesElement(2, "BLUE", "b"),		
+				new NodesElement(2, "BLUE", "b"),
 		};
 		CxReaderWrapper reader = getBaseSubNetwork(nodes);
 		

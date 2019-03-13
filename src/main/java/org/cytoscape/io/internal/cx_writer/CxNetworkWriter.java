@@ -6,10 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -27,6 +26,7 @@ import org.cytoscape.model.CyIdentifiable;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyTable;
+import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CySubNetwork;
 import org.cytoscape.work.TaskMonitor;
 import org.cytoscape.work.Tunable;
@@ -45,10 +45,8 @@ public class CxNetworkWriter implements CyWriter {
 	private final static Logger logger = LoggerFactory.getLogger(CxNetworkWriter.class);
 	private static final boolean WRITE_SIBLINGS_DEFAULT = false;
 	private static final boolean USE_CXID_DEFAULT = true;
-	private final static String ENCODING = "UTF-8";
 	private final OutputStream _os;
 	private final CyNetwork _network;
-	private final CharsetEncoder _encoder;
 
 	public ListMultipleSelection<String> aspectFilter = new ListMultipleSelection<>();
 	public ListMultipleSelection<String> nodeColFilter = new ListMultipleSelection<>();
@@ -101,15 +99,6 @@ public class CxNetworkWriter implements CyWriter {
 		this.writeSiblings = writeSiblings;
 		setUseCxId(use_cxId);
 
-		if (Charset.isSupported(ENCODING)) {
-			// UTF-8 is supported by system
-			_encoder = Charset.forName(ENCODING).newEncoder();
-		} else {
-			// Use default.
-			logger.warn("UTF-8 is not supported by this system.  This can be a problem for non-English annotations.");
-			_encoder = Charset.defaultCharset().newEncoder();
-		}
-
 		populateFilters();
 	}
 
@@ -133,25 +122,42 @@ public class CxNetworkWriter implements CyWriter {
 		networkColFilter.setSelectedValues(networkColumnNames);
 	}
 
-	private final ArrayList<String> getAllColumnNames(final Class<? extends CyIdentifiable> type) {
-
-		// Shared
-		final CyTable sharedTable = _network.getTable(type, CyNetwork.DEFAULT_ATTRS);
-
-		// Local
-		final CyTable localTable = _network.getTable(type, CyNetwork.LOCAL_ATTRS);
-
+	private final Set<String> getAllColumnNames(final Class<? extends CyIdentifiable> type, CyNetwork subnet){
 		final SortedSet<String> colNames = new TreeSet<>();
-
+		
+		// Shared
+		final CyTable sharedTable = subnet.getTable(type, CyNetwork.DEFAULT_ATTRS);
 		colNames.addAll(sharedTable.getColumns().stream().map(col -> col.getName()).collect(Collectors.toList()));
+		
+		// Local
+		final CyTable localTable = subnet.getTable(type, CyNetwork.LOCAL_ATTRS);
 		colNames.addAll(localTable.getColumns().stream().map(col -> col.getName()).collect(Collectors.toList()));
+		
+		// Hidden
+		final CyTable hiddenTable = subnet.getTable(type, CyNetwork.HIDDEN_ATTRS);
+		colNames.addAll(hiddenTable.getColumns().stream().map(col -> col.getName()).collect(Collectors.toList()));
+		
+		return colNames;
+	}
+	
+	private final ArrayList<String> getAllColumnNames(final Class<? extends CyIdentifiable> type) {
+		
+		final Set<String> colNames = getAllColumnNames(type, _network);
 
-		if (type == CyNetwork.class) {
+		if (type == CyNetwork.class && _network instanceof CySubNetwork) {
+			CyRootNetwork root = ((CySubNetwork) _network).getRootNetwork();
 			// Add Root table to available column names
-			final CyTable rootTable = ((CySubNetwork) _network).getRootNetwork().getDefaultNetworkTable();
+			final CyTable rootTable = root.getDefaultNetworkTable();
 			colNames.addAll(rootTable.getColumns().stream().map(col -> col.getName()).collect(Collectors.toList()));
+			
+			// Add all attributes of sibling networks
+			for (CySubNetwork subnet : root.getSubNetworkList()) {
+				if (subnet != _network) {
+					colNames.addAll(getAllColumnNames(type, subnet));
+				}
+			}
 		}
-
+		
 		return new ArrayList<String>(colNames);
 	}
 
@@ -163,11 +169,6 @@ public class CxNetworkWriter implements CyWriter {
 			taskMonitor.setStatusMessage("Exporting current network as CX...");
 		}
 		
-		String network_type = writeSiblings ? "collection" : "subnetwork";
-		String id_type = useCxId ? "CX IDs" : "SUIDs";
-		logger.info("Exporting network " + _network + " as " + network_type + " with " + id_type);
-		Settings.INSTANCE.debug("Encoding = " + _encoder.charset());
-
 		final CxExporter exporter = new CxExporter(_network, writeSiblings, useCxId);
 
 		List<String> aspects = aspectFilter.getSelectedValues();

@@ -71,7 +71,7 @@ public final class CxUtil {
 					ObjectMapper mapper = new ObjectMapper();
 					return mapper.readValue(metaDataStr, MetaDataCollection.class);
 				}catch(IOException e) {
-					Settings.INSTANCE.debug("Get Metadata threw an IOException: " + e);
+					logger.info("Get Metadata threw an IOException: " + e);
 				}
 			}
 		}

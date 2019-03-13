@@ -35,6 +35,8 @@ import org.ndexbio.cxio.metadata.MetaDataCollection;
 import org.ndexbio.cxio.metadata.MetaDataElement;
 import org.ndexbio.cxio.misc.AspectElementCounts;
 import org.ndexbio.cxio.misc.OpaqueElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -86,6 +88,8 @@ import org.cytoscape.view.presentation.property.BasicVisualLexicon;
  *
  */
 public final class CxExporter {
+	Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	private final boolean writeSiblings;
 	private final boolean useCxId;
 	private final CyNetwork baseNetwork;
@@ -154,17 +158,25 @@ public final class CxExporter {
 	 */
 
 	public final void writeNetwork(Collection<String> aspects, final OutputStream out) throws IOException {
-		// If aspect filter is specified, filter opaque aspects as well
-		omitOpaqueAspects = aspects != null;
 		
 		if (aspects == null || aspects.isEmpty()) {
 			aspects = AspectSet.getAspectNames();
 		}
 		
+		// if specific aspects are specified, do not write opaque aspects
+		if (aspects.size() != AspectSet.getAspectNames().size()) {
+			omitOpaqueAspects = true;
+		}
+		
 		String net_type = writeSiblings ? "collection" : "subnetwork";
 		String id_type = useCxId ? "CX IDs" : "SUIDs";
-		Settings.INSTANCE.debug("Exporting network as " + net_type + " with " + id_type);
-		Settings.INSTANCE.debug("Aspect filter: " + aspects);
+		
+		logger.info("Exporting network as " + net_type + " with " + id_type);
+		logger.info("Aspect filter: " + aspects);
+		logger.info("NodeCol filter: " + nodeColumns);
+		logger.info("EdgeCol filter: " + edgeColumns);
+		logger.info("NetworkCol filter: " + networkColumns);
+		
 		
 		// Build session info that will be exported with network
 		CySessionManager session_manager = CyServiceModule.getService(CySessionManager.class);

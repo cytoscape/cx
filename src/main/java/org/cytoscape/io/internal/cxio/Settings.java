@@ -13,7 +13,6 @@ public final class Settings {
     private static final boolean IGNORE_SELECTED_COLUMN_DEFAULT                                        = false;
     private static final boolean IGNORE_SUID_COLUMN_DEFAULT                                            = true;
     private static final boolean WRITE_SELECTED_ONLY_IF_TRUE_DEFAULT                                   = true;
-    private static final boolean DEBUG_DEFAULT                                                         = false;
     private static final boolean TIMING_DEFAULT                                                        = true;
 
 	public final static Set<String> IGNORE_EDGE_ATTRIBUTES = new HashSet<>();
@@ -26,20 +25,10 @@ public final class Settings {
 	}
 	
     private boolean              _timing                                                               = TIMING_DEFAULT;
-    private boolean              _debug                                                                = DEBUG_DEFAULT;
     private boolean              _ignore_selected_column                                               = IGNORE_SELECTED_COLUMN_DEFAULT;
     private boolean              _write_selected_only_if_true                                          = WRITE_SELECTED_ONLY_IF_TRUE_DEFAULT;
     private boolean              _ignore_suid_column                                                   = IGNORE_SUID_COLUMN_DEFAULT;
     
-    public boolean isDebug() {
-    	return _debug;
-    }
-    
-    public void debug(String message) {
-        if (_debug) {
-        	System.out.println(message);
-        }
-    }
 
     public boolean isIgnoreSelectedColumn() {
         return _ignore_selected_column;
@@ -55,10 +44,6 @@ public final class Settings {
 
     public boolean isWriteSelectedOnlyIfTrue() {
         return _write_selected_only_if_true;
-    }
-
-    public void setDebug(final boolean debug) {
-        _debug = debug;
     }
 
     public void setIgnoreSelectedColumn(final boolean ignore_selected_column) {

@@ -17,6 +17,7 @@ import org.cytoscape.model.subnetwork.CyRootNetworkManager;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.work.TaskMonitor;
+import org.cytoscape.work.util.ListSingleSelection;
 import org.ndexbio.model.cx.NiceCXNetwork;
 
 public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
@@ -77,7 +78,8 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
 		// Throw an error if trying to import CX network into existing collection.
 		if (getRootNetwork() != null) {
-			throw new IllegalArgumentException("CX Support is changing to disallow import into existing collections");
+			System.out.println("CX Support is changing to disallow import into existing collections");
+			setRootNetworkList(new ListSingleSelection<String>());
 		}
 		
 		

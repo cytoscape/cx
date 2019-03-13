@@ -38,12 +38,15 @@ import org.cytoscape.group.internal.CyGroupFactoryImpl;
 import org.cytoscape.group.internal.CyGroupManagerImpl;
 import org.cytoscape.group.internal.LockedVisualPropertiesManager;
 import org.cytoscape.io.internal.CyServiceModule;
+import org.cytoscape.io.internal.cx_reader.CytoscapeCxFileFilter;
 import org.cytoscape.io.internal.cx_reader.CytoscapeCxNetworkReader;
 import org.cytoscape.io.internal.cx_reader.StringParser;
-import org.cytoscape.io.internal.cxio.CxExporter;
+import org.cytoscape.io.internal.cx_writer.CxNetworkWriter;
+import org.cytoscape.io.internal.cx_writer.CxNetworkWriterFactory;
 import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.Settings;
 import org.cytoscape.io.internal.nicecy.NiceCyRootNetwork;
+import org.cytoscape.io.util.StreamUtil;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
@@ -242,13 +245,23 @@ public class TestUtil {
 
 	public static void doExport(CyNetwork network, boolean writeSiblings, boolean useCxId,
 			OutputStream out) {
-		CxExporter cx_exporter = new CxExporter(network, writeSiblings, useCxId);
 		
+		StreamUtil streamUtil = CyServiceModule.getService(StreamUtil.class);
+		CytoscapeCxFileFilter filter = new CytoscapeCxFileFilter(streamUtil);
+		CxNetworkWriterFactory writerFactory = new CxNetworkWriterFactory(filter);
+		CxNetworkWriter writer = (CxNetworkWriter) writerFactory.createWriter(out, network);
+		writer.setUseCxId(useCxId);
+		writer.setWriteSiblings(writeSiblings);
 		try {
-			cx_exporter.writeNetwork(null, out);
-		} catch (IOException e) {
-			fail("Failed to export network to CX: " + e.getMessage());
+			writer.run(null);
+		} catch (FileNotFoundException e1) {
+			fail("Failed to export network to CX: " + e1.getMessage());
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			fail("Failed to export network to CX: " + e1.getMessage());
+			e1.printStackTrace();
 		}
+
 	}
 	
 	// Test helper to use base subnetwork with optional node list (on top of id:0 starter node)
@@ -306,7 +319,7 @@ public class TestUtil {
 			niceCX.addNetworkAttribute((NetworkAttributesElement) aspect);
 			break;
 		case HiddenAttributesElement.ASPECT_NAME:
-			niceCX.addOpapqueAspect(aspect);
+			niceCX.addOpaqueAspect(aspect);
 			break;
 		case NodesElement.ASPECT_NAME:
 			niceCX.addNode((NodesElement) aspect);
@@ -338,7 +351,7 @@ public class TestUtil {
 			niceCX.addNodeAssociatedAspectElement(nodeId, cle);
 			break;
 		default:
-			niceCX.addOpapqueAspect(aspect);
+			niceCX.addOpaqueAspect(aspect);
 		}
 	}
 	
@@ -869,7 +882,7 @@ public class TestUtil {
 		
 		File outf = TestUtil.saveOutputStreamToFile(out, name + "_test_output.cx");
 		// TODO: Delete test files on exit
-		outf.deleteOnExit();
+//		outf.deleteOnExit();
 		FileInputStream export_in = new FileInputStream(outf);
 		
 		CxReaderWrapper out_reader = INSTANCE.getReader(export_in, null);

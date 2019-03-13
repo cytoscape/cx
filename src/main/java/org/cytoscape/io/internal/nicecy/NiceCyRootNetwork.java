@@ -192,7 +192,8 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 		}
 		aspects.forEach(aspect -> {
 			HiddenAttributesElement hae = (HiddenAttributesElement) aspect;
-			getNetwork(hae.getSubnetwork()).hiddenAttributes.add(hae);
+			NiceCyNetwork net = getNetwork(hae.getSubnetwork());
+			net.hiddenAttributes.add(hae);
 		});
 	}
 

@@ -214,7 +214,7 @@ public final class CxImporter {
      					niceCX.addNodeAssociatedAspectElement(e.getNode(), e);
      					break;
      				default:    // opaque aspect
-     					niceCX.addOpapqueAspect(elmt);
+     					niceCX.addOpaqueAspect(elmt);
      			}
      	} 
      	
