@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ndexbio.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
+import org.ndexbio.cxio.aspects.datamodels.AbstractAttributesAspectElement;
 import org.ndexbio.cxio.aspects.datamodels.AttributesAspectUtils;
 import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.ndexbio.cxio.aspects.datamodels.CyGroupsElement;
@@ -380,10 +381,10 @@ public final class CxExporter {
 
 		final List<AspectElement> elements = new ArrayList<>();
 		if (writeSiblings) {
-			addHiddenAttributesElements(elements, baseNetwork);
+			addNetworkAttributesHelper(CyNetwork.HIDDEN_ATTRS, baseNetwork, elements);
 		}
 		for (final CySubNetwork subnet : subnetworks) {
-			addHiddenAttributesElements(elements, subnet);
+			addNetworkAttributesHelper(CyNetwork.HIDDEN_ATTRS, subnet, elements);
 		}
 
 		writeAspectElements(elements);
@@ -541,49 +542,63 @@ public final class CxExporter {
 			final List<AspectElement> elements) throws JsonParseException, IOException {
 
 		final CyRow row = my_network.getRow(my_network, namespace);
+		
+		if (row == null) {
+			return;
+		}
+				
+		final Map<String, Object> values = row.getAllValues();
+		if (values == null) {
+			return;
+		}
+		for (final String column_name : values.keySet()) {
+			final Object value = values.get(column_name);
+			if (value == null) {
+				continue;
+			}
+			// Ignore columns like SUID, etc
+			if (Settings.isIgnore(column_name, Settings.IGNORE_NETWORK_ATTRIBUTES, value)) {
+				continue;
+			}
+			
+			if (networkColumns != null && !networkColumns.contains(column_name)) {
+				continue;
+			}
+			
+			if (column_name.startsWith(CxUtil.OPAQUE_ASPECT_PREFIX)) {
+				writeOpaqueElement(column_name.substring(CxUtil.OPAQUE_ASPECT_PREFIX.length()), (String) value);
+				continue;
+			}
 
-		if (row != null) {
-			final Map<String, Object> values = row.getAllValues();
-
-			if ((values != null) && !values.isEmpty()) {
-				for (final String column_name : values.keySet()) {
-					final Object value = values.get(column_name);
-					if (value == null) {
-						continue;
-					}
-					// Ignore columns like SUID, etc
-					if (Settings.isIgnore(column_name, Settings.IGNORE_NETWORK_ATTRIBUTES, value)) {
-						continue;
-					}
-					
-					if (networkColumns != null && !networkColumns.contains(column_name)) {
-						return;
-					}
-					
-					if (column_name.startsWith(CxUtil.OPAQUE_ASPECT_PREFIX)) {
-						writeOpaqueElement(column_name.substring(CxUtil.OPAQUE_ASPECT_PREFIX.length()), (String) value);
-						continue;
-					}
-
-					// Only include subnet SUID if writing collection
-					Long subnet = getAspectSubnetworkId(my_network);
-
-					ATTRIBUTE_DATA_TYPE type = AttributesAspectUtils.determineDataType(value);
-					if (value instanceof List) {
-						final List<String> attr_values = new ArrayList<>();
-						for (final Object v : (List) value) {
-							attr_values.add(String.valueOf(v));
-						}
-						if (!attr_values.isEmpty()) {
-							elements.add(new NetworkAttributesElement(subnet, column_name, attr_values, type));
-						}
-					} else {
-						elements.add(new NetworkAttributesElement(subnet, column_name, String.valueOf(value),type));
+			// Only include subnet SUID if writing collection
+			Long subnet = getAspectSubnetworkId(my_network);
+			AbstractAttributesAspectElement element = null;
+			ATTRIBUTE_DATA_TYPE type = AttributesAspectUtils.determineDataType(value);
+			if (value instanceof List) {
+				final List<String> attr_values = new ArrayList<>();
+				for (final Object v : (List) value) {
+					attr_values.add(String.valueOf(v));
+				}
+				if (!attr_values.isEmpty()) {
+					if (namespace.equals(CyNetwork.HIDDEN_ATTRS)) {
+						element = new HiddenAttributesElement(subnet, column_name, attr_values, type);
+					}else {
+						element = new NetworkAttributesElement(subnet, column_name, attr_values, type);
 					}
 				}
+			} else {
+				if (namespace.equals(CyNetwork.HIDDEN_ATTRS)) {
+					element = new HiddenAttributesElement(subnet, column_name, String.valueOf(value), type);
+				}else {
+					element = new NetworkAttributesElement(subnet, column_name, String.valueOf(value), type);
+				}
+			}
+			if (element != null) {
+				elements.add(element);
 			}
 		}
 	}
+	
 	private void addNetworkRelationsElements(final List<AspectElement> elements, CySubNetwork subnetwork) throws IOException {
 		String name = CxUtil.getNetworkName(subnetwork);
 		// Subnetworks does not need root ID since it's not used in CX.
@@ -716,52 +731,6 @@ public final class CxExporter {
 		} else {
 			elements.add(new EdgeAttributesElement(subnetworkId, edgeId, name, String.valueOf(value),
 					AttributesAspectUtils.determineDataType(value)));
-		}
-	}
-	
-	@SuppressWarnings("rawtypes")
-	private void addHiddenAttributesElements(final List<AspectElement> elements, CyNetwork my_network) throws IOException {
-
-		final CyRow row = my_network.getRow(my_network, CyNetwork.HIDDEN_ATTRS);
-		if (row != null) {
-			final Map<String, Object> values = row.getAllValues();
-
-			if ((values != null) && !values.isEmpty()) {
-				for (final String column_name : values.keySet()) {
-					final Object value = values.get(column_name);
-					if (value == null) {
-						continue;
-					}
-					if (Settings.isIgnore(column_name, null, value)) {
-						continue;
-					}
-					if (networkColumns != null && !networkColumns.contains(column_name)) {
-						return;
-					}
-
-					if (column_name.startsWith(CxUtil.OPAQUE_ASPECT_PREFIX)) {
-						writeOpaqueElement(column_name.substring(CxUtil.OPAQUE_ASPECT_PREFIX.length()), (String) value);
-						continue;
-					}
-
-					Long subnet = getAspectSubnetworkId(my_network);
-					if (value instanceof List) {
-						final List<String> attr_values = new ArrayList<>();
-						for (final Object v : (List) value) {
-							attr_values.add(String.valueOf(v));
-						}
-						if (!attr_values.isEmpty()) {
-							elements.add(new HiddenAttributesElement(subnet, column_name, attr_values,
-									AttributesAspectUtils.determineDataType(value)));
-						}
-					} else {
-						elements.add(new HiddenAttributesElement(subnet, column_name, String.valueOf(value),
-								AttributesAspectUtils.determineDataType(value)));
-					}
-
-				}
-			}
-
 		}
 	}
 	

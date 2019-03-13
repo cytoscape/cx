@@ -77,11 +77,11 @@ public final class AspectSet {
         _aspects.add(aspect);
     }
 
-    final SortedSet<Aspect> getAspects() {
+    public final SortedSet<Aspect> getAspects() {
         return _aspects;
     }
 
-    final boolean contains(final Aspect aspect) {
+    public final boolean contains(final Aspect aspect) {
         return _aspects.contains(aspect);
     }
     
@@ -102,7 +102,7 @@ public final class AspectSet {
     	return aspects;
     }
 
-    final Set<AspectFragmentWriter> getAspectFragmentWriters() {
+    public final Set<AspectFragmentWriter> getAspectFragmentWriters() {
         final Set<AspectFragmentWriter> writers = new HashSet<>();
         if (_aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
             writers.add(CartesianLayoutFragmentWriter.createInstance());
@@ -143,7 +143,7 @@ public final class AspectSet {
         return writers;
     }
 
-    final Set<AspectFragmentReader> getAspectFragmentReaders() {
+    public final Set<AspectFragmentReader> getAspectFragmentReaders() {
         final Set<AspectFragmentReader> readers = new HashSet<>();
         if (_aspects.contains(Aspect.CARTESIAN_LAYOUT)) {
             readers.add(CartesianLayoutFragmentReader.createInstance());
