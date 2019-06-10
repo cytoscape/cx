@@ -73,8 +73,16 @@ public class CxNetworkWriter implements CyWriter {
 		return networkColFilter;
 	}
 
-	@Tunable(description = "Write all networks in the collection")
 	public boolean writeSiblings = WRITE_SIBLINGS_DEFAULT;
+
+    @Tunable(description = "Write all networks in the collection")
+    public Boolean getWriteSiblings() {
+        return writeSiblings;
+    }
+
+    public void setWriteSiblings(Boolean writeSiblings) {
+        this.writeSiblings = writeSiblings;
+    }
 
 	public boolean useCxId = USE_CXID_DEFAULT;
 
@@ -94,7 +102,11 @@ public class CxNetworkWriter implements CyWriter {
 			return false;
 		}
 		return useCxId;
-	}
+    }
+    
+    public void setUseCxId(final Boolean useCxId) {
+        this.useCxId = useCxId;
+    }
 
 	public CxNetworkWriter(final OutputStream os, final CyNetwork network, final boolean writeSiblings,
 			final boolean useCxId) {
