@@ -16,6 +16,7 @@ import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyRow;
 import org.cytoscape.model.CyTable;
+import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CySubNetwork;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewFactory;
@@ -196,10 +197,15 @@ public abstract class NiceCyNetwork extends Identifiable{
 	
 	protected void addAttributes() {
 		addTableColumns();
-		CyTable node_table = network.getTable(CyNode.class, getNamespace());
-		CyTable edge_table = network.getTable(CyEdge.class, getNamespace());
-		CyTable net_table = network.getTable(CyNetwork.class, CyNetwork.DEFAULT_ATTRS);//getNamespace());
+		CyTable node_table = network.getDefaultNodeTable();//network.getTable(CyNode.class, getNamespace());
+		CyTable edge_table = network.getDefaultEdgeTable();//network.getTable(CyEdge.class, getNamespace());
+		CyTable net_table = network.getDefaultNetworkTable();//network.getTable(CyNetwork.class, CyNetwork.DEFAULT_ATTRS);//getNamespace());
 		CyTable hidden_table = network.getTable(CyNetwork.class, CyNetwork.HIDDEN_ATTRS);
+		
+		System.out.println("Network SUID: " + network.getSUID());
+		System.out.println("  node_table SUID: " + node_table.getSUID());
+		System.out.println("  edge_table SUID: " + edge_table.getSUID());
+		System.out.println("  network_table SUID: " + net_table.getSUID());
 		
 		NiceCyRootNetwork root;
 		if (this instanceof NiceCyRootNetwork) {
@@ -213,7 +219,6 @@ public abstract class NiceCyNetwork extends Identifiable{
 		addAttributesHelper(hidden_table, network, hiddenAttributes);
 		nodeAttributes.forEach((suid, attrs) -> {
 			CyNode node = root.getNode(suid);
-			
 			addAttributesHelper(node_table, node, attrs);
 		});
 		edgeAttributes.forEach((suid, attrs) -> {
@@ -224,17 +229,23 @@ public abstract class NiceCyNetwork extends Identifiable{
 	}
 	
 	private void addAttributesHelper(CyTable table, CyIdentifiable ele, List<? extends AbstractAttributesAspectElement> attrs) {
+		System.out.println("  Adding attributes to row for SUID: " + ele.getSUID() + " into table " + table.getTitle() + " SUID: " + table.getSUID());
+		
 		CyRow row = table.getRow(ele.getSUID());
 		
 		attrs.forEach(attr -> {
 			String name = attr.getName();
+			System.out.println("    attribute: " + attr.getName());
 			if (table.getColumn(name) == null) {
+				System.out.println("    Column was null for attribute " + attr.getName() + " in table " + table.getTitle() + ". Creating column.");
 				CxUtil.createColumn(table, name, CxUtil.getDataType(attr.getDataType()), attr.isSingleValue());
 			}
 			Object value = CxUtil.getValue(attr);
 			
 			try{
+				System.out.println("      Setting value for SUID " + ele.getSUID() + ":" + value);
 				row.set(name, value);
+				//row.set(namespace, columnName, value);
 			}catch(NullPointerException e) {
 				throw new NullPointerException("NullPointerException setting " + name + " to " + value + ". Is there a null value in a list?");
 			} catch (IllegalArgumentException e) {
@@ -247,18 +258,20 @@ public abstract class NiceCyNetwork extends Identifiable{
 	protected void addTableColumns() {
 		
 		tableColumns.forEach(column -> {
+			System.out.println("      processing table column: " + column.getName() + " subnetwork: " + column.getSubnetwork());
+			
 			CyTable table;
 			String name = column.getName();
 			
 			switch(column.getAppliesTo()) {
 			case "node_table":
-				table = network.getTable(CyNode.class, getNamespace());
+				table = network.getDefaultNodeTable();//network.getTable(CyNode.class, getNamespace());
 				break;
 			case "edge_table": 
-				table = network.getTable(CyEdge.class, getNamespace());
+				table = network.getDefaultEdgeTable();//network.getTable(CyEdge.class, getNamespace());
 				break;
 			case "network_table":
-				table = network.getTable(CyNetwork.class, getNamespace());
+				table = network.getDefaultNetworkTable();//network.getTable(CyNetwork.class, getNamespace());
 				break;
 				default:
 					throw new IllegalArgumentException("Unrecognized CyTableColumn applies_to: " + column.getAppliesTo());

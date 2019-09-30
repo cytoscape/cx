@@ -1,6 +1,7 @@
 package org.cytoscape.io.internal.cxio;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -332,6 +333,13 @@ public final class CxUtil {
 		if (table == null) {
 			return null;
 		}
+		//final Collection<CyColumn> columns = table.getColumns();	
+		//columns.stream().forEach(cyColumn -> { System.out.println("\tExisting column: " + cyColumn); });
+		
+		System.out.println("Creating column: " + name + " in table " + table.getTitle());
+
+		System.out.println(" columns found with name: " + table.getColumns().stream().filter(column -> column.getName().equals(name)).count());
+		System.out.println(" found by getColumn: " + table.getColumn(name) == null);
 		if (table.getColumn(name) == null) {
 			if (is_single) {
 		       table.createColumn(name, data_type, false);

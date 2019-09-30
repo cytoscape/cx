@@ -565,6 +565,8 @@ public final class CxExporter {
 			return;
 		}
 		for (final String column_name : values.keySet()) {
+			System.out.println("writing column: " + column_name + " from " + my_network.toString());
+			
 			final Object value = values.get(column_name);
 			if (value == null) {
 				continue;
