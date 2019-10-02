@@ -17,6 +17,7 @@ import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNode;
+import org.cytoscape.model.CyTable;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CySubNetwork;
 import org.cytoscape.view.model.CyNetworkView;
@@ -488,10 +489,15 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 		// Build Root network information
 		this.network = root;
 		
+		//Add root network columns here, otherwise, subnetworks will have nowhere to put their network table attributes.
+		addRootNetworkColumns();
+		
 		// Build subnetworks (this builds all nodes and edges)
 		Iterator<NiceCySubNetwork> nice_subs = subnetworks.values().iterator();
 		NiceCySubNetwork nice_sub = nice_subs.next();
 		nice_sub.apply((CySubNetwork) root.getBaseNetwork());
+		
+		
 		
 		while (nice_subs.hasNext()) {
 			nice_sub = nice_subs.next();
@@ -501,14 +507,54 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 		}
 		
 		//add collection level attributes (must be done after nodes/edges are created)
+		addTableColumns();
 		addAttributes();
-		serializeOpaqueAspects();
 		
+		serializeOpaqueAspects();
 		TimingUtil.reportTimeDifference(t0, "time to build cynetwork(s)", -1);
 		
 		return networks;
 	}
 
+	protected void addRootNetworkColumns() {
+		tableColumns.stream().filter( x -> "network_table".equals(x.getAppliesTo())).forEach(column -> {
+			
+			CyTable table = network.getTable(CyNetwork.class, CyNetwork.DEFAULT_ATTRS);
+			String name = column.getName();
+			
+			if (table.getColumn(name) == null) {
+				CxUtil.createColumn(table, name, CxUtil.getDataType(column.getDataType()), column.isSingleValue());
+			}
+		}
+		);
+	}
+	
+protected void addTableColumns() {
+		
+		tableColumns.stream().filter( x -> !"network_table".equals(x.getAppliesTo())).forEach(column -> {
+			
+			CyTable table;
+			String name = column.getName();
+			
+			final boolean isLocal = column.getSubnetwork() != null;
+			
+			switch(column.getAppliesTo()) {
+			case "node_table":
+				table = isLocal ? network.getTable(CyNode.class, CyNetwork.LOCAL_ATTRS) : network.getTable(CyNode.class, CyNetwork.DEFAULT_ATTRS);
+				break;
+			case "edge_table": 
+				table = isLocal ? network.getTable(CyEdge.class, CyNetwork.LOCAL_ATTRS) : network.getTable(CyEdge.class, CyNetwork.DEFAULT_ATTRS);
+				break;
+			default:
+					throw new IllegalArgumentException("Unrecognized CyTableColumn applies_to: " + column.getAppliesTo());
+			}
+			
+			if (table.getColumn(name) == null) {
+				CxUtil.createColumn(table, name, CxUtil.getDataType(column.getDataType()), column.isSingleValue());
+			}
+		});
+	}
+	
 	private void serializeOpaqueAspects() {
 		Long t0 = System.currentTimeMillis();
 		NiceCyNetwork subnet = getNetwork(null);

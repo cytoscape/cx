@@ -84,6 +84,7 @@ public abstract class NiceCyNetwork extends Identifiable{
 			this.network = network;
 			
 			addElements();
+			addTableColumns();
 			addAttributes();
 		}
 		
@@ -196,17 +197,12 @@ public abstract class NiceCyNetwork extends Identifiable{
  	}
 	
 	protected void addAttributes() {
-		addTableColumns();
-		CyTable node_table = network.getDefaultNodeTable();//network.getTable(CyNode.class, getNamespace());
-		CyTable edge_table = network.getDefaultEdgeTable();//network.getTable(CyEdge.class, getNamespace());
-		CyTable net_table = network.getDefaultNetworkTable();//network.getTable(CyNetwork.class, CyNetwork.DEFAULT_ATTRS);//getNamespace());
-		CyTable hidden_table = network.getTable(CyNetwork.class, CyNetwork.HIDDEN_ATTRS);
 		
-		System.out.println("Network SUID: " + network.getSUID());
-		System.out.println("  node_table SUID: " + node_table.getSUID());
-		System.out.println("  edge_table SUID: " + edge_table.getSUID());
-		System.out.println("  network_table SUID: " + net_table.getSUID());
-		
+		CyTable node_table = network.getTable(CyNode.class, CyNetwork.DEFAULT_ATTRS);
+		CyTable node_local_table = network.getTable(CyNode.class, CyNetwork.LOCAL_ATTRS);
+		CyTable edge_table = network.getTable(CyEdge.class, CyNetwork.DEFAULT_ATTRS);
+		CyTable edge_local_table = network.getTable(CyEdge.class, CyNetwork.LOCAL_ATTRS);
+			
 		NiceCyRootNetwork root;
 		if (this instanceof NiceCyRootNetwork) {
 			root = (NiceCyRootNetwork) this;
@@ -215,27 +211,34 @@ public abstract class NiceCyNetwork extends Identifiable{
 		}
 		
 		Long t0 = System.currentTimeMillis();
-		addAttributesHelper(net_table, network, attributes);
-		addAttributesHelper(hidden_table, network, hiddenAttributes);
+		addNetworkAttributesHelper(network, attributes, hiddenAttributes);
+		//addNetworkAttributesHelper(hidden_table, network, hiddenAttributes);
 		nodeAttributes.forEach((suid, attrs) -> {
 			CyNode node = root.getNode(suid);
-			addAttributesHelper(node_table, node, attrs);
+			addAttributesHelper(node_table, node_local_table, node, attrs);
 		});
 		edgeAttributes.forEach((suid, attrs) -> {
 			CyEdge edge = root.getEdge(suid);
-			addAttributesHelper(edge_table, edge, attrs);
+			addAttributesHelper(edge_table, edge_local_table, edge, attrs);
 		});
 		TimingUtil.reportTimeDifference(t0, "attributes of " + getNetworkName(), -1);
 	}
 	
-	private void addAttributesHelper(CyTable table, CyIdentifiable ele, List<? extends AbstractAttributesAspectElement> attrs) {
-		System.out.println("  Adding attributes to row for SUID: " + ele.getSUID() + " into table " + table.getTitle() + " SUID: " + table.getSUID());
+	private void addNetworkAttributesHelper(CyIdentifiable ele, List<? extends AbstractAttributesAspectElement> attrs, List<? extends AbstractAttributesAspectElement> hidden_attrs) {
 		
-		CyRow row = table.getRow(ele.getSUID());
+		final CyTable sharedTable = network.getTable(CyNetwork.class, CyNetwork.DEFAULT_ATTRS);
+		final CyTable localTable = network.getTable(CyNetwork.class, CyNetwork.LOCAL_ATTRS);
+		
+		CyRow sharedRow = network.getRow(ele, CyNetwork.DEFAULT_ATTRS);
+		CyRow localRow = network.getRow(ele, CyNetwork.LOCAL_ATTRS);
 		
 		attrs.forEach(attr -> {
-			String name = attr.getName();
-			System.out.println("    attribute: " + attr.getName());
+			final String name = attr.getName();
+			final boolean isLocal = attr.getSubnetwork() != null;
+			
+			final CyTable table = isLocal ? localTable : sharedTable;
+			final CyRow row = isLocal ? localRow : sharedRow;
+			
 			if (table.getColumn(name) == null) {
 				System.out.println("    Column was null for attribute " + attr.getName() + " in table " + table.getTitle() + ". Creating column.");
 				CxUtil.createColumn(table, name, CxUtil.getDataType(attr.getDataType()), attr.isSingleValue());
@@ -243,14 +246,72 @@ public abstract class NiceCyNetwork extends Identifiable{
 			Object value = CxUtil.getValue(attr);
 			
 			try{
-				System.out.println("      Setting value for SUID " + ele.getSUID() + ":" + value);
+				//System.out.println("      Setting value for SUID " + ele.getSUID() + ":" + value);
 				row.set(name, value);
 				//row.set(namespace, columnName, value);
 			}catch(NullPointerException e) {
 				throw new NullPointerException("NullPointerException setting " + name + " to " + value + ". Is there a null value in a list?");
 			} catch (IllegalArgumentException e) {
 				String message = String.format("Cannot set value in column %s(%s) to %s (type %s). %s", name, CxUtil.getDataType(attr.getDataType()), value, value.getClass(), e.getMessage()); 
-				throw new IllegalArgumentException(message);
+				throw new IllegalArgumentException(message, e);
+			}
+		});
+		
+		final CyTable hiddenTable = network.getTable(CyNetwork.class, CyNetwork.HIDDEN_ATTRS);
+		final CyRow hiddenRow = network.getRow(ele, CyNetwork.HIDDEN_ATTRS);
+		
+		hidden_attrs.forEach(attr -> {
+			final String name = attr.getName();
+			
+			if (hiddenTable.getColumn(name) == null) {
+				//System.out.println("    Column was null for attribute " + attr.getName() + " in table " + hiddenTable.getTitle() + ". Creating column.");
+				CxUtil.createColumn(hiddenTable, name, CxUtil.getDataType(attr.getDataType()), attr.isSingleValue());
+			}
+			Object value = CxUtil.getValue(attr);
+			
+			try{
+				//System.out.println("      Setting value for SUID " + ele.getSUID() + ":" + value);
+				hiddenRow.set(name, value);
+				//row.set(namespace, columnName, value);
+			}catch(NullPointerException e) {
+				throw new NullPointerException("NullPointerException setting " + name + " to " + value + ". Is there a null value in a list?");
+			} catch (IllegalArgumentException e) {
+				String message = String.format("Cannot set value in column %s(%s) to %s (type %s). %s", name, CxUtil.getDataType(attr.getDataType()), value, value.getClass(), e.getMessage()); 
+				throw new IllegalArgumentException(message, e);
+			}
+		});
+	}
+	
+	private void addAttributesHelper(CyTable sharedTable, CyTable localTable, CyIdentifiable ele, List<? extends AbstractAttributesAspectElement> attrs) {
+		//System.out.println("  Adding attributes to row for SUID: " + ele.getSUID() + " into shared table " + sharedTable.getTitle() + " and local table " + localTable.getTitle());
+		
+		final CyRow sharedRow = sharedTable.getRow(ele.getSUID());
+		final CyRow localRow = localTable.getRow(ele.getSUID());
+		
+		attrs.forEach(attr -> {
+			final String name = attr.getName();
+			final boolean isLocal = attr.getSubnetwork() != null;
+			
+			final CyTable table = isLocal ? localTable : sharedTable;
+			final CyRow row = isLocal ? localRow : sharedRow;
+			
+			//System.out.println("    attribute : " + attr.getName() + " " + (isLocal ? "local" : "shared"));
+			
+			if (table.getColumn(name) == null) {
+				//System.out.println("    Column was null for attribute " + attr.getName() + " in table " + table.getTitle() + ". Creating column.");
+				CxUtil.createColumn(table, name, CxUtil.getDataType(attr.getDataType()), attr.isSingleValue());
+			}
+			Object value = CxUtil.getValue(attr);
+			
+			try{
+				//System.out.println("      Setting value for SUID " + ele.getSUID() + ":" + value);
+				row.set(name, value);
+				//row.set(namespace, columnName, value);
+			}catch(NullPointerException e) {
+				throw new NullPointerException("NullPointerException setting " + name + " to " + value + ". Is there a null value in a list?");
+			} catch (IllegalArgumentException e) {
+				String message = String.format("Cannot set value in column %s(%s) to %s (type %s). %s", name, CxUtil.getDataType(attr.getDataType()), value, value.getClass(), e.getMessage()); 
+				throw new IllegalArgumentException(message, e);
 			}
 		});
 	}
@@ -258,20 +319,24 @@ public abstract class NiceCyNetwork extends Identifiable{
 	protected void addTableColumns() {
 		
 		tableColumns.forEach(column -> {
-			System.out.println("      processing table column: " + column.getName() + " subnetwork: " + column.getSubnetwork());
 			
 			CyTable table;
 			String name = column.getName();
 			
+			final boolean isLocal = column.getSubnetwork() != null;
+			
 			switch(column.getAppliesTo()) {
 			case "node_table":
-				table = network.getDefaultNodeTable();//network.getTable(CyNode.class, getNamespace());
+				table = isLocal ? network.getTable(CyNode.class, CyNetwork.LOCAL_ATTRS) : network.getTable(CyNode.class, CyNetwork.DEFAULT_ATTRS);
 				break;
 			case "edge_table": 
-				table = network.getDefaultEdgeTable();//network.getTable(CyEdge.class, getNamespace());
+				table = isLocal ? network.getTable(CyEdge.class, CyNetwork.LOCAL_ATTRS) : network.getTable(CyEdge.class, CyNetwork.DEFAULT_ATTRS);
 				break;
 			case "network_table":
-				table = network.getDefaultNetworkTable();//network.getTable(CyNetwork.class, getNamespace());
+				table = isLocal //&& network.getSUID() == column.getSubnetwork() 
+					? network.getTable(CyNetwork.class, CyNetwork.LOCAL_ATTRS) 
+					: network.getTable(CyNetwork.class, CyNetwork.DEFAULT_ATTRS);
+				
 				break;
 				default:
 					throw new IllegalArgumentException("Unrecognized CyTableColumn applies_to: " + column.getAppliesTo());
