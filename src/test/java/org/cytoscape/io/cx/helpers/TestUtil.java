@@ -741,9 +741,23 @@ public class TestUtil {
 			// Citations are inconsistent 
 		case NetworkRelationsElement.ASPECT_NAME:
 			// Network Relations are used to build a network/view ID map
-		case CyTableColumnElement.ASPECT_NAME:
-			// CyTableColumn may change drastically on round trip because Cytoscape adds many properties
 			return true;
+		case CyTableColumnElement.ASPECT_NAME:
+		
+			CyTableColumnElement cyTableColumnElement=(CyTableColumnElement) aspect;
+			System.out.println(" tableColumn: " + cyTableColumnElement.getName());
+			System.out.println("  subnetwork: " + cyTableColumnElement.getSubnetwork());
+			
+			//output.getOpaqueAspectTable().keySet().stream().forEach( x -> System.out.println("  opaque key: " + x));
+			
+			Collection<AspectElement> outputTableColumns = output.getOpaqueAspectTable().get(CyTableColumnElement.ASPECT_NAME);
+			
+			//outputTableColumns.stream().forEach(x -> System.out.println("   existing column: " + ((CyTableColumnElement) x).getName()));
+			
+			long count = outputTableColumns.stream().filter(x -> cyTableColumnElement.getName().equals(((CyTableColumnElement) x).getName())).count();
+			
+			// CyTableColumn may change drastically on round trip because Cytoscape adds many properties
+			return count > 0;
 		default:
 			OpaqueElement oe = (OpaqueElement) aspect;
 			Map<String, Collection<AspectElement>> table = output.getOpaqueAspectTable();
