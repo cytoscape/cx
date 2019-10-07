@@ -749,16 +749,13 @@ public class TestUtil {
 			
 			Collection<AspectElement> outputTableColumns = output.getOpaqueAspectTable().get(CyTableColumnElement.ASPECT_NAME);
 			
-			//final boolean isShared = cyTableColumnElement.getSubnetwork() == null;
 			final Long subnetwork = cyTableColumnElement.getSubnetwork();
 			
 			long count = outputTableColumns.stream().filter(x -> {
-				//final boolean outputIsShared = ((CyTableColumnElement) x).getSubnetwork() == null;
 				return cyTableColumnElement.getName().equals(((CyTableColumnElement) x).getName()) 
 						&& (subnetwork == null && ((CyTableColumnElement) x).getSubnetwork() == null) || (subnetwork != null && subnetwork.equals(((CyTableColumnElement) x).getSubnetwork()));
 			}).count();
 			
-			// CyTableColumn may change drastically on round trip because Cytoscape adds many properties
 			return count > 0;
 		default:
 			OpaqueElement oe = (OpaqueElement) aspect;
