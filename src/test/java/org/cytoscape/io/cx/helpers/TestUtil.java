@@ -744,19 +744,7 @@ public class TestUtil {
 			// Network Relations are used to build a network/view ID map
 			return true;
 		case CyTableColumnElement.ASPECT_NAME:
-		
-			CyTableColumnElement cyTableColumnElement=(CyTableColumnElement) aspect;
-			
-			Collection<AspectElement> outputTableColumns = output.getOpaqueAspectTable().get(CyTableColumnElement.ASPECT_NAME);
-			
-			final Long subnetwork = cyTableColumnElement.getSubnetwork();
-			
-			long count = outputTableColumns.stream().filter(x -> {
-				return cyTableColumnElement.getName().equals(((CyTableColumnElement) x).getName()) 
-						&& (subnetwork == null && ((CyTableColumnElement) x).getSubnetwork() == null) || (subnetwork != null && subnetwork.equals(((CyTableColumnElement) x).getSubnetwork()));
-			}).count();
-			
-			return count > 0;
+			return containsColumnAspect(output, aspect);
 		default:
 			OpaqueElement oe = (OpaqueElement) aspect;
 			Map<String, Collection<AspectElement>> table = output.getOpaqueAspectTable();
@@ -769,7 +757,19 @@ public class TestUtil {
 		}
 	}
 
-	
+	private boolean containsColumnAspect(NiceCXNetwork output, AspectElement aspect) {
+		final CyTableColumnElement cyTableColumnElement=(CyTableColumnElement) aspect;
+		final Collection<AspectElement> outputTableColumns = output.getOpaqueAspectTable().get(CyTableColumnElement.ASPECT_NAME);
+		
+		final Long subnetwork = cyTableColumnElement.getSubnetwork();
+		
+		final long count = outputTableColumns.stream().filter(x -> {
+			return cyTableColumnElement.getName().equals(((CyTableColumnElement) x).getName()) 
+					&& (subnetwork == null && ((CyTableColumnElement) x).getSubnetwork() == null) || (subnetwork != null && subnetwork.equals(((CyTableColumnElement) x).getSubnetwork()));
+		}).count();
+		
+		return count > 0;
+	}
 	
 	private boolean containsNodeAspect(Map<Long, Collection<AspectElement>> map, CartesianLayoutElement cle) {
 		//NODE_LOCATION mapping overwrites cartesianLayout
@@ -984,13 +984,12 @@ public class TestUtil {
 	}
 
 	private void updateColumnIds(Map<String, Collection<AspectElement>> table, Map<Long, Long> cxMapping) {
-		ArrayList<AspectElement> newCollection  = new ArrayList<AspectElement>();
-		Collection<AspectElement> collection = table.get(CyTableColumnElement.ASPECT_NAME);
-			collection.forEach(ae -> {
+		final Collection<AspectElement> collection = table.get(CyTableColumnElement.ASPECT_NAME);
+		final List<AspectElement> newCollection =	collection.stream().map(ae -> {
 			CyTableColumnElement tce = (CyTableColumnElement) ae;
 			Long newId = cxMapping.get(tce.getSubnetwork());
-			newCollection.add(new CyTableColumnElement(newId, tce.getAppliesTo(), tce.getName(), tce.getDataType()));
-		});
+			return new CyTableColumnElement(newId, tce.getAppliesTo(), tce.getName(), tce.getDataType());
+		}).collect(Collectors.toList());
 		table.put(CyTableColumnElement.ASPECT_NAME, newCollection);
 	}
 	
