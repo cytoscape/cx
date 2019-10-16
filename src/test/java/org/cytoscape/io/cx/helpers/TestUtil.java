@@ -359,7 +359,8 @@ public class TestUtil {
 		Map<Long, Long> map = new HashMap<Long, Long>();
 		if (!CxUtil.isCollection(input)) {
 			return map;
-		}
+		} 
+		
 		Map<String, Collection<AspectElement>> in_table = input.getOpaqueAspectTable();
 		Map<String, Collection<AspectElement>> out_table = output.getOpaqueAspectTable();
 		if (in_table == null || out_table == null) {
@@ -741,9 +742,9 @@ public class TestUtil {
 			// Citations are inconsistent 
 		case NetworkRelationsElement.ASPECT_NAME:
 			// Network Relations are used to build a network/view ID map
-		case CyTableColumnElement.ASPECT_NAME:
-			// CyTableColumn may change drastically on round trip because Cytoscape adds many properties
 			return true;
+		case CyTableColumnElement.ASPECT_NAME:
+			return containsColumnAspect(output, aspect);
 		default:
 			OpaqueElement oe = (OpaqueElement) aspect;
 			Map<String, Collection<AspectElement>> table = output.getOpaqueAspectTable();
@@ -756,7 +757,19 @@ public class TestUtil {
 		}
 	}
 
-	
+	private boolean containsColumnAspect(NiceCXNetwork output, AspectElement aspect) {
+		final CyTableColumnElement cyTableColumnElement=(CyTableColumnElement) aspect;
+		final Collection<AspectElement> outputTableColumns = output.getOpaqueAspectTable().get(CyTableColumnElement.ASPECT_NAME);
+		
+		final Long subnetwork = cyTableColumnElement.getSubnetwork();
+		
+		final long count = outputTableColumns.stream().filter(x -> {
+			return cyTableColumnElement.getName().equals(((CyTableColumnElement) x).getName()) 
+					&& (subnetwork == null && ((CyTableColumnElement) x).getSubnetwork() == null) || (subnetwork != null && subnetwork.equals(((CyTableColumnElement) x).getSubnetwork()));
+		}).count();
+		
+		return count > 0;
+	}
 	
 	private boolean containsNodeAspect(Map<Long, Collection<AspectElement>> map, CartesianLayoutElement cle) {
 		//NODE_LOCATION mapping overwrites cartesianLayout
@@ -928,11 +941,14 @@ public class TestUtil {
 		updateAttributeIds(niceCX.getEdgeAttributes(), cxMapping);
 		updateCartesianLayoutIds(niceCX.getNodeAssociatedAspect(CartesianLayoutElement.ASPECT_NAME), cxMapping);
 		Collection<AspectElement> visProps = table.get(CyVisualPropertiesElement.ASPECT_NAME);
+		
 		if (visProps == null) {
 			visProps = table.get("visualProperties");
 		}
 		updateCyVisualPropertyIds(visProps, cxMapping);
 		updateSubNetworkIds(table.get(SubNetworkElement.ASPECT_NAME), cxMapping);
+		updateColumnIds(table, cxMapping);
+		
 	}
 	
 	private void updateGroupIds(Collection<AspectElement> collection, Map<Long, Long> cxMapping) {
@@ -967,6 +983,16 @@ public class TestUtil {
 		});
 	}
 
+	private void updateColumnIds(Map<String, Collection<AspectElement>> table, Map<Long, Long> cxMapping) {
+		final Collection<AspectElement> collection = table.get(CyTableColumnElement.ASPECT_NAME);
+		final List<AspectElement> newCollection =	collection.stream().map(ae -> {
+			CyTableColumnElement tce = (CyTableColumnElement) ae;
+			Long newId = cxMapping.get(tce.getSubnetwork());
+			return new CyTableColumnElement(newId, tce.getAppliesTo(), tce.getName(), tce.getDataType());
+		}).collect(Collectors.toList());
+		table.put(CyTableColumnElement.ASPECT_NAME, newCollection);
+	}
+	
 	private void updateCyVisualPropertyIds(Collection<AspectElement> visProps, Map<Long, Long> cxMapping) {
 		if (visProps == null) {
 			return;

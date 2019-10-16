@@ -519,7 +519,7 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 	protected void addRootNetworkColumns() {
 		tableColumns.stream().filter( x -> "network_table".equals(x.getAppliesTo())).forEach(column -> {
 			
-			CyTable table = network.getTable(CyNetwork.class, CyNetwork.DEFAULT_ATTRS);
+			CyTable table = network.getTable(CyNetwork.class, CyRootNetwork.DEFAULT_ATTRS);
 			String name = column.getName();
 			
 			if (table.getColumn(name) == null) {
