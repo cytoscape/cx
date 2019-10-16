@@ -663,6 +663,15 @@ public class TestUtil {
 		return cvpe.getProperties().isEmpty() && cvpe.getDependencies().isEmpty() && cvpe.getMappings().isEmpty();
 	}
 
+	private boolean isValidRemovedNodeAttributesElement(NodeAttributesElement ele) {
+		return ele.getName().equals("name") 
+				|| ele.getName().equals("shared name");
+	}
+	
+	private boolean isValidRemovedEdgeAttributesElement(EdgeAttributesElement ele) {
+		return ele.getName().equals("interaction")
+				|| ele.getName().equals("shared interaction");
+	}
 	
 	private <T extends AspectElement> boolean containsAspect(Collection<? extends T> output_aspects, T aspect) throws IOException {
 		if (output_aspects == null || output_aspects.isEmpty()) {
@@ -713,10 +722,16 @@ public class TestUtil {
 		case NodeAttributesElement.ASPECT_NAME:
 			NodeAttributesElement nodeAttr = (NodeAttributesElement) aspect;
 			Long node = nodeAttr.getPropertyOf();
+			if (!CxUtil.isCollection(output) && isValidRemovedNodeAttributesElement(nodeAttr)) {
+				return true;
+			}
 			return containsAspect(output.getNodeAttributes().get(node), nodeAttr);
 		case EdgeAttributesElement.ASPECT_NAME:
 			EdgeAttributesElement eae = (EdgeAttributesElement) aspect;
 			Long edge = eae.getPropertyOf();
+			if (!CxUtil.isCollection(output) && isValidRemovedEdgeAttributesElement(eae)) {
+				return true;
+			}
 			return containsAspect(output.getEdgeAttributes().get(edge), eae);	
 		case NamespacesElement.ASPECT_NAME:
 			return verifyNamespace(output, aspect);

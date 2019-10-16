@@ -189,8 +189,18 @@ public class CxNetworkWriter implements CyWriter {
 		final CxExporter exporter = new CxExporter(_network, writeSiblings, useCxId);
 
 		List<String> aspects = aspectFilter.getSelectedValues();
-		exporter.setNodeColumnFilter(nodeColFilter.getSelectedValues());
-		exporter.setEdgeColumnFilter(edgeColFilter.getSelectedValues());
+		exporter.setNodeColumnFilter(nodeColFilter.getSelectedValues().stream().filter( 
+				columnName 
+				-> writeSiblings 
+				|| !columnName.equals("shared name")
+					&& !columnName.equals("name")
+				).collect(Collectors.toList()));
+		exporter.setEdgeColumnFilter(edgeColFilter.getSelectedValues().parallelStream().filter(
+				columnName
+				-> writeSiblings
+				|| !columnName.equals("interaction")
+					&& !columnName.equals("shared interaction")
+				).collect(Collectors.toList()));
 		exporter.setNetworkColumnFilter(networkColFilter.getSelectedValues());
 
 		final long t0 = System.currentTimeMillis();
