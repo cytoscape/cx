@@ -200,6 +200,7 @@ public class CxNetworkWriter implements CyWriter {
 				-> writeSiblings
 				|| !columnName.equals("interaction")
 					&& !columnName.equals("shared interaction")
+					&& !columnName.equals("shared name")
 				).collect(Collectors.toList()));
 		exporter.setNetworkColumnFilter(networkColFilter.getSelectedValues());
 

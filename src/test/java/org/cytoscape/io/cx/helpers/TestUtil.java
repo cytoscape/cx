@@ -670,7 +670,8 @@ public class TestUtil {
 	
 	private boolean isValidRemovedEdgeAttributesElement(EdgeAttributesElement ele) {
 		return ele.getName().equals("interaction")
-				|| ele.getName().equals("shared interaction");
+				|| ele.getName().equals("shared interaction")
+				|| ele.getName().equals("shared name");
 	}
 	
 	private <T extends AspectElement> boolean containsAspect(Collection<? extends T> output_aspects, T aspect) throws IOException {
