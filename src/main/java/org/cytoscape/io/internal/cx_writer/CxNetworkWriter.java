@@ -195,7 +195,7 @@ public class CxNetworkWriter implements CyWriter {
 				|| !columnName.equals("shared name")
 					&& !columnName.equals("name")
 				).collect(Collectors.toList()));
-		exporter.setEdgeColumnFilter(edgeColFilter.getSelectedValues().parallelStream().filter(
+		exporter.setEdgeColumnFilter(edgeColFilter.getSelectedValues().stream().filter(
 				columnName
 				-> writeSiblings
 				|| !columnName.equals("interaction")
