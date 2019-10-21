@@ -212,7 +212,7 @@ public class TestUtil {
 		return reader.getNetworks();
 	}
 	
-	private static ByteArrayOutputStream saveNetwork(CyNetwork network, boolean collection, boolean useCxId) throws IOException {
+	public static ByteArrayOutputStream saveNetwork(CyNetwork network, boolean collection, boolean useCxId) throws IOException {
 		if (collection && useCxId) {
 			logger.info("Not using cxId for collection");
 			useCxId = false;
@@ -282,7 +282,7 @@ public class TestUtil {
 		return reader;
 	}
 	
-	/* Main test wrapper, check that all input aspects persist */
+	/* Main test wrapper; check that all input aspects persist */
 	public static void withAspects(CxReaderWrapper reader, AspectElement... aspects) throws IOException {
 		
 		NiceCXNetwork niceCX = reader.getNiceCX();
