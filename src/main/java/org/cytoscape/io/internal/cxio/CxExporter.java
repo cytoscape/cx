@@ -267,7 +267,17 @@ public final class CxExporter {
 		MetaDataCollection pre_meta_data = CxUtil.getMetaData(baseNetwork);
 		if (pre_meta_data.isEmpty()) {
 			for (AspectFragmentWriter aspect : AspectSet.getAspectFragmentWriters(aspects)) {
-				addDataToMetaDataCollection(pre_meta_data, aspect.getAspectName(), null, null);
+				if (aspect.getAspectName().equals(EdgesElement.ASPECT_NAME)) {
+					if (baseNetwork.getEdgeCount() > 0) {
+						addDataToMetaDataCollection(pre_meta_data, aspect.getAspectName(), null, null);
+					}
+				} else if (aspect.getAspectName().equals(EdgeAttributesElement.ASPECT_NAME)) {
+					if (baseNetwork.getEdgeCount() > 0) {
+						addDataToMetaDataCollection(pre_meta_data, aspect.getAspectName(), null, null);
+					}
+				} else {
+					addDataToMetaDataCollection(pre_meta_data, aspect.getAspectName(), null, null);
+				}
 			}
 		}
 		writer.addPreMetaData(pre_meta_data);
