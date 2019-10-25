@@ -192,25 +192,18 @@ public class CxNetworkWriter implements CyWriter {
 		exporter.setNodeColumnFilter(nodeColFilter.getSelectedValues().stream().filter( 
 				columnName 
 				-> writeSiblings 
-				|| ( !columnName.equals("shared name")
-					 && !columnName.equals("name")
-				   )
+				|| !Settings.IGNORE_SINGLE_NETWORK_NODE_ATTRIBUTES.contains(columnName)
 				).collect(Collectors.toList()));
 		exporter.setEdgeColumnFilter(edgeColFilter.getSelectedValues().stream().filter(
 				columnName
 				-> writeSiblings
-				|| ( !columnName.equals("interaction")
-					 && !columnName.equals("shared interaction")
-					 && !columnName.equals("shared name")
-				   )
+				|| !Settings.IGNORE_SINGLE_NETWORK_EDGE_ATTRIBUTES.contains(columnName)
 				).collect(Collectors.toList()));
 		
 		exporter.setNetworkColumnFilter(networkColFilter.getSelectedValues().stream().filter(
 				columnName 
 				-> writeSiblings 
-				|| ( !columnName.equals("shared name")
-					 && !columnName.equals("selected")
-				   )
+				|| !Settings.IGNORE_SINGLE_NETWORK_NETWORK_ATTRIBUTES.contains(columnName)
 				).collect(Collectors.toList()));
 
 		final long t0 = System.currentTimeMillis();

@@ -51,6 +51,12 @@ public final class CxUtil {
     public static final String NODE_CUSTOM_GRAPHICS_SIZE_SYNC = "nodeCustomGraphicsSizeSync";
     public static final String ARROW_COLOR_MATCHES_EDGE       = "arrowColorMatchesEdge";
     
+    public static final String NAME = "name";
+    public static final String SHARED_NAME = "shared name";
+    public static final String INTERACTION = "interaction";
+    public static final String SHARED_INTERACTION = "shared interaction";
+    public static final String SELECTED = "selected";
+    
     public static final String CX_ID_MAPPING				  = "CX Element ID";
     public static final String CX_METADATA				  	  = "CX MetaData";
 	public static final String OPAQUE_ASPECT_PREFIX 		  = "CX_OPAQUE::";

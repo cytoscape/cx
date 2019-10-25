@@ -19,9 +19,24 @@ public final class Settings {
 	public final static Set<String> IGNORE_NODE_ATTRIBUTES = new HashSet<>();
 	public final static Set<String> IGNORE_NETWORK_ATTRIBUTES = new HashSet<>();
 
+	public final static Set<String> IGNORE_SINGLE_NETWORK_EDGE_ATTRIBUTES = new HashSet<>();
+	public final static Set<String> IGNORE_SINGLE_NETWORK_NODE_ATTRIBUTES = new HashSet<>();
+	public final static Set<String> IGNORE_SINGLE_NETWORK_NETWORK_ATTRIBUTES = new HashSet<>();
+
+	
 	static {
 		IGNORE_NODE_ATTRIBUTES.add(CxUtil.REPRESENTS);
-		// TODO: consider adding SHARED attributes
+		
+		IGNORE_SINGLE_NETWORK_NODE_ATTRIBUTES.add(CxUtil.NAME);
+		IGNORE_SINGLE_NETWORK_NODE_ATTRIBUTES.add(CxUtil.SHARED_NAME);
+		
+		IGNORE_SINGLE_NETWORK_EDGE_ATTRIBUTES.add(CxUtil.INTERACTION);
+		IGNORE_SINGLE_NETWORK_EDGE_ATTRIBUTES.add(CxUtil.SHARED_INTERACTION);
+		IGNORE_SINGLE_NETWORK_EDGE_ATTRIBUTES.add(CxUtil.SHARED_NAME);
+		
+		IGNORE_SINGLE_NETWORK_NETWORK_ATTRIBUTES.add(CxUtil.SHARED_NAME);
+		IGNORE_SINGLE_NETWORK_NETWORK_ATTRIBUTES.add(CxUtil.SELECTED);
+		
 	}
 	
     private boolean              _timing                                                               = TIMING_DEFAULT;
