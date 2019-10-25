@@ -674,6 +674,11 @@ public class TestUtil {
 				|| ele.getName().equals("shared name");
 	}
 	
+	private boolean isValidRemovedNetworkAttributesElement(NetworkAttributesElement ele) {
+		return ele.getName().equals("selected")
+				|| ele.getName().equals("shared name");
+	}
+	
 	private <T extends AspectElement> boolean containsAspect(Collection<? extends T> output_aspects, T aspect) throws IOException {
 		if (output_aspects == null || output_aspects.isEmpty()) {
 			return false;
@@ -716,6 +721,10 @@ public class TestUtil {
 			EdgesElement ee2 = output.getEdges().get(ee.getId());
 			return compareAspect(ee, ee2);
 		case NetworkAttributesElement.ASPECT_NAME:
+			NetworkAttributesElement networkAttr = (NetworkAttributesElement) aspect;
+			if (!CxUtil.isCollection(output) && isValidRemovedNetworkAttributesElement(networkAttr)) {
+				return true;
+			}
 			return containsAspect(output.getNetworkAttributes(), aspect);
 		case HiddenAttributesElement.ASPECT_NAME:
 			Collection<AspectElement> hidden = output.getOpaqueAspectTable().get(HiddenAttributesElement.ASPECT_NAME);
