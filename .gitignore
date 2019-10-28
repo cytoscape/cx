@@ -123,3 +123,6 @@ hs_err_pid*
 
 *.iml
 .idea
+
+src/test/resources/output
+loop_ndex_output/*

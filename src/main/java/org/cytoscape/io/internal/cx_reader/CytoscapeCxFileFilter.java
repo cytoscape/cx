@@ -1,9 +1,10 @@
 package org.cytoscape.io.internal.cx_reader;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,31 +15,35 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class CytoscapeCxFileFilter extends BasicCyFileFilter {
+	
+	private static final String[] extensions = new String[] { "cx" };
+    private static final String[] types = new String[] { "application/json" };
+    private static final String description = "CX JSON";
+    private static final DataCategory category = DataCategory.NETWORK;
+    
 
-    private static final Logger logger            = LoggerFactory.getLogger(CytoscapeCxFileFilter.class);
+    private static final Logger locallogger            = LoggerFactory.getLogger(CytoscapeCxFileFilter.class);
     public static final Pattern CX_HEADER_PATTERN = Pattern
+    													.compile("\\s*\\{\\s*\"\\s*metaData\"\\s*:");
+    public static final Pattern CX_HEADER_PATTERN_OLD = Pattern
                                                           .compile("\\s*\\[\\s*\\{\\s*\"\\s*numberVerification\"\\s*:");
 
-    public CytoscapeCxFileFilter(final Set<String> extensions,
-                                 final Set<String> contentTypes,
-                                 final String description,
-                                 final DataCategory category,
-                                 final StreamUtil streamUtil) {
-        super(extensions, contentTypes, description, category, streamUtil);
-    }
-
     public CytoscapeCxFileFilter(final String[] extensions,
-                                 final String[] contentTypes,
-                                 final String description,
-                                 final DataCategory category,
-                                 final StreamUtil streamUtil) {
-        super(extensions, contentTypes, description, category, streamUtil);
+            final String[] contentTypes,
+            final String description,
+            final DataCategory category,
+            final StreamUtil streamUtil) {
+		super(extensions, contentTypes, description, category, streamUtil);
+	}
+    
+    public CytoscapeCxFileFilter(final StreamUtil streamUtil) {
+        this(extensions, types, description, category, streamUtil);
     }
 
     @Override
     public boolean accepts(final InputStream stream,
-                           final DataCategory category) {
-        if (!category.equals(DataCategory.NETWORK)) {
+                           final DataCategory dataCategory) {
+        if (!dataCategory.equals(DataCategory.NETWORK)) {
             return false;
         }
         try {
@@ -54,12 +59,12 @@ public class CytoscapeCxFileFilter extends BasicCyFileFilter {
 
     @Override
     public boolean accepts(final URI uri,
-                           final DataCategory category) {
+                           final DataCategory dataCategory) {
         try (InputStream is = uri.toURL().openStream()) {
-			return accepts(is, category);
+			return accepts(is, dataCategory);
         }
         catch (final IOException e) {
-            logger.error("Error while opening stream: " + uri,
+            locallogger.error("Error while opening stream: " + uri,
                          e);
             return false;
         }
@@ -70,27 +75,50 @@ public class CytoscapeCxFileFilter extends BasicCyFileFilter {
      * @return null if not an CX file
      */
     protected String getCXstartElement(final InputStream stream) {
-        final String header = this.getHeader(stream,
-                                             20);
+        final String header = getHeaderCharacters(stream, 400);
         final Matcher matcher = CX_HEADER_PATTERN.matcher(header);
         String root = null;
 
         if (matcher.find()) {
             root = matcher.group(0);
         }
+        if (root == null) {
+        	final Matcher matcher_old = CX_HEADER_PATTERN_OLD.matcher(header);
+            
+            if (matcher_old.find()) {
+                root = matcher_old.group(0);
+            }
+        }
 
         return root;
     }
-   
-    public static void main(String [] args)
-    {
-        final String str = "\t[\n{\n   \"numberVerification\"    \n:   [{\"longNumber\"     :    281474976710655} ]}, {";
-        final Matcher matcher = CX_HEADER_PATTERN.matcher(str);
-        
-        String root = null;if (matcher.find()) {
-            root = matcher.group(0);
-        }
-        System.out.println(root);
-    }
+    
+    protected String getHeaderCharacters(InputStream stream, int numCharacters) {
+
+		String header;
+		BufferedReader br = new BufferedReader(new InputStreamReader(stream));
+
+		try {
+			StringBuilder builder = new StringBuilder();
+			for (int i = 0; i < numCharacters; i++) {
+				char[] c = new char[1];
+				br.read(c);
+				builder.append(c);
+			}
+			header = builder.toString();
+		} catch (IOException ioe) {
+			header = "";
+		} finally {
+			if (br != null)
+				try {
+					br.close();
+				} catch (IOException e) {
+				}
+
+			br = null;
+		}
+
+		return header;
+	}
     
 }

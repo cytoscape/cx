@@ -5,12 +5,21 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
-import org.cxio.core.CxReader;
-import org.cxio.core.interfaces.AspectFragmentReader;
-import org.cytoscape.io.cx.Aspect;
+import org.cytoscape.io.internal.AspectSet;
+import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
+import org.ndexbio.cxio.aspects.datamodels.EdgeAttributesElement;
+import org.ndexbio.cxio.aspects.datamodels.EdgesElement;
+import org.ndexbio.cxio.aspects.datamodels.NetworkAttributesElement;
+import org.ndexbio.cxio.aspects.datamodels.NodeAttributesElement;
+import org.ndexbio.cxio.aspects.datamodels.NodesElement;
+import org.ndexbio.cxio.core.CxElementReader2;
+import org.ndexbio.cxio.core.interfaces.AspectElement;
+import org.ndexbio.cxio.core.interfaces.AspectFragmentReader;
+import org.ndexbio.cxio.metadata.MetaDataCollection;
+import org.ndexbio.cxio.metadata.MetaDataElement;
+import org.ndexbio.model.cx.NdexNetworkStatus;
+import org.ndexbio.model.cx.NiceCXNetwork;
 
 /**
  * This class is for de-serializing CX formatted networks, views, and attribute
@@ -76,20 +85,27 @@ import org.cytoscape.io.cx.Aspect;
  */
 public final class CxImporter {
 
-    private final SortedSet<AspectFragmentReader> _additional_readers;
+    private final Set<AspectFragmentReader> all_readers ;
 
-    private CxImporter() {
-        _additional_readers = new TreeSet<AspectFragmentReader>();
+    public CxImporter() {
+        
+        Collection<String> aspects = AspectSet.getAspectNames();
+        
+        all_readers = new HashSet<>();
+        for (final AspectFragmentReader reader : AspectSet.getAspectFragmentReaders(aspects)) {
+            all_readers.add(reader);
+        }
+        
     }
 
-    /**
+    /*
      * This creates a new CxImporter
      *
      * @return a new CxImporter
      */
-    public final static CxImporter createInstance() {
+   /* public final static CxImporter createInstance() {
         return new CxImporter();
-    }
+    } */ 
 
     /**
      * To use custom readers for other aspects than the standard nodes, edges,
@@ -100,8 +116,8 @@ public final class CxImporter {
      *            a collection of additional custom readers to add
      */
     public final void addAdditionalReaders(final Collection<AspectFragmentReader> additional_readers) {
-        _additional_readers.addAll(additional_readers);
-    }
+        all_readers.addAll(additional_readers);
+    } 
 
     /**
      * To use a custom reader for another aspect than the standard nodes, edges,
@@ -112,7 +128,7 @@ public final class CxImporter {
      *            an additional custom readers to add
      */
     public final void addAdditionalReader(final AspectFragmentReader additional_reader) {
-        _additional_readers.add(additional_reader);
+        all_readers.add(additional_reader);
     }
 
     /**
@@ -157,24 +173,83 @@ public final class CxImporter {
      * @see AspectSet
      * @see Aspect
      */
-    public final CxReader obtainCxReader(final AspectSet aspects, final InputStream in) throws IOException {
-        final Set<AspectFragmentReader> all_readers = getAllAspectFragmentReaders(aspects.getAspectFragmentReaders());
-        final CxReader r = CxReader.createInstance(in, all_readers);
-        return r;
+  
+    public NiceCXNetwork getCXNetworkFromStream( final InputStream in) throws IOException {
+    	CxElementReader2 r = new CxElementReader2(in, all_readers, true);
+        long t0 = System.currentTimeMillis();
+        MetaDataCollection metadata = r.getPreMetaData();
+		
+        long nodeIdCounter = 0;
+        long edgeIdCounter = 0;
+        
+        NiceCXNetwork niceCX = new NiceCXNetwork ();
+        
+     	for ( AspectElement elmt : r ) {
+     		switch ( elmt.getAspectName() ) {
+     			case NodesElement.ASPECT_NAME :       //Node
+     				    NodesElement n = (NodesElement) elmt;
+     					niceCX.addNode(n);
+                        if (n.getId() > nodeIdCounter )
+                        	nodeIdCounter = n.getId();
+     					break;
+     				case NdexNetworkStatus.ASPECT_NAME:   //ndexStatus we ignore this in CX
+     					break; 
+     				case EdgesElement.ASPECT_NAME:       // Edge
+     					EdgesElement ee = (EdgesElement) elmt;
+     					niceCX.addEdge(ee);
+     					if( ee.getId() > edgeIdCounter)
+     						edgeIdCounter = ee.getId();
+     					break;
+     				case NodeAttributesElement.ASPECT_NAME:  // node attributes
+     					niceCX.addNodeAttribute((NodeAttributesElement) elmt );
+     					break;
+     				case NetworkAttributesElement.ASPECT_NAME: //network attributes
+     					niceCX.addNetworkAttribute(( NetworkAttributesElement) elmt);
+     					break;
+     				case EdgeAttributesElement.ASPECT_NAME: //edge attributes
+     					niceCX.addEdgeAttribute((EdgeAttributesElement)elmt);
+     					break;
+     				case CartesianLayoutElement.ASPECT_NAME: // cartesian layout
+     					CartesianLayoutElement e = (CartesianLayoutElement)elmt;
+     					niceCX.addNodeAssociatedAspectElement(e.getNode(), e);
+     					break;
+     				default:    // opaque aspect
+     					niceCX.addOpaqueAspect(elmt);
+     			}
+     	} 
+     	
+     	MetaDataCollection postmetadata = r.getPostMetaData();
+     	
+  	    if ( postmetadata !=null) {
+		  if( metadata == null) {
+			  metadata = postmetadata;
+		  } else {
+			  for (MetaDataElement e : postmetadata) {
+				  Long cnt = e.getIdCounter();
+				  if ( cnt !=null) {
+					 metadata.setIdCounter(e.getName(),cnt);
+				  }
+				  cnt = e.getElementCount() ;
+				  if ( cnt !=null) {
+					  metadata.setElementCount(e.getName(),cnt);
+				  }
+			  }
+		  }
+	    }
+  	    
+  	    Long cxNodeIdCounter = metadata.getIdCounter(NodesElement.ASPECT_NAME);
+  	    if (cxNodeIdCounter == null || cxNodeIdCounter.longValue() < nodeIdCounter)
+  	    	metadata.setIdCounter(NodesElement.ASPECT_NAME, Long.valueOf(nodeIdCounter));
+  	    
+  	    Long cxEdgeIdCounter = metadata.getIdCounter(EdgesElement.ASPECT_NAME);
+  	    if (cxEdgeIdCounter == null || cxEdgeIdCounter.longValue() < edgeIdCounter)
+  	        metadata.setIdCounter(EdgesElement.ASPECT_NAME, Long.valueOf(edgeIdCounter));
+  	
+  	    niceCX.setMetadata(metadata);
+  	    if (Settings.INSTANCE.isTiming()) {
+			TimingUtil.reportTimeDifference(t0, "niceCX", niceCX.getMetadata().size());
+		}
+        return niceCX;
     }
-
-    private Set<AspectFragmentReader> getAllAspectFragmentReaders(final Set<AspectFragmentReader> readers) {
-
-        final Set<AspectFragmentReader> all = new HashSet<AspectFragmentReader>();
-        for (final AspectFragmentReader reader : readers) {
-            all.add(reader);
-        }
-        if (_additional_readers != null) {
-            for (final AspectFragmentReader reader : _additional_readers) {
-                all.add(reader);
-            }
-        }
-        return all;
-    }
-
+    
 }

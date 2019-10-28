@@ -6,16 +6,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.cxio.aspects.datamodels.CyVisualPropertiesElement;
-import org.cxio.core.interfaces.AspectElement;
-import org.cxio.util.CxioUtil;
+import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
+import org.ndexbio.cxio.core.interfaces.AspectElement;
+import org.ndexbio.cxio.util.CxioUtil;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import org.apache.log4j.Logger;
+import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.VisualPropertyType;
 import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyEdge;
+import org.cytoscape.model.CyIdentifiable;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyTable;
+import org.cytoscape.model.subnetwork.CySubNetwork;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.View;
 import org.cytoscape.view.model.VisualLexicon;
@@ -37,6 +44,7 @@ import org.cytoscape.view.vizmap.mappings.PassthroughMapping;
  */
 public final class VisualPropertiesGatherer {
 
+	private static final Logger logger = Logger.getLogger("VisualPropertiesGatherer");
     private static final boolean ALLOW_NODE_CUSTOM_PROPERTIES = true;
 
     /**
@@ -56,105 +64,130 @@ public final class VisualPropertiesGatherer {
      *            to gather
      *
      * @return a List of AspectElement
+     * @throws JsonProcessingException 
      */
     public static final List<AspectElement> gatherVisualPropertiesAsAspectElements(final CyNetworkView view,
-                                                                                   final CyNetwork network,
-                                                                                   final VisualMappingManager visual_mapping_manager,
                                                                                    final VisualLexicon lexicon,
-                                                                                   final Set<VisualPropertyType> types) {
+                                                                                   final Set<VisualPropertyType> types,
+                                                                                   final Long viewId,
+                                                                                   boolean use_cxId) throws JsonProcessingException {
 
-        final List<AspectElement> elements = new ArrayList<AspectElement>();
-        final VisualStyle current_visual_style = visual_mapping_manager.getVisualStyle(view);
+        final List<AspectElement> elements = new ArrayList<>();
+        final VisualMappingManager vmm = CyServiceModule.getService(VisualMappingManager.class);
+        final VisualStyle current_visual_style = vmm.getVisualStyle(view);
+        
+        if (lexicon == null) {
+        	throw new IllegalArgumentException("VisualLexicon is not initialized. This should not happen");
+        }
         final Set<VisualProperty<?>> all_visual_properties = lexicon.getAllVisualProperties();
-
+        if (current_visual_style == null) {
+        	throw new IllegalArgumentException("Failed to get Visual Style from view " + view);
+        }
+        
         if (types.contains(VisualPropertyType.NETWORK)) {
-            gatherNetworkVisualProperties(view, network, elements, current_visual_style, all_visual_properties);
+            gatherNetworkVisualProperties(view, elements, current_visual_style, all_visual_properties, viewId);
         }
 
         if (types.contains(VisualPropertyType.NODES_DEFAULT)) {
-            gatherNodesDefaultVisualProperties(view, network, elements, current_visual_style, all_visual_properties);
+            gatherNodesDefaultVisualProperties(view, elements, current_visual_style, all_visual_properties, viewId);
         }
 
         if (types.contains(VisualPropertyType.EDGES_DEFAULT)) {
-            gatherEdgesDefaultVisualProperties(view, network, elements, current_visual_style, all_visual_properties);
+            gatherEdgesDefaultVisualProperties(view, elements, current_visual_style, all_visual_properties, viewId);
         }
 
         if (types.contains(VisualPropertyType.NODES)) {
-            gatherNodeVisualProperties(view, network, elements, all_visual_properties);
+            gatherNodeVisualProperties(view, elements, all_visual_properties, viewId, use_cxId);
         }
 
         if (types.contains(VisualPropertyType.EDGES)) {
-            gatherEdgeVisualProperties(view, network, elements, all_visual_properties);
+            gatherEdgeVisualProperties(view, elements, all_visual_properties, viewId, use_cxId);
         }
 
         return elements;
 
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    private final static void addProperties(final View view,
-                                            final VisualProperty vp,
+    private  final static <T> void addProperties(final View<? extends CyIdentifiable> view,
+                                            final VisualProperty<T> vp,
                                             final CyVisualPropertiesElement cvp) {
-        if (view.isSet(vp) && view.isValueLocked(vp)) {
-            final Object vp_value = view.getVisualProperty(vp);
-            if (vp_value != null) {
-                final String value_str = vp.toSerializableString(vp_value);
-                if (!CxioUtil.isEmpty(value_str)) {
-                    final String id_string = vp.getIdString();
-                    if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")) {
-                        // TODO
-                    }
-                    else {
-                        cvp.putProperty(id_string, value_str);
-                    }
-                }
-            }
+        if (!view.isSet(vp) || !view.isValueLocked(vp)) {
+        	return;
         }
+        
+        try {
+        	final String value_str = getSerializableVisualProperty(view, vp);
+        	if (CxioUtil.isEmpty(value_str)) {
+            	return;
+            }
+        	final String id_string = vp.getIdString();
+            if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")) {
+                // TODO
+            	logger.info("Need to add handler for Property: " + id_string + " " + value_str);
+            }
+            else {
+                cvp.putProperty(id_string, value_str);
+            }
+        }catch (IllegalArgumentException e) {
+        	String message = String.format("Writing %s(%s) = %s caused Error:\n%s", vp.getDisplayName(), vp.getTargetDataType(), view.getVisualProperty(vp), e.getMessage());
+        	throw new IllegalArgumentException(message);
+        }
+        
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    private final static void addPropertiesNetwork(final View view,
+    private static <T> String getSerializableVisualProperty(View<? extends CyIdentifiable> view, VisualProperty<T> vp) {
+    	T prop = view.getVisualProperty(vp);
+		if (prop == null) {
+			return null;
+		}
+		String val = null;
+		try {
+			val = vp.toSerializableString(prop);
+		}catch (ClassCastException e) {
+			val = String.valueOf(prop);
+			String message = String.format("Class cast exception for %s: %s(%s) = %s. Error: %s\n", vp.getClass(), vp.getDisplayName(), vp.getTargetDataType(), view.getVisualProperty(vp), e.getMessage());
+			logger.info(message);
+//        	throw new ClassCastException(message);
+		}
+		
+		return val;
+	}
+
+    private final static <T> void addPropertiesNetwork(final View<? extends CyIdentifiable> view,
                                                    final VisualStyle style,
-                                                   final VisualProperty vp,
+                                                   final VisualProperty<T> vp,
                                                    final CyVisualPropertiesElement cvp) {
+    	String value_str = getSerializableVisualProperty(view, vp);
+        if (CxioUtil.isEmpty(value_str)) {
+        	return;
+        }
+        final String id_string = vp.getIdString();
+        // TODO: Why is this conditional here?
         if (view.isSet(vp) && view.isValueLocked(vp)) {
-            final Object vp_value = view.getVisualProperty(vp);
-            if (vp_value != null) {
-                final String value_str = vp.toSerializableString(vp_value);
-                if (!CxioUtil.isEmpty(value_str)) {
-                    final String id_string = vp.getIdString();
-                    if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")) {
-                        // TODO
-                    }
-                    else {
-                        cvp.putProperty(id_string, value_str);
-                    }
-                }
+            if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")) {
+                // TODO
+            	throw new RuntimeException("Failed to add property " + vp);
             }
+            else {
+                cvp.putProperty(id_string, value_str);
+            }
+        
         }
         else {
-            final Object vp_value = style.getDefaultValue(vp);
-            if (vp_value != null) {
-                final String value_str = vp.toSerializableString(vp_value);
-                if (!CxioUtil.isEmpty(value_str)) {
-                    final String id_string = vp.getIdString();
-                    if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")
-                            || id_string.startsWith("NODE_CUSTOM")) {
-                        // TODO
-                    }
-                    else {
-                        cvp.putProperty(id_string, value_str);
-                    }
-                }
+            if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")
+                    || id_string.startsWith("NODE_CUSTOM")) {
+                // TODO
+            }
+            else {
+                cvp.putProperty(id_string, value_str);
             }
         }
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    private final static void addDefaultProperties(final VisualStyle style,
-                                                   final VisualProperty vp,
+    private final static <T> void addDefaultProperties(final VisualStyle style,
+                                                   final VisualProperty<T> vp,
                                                    final CyVisualPropertiesElement cvp) {
-        final Object vp_value = style.getDefaultValue(vp);
+        final T vp_value = style.getDefaultValue(vp);
         if (vp_value != null) {
             final String value_str = vp.toSerializableString(vp_value);
             if (!CxioUtil.isEmpty(value_str)) {
@@ -173,147 +206,163 @@ public final class VisualPropertiesGatherer {
             }
         }
     }
+    
+    final public static char COMMA = ',';
+    
+    // escape ',' with double ',' 
+    private static String escapeString(String str) {
+        if (str == null) {
+          return null;
+        }
+        StringBuilder result = new StringBuilder();
+        for (int i=0; i<str.length(); i++) {
+          char curChar = str.charAt(i);
+          if (curChar == COMMA) {
+            // special char
+            result.append(COMMA);
+          }
+          result.append(curChar);
+        }
+        return result.toString();
+      }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    private final static void addMappings(final VisualStyle style,
-                                          final VisualProperty vp,
+    // Note: ',' in column name and value are escaped by ',,' 
+    private final static <T> void addMappings(final VisualStyle style,
+                                          final VisualProperty<T> vp,
                                           final CyVisualPropertiesElement cvp,
                                           final CyTable table) {
-        final VisualMappingFunction<?, ?> mapping = style.getVisualMappingFunction(vp);
-
-        if (mapping != null) {
-            if (mapping instanceof PassthroughMapping<?, ?>) {
-                final PassthroughMapping<?, ?> pm = (PassthroughMapping<?, ?>) mapping;
-                final String col = pm.getMappingColumnName();
-                String type = null;
-                try {
-                    type = toAttributeType(pm.getMappingColumnType(), table, col);
+        final VisualMappingFunction<?, T> mapping = style.getVisualMappingFunction(vp);
+        if (mapping == null) {
+        	return;
+        }
+        final String col = mapping.getMappingColumnName();
+        
+        if (mapping instanceof PassthroughMapping<?, ?>) {
+            final PassthroughMapping<?, T> pm = (PassthroughMapping<?, T>) mapping;
+            String type = null;
+            try {
+                type = toAttributeType(pm.getMappingColumnType(), table, col);
+            }
+            catch (final IOException e) {
+                logger.info("WARNING: problem with mapping/column '" + col
+                        + "': column not present, ignoring corresponding passthrough mapping. " + e.getMessage());
+                return;
+            }
+            final StringBuilder sb = new StringBuilder();
+            sb.append(CxUtil.VM_COL);
+            sb.append("=");
+            sb.append(escapeString(col));
+            sb.append(",");
+            sb.append(CxUtil.VM_TYPE);
+            sb.append("=");
+            sb.append(escapeString(type));
+            cvp.putMapping(vp.getIdString(), CxUtil.PASSTHROUGH, sb.toString());
+        }
+        else if (mapping instanceof DiscreteMapping<?, ?>) {
+            final DiscreteMapping<?, T> dm = (DiscreteMapping<?, T>) mapping;
+            String type = null;
+            try {
+                type = toAttributeType(dm.getMappingColumnType(), table, col);
+            }
+            catch (final IOException e) {
+                logger.info("WARNING: problem with mapping/column '" + col
+                        + "': column not present, ignoring corresponding discrete mapping. " + e.getMessage());
+                return;
+            }
+            final Map<?, T> map = dm.getAll();
+            final StringBuilder sb = new StringBuilder();
+            sb.append(CxUtil.VM_COL);
+            sb.append("=");
+            sb.append(escapeString(col));
+            sb.append(",");
+            sb.append(CxUtil.VM_TYPE);
+            sb.append("=");
+            sb.append(escapeString(type));
+            int counter = 0;
+            for (final Map.Entry<?, T> entry : map.entrySet()) {
+                final T value = entry.getValue();
+                if (value == null) {
+                    continue;
                 }
-                catch (final IOException e) {
-                    System.out.println("WARNING: problem with mapping/column '" + col
-                            + "': column not present, ignoring corresponding passthrough mapping");
+                try {
+                    sb.append(",K=");
+                    sb.append(counter);
+                    sb.append("=");
+                    sb.append(escapeString(entry.getKey().toString()));
+                    sb.append(",V=");
+                    sb.append(counter);
+                    sb.append("=");
+                    sb.append(escapeString(vp.toSerializableString(value)));
+                }
+                catch (final Exception e) {
+                    logger.info("could not add discrete mapping entry: " + value);
+                    e.printStackTrace();
                     return;
                 }
-                final StringBuilder sb = new StringBuilder();
-                sb.append(CxUtil.VM_COL);
-                sb.append("=");
-                sb.append(col);
-                sb.append(",");
-                sb.append(CxUtil.VM_TYPE);
-                sb.append("=");
-                sb.append(type);
-                cvp.putMapping(vp.getIdString(), CxUtil.PASSTHROUGH, sb.toString());
+                ++counter;
             }
-            else if (mapping instanceof DiscreteMapping<?, ?>) {
-                final DiscreteMapping<?, ?> dm = (DiscreteMapping<?, ?>) mapping;
-                final String col = dm.getMappingColumnName();
-                String type = null;
-                try {
-                    type = toAttributeType(dm.getMappingColumnType(), table, col);
-                }
-                catch (final IOException e) {
-                    System.out.println("WARNING: problem with mapping/column '" + col
-                            + "': column not present, ignoring corresponding discrete mapping");
-                    return;
-                }
-                final Map<?, ?> map = dm.getAll();
-                final StringBuilder sb = new StringBuilder();
-                sb.append(CxUtil.VM_COL);
-                sb.append("=");
-                sb.append(col);
-                sb.append(",");
-                sb.append(CxUtil.VM_TYPE);
-                sb.append("=");
-                sb.append(type);
-                int counter = 0;
-                for (final Map.Entry<?, ?> entry : map.entrySet()) {
-                    final Object value = entry.getValue();
-                    if (value == null) {
-                        continue;
-                    }
-                    try {
-                        sb.append(",K=");
-                        sb.append(counter);
-                        sb.append("=");
-                        sb.append(entry.getKey().toString());
-                        sb.append(",V=");
-                        sb.append(counter);
-                        sb.append("=");
-                        sb.append(vp.toSerializableString(value));
-                    }
-                    catch (final Exception e) {
-                        System.out.println("could not add discrete mapping entry: " + value);
-                        e.printStackTrace();
-                        return;
-                    }
-                    ++counter;
-                }
-                cvp.putMapping(vp.getIdString(), CxUtil.DISCRETE, sb.toString());
+            cvp.putMapping(vp.getIdString(), CxUtil.DISCRETE, sb.toString());
+        }
+        else if (mapping instanceof ContinuousMapping<?, ?>) {
+            final ContinuousMapping<?, T> cm = (ContinuousMapping<?, T>) mapping;
+            String type = null;
+            try {
+                type = toAttributeType(cm.getMappingColumnType(), table, col);
             }
-            else if (mapping instanceof ContinuousMapping<?, ?>) {
-                final ContinuousMapping<?, ?> cm = (ContinuousMapping<?, ?>) mapping;
-                final String col = cm.getMappingColumnName();
-                String type = null;
-                try {
-                    type = toAttributeType(cm.getMappingColumnType(), table, col);
-                }
-                catch (final IOException e) {
-                    System.out.println("WARNING: problem with mapping/column '" + col
-                            + "': column not present, ignoring corresponding continuous mapping");
-                    return;
-                }
-                final StringBuilder sb = new StringBuilder();
-                sb.append(CxUtil.VM_COL);
-                sb.append("=");
-                sb.append(col);
-                sb.append(",");
-                sb.append(CxUtil.VM_TYPE);
-                sb.append("=");
-                sb.append(type);
-                final List<?> points = cm.getAllPoints();
-                int counter = 0;
-                for (final Object point : points) {
-                    final ContinuousMappingPoint<?, ?> cp = (ContinuousMappingPoint<?, ?>) point;
-                    final Object lesser = cp.getRange().lesserValue;
-                    final Object equal = cp.getRange().equalValue;
-                    final Object greater = cp.getRange().greaterValue;
-                    sb.append(",L=");
-                    sb.append(counter);
-                    sb.append("=");
-                    sb.append(vp.toSerializableString(lesser));
-                    sb.append(",E=");
-                    sb.append(counter);
-                    sb.append("=");
-                    sb.append(vp.toSerializableString(equal));
-                    sb.append(",G=");
-                    sb.append(counter);
-                    sb.append("=");
-                    sb.append(vp.toSerializableString(greater));
-                    sb.append(",OV=");
-                    sb.append(counter);
-                    sb.append("=");
-                    sb.append(cp.getValue());
-                    ++counter;
-                }
-                cvp.putMapping(vp.getIdString(), CxUtil.CONTINUOUS, sb.toString());
+            catch (final IOException e) {
+                logger.info("WARNING: problem with mapping/column '" + col
+                        + "': column not present, ignoring corresponding continuous mapping." + e.getMessage());
+                return;
             }
+            final StringBuilder sb = new StringBuilder();
+            sb.append(CxUtil.VM_COL);
+            sb.append("=");
+            sb.append(escapeString(col));
+            sb.append(",");
+            sb.append(CxUtil.VM_TYPE);
+            sb.append("=");
+            sb.append(escapeString(type));
+            int counter = 0;
+            for (final ContinuousMappingPoint<?, T> cp : cm.getAllPoints()) {
+                final T lesser = cp.getRange().lesserValue;
+                final T equal = cp.getRange().equalValue;
+                final T greater = cp.getRange().greaterValue;
+                sb.append(",L=");
+                sb.append(counter);
+                sb.append("=");
+                sb.append(escapeString(vp.toSerializableString(lesser)));
+                sb.append(",E=");
+                sb.append(counter);
+                sb.append("=");
+                sb.append(escapeString(vp.toSerializableString(equal)));
+                sb.append(",G=");
+                sb.append(counter);
+                sb.append("=");
+                sb.append(escapeString(vp.toSerializableString(greater)));
+                sb.append(",OV=");
+                sb.append(counter);
+                sb.append("=");
+                sb.append(escapeString(cp.getValue().toString()));
+                ++counter;
+            }
+            cvp.putMapping(vp.getIdString(), CxUtil.CONTINUOUS, sb.toString());
         }
     }
 
-    @SuppressWarnings("rawtypes")
     private static void gatherEdgesDefaultVisualProperties(final CyNetworkView view,
-                                                           final CyNetwork network,
                                                            final List<AspectElement> visual_properties,
                                                            final VisualStyle current_visual_style,
-                                                           final Set<VisualProperty<?>> all_visual_properties) {
+                                                           final Set<VisualProperty<?>> all_visual_properties,
+                                                           final Long viewId) {
 
         final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.EDGES_DEFAULT.asString(),
-                                                                          view.getSUID());
-        e.addAppliesTo(view.getSUID());
-        for (final VisualProperty visual_property : all_visual_properties) {
+        		viewId,
+        		viewId);
+        
+        for (final VisualProperty<?> visual_property : all_visual_properties) {
             if (visual_property.getTargetDataType() == CyEdge.class) {
                 addDefaultProperties(current_visual_style, visual_property, e);
-                final CyTable table = network.getTable(CyEdge.class, CyNetwork.DEFAULT_ATTRS);
+                final CyTable table = view.getModel().getTable(CyEdge.class, CyNetwork.DEFAULT_ATTRS);
                 addMappings(current_visual_style, visual_property, e, table);
             }
         }
@@ -321,20 +370,21 @@ public final class VisualPropertiesGatherer {
         visual_properties.add(e);
     }
 
-    @SuppressWarnings("rawtypes")
     private static void gatherEdgeVisualProperties(final CyNetworkView view,
-                                                   final CyNetwork network,
                                                    final List<AspectElement> visual_properties,
-                                                   final Set<VisualProperty<?>> all_visual_properties) {
-        for (final CyEdge edge : network.getEdgeList()) {
-            final View<CyEdge> edge_view = view.getEdgeView(edge);
+                                                   final Set<VisualProperty<?>> all_visual_properties,
+                                                   final Long viewId,
+                                                   boolean use_cxId) throws JsonProcessingException {
+        for (View<CyEdge> edge_view : view.getEdgeViews()) {
+        	final CyEdge edge = edge_view.getModel();
             final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.EDGES.asString(),
-                                                                              view.getSUID());
-            e.addAppliesTo(edge.getSUID());
-            for (final VisualProperty visual_property : all_visual_properties) {
+            												CxUtil.getElementId(edge, (CySubNetwork)view.getModel(), use_cxId),                                                                           
+            												viewId);
+
+            for (final VisualProperty<?> visual_property : all_visual_properties) {
+            	
                 if (visual_property.getTargetDataType() == CyEdge.class) {
                     addProperties(edge_view, visual_property, e);
-
                 }
             }
             if ((e.getProperties() != null) && !e.getProperties().isEmpty()) {
@@ -343,16 +393,16 @@ public final class VisualPropertiesGatherer {
         }
     }
 
-    @SuppressWarnings("rawtypes")
     private static void gatherNetworkVisualProperties(final CyNetworkView view,
-                                                      final CyNetwork network,
                                                       final List<AspectElement> visual_properties,
                                                       final VisualStyle current_visual_style,
-                                                      final Set<VisualProperty<?>> all_visual_properties) {
+                                                      final Set<VisualProperty<?>> all_visual_properties,
+                                                      final Long viewId) {
         final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.NETWORK.asString(),
-                                                                          view.getSUID());
-        e.addAppliesTo(view.getSUID());
-        for (final VisualProperty visual_property : all_visual_properties) {
+        												viewId,
+                                                        viewId);
+
+        for (final VisualProperty<?> visual_property : all_visual_properties) {
             if (visual_property.getTargetDataType() == CyNetwork.class) {
                 addPropertiesNetwork(view, current_visual_style, visual_property, e);
             }
@@ -360,19 +410,18 @@ public final class VisualPropertiesGatherer {
         visual_properties.add(e);
     }
 
-    @SuppressWarnings("rawtypes")
     private static void gatherNodesDefaultVisualProperties(final CyNetworkView view,
-                                                           final CyNetwork network,
                                                            final List<AspectElement> visual_properties,
                                                            final VisualStyle current_visual_style,
-                                                           final Set<VisualProperty<?>> all_visual_properties) {
+                                                           final Set<VisualProperty<?>> all_visual_properties,
+                                                           final Long viewId) {
         final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.NODES_DEFAULT.asString(),
-                                                                          view.getSUID());
-        e.addAppliesTo(view.getSUID());
-        for (final VisualProperty visual_property : all_visual_properties) {
+        											viewId, viewId);
+        
+        for (final VisualProperty<?> visual_property : all_visual_properties) {
             if (visual_property.getTargetDataType() == CyNode.class) {
                 addDefaultProperties(current_visual_style, visual_property, e);
-                final CyTable table = network.getTable(CyNode.class, CyNetwork.DEFAULT_ATTRS);
+                final CyTable table = view.getModel().getTable(CyNode.class, CyNetwork.DEFAULT_ATTRS);
                 addMappings(current_visual_style, visual_property, e, table);
             }
         }
@@ -392,17 +441,18 @@ public final class VisualPropertiesGatherer {
         }
     }
 
-    @SuppressWarnings("rawtypes")
     private static void gatherNodeVisualProperties(final CyNetworkView view,
-                                                   final CyNetwork network,
                                                    final List<AspectElement> visual_properties,
-                                                   final Set<VisualProperty<?>> all_visual_properties) {
-        for (final CyNode cy_node : network.getNodeList()) {
-            final View<CyNode> node_view = view.getNodeView(cy_node);
+                                                   final Set<VisualProperty<?>> all_visual_properties,
+                                                   final Long viewId,
+                                                   boolean use_cxId) throws JsonProcessingException {
+        for (View<CyNode> node_view : view.getNodeViews()) {
+            final CyNode cy_node = node_view.getModel();
             final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.NODES.asString(),
-                                                                              view.getSUID());
-            e.addAppliesTo(cy_node.getSUID());
-            for (final VisualProperty visual_property : all_visual_properties) {
+            																CxUtil.getElementId(cy_node, (CySubNetwork)view.getModel(), use_cxId),
+                                                                            viewId);
+     
+            for (final VisualProperty<?> visual_property : all_visual_properties) {
                 if (visual_property.getTargetDataType() == CyNode.class) {
                     addProperties(node_view, visual_property, e);
                 }
@@ -442,7 +492,7 @@ public final class VisualPropertiesGatherer {
                 }
             }
             if (col_type != null) {
-                System.out.println("mapping type is '" + attr_class + "' will use (from table column) '" + col_type
+                logger.info("mapping type is '" + attr_class + "' will use (from table column) '" + col_type
                                    + "' instead");
                 if ((col_type == Float.class) || (col_type == Double.class)) {
                     return "double";
@@ -455,15 +505,15 @@ public final class VisualPropertiesGatherer {
                 }
                 else {
                     throw new IllegalArgumentException("don't know how to deal with type '" + col_type
-                                                       + "' (from table column)");
+                                                       + "' (from table column "+ col_name + ")");
                 }
             }
-            else {
-                throw new IllegalStateException("failed to obtain type for mapping from table");
-            }
+            
+            throw new IllegalStateException("failed to obtain type for mapping from table");
+            
         }
         else {
-            throw new IllegalArgumentException("don't know how to deal with type '" + attr_class + "'");
+            throw new IllegalArgumentException("don't know how to deal with type '" + attr_class + "' for column " + col_name);
         }
     }
 

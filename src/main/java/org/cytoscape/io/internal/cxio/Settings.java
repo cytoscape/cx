@@ -1,30 +1,49 @@
 package org.cytoscape.io.internal.cxio;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.cytoscape.model.CyNetwork;
+
 public final class Settings {
 
     public final static Settings INSTANCE                                                              = new Settings();
 
     private static final boolean IGNORE_SELECTED_COLUMN_DEFAULT                                        = false;
     private static final boolean IGNORE_SUID_COLUMN_DEFAULT                                            = true;
-    private static final boolean WRITE_SELECTED_ONLY_IF_TRUE_DEFAULT                                   = false;
-    private static final boolean DEBUG_DEFAULT                                                         = false;
-    private static final boolean TIMING_DEFAULT                                                        = false;
-    private static final boolean ALLOW_TO_USE_NETWORK_COLLECTION_NAME_FROM_NETWORK_ATTTRIBUTES_DEFAULT = true;
+    private static final boolean WRITE_SELECTED_ONLY_IF_TRUE_DEFAULT                                   = true;
+    private static final boolean TIMING_DEFAULT                                                        = true;
 
+	public final static Set<String> IGNORE_EDGE_ATTRIBUTES = new HashSet<>();
+	public final static Set<String> IGNORE_NODE_ATTRIBUTES = new HashSet<>();
+	public final static Set<String> IGNORE_NETWORK_ATTRIBUTES = new HashSet<>();
+
+	public final static Set<String> IGNORE_SINGLE_NETWORK_EDGE_ATTRIBUTES = new HashSet<>();
+	public final static Set<String> IGNORE_SINGLE_NETWORK_NODE_ATTRIBUTES = new HashSet<>();
+	public final static Set<String> IGNORE_SINGLE_NETWORK_NETWORK_ATTRIBUTES = new HashSet<>();
+
+	
+	static {
+		IGNORE_NODE_ATTRIBUTES.add(CxUtil.REPRESENTS);
+		
+		IGNORE_SINGLE_NETWORK_NODE_ATTRIBUTES.add(CxUtil.NAME);
+		IGNORE_SINGLE_NETWORK_NODE_ATTRIBUTES.add(CxUtil.SHARED_NAME);
+		
+		IGNORE_SINGLE_NETWORK_EDGE_ATTRIBUTES.add(CxUtil.INTERACTION);
+		IGNORE_SINGLE_NETWORK_EDGE_ATTRIBUTES.add(CxUtil.SHARED_INTERACTION);
+		IGNORE_SINGLE_NETWORK_EDGE_ATTRIBUTES.add(CxUtil.SHARED_NAME);
+		
+		IGNORE_SINGLE_NETWORK_NETWORK_ATTRIBUTES.add(CxUtil.SHARED_NAME);
+		IGNORE_SINGLE_NETWORK_NETWORK_ATTRIBUTES.add(CxUtil.SELECTED);
+		
+	}
+	
     private boolean              _timing                                                               = TIMING_DEFAULT;
-    private boolean              _debug                                                                = DEBUG_DEFAULT;
     private boolean              _ignore_selected_column                                               = IGNORE_SELECTED_COLUMN_DEFAULT;
     private boolean              _write_selected_only_if_true                                          = WRITE_SELECTED_ONLY_IF_TRUE_DEFAULT;
     private boolean              _ignore_suid_column                                                   = IGNORE_SUID_COLUMN_DEFAULT;
-    private boolean              _allow_to_use_network_collection_name_from_network_attributes         = ALLOW_TO_USE_NETWORK_COLLECTION_NAME_FROM_NETWORK_ATTTRIBUTES_DEFAULT;
-
-    public boolean isAllowToUseNetworkCollectionNameFromNetworkAttributes() {
-        return _allow_to_use_network_collection_name_from_network_attributes;
-    }
-
-    public boolean isDebug() {
-        return _debug;
-    }
+    
 
     public boolean isIgnoreSelectedColumn() {
         return _ignore_selected_column;
@@ -42,14 +61,6 @@ public final class Settings {
         return _write_selected_only_if_true;
     }
 
-    public void setAllowToUseNetworkCollectionNameFromNetworkAttributes(final boolean allow_to_use_network_collection_name_from_network_attributes) {
-        _allow_to_use_network_collection_name_from_network_attributes = allow_to_use_network_collection_name_from_network_attributes;
-    }
-
-    public void setDebug(final boolean debug) {
-        _debug = debug;
-    }
-
     public void setIgnoreSelectedColumn(final boolean ignore_selected_column) {
         _ignore_selected_column = ignore_selected_column;
     }
@@ -65,9 +76,36 @@ public final class Settings {
     public void setWriteSelectedOnlyIfTrue(final boolean write_selected_only_if_true) {
         _write_selected_only_if_true = write_selected_only_if_true;
     }
+    
+    public final static boolean isIgnore(final String column_name, final Set<String> additional_to_ignore, Object value) {
+    	
+    	if (value instanceof String && ((String) value).isEmpty()) {
+    		return true;
+    	}
+    	if (value instanceof List<?> && ((List<?>) value).isEmpty()) {
+    		return true;
+    	}
+    	
+    	switch (column_name) {
+		case CyNetwork.SUID:
+			return Settings.INSTANCE.isIgnoreSuidColumn();
+		case CyNetwork.SELECTED:
+			Boolean boolVal = value == null ? false : Boolean.valueOf(value.toString());
+			return Settings.INSTANCE.isIgnoreSelectedColumn()
+					|| (boolVal != true && Settings.INSTANCE.isWriteSelectedOnlyIfTrue());
+		case CxUtil.CX_ID_MAPPING:
+		case CxUtil.CX_METADATA:
+			return true;
+		default:
+			return ((additional_to_ignore != null) && additional_to_ignore.contains(column_name));
+		}
+	}
+	
 
     private Settings() {
         // hidden constructor
     }
+
+	
 
 }
