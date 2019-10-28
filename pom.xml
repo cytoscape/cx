@@ -23,7 +23,7 @@
 
 	<groupId>org.cytoscape</groupId>
 	<artifactId>cx-support</artifactId>
-	<version>2.2.5-SNAPSHOT</version>
+	<version>2.2.5</version>
 	<name>CX Support</name>
 	<description>CX JSON Reader and Writer for Cytoscape</description>
 	<packaging>bundle</packaging>
