@@ -57,6 +57,7 @@ import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyRow;
+import org.cytoscape.model.CyTable;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CySubNetwork;
 import org.cytoscape.session.CySessionManager;
@@ -64,7 +65,6 @@ import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.model.View;
 import org.cytoscape.view.model.VisualLexicon;
-import org.cytoscape.view.presentation.RenderingEngineFactory;
 import org.cytoscape.view.presentation.property.BasicVisualLexicon;
 
 /**
