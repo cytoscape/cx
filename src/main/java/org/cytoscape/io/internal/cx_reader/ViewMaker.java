@@ -30,7 +30,6 @@ import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.model.View;
 import org.cytoscape.view.model.VisualLexicon;
-import org.cytoscape.view.model.VisualLexiconNode;
 import org.cytoscape.view.model.VisualProperty;
 import org.cytoscape.view.presentation.RenderingEngineManager;
 import org.cytoscape.view.presentation.property.BasicVisualLexicon;
@@ -445,10 +444,8 @@ public final class ViewMaker {
         	return;
         }
         for (final Map.Entry<String, String> entry : props.entrySet()) {
-            
-        
-        		final VisualProperty vp = lexicon.lookup(my_class, entry.getKey());
-           
+            final VisualProperty vp = lexicon.lookup(my_class, entry.getKey());
+
             if (vp == null) {
             	continue;
             }
@@ -456,25 +453,7 @@ public final class ViewMaker {
                 final Object parsed_value = vp.parseSerializableString(entry.getValue());
                 if (parsed_value != null) {
                     if (ViewMaker.shouldSetAsLocked(vp)) {
-                    	 final VisualLexiconNode vpNode = lexicon.getVisualLexiconNode(vp);
-                     
-                    	
-                      try { 
-                      	view.setLockedValue(vp, parsed_value);
-                      }
-                      catch (Exception e) {
-                      	
-                      	System.err.println("visualLexicon = " + lexicon.getClass());
-                      	System.err.println("vp = lexicon.lookup(" + my_class + ", "+  entry.getKey()+")");
-                      	System.err.println("view = " + view);
-                      	System.err.println("view.setLockedValue("+ vp + ", " + parsed_value + ")");
-                     
-                     	 /*vpNode.visitDescendants(n -> {
-                    			var vpp = n.getVisualProperty();
-                    			System.err.println("descendant: " + vpp);
-                        });*/
-                     	//e.printStackTrace();
-                      }
+                        view.setLockedValue(vp, parsed_value);
                     }
                     else {
                     	view.setVisualProperty(vp, parsed_value);
