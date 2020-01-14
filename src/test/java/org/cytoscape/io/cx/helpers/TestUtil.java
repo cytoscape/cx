@@ -815,8 +815,13 @@ public class TestUtil {
 			if (Double.compare(cle.getY(), out_cle.getY()) != 0) {
 				continue;
 			}
-			if (cle.getZ() != null && Double.compare(cle.getZ(), out_cle.getZ()) != 0) {
-				continue;
+			if (cle.getZ() != null) 
+			{
+				if (out_cle.getZ() != null) {
+					if (Double.compare(cle.getZ(), out_cle.getZ()) != 0) { continue; }
+				} else {
+					
+				}
 			}
 			return true;
 		}
