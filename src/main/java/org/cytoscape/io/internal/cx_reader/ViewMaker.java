@@ -103,6 +103,14 @@ public final class ViewMaker {
         CyNetworkViewManager view_manager = CyServiceModule.getService(CyNetworkViewManager.class);
         
         view_manager.addNetworkView(network_view);
+        
+        network_view.setVisualProperty(BasicVisualLexicon.NETWORK_CENTER_X_LOCATION, style.getDefaultValue(BasicVisualLexicon.NETWORK_CENTER_X_LOCATION));
+        network_view.setVisualProperty(BasicVisualLexicon.NETWORK_CENTER_Y_LOCATION, style.getDefaultValue(BasicVisualLexicon.NETWORK_CENTER_Y_LOCATION));
+        network_view.setVisualProperty(BasicVisualLexicon.NETWORK_CENTER_Z_LOCATION, style.getDefaultValue(BasicVisualLexicon.NETWORK_CENTER_Z_LOCATION));
+
+        network_view.setVisualProperty(BasicVisualLexicon.NETWORK_SCALE_FACTOR, style.getDefaultValue(BasicVisualLexicon.NETWORK_SCALE_FACTOR));
+        
+  
         if (!network_view.isSet(BasicVisualLexicon.NETWORK_CENTER_X_LOCATION)
 				&& !network_view.isSet(BasicVisualLexicon.NETWORK_CENTER_Y_LOCATION)
 				&& !network_view.isSet(BasicVisualLexicon.NETWORK_CENTER_Z_LOCATION)) {
