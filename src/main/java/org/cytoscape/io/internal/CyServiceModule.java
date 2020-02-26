@@ -21,6 +21,14 @@ public class CyServiceModule {
 		}
 		return (S) services.get(serviceClass);
 	}
+	
+	public static final <S> S getService(Class<S> serviceClass, String filter) {
+		if (!services.containsKey(serviceClass)) {
+			return serviceRegistrar != null ? serviceRegistrar.getService(serviceClass, filter) : null;
+		}
+		return (S) services.get(serviceClass);
+	}
+	
 	public static void setService(Class<?> serviceClass, Object service) {
 		services.put(serviceClass, service);
 	}

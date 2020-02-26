@@ -3,6 +3,7 @@ package org.cytoscape.io.internal.cx_reader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Properties;
 
 import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cxio.CxImporter;
@@ -14,6 +15,7 @@ import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.subnetwork.CyRootNetworkManager;
+import org.cytoscape.property.CyProperty;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.work.TaskMonitor;
@@ -26,16 +28,14 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 	private String _network_collection_name;
 	private NiceCyRootNetwork niceCy;
 	protected final NiceCXNetwork niceCX;
-	
+
 	final CxImporter cx_importer = new CxImporter();
 
-	public CytoscapeCxNetworkReader(
-			final InputStream input_stream,
-			final String network_collection_name,
-			final CyNetworkViewFactory networkview_factory,
-			final CyNetworkFactory network_factory,
-			final CyNetworkManager network_manager,
-			final CyRootNetworkManager root_network_manager) {
+	
+
+	public CytoscapeCxNetworkReader(final InputStream input_stream, final String network_collection_name,
+			final CyNetworkViewFactory networkview_factory, final CyNetworkFactory network_factory,
+			final CyNetworkManager network_manager, final CyRootNetworkManager root_network_manager) {
 
 		super(input_stream, networkview_factory, network_factory, network_manager, root_network_manager);
 
@@ -44,23 +44,37 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 		}
 		try {
 			niceCX = cx_importer.getCXNetworkFromStream(input_stream);
-		} catch (IOException e){
+		} catch (IOException e) {
 			throw new IllegalArgumentException("Failed to import file as CX");
 		}
-		
+
 		_network_collection_name = network_collection_name;
 	}
 
 	@Override
 	public CyNetworkView buildCyNetworkView(final CyNetwork network) {
-		System.out.println("Creating view for " + network);
-		List<CyNetworkView> views = niceCy.createViews(network);
-		if (views.isEmpty()) {
-			CyNetworkViewFactory view_factory = CyServiceModule.getService(CyNetworkViewFactory.class);
-			return view_factory.createNetworkView(network);
-		}
-		return views.get(0);
+	
+	
+		
+		
+			System.out.println("Creating view for " + network);
+			List<CyNetworkView> views = niceCy.createViews(network);
+			if (views.isEmpty()) {
+				System.out.println("   TEST: views was empty");
+				CyNetworkViewFactory view_factory = CyServiceModule.getService(CyNetworkViewFactory.class);
+				System.out.println("   TEST: asking to create network view with class: " + view_factory.getClass());
+				final CyNetworkView createdView = view_factory.createNetworkView(network);
+				System.out.println("   TEST: created view with class: " + createdView.getClass());
+				return createdView;
+			} else {
+			
+				System.out.println("   TEST: views size: " + views.size());
+			}
+			return views.get(0);
+		
 	}
+
+	
 
 	@Override
 	public CyNetwork[] getNetworks() {
@@ -71,7 +85,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 	public void run(final TaskMonitor taskMonitor) throws IOException {
 
 		final long t0 = System.currentTimeMillis();
-		
+
 		if (Settings.INSTANCE.isTiming()) {
 			TimingUtil.reportTimeDifference(t0, "total time parsing", -1);
 		}
@@ -81,14 +95,13 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 			System.out.println("CX Support is changing to disallow import into existing collections");
 			setRootNetworkList(new ListSingleSelection<String>());
 		}
-		
-		
+
 		Long t1 = System.currentTimeMillis();
 		niceCy = new NiceCyRootNetwork(niceCX);
 		if (Settings.INSTANCE.isTiming()) {
 			TimingUtil.reportTimeDifference(t1, "Time to create NiceCyNetwork", -1);
 		}
-		
+
 		if (niceCy.getNetworkName() == null) {
 			// Set the name of collection/network to be imported
 			if (_network_collection_name == null) {
@@ -96,7 +109,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 			}
 			niceCy.setNetworkName(_network_collection_name);
 		}
-		
+
 		t1 = System.currentTimeMillis();
 		List<CyNetwork> networks = niceCy.apply();
 		if (Settings.INSTANCE.isTiming()) {
@@ -104,7 +117,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 		}
 		_networks = new CyNetwork[networks.size()];
 		networks.toArray(_networks);
-		
+
 		if (Settings.INSTANCE.isTiming()) {
 			TimingUtil.reportTimeDifference(t0, "total time to build network(s) (not views)", -1);
 		}

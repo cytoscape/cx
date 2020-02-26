@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.SortedMap;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -45,6 +46,7 @@ import org.cytoscape.io.internal.cx_writer.CxNetworkWriter;
 import org.cytoscape.io.internal.cx_writer.CxNetworkWriterFactory;
 import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.Settings;
+import org.cytoscape.io.internal.nicecy.NiceCyNetwork;
 import org.cytoscape.io.internal.nicecy.NiceCyRootNetwork;
 import org.cytoscape.io.util.StreamUtil;
 import org.cytoscape.model.CyNetwork;
@@ -52,6 +54,7 @@ import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.NetworkTestSupport;
 import org.cytoscape.model.subnetwork.CyRootNetworkManager;
+import org.cytoscape.property.CyProperty;
 import org.cytoscape.service.util.CyServiceRegistrar;
 import org.cytoscape.session.CySessionManager;
 import org.cytoscape.view.model.CyNetworkViewFactory;
@@ -61,6 +64,7 @@ import org.cytoscape.view.presentation.property.BasicVisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.work.SynchronousTaskManager;
 import org.cytoscape.work.swing.DialogTaskManager;
+import org.mockito.Mockito;
 import org.ndexbio.cxio.aspects.datamodels.AbstractAttributesAspectElement;
 import org.ndexbio.cxio.aspects.datamodels.AbstractElementAttributesAspectElement;
 import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
@@ -175,6 +179,14 @@ public class TestUtil {
 		
 		CyServiceModule.setService(SynchronousTaskManager.class, mock(SynchronousTaskManager.class));
 		CyServiceModule.setService(DialogTaskManager.class, mock(DialogTaskManager.class));
+		
+		CyProperty cyProps = mock(CyProperty.class);
+		
+		Properties props = mock(Properties.class);
+		when(props.getProperty(Mockito.eq(NiceCyNetwork.VIEW_THRESHOLD))).thenReturn("3000000");
+		 
+		when(cyProps.getProperties()).thenReturn(props);
+		CyServiceModule.setService(CyProperty.class, cyProps);
 		
 		VisualMappingMock.init();
 
