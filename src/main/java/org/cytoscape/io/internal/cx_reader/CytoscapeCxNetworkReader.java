@@ -60,15 +60,11 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 			System.out.println("Creating view for " + network);
 			List<CyNetworkView> views = niceCy.createViews(network);
 			if (views.isEmpty()) {
-				System.out.println("   TEST: views was empty");
 				CyNetworkViewFactory view_factory = CyServiceModule.getService(CyNetworkViewFactory.class);
-				System.out.println("   TEST: asking to create network view with class: " + view_factory.getClass());
 				final CyNetworkView createdView = view_factory.createNetworkView(network);
-				System.out.println("   TEST: created view with class: " + createdView.getClass());
 				return createdView;
 			} else {
-			
-				System.out.println("   TEST: views size: " + views.size());
+		
 			}
 			return views.get(0);
 		
