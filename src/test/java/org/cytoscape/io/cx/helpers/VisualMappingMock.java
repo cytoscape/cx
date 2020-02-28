@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
 
 import org.cytoscape.application.CyApplicationConfiguration;
@@ -16,7 +17,10 @@ import org.cytoscape.ding.customgraphicsmgr.internal.CustomGraphicsManagerImpl;
 import org.cytoscape.ding.impl.BendFactoryImpl;
 import org.cytoscape.event.CyEventHelper;
 import org.cytoscape.io.internal.CyServiceModule;
+import org.cytoscape.io.internal.cx_reader.CytoscapeCxNetworkReader;
+import org.cytoscape.io.internal.nicecy.NiceCyNetwork;
 import org.cytoscape.model.CyNetwork;
+import org.cytoscape.property.CyProperty;
 import org.cytoscape.service.util.CyServiceRegistrar;
 import org.cytoscape.view.layout.CyLayoutAlgorithm;
 import org.cytoscape.view.layout.CyLayoutAlgorithmManager;
@@ -87,6 +91,17 @@ public class VisualMappingMock{
 		final VisualMappingManager vmm = new VisualMappingManagerImpl(vsFactory, serviceRegistrar);
 		when(serviceRegistrar.getService(VisualMappingManager.class)).thenReturn(vmm);
 		CyServiceModule.setService(VisualMappingManager.class, vmm);
+		
+		CyProperty cyProps = mock(CyProperty.class);
+		
+		Properties props = mock(Properties.class);
+		when(props.getProperty(Mockito.eq(NiceCyNetwork.VIEW_THRESHOLD))).thenReturn("300000");
+		 
+		when(cyProps.getProperties()).thenReturn(props);
+		when(serviceRegistrar.getService(Mockito.eq(CyProperty.class), Mockito.eq("(cyPropertyName=cytoscape3.props)"))).thenReturn(cyProps);
+		
+		
+		CyServiceModule.setService(CyProperty.class, cyProps);
 		
 		Set<VisualLexicon> lexicons = new HashSet<VisualLexicon>();
 		final CustomGraphicsManager cgManager = mock(CustomGraphicsManager.class);
