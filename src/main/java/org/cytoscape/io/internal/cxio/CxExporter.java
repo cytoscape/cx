@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -418,7 +419,7 @@ public final class CxExporter {
 		if (omitOpaqueAspects) {
 			return;
 		}
-		InputStream in = new ByteArrayInputStream(value.getBytes());
+		InputStream in = new ByteArrayInputStream(value.getBytes(StandardCharsets.UTF_8));
 		OpaqueAspectIterator iter = new OpaqueAspectIterator(in);
 		
 		writer.startAspectFragment(column);
