@@ -32,6 +32,22 @@ public class NiceCyView extends Identifiable {
 		edgeBypass = new HashMap<Long, List<CyVisualPropertiesElement>>();
 	}
 	
+	public boolean isCartesianLayoutEmpty() {
+		return cartesianLayout.isEmpty();
+	}
+	
+	public boolean isVisualPropertiesEmpty() {
+		return visualProperties.isEmpty();
+	}
+	
+	public boolean isNodeBypassEmpty() {
+		return nodeBypass.isEmpty();
+	}
+	
+	public boolean isEdgeBypassEmpty() {
+		return edgeBypass.isEmpty();
+	}
+	
 	public String getName() {
 		return name;
 	}

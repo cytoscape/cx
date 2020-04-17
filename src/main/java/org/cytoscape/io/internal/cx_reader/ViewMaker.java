@@ -82,7 +82,7 @@ public final class ViewMaker {
     private static CyNetworkView applyStyle (
     		VisualStyle style, 
     		CyNetworkView network_view,
-    		String layout) {
+    		String layout, boolean fitContent) {
         
         if( layout != null )
         {
@@ -103,10 +103,15 @@ public final class ViewMaker {
         CyNetworkViewManager view_manager = CyServiceModule.getService(CyNetworkViewManager.class);
         
         view_manager.addNetworkView(network_view);
-        if (!network_view.isSet(BasicVisualLexicon.NETWORK_CENTER_X_LOCATION)
-				&& !network_view.isSet(BasicVisualLexicon.NETWORK_CENTER_Y_LOCATION)
-				&& !network_view.isSet(BasicVisualLexicon.NETWORK_CENTER_Z_LOCATION)) {
+        
+        if (fitContent) {
         	network_view.fitContent();
+        } else {
+        	network_view.setVisualProperty(BasicVisualLexicon.NETWORK_CENTER_X_LOCATION, style.getDefaultValue(BasicVisualLexicon.NETWORK_CENTER_X_LOCATION));
+          network_view.setVisualProperty(BasicVisualLexicon.NETWORK_CENTER_Y_LOCATION, style.getDefaultValue(BasicVisualLexicon.NETWORK_CENTER_Y_LOCATION));
+          network_view.setVisualProperty(BasicVisualLexicon.NETWORK_CENTER_Z_LOCATION, style.getDefaultValue(BasicVisualLexicon.NETWORK_CENTER_Z_LOCATION));
+
+          network_view.setVisualProperty(BasicVisualLexicon.NETWORK_SCALE_FACTOR, style.getDefaultValue(BasicVisualLexicon.NETWORK_SCALE_FACTOR));
         }
         
         return network_view;
@@ -278,7 +283,7 @@ public final class ViewMaker {
     		final Class<? extends CyIdentifiable> my_class) throws IOException {
         
 
-            
+       
             final VisualProperty vp = lexicon.lookup(my_class, key);
             if (vp != null) {
                 Object parsed_value = null;
@@ -564,12 +569,19 @@ public final class ViewMaker {
         	
         final VisualLexicon lexicon = rendering_engine_manager.getDefaultVisualLexicon();
 
+        final CyVisualPropertiesElement networkVisualProperties = visualProperties.get("network");
+        
         ViewMaker.setDefaultVisualPropertiesAndMappings(lexicon,
-			                                                visualProperties.get("network"),
+        																							networkVisualProperties,
 			                                                new_visual_style,
 			                                                CyNetwork.class);
 
-        
+        final boolean fitContent = networkVisualProperties != null
+        		&& !networkVisualProperties.getProperties().containsKey(BasicVisualLexicon.NETWORK_CENTER_X_LOCATION.getIdString())
+        		&& !networkVisualProperties.getProperties().containsKey(BasicVisualLexicon.NETWORK_CENTER_Y_LOCATION.getIdString())
+        		&& !networkVisualProperties.getProperties().containsKey(BasicVisualLexicon.NETWORK_SCALE_FACTOR.getIdString());
+ 	
+        System.out.println("FitContent = " + fitContent);
         
         ViewMaker.setDefaultVisualPropertiesAndMappings(lexicon,
                                                         visualProperties.get("nodes:default"),
@@ -608,7 +620,7 @@ public final class ViewMaker {
             visual_mapping_manager.setVisualStyle(new_visual_style, view);
         }
         
-        ViewMaker.applyStyle(new_visual_style, view, doLayout);
+        ViewMaker.applyStyle(new_visual_style, view, doLayout, fitContent);
         
         if (Settings.INSTANCE.isTiming()) {
             TimingUtil.reportTimeDifference(t0, "time to make view", -1);
