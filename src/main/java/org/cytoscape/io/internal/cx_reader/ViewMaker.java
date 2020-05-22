@@ -511,10 +511,10 @@ public final class ViewMaker {
             return s;
         }
         else if (type.equals("integer")) {
-            return Integer.valueOf(s);
+            return Double.valueOf(s).intValue();
         }
         else if (type.equals("long")) {
-            return Long.valueOf(s);
+            return Double.valueOf(s).longValue();
         }
         else if (type.equals("double") || type.equals("float")) {
             return Double.valueOf(s);
