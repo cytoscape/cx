@@ -613,10 +613,14 @@ public final class CxExporter {
 					}
 				}
 			} else {
+				final Object trackedValue =  column_name.endsWith(".SUID") && value instanceof Long 
+						?  CxUtil.getElementId((Long) value, my_network)
+								: value;
+				
 				if (namespace.equals(CyNetwork.HIDDEN_ATTRS)) {
-					element = new HiddenAttributesElement(subnet, column_name, String.valueOf(value), type);
+					element = new HiddenAttributesElement(subnet, column_name, String.valueOf(trackedValue), type);
 				}else {
-					element = new NetworkAttributesElement(subnet, column_name, String.valueOf(value), type);
+					element = new NetworkAttributesElement(subnet, column_name, String.valueOf(trackedValue), type);
 				}
 			}
 			if (element != null) {
@@ -698,6 +702,8 @@ public final class CxExporter {
 		elements.add(group_element);
 	}
 
+	
+	
 	private void addNodeAttributesElement(final List<AspectElement> elements, CyNetwork network, CyNode node, String name, Object value) {
 		if (value == null) {
 			return;
@@ -723,7 +729,11 @@ public final class CxExporter {
 				elements.add(new NodeAttributesElement(subnetworkId, nodeId, name, attr_values, type));
 			}
 			
-		}else {
+		} else {
+			if (name.endsWith(".SUID") && value instanceof Long) {
+				value = CxUtil.getElementId((Long) value, network);
+			}
+			
 			elements.add(new NodeAttributesElement(subnetworkId, nodeId, name, String.valueOf(value), type));
 		}
 	}
@@ -755,6 +765,10 @@ public final class CxExporter {
 						AttributesAspectUtils.determineDataType(value)));
 			}
 		} else {
+			if (name.endsWith(".SUID") && value instanceof Long) {
+				value = CxUtil.getElementId((Long) value, network);
+			}
+			
 			elements.add(new EdgeAttributesElement(subnetworkId, edgeId, name, String.valueOf(value),
 					AttributesAspectUtils.determineDataType(value)));
 		}

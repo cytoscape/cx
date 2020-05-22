@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.ndexbio.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
@@ -211,6 +212,53 @@ public final class CxUtil {
 		CyTable table = getCxTable(cyEle, root);
 		CyRow row = table.getRow(cyEle.getSUID());
 		return row.get(CX_ID_MAPPING, Long.class);
+	}
+	
+	public static void remapTrackedSUIDColumns(CyNetwork network) {
+		CyRootNetwork root = getRoot(network);
+		network.getDefaultNodeTable().getColumns().forEach((column) -> {
+			if (column.getName().endsWith(".SUID")) {
+				System.out.println(network.getSUID() + " has .SUID in node column: " + column.getName());
+				column.getTable().getAllRows();
+				
+				System.out.println("and this is its hasCxIds status: " + CxUtil.hasCxIds(network)); 
+			}
+		});
+	}
+	
+	/**
+	 * Retrieve the CX ID of an element by SUID, otherwise null
+	 * 
+	 * This is of particular use for .SUID named columns, whose values always correspond 
+	 * to elements in the network.
+	 * 
+	 * @param suid
+	 * @param network
+	 * @return
+	 */
+	public static Long getElementId(long suid, CyNetwork network) {
+		CyRootNetwork root = getRoot(network);
+	
+		CyNode node = root.getNode(suid);
+		if (node != null) {
+			return getElementId(node, network, true);
+		}
+		
+		CyEdge edge = root.getEdge(suid);
+		if (edge != null) {
+			return getElementId(edge, network, true);
+		}
+		
+		if (root.getSUID().equals(suid)) {
+			return getElementId(root, network, true);
+		}
+		Optional<CySubNetwork> matchingSubnetwork = root.getSubNetworkList().stream().filter( 
+				(subNetwork) -> subNetwork.getSUID().equals(suid)).findFirst();
+		if (matchingSubnetwork.isPresent()) {
+			return getElementId(matchingSubnetwork.get(), network, true);
+		}
+		
+		return null;
 	}
 	
 	/**

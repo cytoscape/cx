@@ -7,6 +7,7 @@ import java.util.Properties;
 
 import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cxio.CxImporter;
+import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.Settings;
 import org.cytoscape.io.internal.cxio.TimingUtil;
 import org.cytoscape.io.internal.nicecy.NiceCyRootNetwork;
@@ -112,6 +113,11 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 			TimingUtil.reportTimeDifference(t1, "Time to create networks in Cytoscape", -1);
 		}
 		_networks = new CyNetwork[networks.size()];
+		
+		networks.forEach((network) -> {
+			CxUtil.remapTrackedSUIDColumns(network);
+		});
+		
 		networks.toArray(_networks);
 
 		if (Settings.INSTANCE.isTiming()) {
