@@ -221,6 +221,11 @@ public final class CxUtil {
 				System.out.println(network.getSUID() + " has .SUID in node column: " + column.getName());
 				column.getTable().getAllRows();
 				
+				CyTable table = root.getTable(CyNode.class, CXID_NAMESPACE);
+				table.getAllRows().forEach((row) -> {
+					System.out.println("CXID row: " +  row.getAllValues().toString());
+				});
+				
 				System.out.println("and this is its hasCxIds status: " + CxUtil.hasCxIds(network)); 
 			}
 		});
