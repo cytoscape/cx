@@ -146,11 +146,13 @@ public final class ViewMaker {
                     
                     // Some integer values exported as double
                     Object value = vp.parseSerializableString(ov);
+                    
                     try {
-                    	value = ViewMaker.toTypeValue(ov, type);
+                    	value = ViewMaker.toContinuousPointValue(ov, type);
                     }catch(NumberFormatException err) {
                     	
                     }
+                    
                     if ((lp != null) && (ep != null) && (gp != null) && (value != null)) {
                         final BoundaryRangeValues point = new BoundaryRangeValues(lp, ep, gp);
                         cmf.addPoint(value, point);
@@ -506,6 +508,27 @@ public final class ViewMaker {
         }
     }
 
+    public final static Object toContinuousPointValue(final String s, final String type) throws NumberFormatException {
+        if (type.equals("string")) {
+            return s;
+        }
+        else if (type.equals("integer")) {
+            return Double.valueOf(s);
+        }
+        else if (type.equals("long")) {
+            return Double.valueOf(s);
+        }
+        else if (type.equals("double") || type.equals("float")) {
+            return Double.valueOf(s);
+        }
+        else if (type.equals("boolean")) {
+            return Boolean.valueOf(s);
+        }
+        else {
+            throw new IllegalArgumentException("don't know how to deal with type '" + type + "'");
+        }
+    }
+    
     public final static Object toTypeValue(final String s, final String type) throws NumberFormatException {
         if (type.equals("string")) {
             return s;
