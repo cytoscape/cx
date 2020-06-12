@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.cytoscape.io.internal.CxPreferences;
 import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.TimingUtil;
@@ -37,8 +38,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class NiceCyNetwork extends Identifiable {
 	
-	public static final String VIEW_THRESHOLD = "viewThreshold";
-	private static final int DEF_VIEW_THRESHOLD = 3000;
+	
 	
 	protected final List<CyTableColumnElement> tableColumns = new ArrayList<CyTableColumnElement>();
 	protected List<NetworkAttributesElement> attributes = new ArrayList<NetworkAttributesElement>();
@@ -135,33 +135,20 @@ public abstract class NiceCyNetwork extends Identifiable {
 				
 				final long networkSize = network.getEdgeCount() + network.getNodeCount();
 				
-				if (hasExplicitView || networkSize < getViewThreshold()) {
+				final long viewThreshold = CxPreferences.getViewThreshold();
+				
+				if (hasExplicitView || networkSize < viewThreshold) {
 					CyNetworkView v = view_factory.createNetworkView(network);
 					
 						view.apply(v);
 						view_manager.addNetworkView(v);
 						cy_views.add(v);
 					}
-				
-				
 			});
 			return cy_views;
 		}
 
-		private int getViewThreshold() {
-			final Properties props = (Properties) CyServiceModule
-					.getService(CyProperty.class, "(cyPropertyName=cytoscape3.props)").getProperties();
-			final String vts = props.getProperty(VIEW_THRESHOLD);
-			int threshold;
-
-			try {
-				threshold = Integer.parseInt(vts);
-			} catch (Exception e) {
-				threshold = DEF_VIEW_THRESHOLD;
-			}
-
-			return threshold;
-		}
+		
 		
 		public void updateViewIds(NiceCySubNetwork otherNet) {
 			this.id = otherNet.getId();

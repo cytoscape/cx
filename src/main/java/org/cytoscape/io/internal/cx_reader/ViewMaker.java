@@ -13,6 +13,7 @@ import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.ndexbio.cxio.aspects.datamodels.Mapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.cytoscape.io.internal.CxPreferences;
 import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.Settings;
@@ -54,8 +55,6 @@ public final class ViewMaker {
     private static final VisualMappingFunctionFactory vmf_factory_c = CyServiceModule.getContinuousMapping();
     private static final VisualMappingFunctionFactory vmf_factory_d = CyServiceModule.getDiscreteMapping();
     private static final VisualMappingFunctionFactory vmf_factory_p = CyServiceModule.getPassthroughMapping();
-
-    private static final long LAYOUT_THRESHOLD = 25000;
     
     // TODO: Cannot handle passthrough (or other?) mappings to list columns
     
@@ -564,7 +563,7 @@ public final class ViewMaker {
     	final RenderingEngineManager rendering_engine_manager = CyServiceModule.getService(RenderingEngineManager.class);
     	
     	final long t0 = System.currentTimeMillis();
-    	String doLayout = view.getEdgeViews().size() < LAYOUT_THRESHOLD ? "force-directed" : "grid";
+    	String doLayout = view.getEdgeViews().size() < CxPreferences.getLargeLayoutThreshold() ? "force-directed" : "grid";
     	
         final boolean have_default_visual_properties = 
         		(visualProperties != null) ||

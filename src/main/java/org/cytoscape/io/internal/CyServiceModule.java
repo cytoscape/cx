@@ -1,7 +1,9 @@
 package org.cytoscape.io.internal;
 
 import java.util.HashMap;
+import java.util.Properties;
 
+import org.cytoscape.property.CyProperty;
 import org.cytoscape.service.util.CyServiceRegistrar;
 import org.cytoscape.view.vizmap.VisualMappingFunctionFactory;
 
@@ -56,5 +58,6 @@ public class CyServiceModule {
 	public static void setServiceRegistrar(CyServiceRegistrar serviceRegistrar) {
 		CyServiceModule.serviceRegistrar = serviceRegistrar;
 	}
+
 
 }

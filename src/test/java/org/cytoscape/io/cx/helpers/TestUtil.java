@@ -38,6 +38,7 @@ import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.group.internal.CyGroupFactoryImpl;
 import org.cytoscape.group.internal.CyGroupManagerImpl;
 import org.cytoscape.group.internal.LockedVisualPropertiesManager;
+import org.cytoscape.io.internal.CxPreferences;
 import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cx_reader.CytoscapeCxFileFilter;
 import org.cytoscape.io.internal.cx_reader.CytoscapeCxNetworkReader;
@@ -46,7 +47,6 @@ import org.cytoscape.io.internal.cx_writer.CxNetworkWriter;
 import org.cytoscape.io.internal.cx_writer.CxNetworkWriterFactory;
 import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.Settings;
-import org.cytoscape.io.internal.nicecy.NiceCyNetwork;
 import org.cytoscape.io.internal.nicecy.NiceCyRootNetwork;
 import org.cytoscape.io.util.StreamUtil;
 import org.cytoscape.model.CyNetwork;
@@ -183,7 +183,7 @@ public class TestUtil {
 		CyProperty cyProps = mock(CyProperty.class);
 		
 		Properties props = mock(Properties.class);
-		when(props.getProperty(Mockito.eq(NiceCyNetwork.VIEW_THRESHOLD))).thenReturn("3000000");
+		when(props.getProperty(Mockito.eq(CxPreferences.VIEW_THRESHOLD))).thenReturn("3000000");
 		 
 		when(cyProps.getProperties()).thenReturn(props);
 		CyServiceModule.setService(CyProperty.class, cyProps);
