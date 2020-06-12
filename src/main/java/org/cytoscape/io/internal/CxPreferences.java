@@ -34,16 +34,13 @@ public class CxPreferences {
 	
 	public enum ApplyLayoutEnum
 	{
-	    ALWAYS,
 	    AUTO,
 	    NEVER
 	}
 	
 	public static ApplyLayoutEnum getApplyLayout() {
 		final String property = getProperty(CREATE_VIEW_PROPERTY);
-		return ApplyLayoutEnum.ALWAYS.toString().toLowerCase().equals(property) 
-				? ApplyLayoutEnum.ALWAYS 
-				: ApplyLayoutEnum.NEVER.toString().toLowerCase().equals(property) 
+		return ApplyLayoutEnum.NEVER.toString().toLowerCase().equals(property) 
 				  ? ApplyLayoutEnum.NEVER 
 				  : ApplyLayoutEnum.AUTO;
 	}

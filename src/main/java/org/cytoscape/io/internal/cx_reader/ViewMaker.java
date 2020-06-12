@@ -85,7 +85,7 @@ public final class ViewMaker {
     		CyNetworkView network_view,
     		String layout, boolean fitContent) {
         
-        if( layout != null )
+        if( layout != null && CxPreferences.getApplyLayout() != CxPreferences.ApplyLayoutEnum.NEVER)
         {
         	
         	CyLayoutAlgorithmManager layout_manager = CyServiceModule.getService(CyLayoutAlgorithmManager.class);

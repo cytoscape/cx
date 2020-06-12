@@ -136,14 +136,18 @@ public abstract class NiceCyNetwork extends Identifiable {
 				final long networkSize = network.getEdgeCount() + network.getNodeCount();
 				
 				final long viewThreshold = CxPreferences.getViewThreshold();
+				final CxPreferences.CreateViewEnum createViewPreference = CxPreferences.getCreateView();
 				
-				if (hasExplicitView || networkSize < viewThreshold) {
+				if(CxPreferences.getCreateView() == CxPreferences.CreateViewEnum.NEVER) {
+					// DO NOTHING
+				}
+				else if (createViewPreference.equals(CxPreferences.CreateViewEnum.ALWAYS) || networkSize < viewThreshold) {
 					CyNetworkView v = view_factory.createNetworkView(network);
 					
-						view.apply(v);
-						view_manager.addNetworkView(v);
-						cy_views.add(v);
-					}
+					view.apply(v);
+					view_manager.addNetworkView(v);
+					cy_views.add(v);
+				}
 			});
 			return cy_views;
 		}
