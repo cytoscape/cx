@@ -55,6 +55,8 @@ public final class ViewMaker {
     private static final VisualMappingFunctionFactory vmf_factory_d = CyServiceModule.getDiscreteMapping();
     private static final VisualMappingFunctionFactory vmf_factory_p = CyServiceModule.getPassthroughMapping();
 
+    private static final long LAYOUT_THRESHOLD = 25000;
+    
     // TODO: Cannot handle passthrough (or other?) mappings to list columns
     
     private static boolean applyCartesianLayout(CyNetworkView view, 
@@ -562,7 +564,7 @@ public final class ViewMaker {
     	final RenderingEngineManager rendering_engine_manager = CyServiceModule.getService(RenderingEngineManager.class);
     	
     	final long t0 = System.currentTimeMillis();
-    	String doLayout = view.getEdgeViews().size() < 10000 ? "force-directed" : "grid";
+    	String doLayout = view.getEdgeViews().size() < LAYOUT_THRESHOLD ? "force-directed" : "grid";
     	
         final boolean have_default_visual_properties = 
         		(visualProperties != null) ||
