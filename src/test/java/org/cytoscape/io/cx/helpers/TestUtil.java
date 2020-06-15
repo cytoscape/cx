@@ -38,7 +38,6 @@ import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.group.internal.CyGroupFactoryImpl;
 import org.cytoscape.group.internal.CyGroupManagerImpl;
 import org.cytoscape.group.internal.LockedVisualPropertiesManager;
-import org.cytoscape.io.internal.CxPreferences;
 import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cx_reader.CytoscapeCxFileFilter;
 import org.cytoscape.io.internal.cx_reader.CytoscapeCxNetworkReader;
@@ -54,7 +53,6 @@ import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.NetworkTestSupport;
 import org.cytoscape.model.subnetwork.CyRootNetworkManager;
-import org.cytoscape.property.CyProperty;
 import org.cytoscape.service.util.CyServiceRegistrar;
 import org.cytoscape.session.CySessionManager;
 import org.cytoscape.view.model.CyNetworkViewFactory;
@@ -64,7 +62,6 @@ import org.cytoscape.view.presentation.property.BasicVisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.work.SynchronousTaskManager;
 import org.cytoscape.work.swing.DialogTaskManager;
-import org.mockito.Mockito;
 import org.ndexbio.cxio.aspects.datamodels.AbstractAttributesAspectElement;
 import org.ndexbio.cxio.aspects.datamodels.AbstractElementAttributesAspectElement;
 import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
@@ -123,6 +120,18 @@ public class TestUtil {
 	
 	private CyGroupManagerImpl group_manager;
 
+	private CyNetworkViewManager netViewMgr ;
+	
+	public CyNetworkViewManager getCyNetworkViewManager() {
+		return  netViewMgr;
+	}
+	
+	private final Properties properties;
+	
+	public Properties getPropertiesMock() {
+		return properties;
+	}
+	
 	final SynchronousTaskManager<?> synchronousTaskManager = mock(SynchronousTaskManager.class);
 	
 	public static TestUtil INSTANCE;
@@ -150,7 +159,7 @@ public class TestUtil {
 		final VisualMappingManager vmMgr = mock(VisualMappingManager.class);
 		
 		final CyServiceRegistrar serviceRegistrar = mock(CyServiceRegistrar.class);
-		final CyNetworkViewManager netViewMgr = new CyNetworkViewManagerImpl(serviceRegistrar);
+		netViewMgr = new CyNetworkViewManagerImpl(serviceRegistrar);
 		
 		when(serviceRegistrar.getService(CyEventHelper.class)).thenReturn(eventHelper);
 		when(serviceRegistrar.getService(VisualMappingManager.class)).thenReturn(vmMgr);
@@ -180,16 +189,11 @@ public class TestUtil {
 		CyServiceModule.setService(SynchronousTaskManager.class, mock(SynchronousTaskManager.class));
 		CyServiceModule.setService(DialogTaskManager.class, mock(DialogTaskManager.class));
 		
-		CyProperty cyProps = mock(CyProperty.class);
+		final CyServiceRegistrar serviceRegistrar = mock(CyServiceRegistrar.class);
 		
-		Properties props = mock(Properties.class);
-		when(props.getProperty(Mockito.eq(CxPreferences.VIEW_THRESHOLD))).thenReturn("3000000");
-		 
-		when(cyProps.getProperties()).thenReturn(props);
-		CyServiceModule.setService(CyProperty.class, cyProps);
+		VisualMappingMock.init(serviceRegistrar);
+		properties = CyPropertiesMock.init(serviceRegistrar);
 		
-		VisualMappingMock.init();
-
 		initGroups();
 	}
 	

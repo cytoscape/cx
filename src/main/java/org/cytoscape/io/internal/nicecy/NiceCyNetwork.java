@@ -137,11 +137,13 @@ public abstract class NiceCyNetwork extends Identifiable {
 				
 				final long viewThreshold = CxPreferences.getViewThreshold();
 				final CxPreferences.CreateViewEnum createViewPreference = CxPreferences.getCreateView();
-				
+				System.out.println("View Preference: " + createViewPreference);
 				if(CxPreferences.getCreateView() == CxPreferences.CreateViewEnum.NEVER) {
 					// DO NOTHING
+				
 				}
 				else if (createViewPreference.equals(CxPreferences.CreateViewEnum.ALWAYS) || networkSize < viewThreshold) {
+					
 					CyNetworkView v = view_factory.createNetworkView(network);
 					
 					view.apply(v);

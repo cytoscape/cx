@@ -2,7 +2,7 @@ package org.cytoscape.io.cx;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-
+import static org.mockito.Mockito.when;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,21 +11,20 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import org.cytoscape.io.cx.helpers.CyPropertiesMock;
 import org.cytoscape.io.cx.helpers.TestUtil;
 import org.cytoscape.io.cx.helpers.TestUtil.CxReaderWrapper;
 import org.cytoscape.io.internal.AspectSet;
+import org.cytoscape.io.internal.CxPreferences;
 import org.cytoscape.io.internal.CyServiceModule;
-import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNode;
-import org.cytoscape.model.CyRow;
-import org.cytoscape.model.subnetwork.CyRootNetwork;
-import org.cytoscape.model.subnetwork.CySubNetwork;
 import org.cytoscape.view.model.ContinuousRange;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewFactory;
@@ -37,7 +36,9 @@ import org.cytoscape.view.vizmap.VisualMappingFunction;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.view.vizmap.VisualStyle;
 import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.ndexbio.cxio.aspects.datamodels.EdgeAttributesElement;
 import org.ndexbio.cxio.aspects.datamodels.NetworkAttributesElement;
@@ -56,7 +57,7 @@ public class SpecialTest {
 	public static void init() {
 		TestUtil.init();
 	}
-
+	
 	@Test
 	public void testEdgesAndEdgeAttributesForSingleEdgeNetwork() throws IOException {
 
@@ -315,7 +316,7 @@ public class SpecialTest {
 		CxReaderWrapper reader = TestUtil.getSubNetwork(f);
 		TestUtil.withAspects(reader);
 	}
-
+	
 	@Test
 	public void testMismatchedAttributeTypes() throws IOException {
 		File f = TestUtil.getResource("specialCases", "n3_pp.cx");
