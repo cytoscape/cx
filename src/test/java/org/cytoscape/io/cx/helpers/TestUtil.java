@@ -132,6 +132,8 @@ public class TestUtil {
 		return properties;
 	}
 	
+	
+	
 	final SynchronousTaskManager<?> synchronousTaskManager = mock(SynchronousTaskManager.class);
 	
 	public static TestUtil INSTANCE;

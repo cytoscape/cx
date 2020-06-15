@@ -25,6 +25,7 @@ import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNode;
+import org.cytoscape.view.layout.CyLayoutAlgorithmManager;
 import org.cytoscape.view.model.ContinuousRange;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewFactory;
@@ -39,6 +40,11 @@ import org.junit.BeforeClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
+
 import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.ndexbio.cxio.aspects.datamodels.EdgeAttributesElement;
 import org.ndexbio.cxio.aspects.datamodels.NetworkAttributesElement;
@@ -129,5 +135,37 @@ public class PreferencesTest {
 		CyNetwork[] networks = TestUtil.loadNetworks(reader);
 		
 		assertEquals(1, TestUtil.INSTANCE.getCyNetworkViewManager().getNetworkViewSet().size());
+	}
+	
+	
+	
+	@Test
+	public void testLayoutOverThreshold() throws IOException {
+		Properties propertiesMock = TestUtil.INSTANCE.getPropertiesMock();
+		when(propertiesMock.getProperty(Mockito.eq(CxPreferences.CREATE_VIEW_PROPERTY))).thenReturn("always");
+		when(propertiesMock.getProperty(Mockito.eq(CxPreferences.LARGE_LAYOUT_THRESHOLD_PROPERTY))).thenReturn("3000");
+		
+		File f = TestUtil.getResource("collections", "c_elegans.cx");
+		CxReaderWrapper reader = TestUtil.getSubNetwork(f);
+		CyNetwork[] networks = TestUtil.loadNetworks(reader);
+		
+		CyLayoutAlgorithmManager layoutManager = CyServiceModule.getService(CyLayoutAlgorithmManager.class);
+		verify(layoutManager.getLayout("grid"), times(1));
+	}
+	
+	@Test
+	public void testLayoutUnderThreshold() throws IOException {
+		Properties propertiesMock = TestUtil.INSTANCE.getPropertiesMock();
+		when(propertiesMock.getProperty(Mockito.eq(CxPreferences.CREATE_VIEW_PROPERTY))).thenReturn("always");
+		when(propertiesMock.getProperty(Mockito.eq(CxPreferences.LARGE_LAYOUT_THRESHOLD_PROPERTY))).thenReturn("10000");
+		
+		File f = TestUtil.getResource("collections", "c_elegans.cx");
+		CxReaderWrapper reader = TestUtil.getSubNetwork(f);
+		CyNetwork[] networks = TestUtil.loadNetworks(reader);
+		
+		CyLayoutAlgorithmManager layoutManager = CyServiceModule.getService(CyLayoutAlgorithmManager.class);
+		
+		verify(layoutManager.getLayout("force-directed"), times(1));
+	
 	}
 }
