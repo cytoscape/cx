@@ -54,9 +54,6 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 	@Override
 	public CyNetworkView buildCyNetworkView(final CyNetwork network) {
 	
-	
-		
-		
 			System.out.println("Creating view for " + network);
 			List<CyNetworkView> views = niceCy.createViews(network);
 			if (views.isEmpty()) {
