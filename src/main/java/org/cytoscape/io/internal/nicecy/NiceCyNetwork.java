@@ -38,8 +38,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class NiceCyNetwork extends Identifiable {
 	
-	
-	
 	protected final List<CyTableColumnElement> tableColumns = new ArrayList<CyTableColumnElement>();
 	protected List<NetworkAttributesElement> attributes = new ArrayList<NetworkAttributesElement>();
 	protected List<HiddenAttributesElement> hiddenAttributes = new ArrayList<HiddenAttributesElement>();
@@ -122,7 +120,7 @@ public abstract class NiceCyNetwork extends Identifiable {
 			return CyNetwork.DEFAULT_ATTRS;
 		}
 
-		public Collection<? extends CyNetworkView> createViews() {
+		public Collection<? extends CyNetworkView> createViews(Boolean explicitCreateView) {
 			List<CyNetworkView> cy_views = new ArrayList<CyNetworkView>();
 			CyNetworkViewFactory view_factory = CyServiceModule.getService(CyNetworkViewFactory.class);
 			CyNetworkViewManager view_manager = CyServiceModule.getService(CyNetworkViewManager.class);
@@ -138,12 +136,22 @@ public abstract class NiceCyNetwork extends Identifiable {
 				final long viewThreshold = CxPreferences.getViewThreshold();
 				final CxPreferences.CreateViewEnum createViewPreference = CxPreferences.getCreateView();
 				System.out.println("View Preference: " + createViewPreference);
-				if(CxPreferences.getCreateView() == CxPreferences.CreateViewEnum.NEVER) {
-					// DO NOTHING
+				System.out.println("Explicit Create View: " + explicitCreateView);
+				final boolean createView;
 				
+				if (explicitCreateView != null) {
+					createView = explicitCreateView.booleanValue();
+				} else {
+					if(CxPreferences.getCreateView() == CxPreferences.CreateViewEnum.NEVER) { 
+						createView = false;
+					} else if (createViewPreference.equals(CxPreferences.CreateViewEnum.ALWAYS) || networkSize < viewThreshold){
+						createView = true;
+					} else {
+						createView = false;
+					}
 				}
-				else if (createViewPreference.equals(CxPreferences.CreateViewEnum.ALWAYS) || networkSize < viewThreshold) {
-					
+				
+				if (createView) {
 					CyNetworkView v = view_factory.createNetworkView(network);
 					
 					view.apply(v);

@@ -31,8 +31,14 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 
 	final CxImporter cx_importer = new CxImporter();
 
+	private Boolean createView = null;
 	
-
+	// Warning: HACK. Cytoscape doesn't allow access to reader parameters programmatically. This method allows Java reflections 
+	// access to it. This method should not be renamed or made private.
+	public void setCreateView(final Boolean createView) {
+		this.createView = createView;
+	}
+	
 	public CytoscapeCxNetworkReader(final InputStream input_stream, final String network_collection_name,
 			final CyNetworkViewFactory networkview_factory, final CyNetworkFactory network_factory,
 			final CyNetworkManager network_manager, final CyRootNetworkManager root_network_manager) {
@@ -55,7 +61,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 	public CyNetworkView buildCyNetworkView(final CyNetwork network) {
 	
 			System.out.println("Creating view for " + network);
-			List<CyNetworkView> views = niceCy.createViews(network);
+			List<CyNetworkView> views = niceCy.createViews(network, createView);
 			if (views.isEmpty()) {
 				CyNetworkViewFactory view_factory = CyServiceModule.getService(CyNetworkViewFactory.class);
 				final CyNetworkView createdView = view_factory.createNetworkView(network);
@@ -77,6 +83,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 	@Override
 	public void run(final TaskMonitor taskMonitor) throws IOException {
 
+		System.out.println("create view value: " + createView);
 		final long t0 = System.currentTimeMillis();
 
 		if (Settings.INSTANCE.isTiming()) {

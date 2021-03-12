@@ -6,7 +6,7 @@ import org.cytoscape.property.CyProperty;
 
 public class CxPreferences {
 	public static final String VIEW_THRESHOLD = "viewThreshold";
-	private static final int DEF_VIEW_THRESHOLD = 3000;
+	private static final int DEF_VIEW_THRESHOLD = 200000;
 	
 	public static int getViewThreshold() {
 		return getIntegerProperty(VIEW_THRESHOLD, DEF_VIEW_THRESHOLD);
