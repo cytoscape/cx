@@ -46,9 +46,8 @@ public class VisualMappingMock{
 	
 	private VisualMappingMock() { }
 
-	public static void init() {
+	public static void init(CyServiceRegistrar serviceRegistrar) {
 		final CyEventHelper eventHelper = mock(CyEventHelper.class);
-		final CyServiceRegistrar serviceRegistrar = mock(CyServiceRegistrar.class);
 		final VisualMappingFunctionFactory ptFactory = mock(VisualMappingFunctionFactory.class);
 		final VisualStyleFactory vsFactory = new VisualStyleFactoryImpl(serviceRegistrar, ptFactory);
 		final NetworkViewRenderer netViewRenderer = mock(NetworkViewRenderer.class);
@@ -67,12 +66,23 @@ public class VisualMappingMock{
 		renderers.add(netViewRenderer);
 		when(appManager.getNetworkViewRendererSet()).thenReturn(renderers);
 		
-		CyLayoutAlgorithm def = mock(CyLayoutAlgorithm.class);
 		DummyLayoutContext dummyLayoutContext = mock(DummyLayoutContext.class);
-		when(def.createLayoutContext()).thenReturn(dummyLayoutContext);
-		when(def.getDefaultLayoutContext()).thenReturn(dummyLayoutContext);
-		when(def.getName()).thenReturn("grid");
-		when(layoutManager.getLayout(any())).thenReturn(def);
+		
+		CyLayoutAlgorithm gridDef = mock(CyLayoutAlgorithm.class);
+		
+		when(gridDef.createLayoutContext()).thenReturn(dummyLayoutContext);
+		when(gridDef.getDefaultLayoutContext()).thenReturn(dummyLayoutContext);
+		when(gridDef.getName()).thenReturn("grid");
+		
+		when(layoutManager.getLayout(Mockito.eq("grid"))).thenReturn(gridDef);
+		
+		CyLayoutAlgorithm forceDirectedDef = mock(CyLayoutAlgorithm.class);
+		when(forceDirectedDef.createLayoutContext()).thenReturn(dummyLayoutContext);
+		when(forceDirectedDef.getDefaultLayoutContext()).thenReturn(dummyLayoutContext);
+		when(forceDirectedDef.getName()).thenReturn("force-directed");
+		
+		when(layoutManager.getLayout(Mockito.eq("force-directed"))).thenReturn(forceDirectedDef);
+		
 		
 		CyServiceModule.setService(CyApplicationManager.class, appManager);
 		CyServiceModule.setService(RenderingEngineManager.class, renderManager);

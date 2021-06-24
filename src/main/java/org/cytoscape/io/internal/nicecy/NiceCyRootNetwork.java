@@ -577,14 +577,14 @@ protected void addTableColumns() {
 		return CyRootNetwork.SHARED_ATTRS;
 	}
 
-	public List<CyNetworkView> createViews(CyNetwork network) {
+	public List<CyNetworkView> createViews(CyNetwork network, Boolean explicitCreateViews) {
 		List<CyNetworkView> views = new ArrayList<CyNetworkView>();
 		subnetworks.forEach((suid, subnet) -> {
 			if (subnet.network == null) {
 				throw new RuntimeException("No CySubNetwork created for " + subnet);
 			}
 			if (subnet.network.equals(network)) {
-				views.addAll(subnet.createViews());
+				views.addAll(subnet.createViews(explicitCreateViews));
 			}
 		});
 		return views;

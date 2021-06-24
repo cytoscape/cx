@@ -6,6 +6,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+
+import org.cytoscape.io.internal.CxPreferences;
 import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.TimingUtil;
@@ -17,6 +20,7 @@ import org.cytoscape.model.CyRow;
 import org.cytoscape.model.CyTable;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CySubNetwork;
+import org.cytoscape.property.CyProperty;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.view.model.CyNetworkViewManager;
@@ -33,6 +37,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class NiceCyNetwork extends Identifiable {
+	
 	protected final List<CyTableColumnElement> tableColumns = new ArrayList<CyTableColumnElement>();
 	protected List<NetworkAttributesElement> attributes = new ArrayList<NetworkAttributesElement>();
 	protected List<HiddenAttributesElement> hiddenAttributes = new ArrayList<HiddenAttributesElement>();
@@ -115,19 +120,50 @@ public abstract class NiceCyNetwork extends Identifiable {
 			return CyNetwork.DEFAULT_ATTRS;
 		}
 
-		public Collection<? extends CyNetworkView> createViews() {
+		public Collection<? extends CyNetworkView> createViews(Boolean explicitCreateView) {
 			List<CyNetworkView> cy_views = new ArrayList<CyNetworkView>();
 			CyNetworkViewFactory view_factory = CyServiceModule.getService(CyNetworkViewFactory.class);
 			CyNetworkViewManager view_manager = CyServiceModule.getService(CyNetworkViewManager.class);
+		
 			views.forEach((suid, view) -> {
-				CyNetworkView v = view_factory.createNetworkView(network);
-				view.apply(v);
-				view_manager.addNetworkView(v);
-				cy_views.add(v);
+				final boolean hasExplicitView = !view.isCartesianLayoutEmpty() 
+						|| !view.isVisualPropertiesEmpty() 
+						|| !view.isNodeBypassEmpty() 
+						|| !view.isEdgeBypassEmpty();
+				
+				final long networkSize = network.getEdgeCount() + network.getNodeCount();
+				
+				final long viewThreshold = CxPreferences.getViewThreshold();
+				final CxPreferences.CreateViewEnum createViewPreference = CxPreferences.getCreateView();
+				System.out.println("View Preference: " + createViewPreference);
+				System.out.println("Explicit Create View: " + explicitCreateView);
+				final boolean createView;
+				
+				if (explicitCreateView != null) {
+					createView = explicitCreateView.booleanValue();
+				} else {
+					if(CxPreferences.getCreateView() == CxPreferences.CreateViewEnum.NEVER) { 
+						createView = false;
+					} else if (createViewPreference.equals(CxPreferences.CreateViewEnum.ALWAYS) || networkSize < viewThreshold){
+						createView = true;
+					} else {
+						createView = false;
+					}
+				}
+				
+				if (createView) {
+					CyNetworkView v = view_factory.createNetworkView(network);
+					
+					view.apply(v);
+					view_manager.addNetworkView(v);
+					cy_views.add(v);
+				}
 			});
 			return cy_views;
 		}
 
+		
+		
 		public void updateViewIds(NiceCySubNetwork otherNet) {
 			this.id = otherNet.getId();
 			Map<String, NiceCyView> nameMap = new HashMap<String, NiceCyView>();

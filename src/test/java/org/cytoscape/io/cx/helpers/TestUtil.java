@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.SortedMap;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -119,6 +120,20 @@ public class TestUtil {
 	
 	private CyGroupManagerImpl group_manager;
 
+	private CyNetworkViewManager netViewMgr ;
+	
+	public CyNetworkViewManager getCyNetworkViewManager() {
+		return  netViewMgr;
+	}
+	
+	private final Properties properties;
+	
+	public Properties getPropertiesMock() {
+		return properties;
+	}
+	
+	
+	
 	final SynchronousTaskManager<?> synchronousTaskManager = mock(SynchronousTaskManager.class);
 	
 	public static TestUtil INSTANCE;
@@ -146,7 +161,7 @@ public class TestUtil {
 		final VisualMappingManager vmMgr = mock(VisualMappingManager.class);
 		
 		final CyServiceRegistrar serviceRegistrar = mock(CyServiceRegistrar.class);
-		final CyNetworkViewManager netViewMgr = new CyNetworkViewManagerImpl(serviceRegistrar);
+		netViewMgr = new CyNetworkViewManagerImpl(serviceRegistrar);
 		
 		when(serviceRegistrar.getService(CyEventHelper.class)).thenReturn(eventHelper);
 		when(serviceRegistrar.getService(VisualMappingManager.class)).thenReturn(vmMgr);
@@ -176,8 +191,11 @@ public class TestUtil {
 		CyServiceModule.setService(SynchronousTaskManager.class, mock(SynchronousTaskManager.class));
 		CyServiceModule.setService(DialogTaskManager.class, mock(DialogTaskManager.class));
 		
-		VisualMappingMock.init();
-
+		final CyServiceRegistrar serviceRegistrar = mock(CyServiceRegistrar.class);
+		
+		VisualMappingMock.init(serviceRegistrar);
+		properties = CyPropertiesMock.init(serviceRegistrar);
+		
 		initGroups();
 	}
 	
@@ -815,8 +833,13 @@ public class TestUtil {
 			if (Double.compare(cle.getY(), out_cle.getY()) != 0) {
 				continue;
 			}
-			if (cle.getZ() != null && Double.compare(cle.getZ(), out_cle.getZ()) != 0) {
-				continue;
+			if (cle.getZ() != null) 
+			{
+				if (out_cle.getZ() != null) {
+					if (Double.compare(cle.getZ(), out_cle.getZ()) != 0) { continue; }
+				} else {
+					
+				}
 			}
 			return true;
 		}
