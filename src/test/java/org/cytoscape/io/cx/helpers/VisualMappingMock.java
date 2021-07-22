@@ -1,8 +1,8 @@
 package org.cytoscape.io.cx.helpers;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,8 +11,6 @@ import org.cytoscape.application.CyApplicationConfiguration;
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.NetworkViewRenderer;
 import org.cytoscape.ding.DVisualLexicon;
-import org.cytoscape.ding.customgraphics.CustomGraphicsManager;
-import org.cytoscape.ding.customgraphicsmgr.internal.CustomGraphicsManagerImpl;
 import org.cytoscape.ding.impl.BendFactoryImpl;
 import org.cytoscape.event.CyEventHelper;
 import org.cytoscape.io.internal.CyServiceModule;
@@ -21,13 +19,16 @@ import org.cytoscape.service.util.CyServiceRegistrar;
 import org.cytoscape.view.layout.CyLayoutAlgorithm;
 import org.cytoscape.view.layout.CyLayoutAlgorithmManager;
 import org.cytoscape.view.model.VisualLexicon;
+import org.cytoscape.view.model.internal.network.CyNetworkViewManagerImpl;
+import org.cytoscape.view.model.table.CyTableViewManager;
 import org.cytoscape.view.presentation.RenderingEngineFactory;
 import org.cytoscape.view.presentation.RenderingEngineManager;
 import org.cytoscape.view.presentation.property.values.BendFactory;
+import org.cytoscape.view.vizmap.TableVisualMappingManager;
 import org.cytoscape.view.vizmap.VisualMappingFunctionFactory;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.view.vizmap.VisualStyleFactory;
-import org.cytoscape.view.vizmap.internal.VisualMappingManagerImpl;
+import org.cytoscape.view.vizmap.internal.NetworkVisualMappingManagerImpl;
 import org.cytoscape.view.vizmap.internal.VisualStyleFactoryImpl;
 import org.cytoscape.view.vizmap.internal.mappings.ContinuousMappingFactory;
 import org.cytoscape.view.vizmap.internal.mappings.DiscreteMappingFactory;
@@ -52,12 +53,16 @@ public class VisualMappingMock{
 		final VisualStyleFactory vsFactory = new VisualStyleFactoryImpl(serviceRegistrar, ptFactory);
 		final NetworkViewRenderer netViewRenderer = mock(NetworkViewRenderer.class);
 		final CyApplicationManager appManager = mock(CyApplicationManager.class);
+		final CyTableViewManager tableViewManager = mock(CyTableViewManager.class);
+		final TableVisualMappingManager tableVisualMappingManager = mock(TableVisualMappingManager.class);
 		@SuppressWarnings("unchecked")
 		final RenderingEngineFactory<CyNetwork> engineFactory = mock(RenderingEngineFactory.class);
 		final RenderingEngineManager renderManager = mock(RenderingEngineManager.class);
 		final CyLayoutAlgorithmManager layoutManager = mock(CyLayoutAlgorithmManager.class);
 		
 		when(serviceRegistrar.getService(CyApplicationManager.class)).thenReturn(appManager);
+		when(serviceRegistrar.getService(CyTableViewManager.class)).thenReturn(tableViewManager);
+		when(serviceRegistrar.getService(TableVisualMappingManager.class)).thenReturn(tableVisualMappingManager);
 		when(serviceRegistrar.getService(CyEventHelper.class)).thenReturn(eventHelper);
 		when(netViewRenderer.getRenderingEngineFactory(Mockito.anyString())).thenReturn(engineFactory);
 		when(appManager.getCurrentNetworkViewRenderer()).thenReturn(netViewRenderer);
@@ -85,6 +90,8 @@ public class VisualMappingMock{
 		
 		
 		CyServiceModule.setService(CyApplicationManager.class, appManager);
+		CyServiceModule.setService(CyTableViewManager.class, tableViewManager);
+		CyServiceModule.setService(TableVisualMappingManager.class, tableVisualMappingManager);
 		CyServiceModule.setService(RenderingEngineManager.class, renderManager);
 		CyServiceModule.setService(VisualStyleFactory.class, vsFactory);
 		CyServiceModule.setService(CyLayoutAlgorithmManager.class, layoutManager);
@@ -94,19 +101,19 @@ public class VisualMappingMock{
 		CyServiceModule.setDiscreteMapping(new DiscreteMappingFactory(serviceRegistrar));
 		CyServiceModule.setContinuousMapping(new ContinuousMappingFactory(serviceRegistrar));
 		
-		final VisualMappingManager vmm = new VisualMappingManagerImpl(vsFactory, serviceRegistrar);
+		final VisualMappingManager vmm = new NetworkVisualMappingManagerImpl(vsFactory, serviceRegistrar);
 		when(serviceRegistrar.getService(VisualMappingManager.class)).thenReturn(vmm);
 		CyServiceModule.setService(VisualMappingManager.class, vmm);
 		
-		Set<VisualLexicon> lexicons = new HashSet<VisualLexicon>();
-		final CustomGraphicsManager cgManager = mock(CustomGraphicsManager.class);
+		Set<VisualLexicon> lexicons = new HashSet<>();
+		//final CustomGraphicsManager cgManager = mock(CustomGraphicsManager.class);
 		
-		DVisualLexicon lexicon = new DVisualLexicon(cgManager);
+		DVisualLexicon lexicon = new DVisualLexicon();
 		lexicons.add(lexicon);
 		
 		BendFactory bendFactory = new BendFactoryImpl();
 //		registerService(bc, bendFactory, BendFactory.class);
-		lexicon.addBendFactory(bendFactory, new HashMap<Object, Object>());
+		lexicon.addBendFactory(bendFactory, new HashMap<>());
 		
 		when(renderManager.getDefaultVisualLexicon()).thenReturn(lexicon);
 		when(engineFactory.getVisualLexicon()).thenReturn(lexicon);
@@ -114,7 +121,7 @@ public class VisualMappingMock{
 		when(serviceRegistrar.getService(CyApplicationConfiguration.class)).thenReturn(mock(CyApplicationConfiguration.class));
 		when(serviceRegistrar.getService(DialogTaskManager.class)).thenReturn(mock(DialogTaskManager.class));
 		
-		new CustomGraphicsManagerImpl(new HashSet<URL>(), serviceRegistrar);
+		new CyNetworkViewManagerImpl(serviceRegistrar);
 		
 	}
 }

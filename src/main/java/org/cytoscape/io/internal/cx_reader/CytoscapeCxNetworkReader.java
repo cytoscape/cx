@@ -3,7 +3,6 @@ package org.cytoscape.io.internal.cx_reader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Properties;
 
 import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cxio.CxImporter;
@@ -15,7 +14,6 @@ import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.subnetwork.CyRootNetworkManager;
-import org.cytoscape.property.CyProperty;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.work.TaskMonitor;
@@ -69,6 +67,13 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 			} else {
 		
 			}
+			
+			try {
+				niceCy.addTableVisualStyles(network);
+			} catch (Exception e) {
+				System.out.println("Failed to create table style for " + network + ": " + e.getMessage());
+
+			}
 			return views.get(0);
 		
 	}
@@ -96,7 +101,7 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 			setRootNetworkList(new ListSingleSelection<String>());
 		}
 
-		Long t1 = System.currentTimeMillis();
+		long t1 = System.currentTimeMillis();
 		niceCy = new NiceCyRootNetwork(niceCX);
 		if (Settings.INSTANCE.isTiming()) {
 			TimingUtil.reportTimeDifference(t1, "Time to create NiceCyNetwork", -1);
@@ -111,12 +116,12 @@ public class CytoscapeCxNetworkReader extends AbstractCyNetworkReader {
 		}
 
 		t1 = System.currentTimeMillis();
-		List<CyNetwork> networks = niceCy.apply();
+		List<CyNetwork> importedNetworks = niceCy.apply();
 		if (Settings.INSTANCE.isTiming()) {
 			TimingUtil.reportTimeDifference(t1, "Time to create networks in Cytoscape", -1);
 		}
-		_networks = new CyNetwork[networks.size()];
-		networks.toArray(_networks);
+		_networks = new CyNetwork[importedNetworks.size()];
+		importedNetworks.toArray(_networks);
 
 		if (Settings.INSTANCE.isTiming()) {
 			TimingUtil.reportTimeDifference(t0, "total time to build network(s) (not views)", -1);

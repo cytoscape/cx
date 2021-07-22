@@ -7,12 +7,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.cytoscape.application.CyApplicationManager;
+import org.cytoscape.application.TableViewRenderer;
 import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cxio.CxUtil;
 import org.cytoscape.io.internal.cxio.TimingUtil;
+import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkFactory;
@@ -21,9 +25,31 @@ import org.cytoscape.model.CyTable;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CySubNetwork;
 import org.cytoscape.view.model.CyNetworkView;
+import org.cytoscape.view.model.CyNetworkViewFactory;
+import org.cytoscape.view.model.View;
+import org.cytoscape.view.model.VisualLexicon;
+import org.cytoscape.view.model.VisualProperty;
+import org.cytoscape.view.model.table.CyTableView;
+import org.cytoscape.view.model.table.CyTableViewFactory;
+import org.cytoscape.view.model.table.CyTableViewManager;
+import org.cytoscape.view.presentation.RenderingEngineFactory;
+import org.cytoscape.view.vizmap.TableVisualMappingManager;
+import org.cytoscape.view.vizmap.VisualMappingFunctionFactory;
+import org.cytoscape.view.vizmap.VisualStyle;
+import org.cytoscape.view.vizmap.VisualStyleFactory;
+import org.cytoscape.view.vizmap.mappings.BoundaryRangeValues;
+import org.cytoscape.view.vizmap.mappings.ContinuousMapping;
+import org.cytoscape.view.vizmap.mappings.DiscreteMapping;
+import org.cytoscape.view.vizmap.mappings.PassthroughMapping;
+import org.ndexbio.cx2.aspect.element.core.TableColumnVisualStyle;
+import org.ndexbio.cx2.aspect.element.core.VPMappingType;
+import org.ndexbio.cx2.aspect.element.core.VisualPropertyMapping;
+import org.ndexbio.cx2.aspect.element.cytoscape.AbstractTableVisualProperty;
+import org.ndexbio.cx2.aspect.element.cytoscape.DefaultTableType;
 import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.ndexbio.cxio.aspects.datamodels.CyGroupsElement;
 import org.ndexbio.cxio.aspects.datamodels.CyTableColumnElement;
+import org.ndexbio.cxio.aspects.datamodels.CyTableVisualPropertiesElement;
 import org.ndexbio.cxio.aspects.datamodels.CyViewsElement;
 import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.ndexbio.cxio.aspects.datamodels.EdgeAttributesElement;
@@ -42,6 +68,7 @@ import org.ndexbio.model.cx.NamespacesElement;
 import org.ndexbio.model.cx.NdexNetworkStatus;
 import org.ndexbio.model.cx.NiceCXNetwork;
 import org.ndexbio.model.cx.Provenance;
+import org.ndexbio.model.exceptions.NdexException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,6 +98,7 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 			NamespacesElement.ASPECT_NAME,
 			CyVisualPropertiesElement.ASPECT_NAME,
 			"visualProperties",
+			CyTableVisualPropertiesElement.ASPECT_NAME
 	};
 	
 	private Map<Long, Long> suid_to_cxid_map;
@@ -82,18 +110,23 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 	protected final Map<Long, NiceCyEdge> root_edges;
 	protected final Map<Long, NiceCyGroup> root_groups;
 	
+	//table styles
+	// Keys: 1. table type, 2. Column name, 3. Visual property name
+	private Map<DefaultTableType, Map<String, Map<String,TableColumnVisualStyle>>> tableVisualStyles;
+	
+	
 	public NiceCyRootNetwork(NiceCXNetwork niceCX) {
 		super(CxUtil.DEFAULT_SUBNET);
-		subnetworks = new HashMap<Long, NiceCySubNetwork>();
-		root_nodes = new HashMap<Long, NiceCyNode>();
-		root_edges = new HashMap<Long, NiceCyEdge>();
-		root_groups = new HashMap<Long, NiceCyGroup>();
+		subnetworks = new HashMap<>();
+		root_nodes = new HashMap<>();
+		root_edges = new HashMap<>();
+		root_groups = new HashMap<>();
 		
 		opaqueAspects = niceCX.getOpaqueAspectTable();
 		isCollection = opaqueAspects.containsKey(SubNetworkElement.ASPECT_NAME);
 		
 		logger.info("Converting NiceCX to NiceCY: ");
-		Long t0 = System.currentTimeMillis();
+		long t0 = System.currentTimeMillis();
 		try {
 			// Must run first to detect CX IDs, NetworkRelations, and subnetworks
 			handleCxMapping(opaqueAspects.get(CxUtil.CX_ID_MAPPING));
@@ -127,6 +160,7 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 			visualProps = opaqueAspects.get("visualProperties");
 		}
 		handleCyVisualProperties(visualProps);
+		handleCyTableVisualProperties(opaqueAspects.get(AbstractTableVisualProperty.ASPECT_NAME));
 	}
 	
 	/**
@@ -222,6 +256,15 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 				break;
 			}
 		});
+	}
+	
+	private void handleCyTableVisualProperties(Collection<AspectElement> tableStyles) {
+		if (tableStyles != null && !tableStyles.isEmpty()) {
+			for (AspectElement e : tableStyles) {
+				this.tableVisualStyles = ((CyTableVisualPropertiesElement) e).getTableStyles();
+				break;
+			}
+		}
 	}
 	
 	private void handleNodeAssociatedAspects(Map<String, Map<Long, Collection<AspectElement>>> nodeAssociatedAspects) {
@@ -477,8 +520,8 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 			throw new RuntimeException("No networks were detected in the CX");
 		}
 		
-		Long t0 = System.currentTimeMillis();
-		List<CyNetwork> networks = new ArrayList<CyNetwork>();
+		long t0 = System.currentTimeMillis();
+		List<CyNetwork> networks = new ArrayList<>();
 		
 		CyNetworkFactory network_factory = CyServiceModule.getService(CyNetworkFactory.class);
 		
@@ -501,21 +544,174 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 		
 		while (nice_subs.hasNext()) {
 			nice_sub = nice_subs.next();
-			CyNetwork network = root.addSubNetwork();
-			nice_sub.apply((CySubNetwork) network);
-			networks.add(network);
+			CyNetwork currentNetwork = root.addSubNetwork();
+			nice_sub.apply((CySubNetwork) currentNetwork);
+			networks.add(currentNetwork);
 		}
 		
 		//add collection level attributes (must be done after nodes/edges are created)
 		addTableColumns();
 		addAttributes();
 		
+//		addTableVisualStyles(networks.get(0));
+		
 		serializeOpaqueAspects();
 		TimingUtil.reportTimeDifference(t0, "time to build cynetwork(s)", -1);
 		
 		return networks;
 	}
+	
+	public void addTableVisualStyles(CyNetwork currentNetwork) throws Exception {
+		if (this.tableVisualStyles == null) return;
+		
+		Map<String, Map<String,TableColumnVisualStyle>> tableStyles = this.tableVisualStyles.get(DefaultTableType.Network);
+		if ( tableStyles != null) {
+			addStyleToTable(currentNetwork.getDefaultNetworkTable(), tableStyles);
+		}
+		
+		tableStyles = this.tableVisualStyles.get(DefaultTableType.Node);
+		if ( tableStyles != null) {
+			addStyleToTable(currentNetwork.getDefaultNodeTable(), tableStyles);
+		}
+		
+		tableStyles = this.tableVisualStyles.get(DefaultTableType.Edge);
+		if ( tableStyles != null) {
+			addStyleToTable(currentNetwork.getDefaultEdgeTable(), tableStyles);
+		}
+	}
 
+	private static <K,J,T> void addStyleToTable(CyTable table, Map<String, Map<String,TableColumnVisualStyle>> nodeTableStyles) throws Exception {
+		var appManager = CyServiceModule.getService(CyApplicationManager.class);
+        var tableViewManager = CyServiceModule.getService(CyTableViewManager.class);
+		var tableViewFactory = CyServiceModule.getService(CyTableViewFactory.class);
+        var tableVisualMappingManager = CyServiceModule.getService(TableVisualMappingManager.class);
+    	VisualStyleFactory visualStyleFactory = CyServiceModule.getService(VisualStyleFactory.class);
+    	
+    	VisualMappingFunctionFactory vmfFactoryC = CyServiceModule.getContinuousMapping();
+        VisualMappingFunctionFactory vmfFactoryD = CyServiceModule.getDiscreteMapping();
+        VisualMappingFunctionFactory vmfFactoryP = CyServiceModule.getPassthroughMapping();
+
+		if (table != null) {
+			
+			CyTableView tableView = tableViewManager.getTableView(table);
+            
+			if ( tableView == null) {
+				tableView = tableViewFactory.createTableView(table);
+				tableViewManager.setTableView(tableView);
+			}
+			TableViewRenderer renderer = appManager.getTableViewRenderer(tableView.getRendererId());
+
+			RenderingEngineFactory<CyTable> factory = renderer
+					.getRenderingEngineFactory(TableViewRenderer.DEFAULT_CONTEXT);
+			VisualLexicon lexicon = factory.getVisualLexicon();
+
+			for (Map.Entry<String,Map<String,TableColumnVisualStyle>> e : nodeTableStyles.entrySet()) {
+				String colName = e.getKey();
+				View<CyColumn> colView = tableView.getColumnView(colName);
+
+				VisualStyle columnStyle = tableVisualMappingManager.getVisualStyle(colView);
+
+				if ( columnStyle == null)  {
+			    	columnStyle = visualStyleFactory.createVisualStyle(UUID.randomUUID().toString());
+			    	tableVisualMappingManager.setVisualStyle(colView, columnStyle);
+				}
+				Map<String, TableColumnVisualStyle> colStyles = e.getValue();
+				for ( Map.Entry<String,TableColumnVisualStyle> e2 : colStyles.entrySet()) {
+					String vpName = e2.getKey();
+					TableColumnVisualStyle style = e2.getValue();
+					
+					VisualProperty<T> vp = (VisualProperty<T>)lexicon.lookup(CyColumn.class, vpName);
+
+					Object v = style.getDefaultValue(); 
+                    VisualPropertyMapping mapping = style.getMapping();
+					
+					if ( vp!= null) {
+						if ( v!= null) {
+							T finalV = CxUtil.cvtCX2ObjToVisualPropertyValue(v, vp);
+							columnStyle.setDefaultValue(vp, finalV);
+						}
+						if ( mapping !=null) {
+							Class attrDataType = table.getColumn(mapping.getMappingDef().getAttributeName()).getType();
+							if (mapping.getType() == VPMappingType.PASSTHROUGH) {
+								PassthroughMapping<?,T> pmf = (PassthroughMapping<?,T>) 
+										vmfFactoryP.createVisualMappingFunction(
+												mapping.getMappingDef().getAttributeName(), 
+												attrDataType, vp);
+								columnStyle.addVisualMappingFunction(pmf);
+							} else if ( mapping.getType() == VPMappingType.DISCRETE) {
+								DiscreteMapping<K,T> dmf = (DiscreteMapping<K,T>) 
+										vmfFactoryD.createVisualMappingFunction(
+												mapping.getMappingDef().getAttributeName(), 
+												attrDataType, vp);
+								for (Map<String, Object> dMappingEntry : mapping.getMappingDef().getMapppingList()) {
+									//Object rowValue = ;
+									T vpValue = CxUtil.cvtCX2ObjToVisualPropertyValue(dMappingEntry.get("vp"), vp);
+									dmf.putMapValue((K)dMappingEntry.get("v"), vpValue);
+								}	
+								columnStyle.addVisualMappingFunction(dmf);
+							} else if (mapping.getType() == VPMappingType.CONTINUOUS) {
+								ContinuousMapping cmf = (ContinuousMapping) 
+										vmfFactoryC.createVisualMappingFunction(
+												mapping.getMappingDef().getAttributeName(), 
+												attrDataType, vp);
+								
+								
+					            int counter = 0;
+
+								int cyCounter = 0;
+								T L = null;
+								T E = null;
+								T G = null;
+								Object ov = null;
+								for ( Map<String,Object> m : mapping.getMappingDef().getMapppingList() ) {
+									
+									Object minV = m.get("min");
+									Object maxV = m.get("max");
+									Boolean includeMin = (Boolean)m.get("includeMin");
+									Boolean includeMax = (Boolean)m.get("includeMax");
+									Object minVP = m.get("minVPValue");
+									Object maxVP = m.get("maxVPValue");
+									
+									if ( minVP == null && maxVP == null)
+										throw new Exception ("minVPValue and maxVPValue are both missing in CONTINUOUS mapping of " + vpName + " on column " + colName);
+									
+									if ( counter == 0) { // first range
+									    L = CxUtil.cvtCX2ObjToVisualPropertyValue(maxVP, vp);
+									    ov = maxV;
+									    if ( includeMax.booleanValue()) 
+									    	E = L;
+									} else {  // middle ranges and the last range
+										G = CxUtil.cvtCX2ObjToVisualPropertyValue(minVP, vp);
+										if (includeMin.booleanValue())
+											E=G;
+						                
+						                BoundaryRangeValues<T> point = new BoundaryRangeValues<>(L, E, G);
+				                        cmf.addPoint(ov, point);
+						                // prepare for the next point
+						                if ( maxV != null) {
+						                	ov = maxV;
+						                	L = CxUtil.cvtCX2ObjToVisualPropertyValue(maxVP, vp);
+						                	if (includeMax.booleanValue())
+						                		E = L;
+						                	else 
+						                		E = null;
+						                }	
+						                
+									}
+									counter++;
+								}	
+						       // vp.putMapping(cx1VPName, VPMappingType.CONTINUOUS.toString(), sb.toString());
+								columnStyle.addVisualMappingFunction(cmf);
+							} 
+						}
+					}
+					
+				}				
+			}
+		}	
+
+	}
+	
 	protected void addRootNetworkColumns() {
 		tableColumns.stream().filter( x -> "network_table".equals(x.getAppliesTo())).forEach(column -> {
 			
@@ -637,7 +833,7 @@ protected void addTableColumns() {
 	 */
 	public void updateNetworkAndViewIds(NiceCyRootNetwork other) {
 		this.id = other.getId();
-		Map<String, NiceCySubNetwork> netNameMap = new HashMap<String, NiceCySubNetwork>();
+		Map<String, NiceCySubNetwork> netNameMap = new HashMap<>();
 		for (NiceCySubNetwork net : other.subnetworks.values()) {
 			String name = net.getNetworkName();
 			if (netNameMap.containsKey(name)) {

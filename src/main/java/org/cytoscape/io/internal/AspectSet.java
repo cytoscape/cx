@@ -5,9 +5,11 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.ndexbio.cx2.aspect.element.cytoscape.AbstractTableVisualProperty;
 import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.ndexbio.cxio.aspects.datamodels.CyGroupsElement;
 import org.ndexbio.cxio.aspects.datamodels.CyTableColumnElement;
+import org.ndexbio.cxio.aspects.datamodels.CyTableVisualPropertiesElement;
 import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.ndexbio.cxio.aspects.datamodels.EdgeAttributesElement;
 import org.ndexbio.cxio.aspects.datamodels.EdgesElement;
@@ -23,6 +25,7 @@ import org.ndexbio.cxio.aspects.readers.CyTableColumnFragmentReader;
 import org.ndexbio.cxio.aspects.readers.CyVisualPropertiesFragmentReader;
 import org.ndexbio.cxio.aspects.readers.EdgeAttributesFragmentReader;
 import org.ndexbio.cxio.aspects.readers.EdgesFragmentReader;
+import org.ndexbio.cxio.aspects.readers.GeneralAspectFragmentReader;
 import org.ndexbio.cxio.aspects.readers.HiddenAttributesFragmentReader;
 import org.ndexbio.cxio.aspects.readers.NetworkAttributesFragmentReader;
 import org.ndexbio.cxio.aspects.readers.NetworkRelationsFragmentReader;
@@ -34,6 +37,7 @@ import org.ndexbio.cxio.aspects.writers.CyGroupsFragmentWriter;
 import org.ndexbio.cxio.aspects.writers.CyTableColumnFragmentWriter;
 import org.ndexbio.cxio.aspects.writers.EdgeAttributesFragmentWriter;
 import org.ndexbio.cxio.aspects.writers.EdgesFragmentWriter;
+import org.ndexbio.cxio.aspects.writers.GeneralAspectFragmentWriter;
 import org.ndexbio.cxio.aspects.writers.HiddenAttributesFragmentWriter;
 import org.ndexbio.cxio.aspects.writers.NetworkAttributesFragmentWriter;
 import org.ndexbio.cxio.aspects.writers.NetworkRelationsFragmentWriter;
@@ -51,7 +55,7 @@ public class AspectSet {
 	}
 
 	public final static ArrayList<String> getAspectNames() {
-		ArrayList<String> aspects = new ArrayList<String>();
+		ArrayList<String> aspects = new ArrayList<>();
 		aspects.add(NodesElement.ASPECT_NAME);
 		aspects.add(EdgesElement.ASPECT_NAME);
 		aspects.add(CartesianLayoutElement.ASPECT_NAME);
@@ -64,11 +68,12 @@ public class AspectSet {
 		aspects.add(CyGroupsElement.ASPECT_NAME);
 		aspects.add(HiddenAttributesElement.ASPECT_NAME);
 		aspects.add(CyTableColumnElement.ASPECT_NAME);
+		aspects.add(AbstractTableVisualProperty.ASPECT_NAME);
 		return aspects;
 	}
 
 	public final static Set<AspectFragmentWriter> getAspectFragmentWriters(Collection<String> _aspects) {
-		final Set<AspectFragmentWriter> writers = new HashSet<AspectFragmentWriter>();
+		final Set<AspectFragmentWriter> writers = new HashSet<>();
 		for (String aspect : _aspects) {
 			switch (aspect) {
 			case CartesianLayoutElement.ASPECT_NAME:
@@ -107,6 +112,9 @@ public class AspectSet {
 			case CyTableColumnElement.ASPECT_NAME:
 				writers.add(CyTableColumnFragmentWriter.createInstance());
 				break;
+			case AbstractTableVisualProperty.ASPECT_NAME:
+				writers.add(new GeneralAspectFragmentWriter (AbstractTableVisualProperty.ASPECT_NAME));
+				break;
 			default:
 				throw new IllegalArgumentException("Cannot get writer for unknown aspect: " + aspect);
 			}
@@ -115,7 +123,7 @@ public class AspectSet {
 	}
 
 	public final static Set<AspectFragmentReader> getAspectFragmentReaders(Collection<String> _aspects) {
-		final Set<AspectFragmentReader> readers = new HashSet<AspectFragmentReader>();
+		final Set<AspectFragmentReader> readers = new HashSet<>();
 		for (String aspect : _aspects) {
 			switch (aspect) {
 			case CartesianLayoutElement.ASPECT_NAME:
@@ -153,6 +161,10 @@ public class AspectSet {
 				break;
 			case CyTableColumnElement.ASPECT_NAME:
 				readers.add(CyTableColumnFragmentReader.createInstance());
+				break;
+			case AbstractTableVisualProperty.ASPECT_NAME:
+				readers.add(new GeneralAspectFragmentReader<> (AbstractTableVisualProperty.ASPECT_NAME,
+						CyTableVisualPropertiesElement.class));
 				break;
 			default:
 				throw new IllegalArgumentException("Cannot get writer for unknown aspect: " + aspect);

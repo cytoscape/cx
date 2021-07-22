@@ -13,12 +13,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.ndexbio.cx2.aspect.element.core.MappingDefinition;
+import org.ndexbio.cx2.aspect.element.core.TableColumnVisualStyle;
+import org.ndexbio.cx2.aspect.element.core.VPMappingType;
+import org.ndexbio.cx2.aspect.element.core.VisualPropertyMapping;
+import org.ndexbio.cx2.aspect.element.cytoscape.DefaultTableType;
 import org.ndexbio.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
 import org.ndexbio.cxio.aspects.datamodels.AbstractAttributesAspectElement;
 import org.ndexbio.cxio.aspects.datamodels.AttributesAspectUtils;
 import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.ndexbio.cxio.aspects.datamodels.CyGroupsElement;
 import org.ndexbio.cxio.aspects.datamodels.CyTableColumnElement;
+import org.ndexbio.cxio.aspects.datamodels.CyTableVisualPropertiesElement;
 import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.ndexbio.cxio.aspects.datamodels.EdgeAttributesElement;
 import org.ndexbio.cxio.aspects.datamodels.EdgesElement;
@@ -48,6 +54,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import org.cytoscape.application.CyApplicationManager;
+import org.cytoscape.application.TableViewRenderer;
 import org.cytoscape.group.CyGroup;
 import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.internal.AspectSet;
@@ -66,7 +74,18 @@ import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.model.View;
 import org.cytoscape.view.model.VisualLexicon;
+import org.cytoscape.view.model.VisualProperty;
+import org.cytoscape.view.model.table.CyTableView;
+import org.cytoscape.view.model.table.CyTableViewManager;
+import org.cytoscape.view.presentation.RenderingEngineFactory;
 import org.cytoscape.view.presentation.property.BasicVisualLexicon;
+import org.cytoscape.view.vizmap.TableVisualMappingManager;
+import org.cytoscape.view.vizmap.VisualMappingFunction;
+import org.cytoscape.view.vizmap.VisualStyle;
+import org.cytoscape.view.vizmap.mappings.ContinuousMapping;
+import org.cytoscape.view.vizmap.mappings.ContinuousMappingPoint;
+import org.cytoscape.view.vizmap.mappings.DiscreteMapping;
+import org.cytoscape.view.vizmap.mappings.PassthroughMapping;
 
 /**
  * This class is for serializing Cytoscape networks, views, and attribute tables
@@ -226,6 +245,9 @@ public final class CxExporter {
 			}
 			// Writes Cartesian layout and visual props, only writes subnets for collections
 			writeSubNetworks();
+			
+			// write table visual styles
+			writeTableVisualStyles();
 			
 			// Also handles Opaque aspects
 			writeHiddenAttributes(); 
@@ -391,7 +413,7 @@ public final class CxExporter {
 		
 		// Write root table
 		if (writeSiblings) {
-			addNetworkAttributesHelper(CyRootNetwork.DEFAULT_ATTRS, baseNetwork, elements);
+			addNetworkAttributesHelper(CyNetwork.DEFAULT_ATTRS, baseNetwork, elements);
 		}
 		
 		for (final CySubNetwork subnet : subnetworks) {
@@ -400,6 +422,255 @@ public final class CxExporter {
 
 		writeAspectElements(elements);
 	}
+	
+	private void writeTableVisualStyles() throws IOException {
+		var appManager = CyServiceModule.getService(CyApplicationManager.class);
+        var tableViewManager = CyServiceModule.getService(CyTableViewManager.class);
+        var tableVisualMappingManager = CyServiceModule.getService(TableVisualMappingManager.class);
+        
+        CyTableVisualPropertiesElement styles = new CyTableVisualPropertiesElement();
+        
+        processCyTableVisualStyles(DefaultTableType.Network, baseNetwork.getDefaultNetworkTable(),
+				appManager, tableVisualMappingManager,tableViewManager,styles);
+        
+        processCyTableVisualStyles(DefaultTableType.Node,baseNetwork.getDefaultNodeTable(),
+        				appManager, tableVisualMappingManager,tableViewManager,styles);
+     
+        processCyTableVisualStyles(DefaultTableType.Edge, baseNetwork.getDefaultEdgeTable(),
+        				appManager, tableVisualMappingManager,tableViewManager,styles);
+        	
+		if ( !styles.getTableStyles().isEmpty()) {
+	        List<AspectElement> tableStyles = new ArrayList<>();
+	        
+	        tableStyles.add(styles);
+
+	        writeAspectElements(tableStyles);
+		}		
+
+	}
+
+	private static <T> void processCyTableVisualStyles(DefaultTableType type, CyTable table,
+			CyApplicationManager appManager, TableVisualMappingManager tableVisualMappingManager,
+			CyTableViewManager tableViewManager, CyTableVisualPropertiesElement tableStyles ) {
+
+		if (table != null) {
+			CyTableView tableView = tableViewManager.getTableView(table);
+
+			if (tableView != null) {
+
+				//CyTableVisualPropertiesElement styleEntry = new CyTableVisualPropertiesElement();
+
+				TableViewRenderer renderer = appManager.getTableViewRenderer(tableView.getRendererId());
+
+				RenderingEngineFactory<CyTable> factory = renderer
+						.getRenderingEngineFactory(TableViewRenderer.DEFAULT_CONTEXT);
+				VisualLexicon lexicon = factory.getVisualLexicon();
+
+				final Set<VisualProperty<?>> allVisualProperties = lexicon.getAllVisualProperties();
+
+				Map<String, Map<String,TableColumnVisualStyle>> styleEntry = new HashMap<>();
+
+				for (View<CyColumn> colView : tableView.getColumnViews()) {
+					VisualStyle style = tableVisualMappingManager.getVisualStyle(colView);
+					if (style != null) {
+						for (VisualProperty<?> vpo : allVisualProperties) {
+							VisualProperty<T> vp = (VisualProperty<T>) vpo;
+							T v = style.getDefaultValue(vp);
+							if (v == null)
+								continue;
+
+							VisualMappingFunction<?, T> f = style.getVisualMappingFunction(vp);
+
+							if (v.equals(vp.getDefault()) && f == null)
+								continue;
+
+							TableColumnVisualStyle s = new TableColumnVisualStyle();
+							if (!v.equals(vp.getDefault()))
+								s.setDefaultValue(
+										CxUtil.cvtVisualPropertyValueAsCX2Obj(v, vp));
+
+							if (f != null) {
+								s.setMapping(cvtMapping(f, vp));
+							}
+
+							String colName = colView.getModel().getName();
+							
+							Map<String, TableColumnVisualStyle> columStyle = styleEntry.get(colName);
+							
+							if ( columStyle == null) 
+								columStyle = new HashMap<>();
+							 
+							columStyle.put(vp.getIdString(), s);
+
+							styleEntry.put(colView.getModel().getName(), columStyle);
+
+							// System.out.println(colView.getModel().getName() + " -- " +
+							// vp.getDisplayName() + ": " + v.toString() + "(" );
+						}
+					}
+				}
+				
+				if (!styleEntry.isEmpty())
+					tableStyles.getTableStyles().put(type, styleEntry);			
+			}
+		}
+	}
+	
+	/*   private static <T> String getSerializableVisualProperty(VisualStyle style, VisualProperty<T> vp) {
+	    	T prop = style.getDefaultValue(vp);
+			if (prop == null) {
+				return null;
+			}
+			String val = null;
+				val = vp.toSerializableString(prop);		
+			return val;
+		}
+*/
+	
+    private static <T> VisualPropertyMapping cvtMapping(VisualMappingFunction<?, T> mapping, VisualProperty<T> vp) {
+        
+    	VisualPropertyMapping result = new VisualPropertyMapping();
+ 
+		MappingDefinition defObj = new MappingDefinition();
+		result.setMappingDef(defObj);
+
+    	final String col = mapping.getMappingColumnName();
+    	defObj.setAttributeName(col);
+        
+        
+        if (mapping instanceof PassthroughMapping<?, ?>) {
+        	result.setType(VPMappingType.PASSTHROUGH);
+        }
+        else if (mapping instanceof DiscreteMapping<?, ?>) {
+            final DiscreteMapping<?, T> dm = (DiscreteMapping<?, T>) mapping;
+          /*  String type = null;
+            try {
+                type = toAttributeType(dm.getMappingColumnType(), table, col);
+            }
+            catch (final IOException e) {
+                logger.info("WARNING: problem with mapping/column '" + col
+                        + "': column not present, ignoring corresponding discrete mapping. " + e.getMessage());
+                return;
+            } */
+            final Map<?, T> map = dm.getAll();
+
+			List<Map<String,Object>> m = new ArrayList<> ();
+
+			for (final Map.Entry<?, T> entry : map.entrySet()) {
+                T value = entry.getValue();
+                if (value == null) {
+                    continue;
+                }
+
+	            Map<String,Object> mapEntry = new HashMap<>(2);
+                
+	            mapEntry.put("v", entry.getKey());
+	            mapEntry.put("vp",CxUtil.cvtVisualPropertyValueAsCX2Obj(value, vp) );
+	            m.add(mapEntry);
+            }
+			defObj.setMapppingList(m);
+			result.setType(VPMappingType.DISCRETE);
+        }
+        else if (mapping instanceof ContinuousMapping<?, ?>) {
+            final ContinuousMapping<?, T> cm = (ContinuousMapping<?, T>) mapping;
+         /*   String type = null;
+            try {
+                type = toAttributeType(cm.getMappingColumnType(), table, col);
+            }
+            catch (final IOException e) {
+                logger.info("WARNING: problem with mapping/column '" + col
+                        + "': column not present, ignoring corresponding continuous mapping." + e.getMessage());
+                return;
+            } */
+			List<Map<String, Object>> m = new ArrayList<>();
+
+			Object min = null;
+			Boolean includeMin = null;
+			Object minVP = null;
+
+			int counter = 0;
+			
+			Map<String, Object> currentMapping = new HashMap<>();
+
+            for ( ContinuousMappingPoint<?,T> cp : cm.getAllPoints()) {
+                T lesser = cp.getRange().lesserValue;
+                T equal = cp.getRange().equalValue;
+                T greater = cp.getRange().greaterValue;
+                
+                Object OV = cp.getValue();
+
+				currentMapping.put("maxVPValue", CxUtil.cvtVisualPropertyValueAsCX2Obj(lesser, vp));
+				currentMapping.put("includeMax", Boolean.valueOf(equal.equals(lesser)));
+				currentMapping.put("max", OV);
+
+				if (counter == 0) { // min side
+					currentMapping.put("includeMin", Boolean.FALSE);
+
+				} else {
+					currentMapping.put("includeMin", includeMin);
+					currentMapping.put("minVPValue", minVP);
+					currentMapping.put("min", min);
+				}
+
+				m.add(currentMapping);
+
+				// store the max values as min for the next segment
+				includeMin = Boolean.valueOf(equal.equals(greater));
+
+				min = OV;
+				minVP = CxUtil.cvtVisualPropertyValueAsCX2Obj(greater, vp);
+
+				currentMapping = new HashMap<>();
+				counter++;
+
+            }
+            
+			// add the last entry
+			currentMapping.put("includeMin", includeMin);
+			currentMapping.put("includeMax", Boolean.FALSE);
+			currentMapping.put("minVPValue", minVP);
+			currentMapping.put("min", min);
+			m.add(currentMapping);
+
+            
+      /*      final StringBuilder sb = new StringBuilder();
+            sb.append(CxUtil.VM_COL);
+            sb.append("=");
+            sb.append(escapeString(col));
+            sb.append(",");
+            sb.append(CxUtil.VM_TYPE);
+            sb.append("=");
+            sb.append(escapeString(type));
+            int counter = 0;
+            for (final ContinuousMappingPoint<?, T> cp : cm.getAllPoints()) {
+                final T lesser = cp.getRange().lesserValue;
+                final T equal = cp.getRange().equalValue;
+                final T greater = cp.getRange().greaterValue;
+                sb.append(",L=");
+                sb.append(counter);
+                sb.append("=");
+                sb.append(escapeString(vp.toSerializableString(lesser)));
+                sb.append(",E=");
+                sb.append(counter);
+                sb.append("=");
+                sb.append(escapeString(vp.toSerializableString(equal)));
+                sb.append(",G=");
+                sb.append(counter);
+                sb.append("=");
+                sb.append(escapeString(vp.toSerializableString(greater)));
+                sb.append(",OV=");
+                sb.append(counter);
+                sb.append("=");
+                sb.append(escapeString(cp.getValue().toString()));
+                ++counter;
+            }*/
+            //cvp.putMapping(vp.getIdString(), CxUtil.CONTINUOUS, sb.toString());
+			defObj.setMapppingList(m);
+            result.setType(VPMappingType.CONTINUOUS);
+        }
+
+        return result;
+    }
 	
 	private final void writeHiddenAttributes() throws IOException {
 

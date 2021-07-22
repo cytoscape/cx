@@ -1,20 +1,12 @@
 package org.cytoscape.io.internal.cxio;
 
+import java.awt.Font;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.ndexbio.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
-import org.ndexbio.cxio.aspects.datamodels.AbstractAttributesAspectElement;
-import org.ndexbio.cxio.aspects.datamodels.EdgesElement;
-import org.ndexbio.cxio.aspects.datamodels.NetworkRelationsElement;
-import org.ndexbio.cxio.aspects.datamodels.NodesElement;
-import org.ndexbio.cxio.metadata.MetaDataCollection;
-import org.ndexbio.cxio.metadata.MetaDataElement;
-import org.ndexbio.model.cx.NiceCXNetwork;
 import org.apache.log4j.Logger;
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.NetworkViewRenderer;
@@ -30,7 +22,22 @@ import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CySubNetwork;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.VisualLexicon;
+import org.cytoscape.view.model.VisualProperty;
 import org.cytoscape.view.presentation.RenderingEngineFactory;
+import org.cytoscape.view.presentation.property.BooleanVisualProperty;
+import org.cytoscape.view.presentation.property.DoubleVisualProperty;
+import org.cytoscape.view.presentation.property.IntegerVisualProperty;
+import org.cytoscape.view.presentation.property.StringVisualProperty;
+import org.ndexbio.cx2.aspect.element.core.FontFace;
+import org.ndexbio.cx2.converter.FontFaceConverter;
+import org.ndexbio.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
+import org.ndexbio.cxio.aspects.datamodels.AbstractAttributesAspectElement;
+import org.ndexbio.cxio.aspects.datamodels.EdgesElement;
+import org.ndexbio.cxio.aspects.datamodels.NetworkRelationsElement;
+import org.ndexbio.cxio.aspects.datamodels.NodesElement;
+import org.ndexbio.cxio.metadata.MetaDataCollection;
+import org.ndexbio.cxio.metadata.MetaDataElement;
+import org.ndexbio.model.cx.NiceCXNetwork;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -476,4 +483,71 @@ public final class CxUtil {
         
     }
     
+    /**
+     * Convert a visual property value to a CX2 object
+     * @param <T>
+     * @param style
+     * @param vp
+     * @return
+     */
+	public static <T> Object cvtVisualPropertyValueAsCX2Obj(T value, VisualProperty<T> vp) {
+		if (value == null) {
+			return null;
+		}
+		if ( value instanceof String || 
+				value instanceof Integer ||
+				value instanceof Double ||
+				value instanceof Boolean  ) {
+			return value;
+		}
+			
+	    if (value instanceof Font) {
+	    	
+	    	//FontFace ff = 
+	    	return FontFaceConverter.convertFont(((Font) value).getName());
+	    	
+	    	/*ff.setFamily(((Font) value).getFamily());
+	    	if (((Font) value).isBold())
+	    		ff.setWeight(FontFace.BOLD);
+	    	if(((Font) value).isItalic())
+	    		ff.setStyle(FontFace.ITALIC);
+	    	return ff; */
+	    }
+
+	    // for all other vp values, just use cytoscape serialization function. 
+		return vp.toSerializableString(value);		
+	}
+
+
+	public static <T> T cvtCX2ObjToVisualPropertyValue(Object value, VisualProperty<T> vp) {
+		if (value == null) {
+			return null;
+		}
+		if ( vp instanceof StringVisualProperty || 
+				vp instanceof IntegerVisualProperty ||
+				vp instanceof DoubleVisualProperty ||
+				vp instanceof BooleanVisualProperty  ) {
+			return (T)value;
+		}
+			
+	    if (vp.getDefault() instanceof Font) {
+	    	
+	    	FontFace ff = (value instanceof Map<?,?>) ? 
+	    			FontFace.createFromMap((Map<String,String>)value) : (FontFace) value;
+	    			
+	    	return (T) (new Font(ff.getName(),Font.PLAIN,11));
+	    	
+	    	/*ff.setFamily(((Font) value).getFamily());
+	    	if (((Font) value).isBold())
+	    		ff.setWeight(FontFace.BOLD);
+	    	if(((Font) value).isItalic())
+	    		ff.setStyle(FontFace.ITALIC);
+	    	return ff; */
+	    }
+
+	    // for all other vp values, just use cytoscape serialization function. 
+		return vp.parseSerializableString((String)value);		
+	}
+
+	
 }

@@ -24,6 +24,7 @@ import org.cytoscape.property.CyProperty;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.view.model.CyNetworkViewManager;
+import org.ndexbio.cx2.aspect.element.core.TableColumnVisualStyle;
 import org.ndexbio.cxio.aspects.datamodels.AbstractAttributesAspectElement;
 import org.ndexbio.cxio.aspects.datamodels.CyTableColumnElement;
 import org.ndexbio.cxio.aspects.datamodels.EdgeAttributesElement;
@@ -260,6 +261,7 @@ public abstract class NiceCyNetwork extends Identifiable {
 		TimingUtil.reportTimeDifference(t0, "attributes of " + getNetworkName(), -1);
 	}
 
+	
 	private void addNetworkAttributesHelper(CyIdentifiable ele, List<? extends AbstractAttributesAspectElement> attrs,
 			List<? extends AbstractAttributesAspectElement> hidden_attrs) {
 
