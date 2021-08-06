@@ -428,30 +428,65 @@ public final class CxExporter {
         var tableViewManager = CyServiceModule.getService(CyTableViewManager.class);
         var tableVisualMappingManager = CyServiceModule.getService(TableVisualMappingManager.class);
         
-        CyTableVisualPropertiesElement styles = new CyTableVisualPropertiesElement();
-        
-        processCyTableVisualStyles(DefaultTableType.Network, baseNetwork.getDefaultNetworkTable(),
+
+        List<AspectElement> tableStyles = new ArrayList<>();
+
+    	if (writeSiblings) {
+		/*	addTableColumnsHelper(baseNetwork, "network_table", elements, CyRootNetwork.SHARED_ATTRS);
+			addTableColumnsHelper(baseNetwork, "node_table", elements, CyRootNetwork.SHARED_ATTRS);
+			addTableColumnsHelper(baseNetwork, "edge_table", elements, CyRootNetwork.SHARED_ATTRS);
+		*/
+			for (final CySubNetwork subnet : subnetworks) {
+		        CyTableVisualPropertiesElement styles = new CyTableVisualPropertiesElement();
+		        styles.setSubnetId(getAspectSubnetworkId(subnet));
+				processCyTableVisualStyles(DefaultTableType.Network, subnet.getDefaultNetworkTable(),
+						appManager, tableVisualMappingManager,tableViewManager,styles);
+		        
+				processCyTableVisualStyles(DefaultTableType.Node,subnet.getDefaultNodeTable(),
+		        				appManager, tableVisualMappingManager,tableViewManager,styles);
+		     
+				processCyTableVisualStyles(DefaultTableType.Edge, subnet.getDefaultEdgeTable(),
+		        				appManager, tableVisualMappingManager,tableViewManager,styles);
+
+				
+				if ( !styles.getTableStyles().isEmpty()) {
+			        
+			        tableStyles.add(styles);
+
+				}		
+
+				/*	addTableColumnsHelper(subnet, "node_table", elements, CyNetwork.DEFAULT_ATTRS);
+				addTableColumnsHelper(subnet, "edge_table", elements, CyNetwork.DEFAULT_ATTRS);
+				addTableColumnsHelper(subnet, "network_table", elements, CyNetwork.DEFAULT_ATTRS);*/
+			}
+		} else {
+	        CyTableVisualPropertiesElement styles = new CyTableVisualPropertiesElement();
+
+	        processCyTableVisualStyles(DefaultTableType.Network, baseNetwork.getDefaultNetworkTable(),
 				appManager, tableVisualMappingManager,tableViewManager,styles);
         
-        processCyTableVisualStyles(DefaultTableType.Node,baseNetwork.getDefaultNodeTable(),
+			processCyTableVisualStyles(DefaultTableType.Node,baseNetwork.getDefaultNodeTable(),
         				appManager, tableVisualMappingManager,tableViewManager,styles);
      
-        processCyTableVisualStyles(DefaultTableType.Edge, baseNetwork.getDefaultEdgeTable(),
+			processCyTableVisualStyles(DefaultTableType.Edge, baseNetwork.getDefaultEdgeTable(),
         				appManager, tableVisualMappingManager,tableViewManager,styles);
-        	
-		if ( !styles.getTableStyles().isEmpty()) {
-	        List<AspectElement> tableStyles = new ArrayList<>();
-	        
-	        tableStyles.add(styles);
 
-	        writeAspectElements(tableStyles);
-		}		
+			if ( !styles.getTableStyles().isEmpty()) {
+		        
+		        tableStyles.add(styles);
+
+			}		
+
+		}
+    	
+    	if ( !tableStyles.isEmpty())
+    		writeAspectElements(tableStyles);
 
 	}
 
 	private static <T> void processCyTableVisualStyles(DefaultTableType type, CyTable table,
 			CyApplicationManager appManager, TableVisualMappingManager tableVisualMappingManager,
-			CyTableViewManager tableViewManager, CyTableVisualPropertiesElement tableStyles ) {
+			CyTableViewManager tableViewManager, CyTableVisualPropertiesElement tableStyles) {
 
 		if (table != null) {
 			CyTableView tableView = tableViewManager.getTableView(table);
@@ -493,7 +528,10 @@ public final class CxExporter {
 								s.setMapping(cvtMapping(f, vp));
 							}
 
-							String colName = colView.getModel().getName();
+							CyColumn col = colView.getModel();
+							String colName = col.getName();
+							boolean isVirtual = col.getVirtualColumnInfo().isVirtual();
+							System.out.println(colName + " is virtual = " + isVirtual);
 							
 							Map<String, TableColumnVisualStyle> columStyle = styleEntry.get(colName);
 							

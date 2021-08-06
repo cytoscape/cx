@@ -243,8 +243,8 @@ public class BaseTests {
 			CxReaderWrapper reader = TestUtil.getSubNetwork(f);
 			TestUtil.withAspects(reader);
 		}
-	} */
-	
+	} 
+	*/
 /*	@Test
 	public void testSubnets() throws IOException {
 		File dir = TestUtil.getResource("subnets");

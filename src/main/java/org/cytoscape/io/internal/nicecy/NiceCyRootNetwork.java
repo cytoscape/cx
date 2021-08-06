@@ -111,8 +111,8 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 	protected final Map<Long, NiceCyGroup> root_groups;
 	
 	//table styles
-	// Keys: 1. table type, 2. Column name, 3. Visual property name
-	private Map<DefaultTableType, Map<String, Map<String,TableColumnVisualStyle>>> tableVisualStyles;
+	// Keys: 0. subnetId(-1) if not a collection 1. table type, 2. Column name, 3. Visual property name
+	private Map<Long,Map<DefaultTableType, Map<String, Map<String,TableColumnVisualStyle>>>> tableVisualStyles;
 	
 	
 	public NiceCyRootNetwork(NiceCXNetwork niceCX) {
@@ -121,7 +121,8 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 		root_nodes = new HashMap<>();
 		root_edges = new HashMap<>();
 		root_groups = new HashMap<>();
-		
+		tableVisualStyles = new HashMap<>();
+
 		opaqueAspects = niceCX.getOpaqueAspectTable();
 		isCollection = opaqueAspects.containsKey(SubNetworkElement.ASPECT_NAME);
 		
@@ -144,6 +145,7 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 			throw new RuntimeException("Failed to process JSON in CX: " + e.getMessage());
 		}
 		TimingUtil.reportTimeDifference(t0, "Convert to NiceCY", -1);
+		
 	}
 	
 	private void handleOpaqueAspects() throws JsonProcessingException{
@@ -261,8 +263,8 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 	private void handleCyTableVisualProperties(Collection<AspectElement> tableStyles) {
 		if (tableStyles != null && !tableStyles.isEmpty()) {
 			for (AspectElement e : tableStyles) {
-				this.tableVisualStyles = ((CyTableVisualPropertiesElement) e).getTableStyles();
-				break;
+				CyTableVisualPropertiesElement tableStyle = (CyTableVisualPropertiesElement) e;
+				this.tableVisualStyles.put(tableStyle.getSubnetId(),tableStyle.getTableStyles());
 			}
 		}
 	}
@@ -552,9 +554,7 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 		//add collection level attributes (must be done after nodes/edges are created)
 		addTableColumns();
 		addAttributes();
-		
-//		addTableVisualStyles(networks.get(0));
-		
+				
 		serializeOpaqueAspects();
 		TimingUtil.reportTimeDifference(t0, "time to build cynetwork(s)", -1);
 		
@@ -562,25 +562,47 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 	}
 	
 	public void addTableVisualStyles(CyNetwork currentNetwork) throws Exception {
-		if (this.tableVisualStyles == null) return;
+		if (this.tableVisualStyles.isEmpty()) return;
 		
-		Map<String, Map<String,TableColumnVisualStyle>> tableStyles = this.tableVisualStyles.get(DefaultTableType.Network);
+		Map<DefaultTableType, Map<String, Map<String,TableColumnVisualStyle>>> currentNetTableStyles; 
+		if ( isCollection ) {
+			Long subNetId = getSubNetId(currentNetwork);
+			currentNetTableStyles =this.tableVisualStyles.get(subNetId);
+		} else {
+			currentNetTableStyles = tableVisualStyles.get(null);
+		}
+		
+		Map<String, Map<String,TableColumnVisualStyle>> tableStyles = currentNetTableStyles.get(DefaultTableType.Network);
 		if ( tableStyles != null) {
 			addStyleToTable(currentNetwork.getDefaultNetworkTable(), tableStyles);
 		}
 		
-		tableStyles = this.tableVisualStyles.get(DefaultTableType.Node);
+		tableStyles = currentNetTableStyles.get(DefaultTableType.Node);
 		if ( tableStyles != null) {
 			addStyleToTable(currentNetwork.getDefaultNodeTable(), tableStyles);
 		}
 		
-		tableStyles = this.tableVisualStyles.get(DefaultTableType.Edge);
+		tableStyles = currentNetTableStyles.get(DefaultTableType.Edge);
 		if ( tableStyles != null) {
 			addStyleToTable(currentNetwork.getDefaultEdgeTable(), tableStyles);
 		}
 	}
+	
+	private Long getSubNetId ( CyNetwork currentNetwork) {
+	
+		for (Map.Entry<Long, NiceCySubNetwork> entry : this.subnetworks.entrySet()) {
+			NiceCyNetwork subnet = entry.getValue();
+			if (subnet.network == null) {
+				throw new RuntimeException("No CySubNetwork created for " + subnet);
+			}
+			if (subnet.network.equals(currentNetwork)) {
+				return entry.getKey();
+			}
+		}
+		throw new RuntimeException("No CySubNetwork found for " + currentNetwork);
+	}
 
-	private static <K,J,T> void addStyleToTable(CyTable table, Map<String, Map<String,TableColumnVisualStyle>> nodeTableStyles) throws Exception {
+	private static <K,T> void addStyleToTable(CyTable table, Map<String, Map<String,TableColumnVisualStyle>> nodeTableStyles) throws Exception {
 		var appManager = CyServiceModule.getService(CyApplicationManager.class);
         var tableViewManager = CyServiceModule.getService(CyTableViewManager.class);
 		var tableViewFactory = CyServiceModule.getService(CyTableViewFactory.class);
