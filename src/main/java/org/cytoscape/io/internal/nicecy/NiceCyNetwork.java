@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import org.cytoscape.io.internal.CxPreferences;
 import org.cytoscape.io.internal.CyServiceModule;
@@ -20,11 +19,9 @@ import org.cytoscape.model.CyRow;
 import org.cytoscape.model.CyTable;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CySubNetwork;
-import org.cytoscape.property.CyProperty;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.view.model.CyNetworkViewManager;
-import org.ndexbio.cx2.aspect.element.core.TableColumnVisualStyle;
 import org.ndexbio.cxio.aspects.datamodels.AbstractAttributesAspectElement;
 import org.ndexbio.cxio.aspects.datamodels.CyTableColumnElement;
 import org.ndexbio.cxio.aspects.datamodels.EdgeAttributesElement;
@@ -344,7 +341,7 @@ public abstract class NiceCyNetwork extends Identifiable {
 		});
 	}
 
-	private void addAttributesHelper(CyTable sharedTable, CyTable localTable, CyIdentifiable ele,
+	private static void addAttributesHelper(CyTable sharedTable, CyTable localTable, CyIdentifiable ele,
 			List<? extends AbstractAttributesAspectElement> attrs) {
 		// System.out.println(" Adding attributes to row for SUID: " + ele.getSUID() + "
 		// into shared table " + sharedTable.getTitle() + " and local table " +
