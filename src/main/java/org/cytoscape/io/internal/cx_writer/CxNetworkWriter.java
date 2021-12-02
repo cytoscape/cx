@@ -47,6 +47,8 @@ public class CxNetworkWriter implements CyWriter {
 	private static final boolean USE_CXID_DEFAULT = true;
 	private final OutputStream _os;
 	private final CyNetwork _network;
+	
+	private boolean isCX2;
 
 	public ListMultipleSelection<String> aspectFilter = new ListMultipleSelection<>();
 	public ListMultipleSelection<String> nodeColFilter = new ListMultipleSelection<>();
@@ -109,13 +111,13 @@ public class CxNetworkWriter implements CyWriter {
     }
 
 	public CxNetworkWriter(final OutputStream os, final CyNetwork network, final boolean writeSiblings,
-			final boolean useCxId) {
+			final boolean useCxId, boolean inCX2Format) {
 
 		_os = os;
 		_network = network;
 		this.writeSiblings = writeSiblings;
 		this.useCxId = useCxId;
-
+		isCX2 = inCX2Format;
 		populateFilters();
 	}
 
@@ -139,7 +141,7 @@ public class CxNetworkWriter implements CyWriter {
 		networkColFilter.setSelectedValues(networkColumnNames);
 	}
 
-	private final Set<String> getAllColumnNames(final Class<? extends CyIdentifiable> type, CyNetwork subnet){
+	private final static Set<String> getAllColumnNames(final Class<? extends CyIdentifiable> type, CyNetwork subnet){
 		final SortedSet<String> colNames = new TreeSet<>();
 		
 		// Shared
@@ -212,7 +214,10 @@ public class CxNetworkWriter implements CyWriter {
 		} else if (TimingUtil.WRITE_TO_BYTE_ARRAY_OUTPUTSTREAM) {
 			exporter.writeNetwork(aspects, new ByteArrayOutputStream());
 		} else {
-			exporter.writeNetwork(aspects, _os);
+			if ( isCX2 ) {
+				//TODO: export in cx2 format
+			} else
+				exporter.writeNetwork(aspects, _os);
 			_os.close();
 
 		}

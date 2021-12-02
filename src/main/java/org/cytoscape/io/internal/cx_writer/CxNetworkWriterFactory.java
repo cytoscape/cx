@@ -9,9 +9,11 @@ import org.cytoscape.view.model.CyNetworkView;
 
 public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
     private final CyFileFilter          _filter;
+    private final boolean isCX2;
 
-    public CxNetworkWriterFactory(final CyFileFilter filter) {
+    public CxNetworkWriterFactory(final CyFileFilter filter, boolean inCX2Format) {
         _filter = filter;
+        isCX2 = inCX2Format;
     }
 
     @Override
@@ -19,7 +21,7 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
         return new CxNetworkWriter(os,
                                    network,
                                    false,
-                                   false);
+                                   false, isCX2);
     }
 
     @Override
@@ -32,7 +34,7 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
         return new CxNetworkWriter(os,
                                    view.getModel(),
                                    false,
-                                   false);
+                                   false, isCX2);
 
     }
 
