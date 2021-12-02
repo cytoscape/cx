@@ -51,7 +51,7 @@ public class FilterTest {
 			CyNetwork[] networks = TestUtil.loadNetworks(reader);
 			StreamUtil streamUtil = CyServiceModule.getService(StreamUtil.class);
 			CytoscapeCxFileFilter filter = new CytoscapeCxFileFilter(streamUtil);
-			CxNetworkWriterFactory writerFactory = new CxNetworkWriterFactory(filter);
+			CxNetworkWriterFactory writerFactory = new CxNetworkWriterFactory(filter,false);
 			
 			out = new ByteArrayOutputStream();
 			writer = (CxNetworkWriter) writerFactory.createWriter(out, networks[0]);
