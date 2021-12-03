@@ -2,6 +2,7 @@ package org.cytoscape.io.internal.cxio;
 
 import java.awt.Font;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.NetworkViewRenderer;
+import org.cytoscape.io.internal.AspectSet;
 import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyEdge;
@@ -28,6 +30,7 @@ import org.cytoscape.view.presentation.property.BooleanVisualProperty;
 import org.cytoscape.view.presentation.property.DoubleVisualProperty;
 import org.cytoscape.view.presentation.property.IntegerVisualProperty;
 import org.cytoscape.view.presentation.property.StringVisualProperty;
+import org.ndexbio.cx2.aspect.element.core.CxMetadata;
 import org.ndexbio.cx2.aspect.element.core.FontFace;
 import org.ndexbio.cx2.converter.FontFaceConverter;
 import org.ndexbio.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
@@ -91,6 +94,31 @@ public final class CxUtil {
 		}
 		return new MetaDataCollection();
     }
+    
+    public static List<CxMetadata> getOpaqueAspects(CyNetwork network) {
+    	List<CxMetadata> result = new ArrayList<>();
+    	CyTable hidden_network_table = network.getTable(CyNetwork.class, CyNetwork.HIDDEN_ATTRS);
+		CyRow row = hidden_network_table.getRow(network.getSUID());
+		if (row != null) {
+			String metaDataStr = row.get(CxUtil.CX_METADATA, String.class);
+			if (metaDataStr != null) {
+				try {
+					ObjectMapper mapper = new ObjectMapper();
+					MetaDataCollection cx2MetadataCollection = mapper.readValue(metaDataStr, MetaDataCollection.class);
+					for ( MetaDataElement e : cx2MetadataCollection) {
+					  if ( !AspectSet.getAspectNames().contains(e))
+						  result.add(new CxMetadata(e.getName(),e.getElementCount().longValue()));
+					}
+				}catch(IOException e) {
+					logger.info("Get Metadata threw an IOException: " + e);
+				}
+			} else {
+				//TODO: get the CX2 opaque metatdata directly if the network is imported in cx2 format.
+			}
+		}
+		return result;
+    }
+
     
     public static void setMetaData(CyNetwork network, MetaDataCollection metaData) {
     	CyTable hidden_table = network.getTable(CyNetwork.class, CyNetwork.HIDDEN_ATTRS);

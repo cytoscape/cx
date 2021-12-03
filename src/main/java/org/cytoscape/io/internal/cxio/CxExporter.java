@@ -13,11 +13,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.ndexbio.cx2.aspect.element.core.CxMetadata;
 import org.ndexbio.cx2.aspect.element.core.MappingDefinition;
 import org.ndexbio.cx2.aspect.element.core.TableColumnVisualStyle;
 import org.ndexbio.cx2.aspect.element.core.VPMappingType;
 import org.ndexbio.cx2.aspect.element.core.VisualPropertyMapping;
 import org.ndexbio.cx2.aspect.element.cytoscape.DefaultTableType;
+import org.ndexbio.cx2.io.CXWriter;
 import org.ndexbio.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
 import org.ndexbio.cxio.aspects.datamodels.AbstractAttributesAspectElement;
 import org.ndexbio.cxio.aspects.datamodels.AttributesAspectUtils;
@@ -306,6 +308,18 @@ public final class CxExporter {
 		writer.addPreMetaData(pre_meta_data);
 		return pre_meta_data;
 	}
+	
+	private List<CxMetadata> getCx2Metadata(List<String> aspects) {
+		List<CxMetadata> result = new ArrayList<>();
+		if ( aspects == null || aspects.size() == 0) {
+			// get all aspects including opaque ones.
+			List<CxMetadata> opapqueAspects = CxUtil.getOpaqueAspects(baseNetwork);
+		} else {
+			// only get the specified. 
+		}
+		return result;
+	}
+	
 	private final void writePostMetadata(final MetaDataCollection meta_data,
 			final AspectElementCounts aspects_counts) {
 
@@ -1376,5 +1390,102 @@ public final class CxExporter {
 		}
 	}
 	
+	
+	public final void writeNetworkInCX2(Collection<String> aspects, final OutputStream out) throws IOException {
+		
+		Collection<String> outputAspects = aspects;
+		if (aspects == null || aspects.isEmpty()) {
+			outputAspects = AspectSet.getCx2AspectNames();
+		}
+		
+		// if specific aspects are specified, do not write opaque aspects
+		//TODO: this seems to be wrong when the size matches but aspects sets are different.
+		if (outputAspects.size() != AspectSet.getCx2AspectNames().size()) {
+			omitOpaqueAspects = true;
+		}
+		
+		String net_type = "subnetwork";
+		String id_type = useCxId ? "CX IDs" : "SUIDs";
+		
+		logger.info("Exporting network as " + net_type + " with " + id_type);
+		logger.info("Aspect filter: " + aspects);
+		logger.info("NodeCol filter: " + nodeColumns);
+		logger.info("EdgeCol filter: " + edgeColumns);
+		logger.info("NetworkCol filter: " + networkColumns);
+		
+		
+		// Build session info that will be exported with network
+		CySessionManager session_manager = CyServiceModule.getService(CySessionManager.class);
+		session_manager.getCurrentSession();
+
+		CXWriter cx2Writer = new CXWriter(out, false);
+
+		MetaDataCollection meta_data = writePreMetaData(aspects);
+
+		writer.start();
+
+		String msg = null;
+		boolean success = true;
+		
+		// Must expand all groups beforehand to reveal nodes
+		collapsed_groups = expandGroups();
+		
+		try {
+			
+			// Write network table
+			writeTableColumns();
+			writeNetworkAttributes();
+			
+			// Write nodes, edges, and their attributes
+			writeNodes(); // Handles CyGroups and internal nodes/edges
+			writeEdges();
+			writeNodeAttributes();
+			writeEdgeAttributes();
+
+			// Collection specific aspects
+			if (writeSiblings) {
+				writeCxIds();
+			}
+			// Writes Cartesian layout and visual props, only writes subnets for collections
+			writeSubNetworks();
+			
+			// write table visual styles
+			writeTableVisualStyles();
+			
+			// Also handles Opaque aspects
+			writeHiddenAttributes(); 
+
+			final AspectElementCounts aspects_counts = writer.getAspectElementCounts();
+
+			writePostMetadata(meta_data, aspects_counts);
+			CxUtil.setMetaData(baseNetwork, meta_data);
+
+		} catch (final Exception e) {
+			e.printStackTrace();
+			msg = "Failed to create cx network: " + e.getMessage();
+			success = false;
+		} finally {
+			collapsed_groups.forEach(group -> {
+				for (CyNetwork net : group.getNetworkSet()) {
+					if (net instanceof CySubNetwork) {
+						group.collapse(net);
+					}
+				}
+			});
+		}
+		
+
+		writer.end(success, msg);
+
+		if (success) {
+			final AspectElementCounts counts = writer.getAspectElementCounts();
+			if (counts != null) {
+				System.out.println("Aspects elements written out:");
+				System.out.println(counts);
+			}
+
+		}
+	}
+
 }
 

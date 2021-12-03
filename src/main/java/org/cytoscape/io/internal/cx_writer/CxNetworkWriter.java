@@ -122,7 +122,7 @@ public class CxNetworkWriter implements CyWriter {
 	}
 
 	private void populateFilters() {
-		ArrayList<String> aspects = AspectSet.getAspectNames();
+		List<String> aspects = AspectSet.getAspectNames();
 		aspectFilter.setPossibleValues(aspects);
 
 		// Node Column filter

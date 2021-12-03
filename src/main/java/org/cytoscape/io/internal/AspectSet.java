@@ -1,11 +1,22 @@
 package org.cytoscape.io.internal;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import org.ndexbio.cx2.aspect.element.core.CxAttributeDeclaration;
+import org.ndexbio.cx2.aspect.element.core.CxEdge;
+import org.ndexbio.cx2.aspect.element.core.CxEdgeBypass;
+import org.ndexbio.cx2.aspect.element.core.CxNetworkAttribute;
+import org.ndexbio.cx2.aspect.element.core.CxNode;
+import org.ndexbio.cx2.aspect.element.core.CxNodeBypass;
+import org.ndexbio.cx2.aspect.element.core.CxVisualProperty;
 import org.ndexbio.cx2.aspect.element.cytoscape.AbstractTableVisualProperty;
+import org.ndexbio.cx2.aspect.element.cytoscape.CxTableVisualProperty;
+import org.ndexbio.cx2.aspect.element.cytoscape.VisualEditorProperties;
 import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.ndexbio.cxio.aspects.datamodels.CyGroupsElement;
 import org.ndexbio.cxio.aspects.datamodels.CyTableColumnElement;
@@ -50,27 +61,41 @@ import org.ndexbio.cxio.core.interfaces.AspectFragmentWriter;
 
 public class AspectSet {
 
+	private static final List<String> cx2Aspects =
+			Arrays.asList(CxAttributeDeclaration.ASPECT_NAME,
+				CxNetworkAttribute.ASPECT_NAME,
+				CxNode.ASPECT_NAME,
+				CxEdge.ASPECT_NAME,
+				CxVisualProperty.ASPECT_NAME,
+				CxNodeBypass.ASPECT_NAME,
+				CxEdgeBypass.ASPECT_NAME,
+				VisualEditorProperties.ASPECT_NAME,
+				AbstractTableVisualProperty.ASPECT_NAME   // Cytoscape table styles
+				);
+	
+	private static final List<String> cxAspects = Arrays.asList(
+			NodesElement.ASPECT_NAME,
+			EdgesElement.ASPECT_NAME,
+			CartesianLayoutElement.ASPECT_NAME,
+			EdgeAttributesElement.ASPECT_NAME,
+			NodeAttributesElement.ASPECT_NAME,
+			NetworkAttributesElement.ASPECT_NAME,
+			SubNetworkElement.ASPECT_NAME,
+			CyVisualPropertiesElement.ASPECT_NAME,
+			NetworkRelationsElement.ASPECT_NAME,
+			CyGroupsElement.ASPECT_NAME,
+			HiddenAttributesElement.ASPECT_NAME,
+			CyTableColumnElement.ASPECT_NAME,
+			AbstractTableVisualProperty.ASPECT_NAME
+		);
+	
 	private AspectSet() {
 		// Hidden
 	}
 
-	public final static ArrayList<String> getAspectNames() {
-		ArrayList<String> aspects = new ArrayList<>();
-		aspects.add(NodesElement.ASPECT_NAME);
-		aspects.add(EdgesElement.ASPECT_NAME);
-		aspects.add(CartesianLayoutElement.ASPECT_NAME);
-		aspects.add(EdgeAttributesElement.ASPECT_NAME);
-		aspects.add(NodeAttributesElement.ASPECT_NAME);
-		aspects.add(NetworkAttributesElement.ASPECT_NAME);
-		aspects.add(SubNetworkElement.ASPECT_NAME);
-		aspects.add(CyVisualPropertiesElement.ASPECT_NAME);
-		aspects.add(NetworkRelationsElement.ASPECT_NAME);
-		aspects.add(CyGroupsElement.ASPECT_NAME);
-		aspects.add(HiddenAttributesElement.ASPECT_NAME);
-		aspects.add(CyTableColumnElement.ASPECT_NAME);
-		aspects.add(AbstractTableVisualProperty.ASPECT_NAME);
-		return aspects;
-	}
+	public final static List<String> getAspectNames() {return cxAspects;}
+	
+	public final static List<String> getCx2AspectNames() { return cx2Aspects;}
 
 	public final static Set<AspectFragmentWriter> getAspectFragmentWriters(Collection<String> _aspects) {
 		final Set<AspectFragmentWriter> writers = new HashSet<>();
