@@ -50,6 +50,7 @@ import org.ndexbio.cxio.core.interfaces.AspectElement;
 import org.ndexbio.cxio.core.interfaces.AspectFragmentReader;
 import org.ndexbio.cxio.metadata.MetaDataCollection;
 import org.ndexbio.model.cx.NiceCXNetwork;
+import org.ndexbio.model.exceptions.NdexException;
 
 public class SpecialTest {
 
@@ -59,7 +60,7 @@ public class SpecialTest {
 	}
 	
 	@Test
-	public void testEdgesAndEdgeAttributesForSingleEdgeNetwork() throws IOException {
+	public void testEdgesAndEdgeAttributesForSingleEdgeNetwork() throws IOException, NdexException {
 
 		// If no CX IDs are set, use SUIDs
 		final CyNetworkFactory network_factory = CyServiceModule.getService(CyNetworkFactory.class);
@@ -101,7 +102,7 @@ public class SpecialTest {
 	}
 
 	@Test
-	public void testNoEdgesAndEdgeAttributesForZeroEdgeNetwork() throws IOException {
+	public void testNoEdgesAndEdgeAttributesForZeroEdgeNetwork() throws IOException, NdexException {
 
 		// If no CX IDs are set, use SUIDs
 		final CyNetworkFactory network_factory = CyServiceModule.getService(CyNetworkFactory.class);
@@ -181,7 +182,7 @@ public class SpecialTest {
 	}
 
 	@Test
-	public void testIgnoredColumnsSingleNetwork() throws IOException {
+	public void testIgnoredColumnsSingleNetwork() throws IOException, NdexException {
 		CyNetwork network = ignoredColumnsTestNetwork();
 
 		final ByteArrayOutputStream out = TestUtil.saveNetwork(network, false, false);
@@ -222,7 +223,7 @@ public class SpecialTest {
 	}
 
 	@Test
-	public void testIgnoredColumnsCollection() throws IOException {
+	public void testIgnoredColumnsCollection() throws IOException, NdexException {
 
 		CyNetwork network = ignoredColumnsTestNetwork();
 
@@ -288,7 +289,7 @@ public class SpecialTest {
 	}
 
 	@Test
-	public void testLocationPassthrough() throws IOException {
+	public void testLocationPassthrough() throws IOException, NdexException {
 		File f = TestUtil.getResource("specialCases", "node_location_map.cx");
 		CxReaderWrapper reader = TestUtil.getSubNetwork(f);
 		Map<Long, Collection<AspectElement>> nodeAspectIn = reader.getNiceCX()
@@ -311,14 +312,14 @@ public class SpecialTest {
 	}
 
 	@Test
-	public void testGroups() throws IOException {
+	public void testGroups() throws IOException, NdexException {
 		File f = TestUtil.getResource("collections", "groups_1.cx");
 		CxReaderWrapper reader = TestUtil.getSubNetwork(f);
 		TestUtil.withAspects(reader);
 	}
 	
 	@Test
-	public void testMismatchedAttributeTypes() throws IOException {
+	public void testMismatchedAttributeTypes() throws IOException, NdexException {
 		File f = TestUtil.getResource("specialCases", "n3_pp.cx");
 		CxReaderWrapper reader = TestUtil.getSubNetwork(f);
 		try {
@@ -330,7 +331,7 @@ public class SpecialTest {
 	}
 
 	@Test
-	public void testWikiPathway() throws IOException {
+	public void testWikiPathway() throws IOException, NdexException {
 		File f = TestUtil.getResource("specialCases",
 				"TCA Cycle Nutrient Utilization and Invasiveness of Ovarian Cancer - Homo sapiens.cx");
 		CxReaderWrapper reader = TestUtil.getSubNetwork(f);
@@ -338,7 +339,7 @@ public class SpecialTest {
 	}
 
 	@Test
-	public void testMapFontSizeToDouble() throws IOException {
+	public void testMapFontSizeToDouble() throws IOException, NdexException {
 		CxReaderWrapper reader = TestUtil.getSubNetwork(TestUtil.getResource("base", "subnetwork.cx"));
 		CyNetwork[] networks = TestUtil.loadNetworks(reader);
 		networks[0].getDefaultNodeTable().createColumn("LabelSize", Double.class, true);
@@ -364,7 +365,7 @@ public class SpecialTest {
 	}
 
 	@Test
-	public void testMapDoubleToInteger() throws IOException {
+	public void testMapDoubleToInteger() throws IOException, NdexException {
 		CxReaderWrapper reader = TestUtil.getSubNetwork(TestUtil.getResource("base", "subnetwork.cx"));
 		CyNetwork[] networks = TestUtil.loadNetworks(reader);
 		networks[0].getDefaultNodeTable().createColumn("LabelSize", Integer.class, true);
@@ -390,7 +391,7 @@ public class SpecialTest {
 	}
 
 	@Test
-	public void testMultiViewSubnet() throws IOException {
+	public void testMultiViewSubnet() throws IOException, NdexException {
 		CxReaderWrapper reader = TestUtil.getSubNetwork(TestUtil.getResource("base", "subnetwork.cx"));
 		CyNetwork[] networks = TestUtil.loadNetworks(reader);
 		CyNetworkViewFactory view_factory = CyServiceModule.getService(CyNetworkViewFactory.class);
@@ -412,7 +413,7 @@ public class SpecialTest {
 	}
 
 	@Test
-	public void testCollectionName() throws IOException {
+	public void testCollectionName() throws IOException, NdexException {
 		CxReaderWrapper reader = TestUtil.getSubNetwork(TestUtil.getResource("base", "subnetwork.cx"));
 		NiceCXNetwork niceCx = reader.getNiceCX();
 		niceCx.addNetworkAttribute(new NetworkAttributesElement(null, CyNetwork.NAME, "Collection"));

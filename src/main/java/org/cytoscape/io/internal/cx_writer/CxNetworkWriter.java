@@ -31,6 +31,7 @@ import org.cytoscape.model.subnetwork.CySubNetwork;
 import org.cytoscape.work.TaskMonitor;
 import org.cytoscape.work.Tunable;
 import org.cytoscape.work.util.ListMultipleSelection;
+import org.ndexbio.model.exceptions.NdexException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -181,7 +182,7 @@ public class CxNetworkWriter implements CyWriter {
 	}
 
 	@Override
-	public void run(final TaskMonitor taskMonitor) throws FileNotFoundException, IOException {
+	public void run(final TaskMonitor taskMonitor) throws FileNotFoundException, IOException, NdexException {
 		if (taskMonitor != null) {
 			taskMonitor.setProgress(0.0);
 			taskMonitor.setTitle("Exporting to CX");
@@ -215,7 +216,7 @@ public class CxNetworkWriter implements CyWriter {
 			exporter.writeNetwork(aspects, new ByteArrayOutputStream());
 		} else {
 			if ( isCX2 ) {
-				//TODO: export in cx2 format
+				exporter.writeNetworkInCX2(null, _os);
 			} else
 				exporter.writeNetwork(aspects, _os);
 			_os.close();

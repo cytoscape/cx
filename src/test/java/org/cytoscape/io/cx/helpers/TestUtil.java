@@ -84,6 +84,7 @@ import org.ndexbio.model.cx.CitationElement;
 import org.ndexbio.model.cx.NamespacesElement;
 import org.ndexbio.model.cx.NiceCXNetwork;
 import org.ndexbio.model.cx.Provenance;
+import org.ndexbio.model.exceptions.NdexException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -230,7 +231,7 @@ public class TestUtil {
 		return reader.getNetworks();
 	}
 	
-	public static ByteArrayOutputStream saveNetwork(CyNetwork network, boolean collection, boolean useCxId) throws IOException {
+	public static ByteArrayOutputStream saveNetwork(CyNetwork network, boolean collection, boolean useCxId) throws NdexException {
 		if (collection && useCxId) {
 			logger.info("Not using cxId for collection");
 			useCxId = false;
@@ -262,7 +263,7 @@ public class TestUtil {
 	}
 
 	public static void doExport(CyNetwork network, boolean writeSiblings, boolean useCxId,
-			OutputStream out) {
+			OutputStream out) throws NdexException {
 		
 		StreamUtil streamUtil = CyServiceModule.getService(StreamUtil.class);
 		CytoscapeCxFileFilter filter = new CytoscapeCxFileFilter(streamUtil);
@@ -301,7 +302,7 @@ public class TestUtil {
 	}
 	
 	/* Main test wrapper; check that all input aspects persist */
-	public static void withAspects(CxReaderWrapper reader, AspectElement... aspects) throws IOException {
+	public static void withAspects(CxReaderWrapper reader, AspectElement... aspects) throws IOException, NdexException {
 		
 		NiceCXNetwork niceCX = reader.getNiceCX();
 		
@@ -930,7 +931,7 @@ public class TestUtil {
 	}
 
 	// Run CxNetworkReader, export to file, and import back to NiceCX for compare
-	public static NiceCXNetwork getOutput(CxReaderWrapper reader) throws IOException {
+	public static NiceCXNetwork getOutput(CxReaderWrapper reader) throws IOException, NdexException {
 		boolean collection = CxUtil.isCollection(reader.getNiceCX());
 		boolean useCxId = !collection;
 		String name = reader.getNiceCX().getNetworkName();
