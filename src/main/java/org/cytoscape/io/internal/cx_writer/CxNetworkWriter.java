@@ -194,13 +194,17 @@ public class CxNetworkWriter implements CyWriter {
 		List<String> aspects = aspectFilter.getSelectedValues();
 		exporter.setNodeColumnFilter(nodeColFilter.getSelectedValues().stream().filter( 
 				columnName 
-				-> writeSiblings 
-				|| !Settings.IGNORE_SINGLE_NETWORK_NODE_ATTRIBUTES.contains(columnName)
+				-> (isCX2 ?
+					!Settings.CX2_IGNORE_NODE_ATTRIBUTES.contains(columnName):
+				writeSiblings 
+				|| !Settings.IGNORE_SINGLE_NETWORK_NODE_ATTRIBUTES.contains(columnName))
 				).collect(Collectors.toList()));
 		exporter.setEdgeColumnFilter(edgeColFilter.getSelectedValues().stream().filter(
 				columnName
-				-> writeSiblings
-				|| !Settings.IGNORE_SINGLE_NETWORK_EDGE_ATTRIBUTES.contains(columnName)
+				-> (isCX2 ?
+					!Settings.CX2_IGNORE_EDGE_ATTRIBUTES.contains(columnName)	:
+					(writeSiblings
+				|| !Settings.IGNORE_SINGLE_NETWORK_EDGE_ATTRIBUTES.contains(columnName)))
 				).collect(Collectors.toList()));
 		
 		exporter.setNetworkColumnFilter(networkColFilter.getSelectedValues().stream().filter(

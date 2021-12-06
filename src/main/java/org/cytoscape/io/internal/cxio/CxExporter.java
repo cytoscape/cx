@@ -912,56 +912,49 @@ public final class CxExporter {
 		}
 	}
 	
-	private void writeCx2Nodes(CXWriter cx2Writer) throws IOException, NdexException {
+	private void writeCx2Nodes(CXWriter cx2Writer,CySubNetwork subnet, CyNetworkView view) throws IOException, NdexException {
 		//TODO: handle cyGroups
-		for (final CySubNetwork subnet : subnetworks) {
-			if ( subnet.getNodeCount()==0)
-				return;
+		if ( subnet.getNodeCount()==0)
+			return;
 			
-			CyNetworkView firstView = null;
-			final Collection<CyNetworkView> views = _networkview_manager.getNetworkViews(subnet);			
-			if ( !views.isEmpty()) {
-				for ( CyNetworkView view: views) {
-					firstView = view;
-					break;
-				}
-			}
-			boolean z_used = false;
-			for (View<CyNode> node_view : firstView.getNodeViews()) {
+		
+		boolean z_used = false;
+		if ( view!=null) {
+			for (View<CyNode> node_view : view.getNodeViews()) {
 				Double z = node_view.getVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION);
 				if (z != null && Math.abs(z.doubleValue()) > 0.000000001) {
 					z_used = true;
 					break;
 				}
 			}
+		}
 			
-			cx2Writer.startAspectFragment(CxNode.ASPECT_NAME);
-			for (final CyNode cyNode : subnet.getNodeList()) {
-				Long nodeId = CxUtil.getElementId(cyNode, subnet, useCxId);
-				LinkedHashMap<String,Object> nodeAttrs = new LinkedHashMap<>();
-				CyRow row = subnet.getRow(cyNode, CyNetwork.DEFAULT_ATTRS);
-				for ( Map.Entry<String, Object> e: row.getAllValues().entrySet()) {
-					Object value = e.getValue();
-					String name = e.getKey();
-					if (value != null && !Settings.isIgnore(name, Settings.IGNORE_NODE_ATTRIBUTES, value) &&
-					   	(nodeColumns == null || nodeColumns.contains(name))) {
-						nodeAttrs.put(name, value);	
-					}
+		cx2Writer.startAspectFragment(CxNode.ASPECT_NAME);
+		for (final CyNode cyNode : subnet.getNodeList()) {
+			Long nodeId = CxUtil.getElementId(cyNode, subnet, useCxId);
+			LinkedHashMap<String,Object> nodeAttrs = new LinkedHashMap<>();
+			CyRow row = subnet.getRow(cyNode, CyNetwork.DEFAULT_ATTRS);
+			for ( Map.Entry<String, Object> e: row.getAllValues().entrySet()) {
+				Object value = e.getValue();
+				String name = e.getKey();
+				if (value != null && !Settings.isIgnore(name, Settings.IGNORE_NODE_ATTRIBUTES, value) &&
+					   (nodeColumns == null || nodeColumns.contains(name))) {
+					nodeAttrs.put(name, value);	
 				}
-				CxNode cx2Node = new CxNode(nodeId, nodeAttrs);
-				if (firstView !=null) {
-					View<CyNode> nodeView = firstView.getNodeView(cyNode);
+			}
+			CxNode cx2Node = new CxNode(nodeId, nodeAttrs);
+			if (view !=null) {
+					View<CyNode> nodeView = view.getNodeView(cyNode);
 					cx2Node.setX(nodeView.getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION));
 					cx2Node.setY(nodeView.getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION));
 					if (z_used) {
 						cx2Node.setZ(nodeView.getVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION));
 					}	
-				}
-				cx2Writer.writeElementInFragment(cx2Node);
-			}	
-			cx2Writer.endAspectFragment();
-			break;
+			}
+			cx2Writer.writeElementInFragment(cx2Node);
 		}	
+		cx2Writer.endAspectFragment();
+		
 	}
 	
 	private final void writeEdges() throws IOException {
@@ -972,6 +965,38 @@ public final class CxExporter {
 			edgeElements.add(createEdgeElement(edge, baseNetwork));
 		}
 		writeAspectElements(edgeElements);
+	}
+	
+	private void writeCx2Edges(CXWriter cx2Writer) throws IOException, NdexException {
+		for (final CySubNetwork subnet : subnetworks) {
+			if ( subnet.getEdgeCount()==0)
+				return;
+			cx2Writer.startAspectFragment(CxEdge.ASPECT_NAME);
+			for (CyEdge cyEdge : subnet.getEdgeList()) {
+
+				CxEdge cxEdge = new CxEdge(CxUtil.getElementId(cyEdge, subnet, useCxId),
+						CxUtil.getElementId(cyEdge.getSource(), subnet, useCxId),
+						CxUtil.getElementId(cyEdge.getTarget(), subnet, useCxId));
+				
+				LinkedHashMap<String,Object> edgeAttrs = new LinkedHashMap<>();
+				CyRow row = subnet.getRow(cyEdge, CyNetwork.DEFAULT_ATTRS);
+				for (Map.Entry<String,Object>e: row.getAllValues().entrySet()) {
+					String name = e.getKey();
+					Object value = e.getValue();
+					if (value != null && !Settings.isIgnore(name, Settings.IGNORE_NODE_ATTRIBUTES, value) &&
+						   	(edgeColumns == null || edgeColumns.contains(name))) {
+							edgeAttrs.put(name, value);	
+						}
+					
+				}
+				if ( !edgeAttrs.isEmpty())
+					cxEdge.setAttributes(edgeAttrs);
+
+				cx2Writer.writeElementInFragment(cxEdge);
+			}
+			cx2Writer.endAspectFragment();
+			break;
+		}	
 	}
 
 	private void writeNodeAttributes() throws IOException {
@@ -1418,6 +1443,15 @@ public final class CxExporter {
 		writeAspectElements(elements);
 	}
 
+	private void writeCX2VisualProperties (CXWriter cx2Wrter, CyNetworkView view, final VisualLexicon lexicon) {
+		if ( view == null)
+			return;
+		final Long viewId = getViewId(view);
+		if ( viewId == null)
+			return;
+		
+		
+	}
 	
 	//Creators
 	private EdgesElement createEdgeElement(CyEdge edge, CyNetwork network) throws JsonProcessingException {
@@ -1604,6 +1638,7 @@ public final class CxExporter {
 	
 	public final void writeNetworkInCX2(Collection<String> aspects, final OutputStream out) throws IOException, NdexException {
 		
+		
 		Collection<String> outputAspects = aspects;
 		if (aspects == null || aspects.isEmpty()) {
 			outputAspects = AspectSet.getCx2AspectNames();
@@ -1617,6 +1652,18 @@ public final class CxExporter {
 		
 		String net_type = "subnetwork";
 		String id_type = useCxId ? "CX IDs" : "SUIDs";
+		
+		CySubNetwork subNet = this.subnetworks.get(0);
+		
+		CyNetworkView firstView = null;
+		final Collection<CyNetworkView> views = _networkview_manager.getNetworkViews(subNet);			
+		if ( !views.isEmpty()) {
+			for ( CyNetworkView view: views) {
+				firstView = view;
+				break;
+			}
+		}
+
 		
 		logger.info("Exporting network as " + net_type + " with " + id_type);
 		logger.info("Aspect filter: " + outputAspects);
@@ -1654,12 +1701,11 @@ public final class CxExporter {
 			}
 			
 			//write nodes. TODO: Handles CyGroups and internal nodes/edges
-			writeCx2Nodes(cx2Writer);
+			writeCx2Nodes(cx2Writer, subNet,firstView);
+			
+			writeCx2Edges(cx2Writer);
 			
 	/*	
-			// Write nodes, edges, and their attributes
-			writeEdges();
-			writeEdgeAttributes();
 
 			// Writes Cartesian layout and visual props, only writes subnets for collections
 			writeSubNetworks();

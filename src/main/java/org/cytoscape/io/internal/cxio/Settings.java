@@ -1,5 +1,6 @@
 package org.cytoscape.io.internal.cxio;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,8 +24,11 @@ public final class Settings {
 	public final static Set<String> IGNORE_SINGLE_NETWORK_NODE_ATTRIBUTES = new HashSet<>();
 	public final static Set<String> IGNORE_SINGLE_NETWORK_NETWORK_ATTRIBUTES = new HashSet<>();
 	
-	public final static Set<String> CX2_IGNORE_NODE_ATTRIBUTES = new HashSet<>();
+	public final static Set<String> CX2_IGNORE_NODE_ATTRIBUTES = new HashSet<>(
+			Arrays.asList(CxUtil.SHARED_NAME));
 
+	public final static Set<String> CX2_IGNORE_EDGE_ATTRIBUTES = 
+			new HashSet<>(Arrays.asList(CxUtil.NAME,CxUtil.SHARED_NAME, CxUtil.SHARED_INTERACTION));
 	
 	static {
 		IGNORE_NODE_ATTRIBUTES.add(CxUtil.REPRESENTS);
