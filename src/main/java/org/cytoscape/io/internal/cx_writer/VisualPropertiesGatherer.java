@@ -12,6 +12,8 @@ import org.ndexbio.cx2.aspect.element.core.VPMappingType;
 import org.ndexbio.cx2.aspect.element.core.VisualPropertyMapping;
 import org.ndexbio.cx2.aspect.element.cytoscape.VisualEditorProperties;
 import org.ndexbio.cx2.converter.CXToCX2VisualPropertyConverter;
+import org.ndexbio.cx2.converter.ConverterUtilities;
+import org.ndexbio.cx2.converter.ConverterUtilitiesResult;
 import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.ndexbio.cxio.core.interfaces.AspectElement;
 import org.ndexbio.cxio.util.CxioUtil;
@@ -142,7 +144,7 @@ public final class VisualPropertiesGatherer {
         
     }
 
-    public static <T> String getSerializableVisualProperty(View<? extends CyIdentifiable> view, VisualProperty<T> vp) {
+    private static <T> String getSerializableVisualProperty(View<? extends CyIdentifiable> view, VisualProperty<T> vp) {
     	T prop = view.getVisualProperty(vp);
 		if (prop == null) {
 			return null;
@@ -213,6 +215,25 @@ public final class VisualPropertiesGatherer {
             }
         }
     }
+
+    public final static <T> String getDefaultPropertyAsString(final VisualStyle style,
+            final VisualProperty<T> vp) {
+		final String id_string = vp.getIdString();
+		if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")
+				|| id_string.startsWith("NODE_CUSTOM") ) {
+			return null;
+		}
+
+    	final T vp_value = style.getDefaultValue(vp);
+    	if (vp_value != null) {
+    		final String value_str = vp.toSerializableString(vp_value);
+    		if (!CxioUtil.isEmpty(value_str)) {
+        		return value_str;
+    		}
+    	}
+    	return null;
+}
+
     
     final public static char COMMA = ',';
     
@@ -365,6 +386,7 @@ public final class VisualPropertiesGatherer {
     	}
     	
     	String col = mapping.getMappingColumnName();
+    	String vpName = vp.getIdString();
 		VisualPropertyMapping cx2Mapping = new VisualPropertyMapping();
 		MappingDefinition def = new MappingDefinition (col);
 		cx2Mapping.setMappingDef(def);
@@ -404,7 +426,7 @@ public final class VisualPropertiesGatherer {
     				continue;
     			}	
     			Map<String,Object> mapEntry = new HashMap<>();
-    			String catVPStr = vp.getIdString().equals("NODE_SIZE") ? "NODE_HEIGHT" : vp.getIdString() ;
+    			String catVPStr = vpName.equals("NODE_SIZE") ? "NODE_HEIGHT" : vpName ;
     			Object newVP = cvtr.getNewEdgeOrNodePropertyValue(catVPStr, vp.toSerializableString(value));
     			if ( newVP!=null) {
     				mapEntry.put("v",  entry.getKey());
@@ -415,6 +437,7 @@ public final class VisualPropertiesGatherer {
     		if (!mappingList.isEmpty())
     			def.setMapppingList(mappingList);
     	}	else if (mapping instanceof ContinuousMapping<?, ?>) {
+    		cx2Mapping.setType(VPMappingType.CONTINUOUS);
     		final ContinuousMapping<?, T> cm = (ContinuousMapping<?, T>) mapping;
     		String type = null;
     		try {
@@ -425,34 +448,73 @@ public final class VisualPropertiesGatherer {
     					+ "': column not present, ignoring corresponding continuous mapping." + e.getMessage());
     			return null;
     		}
-    		final StringBuilder sb = new StringBuilder();
-    	
-    		int counter = 0;
-    		for (final ContinuousMappingPoint<?, T> cp : cm.getAllPoints()) {
-    			final T lesser = cp.getRange().lesserValue;
-    			final T equal = cp.getRange().equalValue;
-    			final T greater = cp.getRange().greaterValue;
-    			sb.append(",L=");
-    			sb.append(counter);
-    			sb.append("=");
-    			sb.append(escapeString(vp.toSerializableString(lesser)));
-    			sb.append(",E=");
-    			sb.append(counter);
-    			sb.append("=");
-    			sb.append(escapeString(vp.toSerializableString(equal)));
-    			sb.append(",G=");
-    			sb.append(counter);
-    			sb.append("=");
-    			sb.append(escapeString(vp.toSerializableString(greater)));
-    			sb.append(",OV=");
-    			sb.append(counter);
-    			sb.append("=");
-    			sb.append(escapeString(cp.getValue().toString()));
-    			++counter;
-    		}
-    		//cvp.putMapping(vp.getIdString(), CxUtil.CONTINUOUS, sb.toString());
     		
-    		return null;
+			List<Map<String, Object>> m = new ArrayList<>();
+
+			Object min = null;
+			Boolean includeMin = null;
+			// Object max = null;
+			Object minVP = null;
+			// Object maxVP = null;
+
+			int counter = 0;
+			Map<String, Object> currentMapping = new HashMap<>();
+
+			for (ContinuousMappingPoint<?, T> cp : cm.getAllPoints()) {
+				T L = cp.getRange().lesserValue;
+				
+				Object LO = cvtr.getNewEdgeOrNodePropertyValue(vpName, vp.toSerializableString(L));
+
+				T E = cp.getRange().equalValue;
+				
+				// Object EO = vpConverter.getNewEdgeOrNodePropertyValue(vpName,E);
+
+				T G = cp.getRange().greaterValue;
+				if (G == null) {
+					break;
+				}
+				Object GO = cvtr.getNewEdgeOrNodePropertyValue(vpName, vp.toSerializableString(G));
+
+				Object OV = cp.getValue();
+				
+				Object OVO = cp.getValue();
+
+				if (counter == 0) { // min side
+					currentMapping.put("includeMin", Boolean.FALSE);
+					currentMapping.put("includeMax", Boolean.valueOf(E.equals(L)));
+					currentMapping.put("maxVPValue", LO);
+					currentMapping.put("max", OVO);
+					m.add(currentMapping);
+				} else {
+					currentMapping.put("includeMin", includeMin);
+					currentMapping.put("includeMax", Boolean.valueOf(E.equals(L)));
+					currentMapping.put("minVPValue", minVP);
+					currentMapping.put("min", min);
+					currentMapping.put("maxVPValue", LO);
+					currentMapping.put("max", OVO);
+					m.add(currentMapping);
+				}
+
+				// store the max values as min for the next segment
+				includeMin = Boolean.valueOf(E.equals(G));
+
+				min = OVO;
+				minVP = GO;
+
+				currentMapping = new HashMap<>();
+				counter++;
+			}
+
+			// add the last entry
+			currentMapping.put("includeMin", includeMin);
+			currentMapping.put("includeMax", Boolean.FALSE);
+			currentMapping.put("minVPValue", minVP);
+			currentMapping.put("min", min);
+			m.add(currentMapping);
+
+			// add the list
+			if (!m.isEmpty())
+    			def.setMapppingList(m);
     	} else {
     		throw new NdexException("Mapping type on column " +col + " is not supported by CX2.");
     	}

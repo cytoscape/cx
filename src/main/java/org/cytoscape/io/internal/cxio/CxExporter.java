@@ -1479,7 +1479,7 @@ public final class CxExporter {
         Map<String,String> cx1Style = new HashMap<>();
         for (final VisualProperty<?> visual_property : all_visual_properties) {
             if (visual_property.getTargetDataType() == CyNetwork.class) {
-            	String value_str = VisualPropertiesGatherer.getSerializableVisualProperty(view, visual_property);
+            	String value_str = VisualPropertiesGatherer.getDefaultPropertyAsString(current_visual_style, visual_property);
                 if (value_str !=null && !CxioUtil.isEmpty(value_str)) {
                 	cx1Style.put(visual_property.getIdString(), value_str);
                 }
@@ -1493,10 +1493,8 @@ public final class CxExporter {
         for (final VisualProperty<?> visual_property : all_visual_properties) {
             if (visual_property.getTargetDataType() == CyNode.class) {
             	String idStr = visual_property.getIdString();
-            	if (idStr.startsWith("NODE_CUSTOMGRAPHICS") ||
-            			idStr.startsWith("NODE_CUSTOMPAINT")) //Temporarily ignore these vps.
-            		continue;
-            	String value_str = VisualPropertiesGatherer.getSerializableVisualProperty(view, visual_property);
+
+            	String value_str = VisualPropertiesGatherer.getDefaultPropertyAsString(current_visual_style, visual_property);
                 if (value_str !=null && !CxioUtil.isEmpty(value_str)) {
                 	cx1Style.put(idStr, value_str);
                 }
@@ -1534,7 +1532,7 @@ public final class CxExporter {
         table = view.getModel().getTable(CyEdge.class, CyNetwork.DEFAULT_ATTRS);
         for (final VisualProperty<?> visual_property : all_visual_properties) {
             if (visual_property.getTargetDataType() == CyEdge.class) {
-            	String value_str = VisualPropertiesGatherer.getSerializableVisualProperty(view, visual_property);
+            	String value_str = VisualPropertiesGatherer.getDefaultPropertyAsString(current_visual_style, visual_property);
                 if (value_str !=null && !CxioUtil.isEmpty(value_str)) {
                 	cx1Style.put(visual_property.getIdString(), value_str);
                 }
