@@ -24,13 +24,16 @@ import org.ndexbio.cx2.aspect.element.core.CxNode;
 import org.ndexbio.cx2.aspect.element.core.CxNodeBypass;
 import org.ndexbio.cx2.aspect.element.core.CxVisualProperty;
 import org.ndexbio.cx2.aspect.element.core.DeclarationEntry;
+import org.ndexbio.cx2.aspect.element.core.DefaultVisualProperties;
 import org.ndexbio.cx2.aspect.element.core.MappingDefinition;
 import org.ndexbio.cx2.aspect.element.core.TableColumnVisualStyle;
 import org.ndexbio.cx2.aspect.element.core.VPMappingType;
 import org.ndexbio.cx2.aspect.element.core.VisualPropertyMapping;
+import org.ndexbio.cx2.aspect.element.core.VisualPropertyTable;
 import org.ndexbio.cx2.aspect.element.cytoscape.AbstractTableVisualProperty;
 import org.ndexbio.cx2.aspect.element.cytoscape.DefaultTableType;
 import org.ndexbio.cx2.aspect.element.cytoscape.VisualEditorProperties;
+import org.ndexbio.cx2.converter.CXToCX2VisualPropertyConverter;
 import org.ndexbio.cx2.io.CXWriter;
 import org.ndexbio.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
 import org.ndexbio.cxio.aspects.datamodels.AbstractAttributesAspectElement;
@@ -52,10 +55,12 @@ import org.ndexbio.cxio.core.CxWriter;
 import org.ndexbio.cxio.core.OpaqueAspectIterator;
 import org.ndexbio.cxio.core.interfaces.AspectElement;
 import org.ndexbio.cxio.core.interfaces.AspectFragmentWriter;
+import org.ndexbio.cxio.core.writers.NiceCXCX2Writer;
 import org.ndexbio.cxio.metadata.MetaDataCollection;
 import org.ndexbio.cxio.metadata.MetaDataElement;
 import org.ndexbio.cxio.misc.AspectElementCounts;
 import org.ndexbio.cxio.misc.OpaqueElement;
+import org.ndexbio.cxio.util.CxioUtil;
 import org.ndexbio.model.exceptions.NdexException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,6 +103,7 @@ import org.cytoscape.view.presentation.RenderingEngineFactory;
 import org.cytoscape.view.presentation.property.BasicVisualLexicon;
 import org.cytoscape.view.vizmap.TableVisualMappingManager;
 import org.cytoscape.view.vizmap.VisualMappingFunction;
+import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.view.vizmap.VisualStyle;
 import org.cytoscape.view.vizmap.mappings.ContinuousMapping;
 import org.cytoscape.view.vizmap.mappings.ContinuousMappingPoint;
@@ -360,7 +366,7 @@ public final class CxExporter {
 				break;
 			}	
 		
-			result.add(new CxMetadata(AbstractTableVisualProperty.ASPECT_NAME,1));
+			result.add(new CxMetadata(AbstractTableVisualProperty.ASPECT_NAME));
 			//add the opaqueAspect matadata
 			result.addAll(opapqueAspects);
 			
@@ -1443,14 +1449,109 @@ public final class CxExporter {
 		writeAspectElements(elements);
 	}
 
-	private void writeCX2VisualProperties (CXWriter cx2Wrter, CyNetworkView view, final VisualLexicon lexicon) {
+	private static void writeCX2VisualProperties (CXWriter cx2Writer, CyNetworkView view) throws NdexException, JsonGenerationException, JsonMappingException, IOException {
 		if ( view == null)
 			return;
-		final Long viewId = getViewId(view);
+	/*	final Long viewId = getViewId(view);
 		if ( viewId == null)
-			return;
+			return; */
 		
+		VisualLexicon lexicon = CxUtil.getLexicon(view);
+		CxVisualProperty cx2VisualProps = new CxVisualProperty();
+		VisualEditorProperties editorProps = new VisualEditorProperties();
 		
+		CXToCX2VisualPropertyConverter cvtr = CXToCX2VisualPropertyConverter.getInstance();
+        VisualMappingManager vmm = CyServiceModule.getService(VisualMappingManager.class);
+        VisualStyle current_visual_style = vmm.getVisualStyle(view);
+        final Set<VisualProperty<?>> all_visual_properties = lexicon.getAllVisualProperties();
+
+        // handle editor properties
+        VisualPropertiesGatherer.addCx2EditorPropsDependency(CxUtil.NODE_CUSTOM_GRAPHICS_SIZE_SYNC, 
+        		current_visual_style, editorProps);
+        VisualPropertiesGatherer.addCx2EditorPropsDependency(CxUtil.NODE_SIZE_LOCKED, current_visual_style, editorProps);
+        VisualPropertiesGatherer.addCx2EditorPropsDependency(CxUtil.ARROW_COLOR_MATCHES_EDGE, current_visual_style, editorProps);
+        cx2Writer.writeFullAspectFragment(Arrays.asList(editorProps));
+        
+        DefaultVisualProperties defaultProps = new DefaultVisualProperties();
+		cx2VisualProps.setDefaultProps(defaultProps);
+		
+        //getNetwork styles
+        Map<String,String> cx1Style = new HashMap<>();
+        for (final VisualProperty<?> visual_property : all_visual_properties) {
+            if (visual_property.getTargetDataType() == CyNetwork.class) {
+            	String value_str = VisualPropertiesGatherer.getSerializableVisualProperty(view, visual_property);
+                if (value_str !=null && !CxioUtil.isEmpty(value_str)) {
+                	cx1Style.put(visual_property.getIdString(), value_str);
+                }
+            }
+        }
+        defaultProps.setNetworkProperties(cvtr.convertNetworkVPs(cx1Style));
+     
+        //get node styles
+        cx1Style.clear();
+        CyTable table = view.getModel().getTable(CyNode.class, CyNetwork.DEFAULT_ATTRS);
+        for (final VisualProperty<?> visual_property : all_visual_properties) {
+            if (visual_property.getTargetDataType() == CyNode.class) {
+            	String idStr = visual_property.getIdString();
+            	if (idStr.startsWith("NODE_CUSTOMGRAPHICS") ||
+            			idStr.startsWith("NODE_CUSTOMPAINT")) //Temporarily ignore these vps.
+            		continue;
+            	String value_str = VisualPropertiesGatherer.getSerializableVisualProperty(view, visual_property);
+                if (value_str !=null && !CxioUtil.isEmpty(value_str)) {
+                	cx1Style.put(idStr, value_str);
+                }
+
+                VisualPropertyMapping cx2Mapping = 
+                		VisualPropertiesGatherer.getCX2Mapping(current_visual_style, visual_property, table);
+                if ( cx2Mapping!=null) {
+                	if  (visual_property.getIdString().equals("NODE_SIZE")) {  //Node size is special.
+                		if ( editorProps.getProperties().get(CxUtil.NODE_SIZE_LOCKED).equals(Boolean.TRUE)) {
+                    		cx2VisualProps.getNodeMappings().put("NODE_WIDTH",
+                        			cx2Mapping);
+                    		cx2VisualProps.getNodeMappings().put("NODE_HEIGHT",
+                        			cx2Mapping);
+                			
+                		}
+                	} else {
+                		cx2VisualProps.getNodeMappings().put(cvtr.getNewEdgeOrNodeProperty(idStr),
+                			cx2Mapping);
+                	}
+                }
+                
+            }
+        }
+        if (editorProps.getProperties().get(CxUtil.NODE_SIZE_LOCKED).equals(Boolean.TRUE)) { //handle node size
+        	String v = cx1Style.remove("NODE_SIZE");
+        	if ( v!=null) { 
+        		cx1Style.put("NODE_WIDTH", v);
+        		cx1Style.put("NODE_HEIGHT",v);
+        	}	
+        }
+        defaultProps.setNodeProperties(cvtr.convertEdgeOrNodeVPs(cx1Style));
+
+        // get edge styles 
+        cx1Style.clear();
+        table = view.getModel().getTable(CyEdge.class, CyNetwork.DEFAULT_ATTRS);
+        for (final VisualProperty<?> visual_property : all_visual_properties) {
+            if (visual_property.getTargetDataType() == CyEdge.class) {
+            	String value_str = VisualPropertiesGatherer.getSerializableVisualProperty(view, visual_property);
+                if (value_str !=null && !CxioUtil.isEmpty(value_str)) {
+                	cx1Style.put(visual_property.getIdString(), value_str);
+                }
+
+                VisualPropertyMapping cx2Mapping = 
+                		VisualPropertiesGatherer.getCX2Mapping(current_visual_style, visual_property, table);
+                if ( cx2Mapping!=null) {
+                	cx2VisualProps.getEdgeMappings().put(cvtr.getNewEdgeOrNodeProperty(visual_property.getIdString()),
+                			cx2Mapping);
+                }
+                
+            }
+        }
+        defaultProps.setEdgeProperties(cvtr.convertEdgeOrNodeVPs(cx1Style));
+
+        cx2Writer.writeFullAspectFragment(Arrays.asList(cx2VisualProps));
+
 	}
 	
 	//Creators
@@ -1705,6 +1806,7 @@ public final class CxExporter {
 			
 			writeCx2Edges(cx2Writer);
 			
+			writeCX2VisualProperties (cx2Writer, firstView);
 	/*	
 
 			// Writes Cartesian layout and visual props, only writes subnets for collections

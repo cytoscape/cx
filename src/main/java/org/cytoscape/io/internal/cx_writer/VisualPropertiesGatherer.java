@@ -2,13 +2,20 @@ package org.cytoscape.io.internal.cx_writer;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.ndexbio.cx2.aspect.element.core.MappingDefinition;
+import org.ndexbio.cx2.aspect.element.core.VPMappingType;
+import org.ndexbio.cx2.aspect.element.core.VisualPropertyMapping;
+import org.ndexbio.cx2.aspect.element.cytoscape.VisualEditorProperties;
+import org.ndexbio.cx2.converter.CXToCX2VisualPropertyConverter;
 import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.ndexbio.cxio.core.interfaces.AspectElement;
 import org.ndexbio.cxio.util.CxioUtil;
+import org.ndexbio.model.exceptions.NdexException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -135,7 +142,7 @@ public final class VisualPropertiesGatherer {
         
     }
 
-    private static <T> String getSerializableVisualProperty(View<? extends CyIdentifiable> view, VisualProperty<T> vp) {
+    public static <T> String getSerializableVisualProperty(View<? extends CyIdentifiable> view, VisualProperty<T> vp) {
     	T prop = view.getVisualProperty(vp);
 		if (prop == null) {
 			return null;
@@ -349,6 +356,112 @@ public final class VisualPropertiesGatherer {
         }
     }
 
+    public static <T> VisualPropertyMapping getCX2Mapping(final VisualStyle style,
+            final VisualProperty<T> vp,
+            final CyTable table) throws NdexException {
+    	final VisualMappingFunction<?, T> mapping = style.getVisualMappingFunction(vp);
+    	if (mapping == null) {
+    		return null;
+    	}
+    	
+    	String col = mapping.getMappingColumnName();
+		VisualPropertyMapping cx2Mapping = new VisualPropertyMapping();
+		MappingDefinition def = new MappingDefinition (col);
+		cx2Mapping.setMappingDef(def);
+		CXToCX2VisualPropertyConverter cvtr = CXToCX2VisualPropertyConverter.getInstance();
+		
+    	if (mapping instanceof PassthroughMapping<?, ?>) {
+    		cx2Mapping.setType(VPMappingType.PASSTHROUGH);
+    		final PassthroughMapping<?, T> pm = (PassthroughMapping<?, T>) mapping;
+    		String type = null;
+    		try {
+    			type = toAttributeType(pm.getMappingColumnType(), table, col);
+    		}
+    		catch (final IOException e) {
+    			logger.info("WARNING: problem with mapping/column '" + col
+    					+ "': column not present, ignoring corresponding passthrough mapping. " + e.getMessage());
+    			return null;
+    		}
+    	} else if (mapping instanceof DiscreteMapping<?, ?>) {
+    		cx2Mapping.setType(VPMappingType.DISCRETE);
+    		final DiscreteMapping<?, T> dm = (DiscreteMapping<?, T>) mapping;
+    		String type = null;
+    		try {
+    			type = toAttributeType(dm.getMappingColumnType(), table, col);
+    		}
+    		catch (final IOException e) {
+    			logger.info("WARNING: problem with mapping/column '" + col
+    					+ "': column not present, ignoring corresponding discrete mapping. " + e.getMessage());
+    			return null;
+    		}
+    		
+    		final Map<?, T> map = dm.getAll();
+    		
+    		List<Map<String, Object>> mappingList = new ArrayList<>();
+    		for (final Map.Entry<?, T> entry : map.entrySet()) {
+    			final T value = entry.getValue();
+    			if (value == null) {
+    				continue;
+    			}	
+    			Map<String,Object> mapEntry = new HashMap<>();
+    			String catVPStr = vp.getIdString().equals("NODE_SIZE") ? "NODE_HEIGHT" : vp.getIdString() ;
+    			Object newVP = cvtr.getNewEdgeOrNodePropertyValue(catVPStr, vp.toSerializableString(value));
+    			if ( newVP!=null) {
+    				mapEntry.put("v",  entry.getKey());
+        			mapEntry.put("vp", newVP);
+        			mappingList.add(mapEntry);
+    			}
+    		}
+    		if (!mappingList.isEmpty())
+    			def.setMapppingList(mappingList);
+    	}	else if (mapping instanceof ContinuousMapping<?, ?>) {
+    		final ContinuousMapping<?, T> cm = (ContinuousMapping<?, T>) mapping;
+    		String type = null;
+    		try {
+    			type = toAttributeType(cm.getMappingColumnType(), table, col);
+    		}
+    		catch (final IOException e) {
+    			logger.info("WARNING: problem with mapping/column '" + col
+    					+ "': column not present, ignoring corresponding continuous mapping." + e.getMessage());
+    			return null;
+    		}
+    		final StringBuilder sb = new StringBuilder();
+    	
+    		int counter = 0;
+    		for (final ContinuousMappingPoint<?, T> cp : cm.getAllPoints()) {
+    			final T lesser = cp.getRange().lesserValue;
+    			final T equal = cp.getRange().equalValue;
+    			final T greater = cp.getRange().greaterValue;
+    			sb.append(",L=");
+    			sb.append(counter);
+    			sb.append("=");
+    			sb.append(escapeString(vp.toSerializableString(lesser)));
+    			sb.append(",E=");
+    			sb.append(counter);
+    			sb.append("=");
+    			sb.append(escapeString(vp.toSerializableString(equal)));
+    			sb.append(",G=");
+    			sb.append(counter);
+    			sb.append("=");
+    			sb.append(escapeString(vp.toSerializableString(greater)));
+    			sb.append(",OV=");
+    			sb.append(counter);
+    			sb.append("=");
+    			sb.append(escapeString(cp.getValue().toString()));
+    			++counter;
+    		}
+    		//cvp.putMapping(vp.getIdString(), CxUtil.CONTINUOUS, sb.toString());
+    		
+    		return null;
+    	} else {
+    		throw new NdexException("Mapping type on column " +col + " is not supported by CX2.");
+    	}
+		return cx2Mapping;
+
+    }
+
+    
+    
     private static void gatherEdgesDefaultVisualProperties(final CyNetworkView view,
                                                            final List<AspectElement> visual_properties,
                                                            final VisualStyle current_visual_style,
@@ -441,6 +554,23 @@ public final class VisualPropertiesGatherer {
         }
     }
 
+    /** add editor property into the give props object.
+     * 
+     * @param id_string dependency property name
+     * @param style current style
+     * @param props property object that this dependency should be added to.
+     */
+    public static void addCx2EditorPropsDependency(final String id_string,
+            final VisualStyle style,
+            VisualEditorProperties props) {
+    	for (final VisualPropertyDependency<?> d : style.getAllVisualPropertyDependencies()) {
+    		if (d.getIdString().equals(id_string)) {
+    			props.getProperties().put(id_string, d.isDependencyEnabled());
+    		}
+    	}
+    }
+
+    
     private static void gatherNodeVisualProperties(final CyNetworkView view,
                                                    final List<AspectElement> visual_properties,
                                                    final Set<VisualProperty<?>> all_visual_properties,
