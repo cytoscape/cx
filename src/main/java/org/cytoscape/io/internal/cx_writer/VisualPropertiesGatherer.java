@@ -3,13 +3,18 @@ package org.cytoscape.io.internal.cx_writer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.ndexbio.cx2.aspect.element.core.CxEdgeBypass;
+import org.ndexbio.cx2.aspect.element.core.CxNodeBypass;
 import org.ndexbio.cx2.aspect.element.core.MappingDefinition;
 import org.ndexbio.cx2.aspect.element.core.VPMappingType;
 import org.ndexbio.cx2.aspect.element.core.VisualPropertyMapping;
+import org.ndexbio.cx2.aspect.element.core.VisualPropertyTable;
 import org.ndexbio.cx2.aspect.element.cytoscape.VisualEditorProperties;
 import org.ndexbio.cx2.converter.CXToCX2VisualPropertyConverter;
 import org.ndexbio.cx2.converter.ConverterUtilities;
@@ -637,11 +642,11 @@ public final class VisualPropertiesGatherer {
                                                    final List<AspectElement> visual_properties,
                                                    final Set<VisualProperty<?>> all_visual_properties,
                                                    final Long viewId,
-                                                   boolean use_cxId) throws JsonProcessingException {
+                                                   boolean use_cxId) {
         for (View<CyNode> node_view : view.getNodeViews()) {
             final CyNode cy_node = node_view.getModel();
             final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.NODES.asString(),
-            																CxUtil.getElementId(cy_node, (CySubNetwork)view.getModel(), use_cxId),
+            																CxUtil.getElementId(cy_node, view.getModel(), use_cxId),
                                                                             viewId);
      
             for (final VisualProperty<?> visual_property : all_visual_properties) {
@@ -655,6 +660,83 @@ public final class VisualPropertiesGatherer {
         }
     }
 
+	public static List<CxNodeBypass> getNodeBypasses(final CyNetworkView view,
+			final Set<VisualProperty<?>> all_visual_properties, boolean use_cxId, boolean nodeSizeLocked) throws NdexException {
+		
+		List<CxNodeBypass> nodeByPasses = new LinkedList<>();
+
+		List<VisualProperty<?>> filteredVPs = all_visual_properties
+				.stream().filter(x -> x.getTargetDataType() == CyNode.class)
+				.collect(Collectors.toList());
+		
+		for (View<CyNode> node_view : view.getNodeViews()) {
+			Map<String,String> cx1VPTable = new HashMap<>();
+			for (final VisualProperty<?> visual_property : filteredVPs) {
+				final String value_str = getSerializableVisualProperty(node_view, visual_property);
+	        	if (!CxioUtil.isEmpty(value_str)) {
+		        	final String id_string = visual_property.getIdString();
+		            if (!id_string.equals("NODE") && !id_string.equals("EDGE") && !id_string.equals("NETWORK")) {
+		                cx1VPTable.put(id_string, value_str);   
+		            }
+	            }
+			}
+			if (!cx1VPTable.isEmpty()) {
+				final CyNode cy_node = node_view.getModel();
+				Long nodeId = CxUtil.getElementId(cy_node, view.getModel(), use_cxId);
+
+				if (nodeSizeLocked) { // handle node size
+					String v = cx1VPTable.remove("NODE_SIZE");
+					if (v != null) {
+						cx1VPTable.put("NODE_WIDTH", v);
+						cx1VPTable.put("NODE_HEIGHT", v);
+					}
+				}
+				VisualPropertyTable t = CXToCX2VisualPropertyConverter.getInstance().convertEdgeOrNodeVPs(cx1VPTable);
+				nodeByPasses.add(new CxNodeBypass(nodeId, t));
+			}
+		}
+		return nodeByPasses;
+	}
+ 
+	public static List<CxEdgeBypass> getEdgeBypasses(final CyNetworkView view,
+			final Set<VisualProperty<?>> all_visual_properties, boolean use_cxId, boolean arrowColorMatchesEdge) throws NdexException {
+		
+		List<CxEdgeBypass> edgeByPasses = new LinkedList<>();
+
+		List<VisualProperty<?>> filteredVPs = all_visual_properties
+				.stream().filter(x -> x.getTargetDataType() == CyEdge.class)
+				.collect(Collectors.toList());
+		
+		for (View<CyEdge> edgeView : view.getEdgeViews()) {
+			Map<String,String> cx1VPTable = new HashMap<>();
+			for (final VisualProperty<?> visual_property : filteredVPs) {
+				final String value_str = getSerializableVisualProperty(edgeView, visual_property);
+	        	if (!CxioUtil.isEmpty(value_str)) {
+		        	final String id_string = visual_property.getIdString();
+		            if (!id_string.equals("NODE") && !id_string.equals("EDGE") && !id_string.equals("NETWORK")) {
+		                cx1VPTable.put(id_string, value_str);   
+		            }
+	            }
+			}
+			if (!cx1VPTable.isEmpty()) {
+				final CyEdge cyEdge = edgeView.getModel();
+				Long edgeId = CxUtil.getElementId(cyEdge, view.getModel(), use_cxId);
+
+				if (arrowColorMatchesEdge) { // handle node size
+					String v = cx1VPTable.remove("EDGE_UNSELECTED_PAINT");
+					if (v != null) {
+						cx1VPTable.put("EDGE_SOURCE_ARROW_UNSELECTED_PAINT", v);
+						cx1VPTable.put("EDGE_STROKE_UNSELECTED_PAINT", v);
+						cx1VPTable.put("EDGE_TARGET_ARROW_UNSELECTED_PAINT", v);
+					}
+				}
+				VisualPropertyTable t = CXToCX2VisualPropertyConverter.getInstance().convertEdgeOrNodeVPs(cx1VPTable);
+				edgeByPasses.add(new CxEdgeBypass(edgeId, t));
+			}
+		}
+		return edgeByPasses;
+	}
+    
     private final static String toAttributeType(final Class<?> attr_class, final CyTable table, final String col_name)
             throws IOException {
         if (attr_class == String.class) {

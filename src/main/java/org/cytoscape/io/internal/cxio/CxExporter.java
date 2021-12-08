@@ -14,6 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.ndexbio.cx2.aspect.element.core.CxAttributeDeclaration;
 import org.ndexbio.cx2.aspect.element.core.CxEdge;
@@ -31,6 +32,7 @@ import org.ndexbio.cx2.aspect.element.core.VPMappingType;
 import org.ndexbio.cx2.aspect.element.core.VisualPropertyMapping;
 import org.ndexbio.cx2.aspect.element.core.VisualPropertyTable;
 import org.ndexbio.cx2.aspect.element.cytoscape.AbstractTableVisualProperty;
+import org.ndexbio.cx2.aspect.element.cytoscape.CxTableVisualProperty;
 import org.ndexbio.cx2.aspect.element.cytoscape.DefaultTableType;
 import org.ndexbio.cx2.aspect.element.cytoscape.VisualEditorProperties;
 import org.ndexbio.cx2.converter.CXToCX2VisualPropertyConverter;
@@ -141,7 +143,7 @@ public final class CxExporter {
 	private boolean omitOpaqueAspects = false;
 	private List<String> nodeColumns, edgeColumns, networkColumns;
 	
-	private HashMap<String, Long> idCounters = new HashMap<String, Long>();
+	private HashMap<String, Long> idCounters = new HashMap<>();
 	
 	private Set<CyGroup> collapsed_groups;
 	
@@ -270,7 +272,7 @@ public final class CxExporter {
 			writeSubNetworks();
 			
 			// write table visual styles
-			writeTableVisualStyles();
+			writeTableVisualStyles(null);
 			
 			// Also handles Opaque aspects
 			writeHiddenAttributes(); 
@@ -579,13 +581,13 @@ public final class CxExporter {
 	}
 	
 	
-	private void writeTableVisualStyles() throws IOException {
+	private void writeTableVisualStyles(CXWriter cx2Writer) throws IOException, NdexException {
 		var appManager = CyServiceModule.getService(CyApplicationManager.class);
         var tableViewManager = CyServiceModule.getService(CyTableViewManager.class);
         var tableVisualMappingManager = CyServiceModule.getService(TableVisualMappingManager.class);
         
 
-        List<AspectElement> tableStyles = new ArrayList<>();
+        List<CyTableVisualPropertiesElement> tableStyles = new ArrayList<>();
 
     	if (writeSiblings) {
 		/*	addTableColumnsHelper(baseNetwork, "network_table", elements, CyRootNetwork.SHARED_ATTRS);
@@ -635,9 +637,16 @@ public final class CxExporter {
 
 		}
     	
-    	if ( !tableStyles.isEmpty())
-    		writeAspectElements(tableStyles);
-
+    	if ( !tableStyles.isEmpty()) {
+    		if (cx2Writer != null) {   	    			
+    			cx2Writer.writeFullAspectFragment(
+    					tableStyles
+    	    			.stream()
+    	    			.map( (CyTableVisualPropertiesElement x) -> { return new CxTableVisualProperty(x);})
+    	    			.collect(Collectors.toList()));
+    		} else
+    			writeAspectElements(tableStyles.stream().map(x -> (AspectElement)x).collect(Collectors.toList()));
+    	}	
 	}
 
 	private static <T> void processCyTableVisualStyles(DefaultTableType type, CyTable table,
@@ -1449,13 +1458,11 @@ public final class CxExporter {
 		writeAspectElements(elements);
 	}
 
-	private static void writeCX2VisualProperties (CXWriter cx2Writer, CyNetworkView view) throws NdexException, JsonGenerationException, JsonMappingException, IOException {
+	//write default, mapping and bypasses
+	private void writeCX2VisualProperties (CXWriter cx2Writer, CyNetworkView view) throws NdexException, JsonGenerationException, JsonMappingException, IOException {
 		if ( view == null)
 			return;
-	/*	final Long viewId = getViewId(view);
-		if ( viewId == null)
-			return; */
-		
+
 		VisualLexicon lexicon = CxUtil.getLexicon(view);
 		CxVisualProperty cx2VisualProps = new CxVisualProperty();
 		VisualEditorProperties editorProps = new VisualEditorProperties();
@@ -1471,6 +1478,9 @@ public final class CxExporter {
         VisualPropertiesGatherer.addCx2EditorPropsDependency(CxUtil.NODE_SIZE_LOCKED, current_visual_style, editorProps);
         VisualPropertiesGatherer.addCx2EditorPropsDependency(CxUtil.ARROW_COLOR_MATCHES_EDGE, current_visual_style, editorProps);
         cx2Writer.writeFullAspectFragment(Arrays.asList(editorProps));
+        
+        boolean nodeSizeLocked = editorProps.getProperties().get(CxUtil.NODE_SIZE_LOCKED).equals(Boolean.TRUE);
+        boolean arrowColorMatchesEdge = editorProps.getProperties().get(CxUtil.ARROW_COLOR_MATCHES_EDGE).equals(Boolean.TRUE);
         
         DefaultVisualProperties defaultProps = new DefaultVisualProperties();
 		cx2VisualProps.setDefaultProps(defaultProps);
@@ -1502,8 +1512,8 @@ public final class CxExporter {
                 VisualPropertyMapping cx2Mapping = 
                 		VisualPropertiesGatherer.getCX2Mapping(current_visual_style, visual_property, table);
                 if ( cx2Mapping!=null) {
-                	if  (visual_property.getIdString().equals("NODE_SIZE")) {  //Node size is special.
-                		if ( editorProps.getProperties().get(CxUtil.NODE_SIZE_LOCKED).equals(Boolean.TRUE)) {
+                	if  (idStr.equals("NODE_SIZE")) {  //Node size is special.
+                		if ( nodeSizeLocked) {
                     		cx2VisualProps.getNodeMappings().put("NODE_WIDTH",
                         			cx2Mapping);
                     		cx2VisualProps.getNodeMappings().put("NODE_HEIGHT",
@@ -1511,14 +1521,16 @@ public final class CxExporter {
                 			
                 		}
                 	} else {
-                		cx2VisualProps.getNodeMappings().put(cvtr.getNewEdgeOrNodeProperty(idStr),
-                			cx2Mapping);
+                		if ( !nodeSizeLocked || !idStr.equals("NODE_WIDTH") || !idStr.equals("NODE_HEIGHT")) {
+                			cx2VisualProps.getNodeMappings()
+                			.put(cvtr.getNewEdgeOrNodeProperty(idStr), cx2Mapping);
+                		}
                 	}
                 }
                 
             }
         }
-        if (editorProps.getProperties().get(CxUtil.NODE_SIZE_LOCKED).equals(Boolean.TRUE)) { //handle node size
+        if (nodeSizeLocked) { //handle node size
         	String v = cx1Style.remove("NODE_SIZE");
         	if ( v!=null) { 
         		cx1Style.put("NODE_WIDTH", v);
@@ -1549,11 +1561,21 @@ public final class CxExporter {
         defaultProps.setEdgeProperties(cvtr.convertEdgeOrNodeVPs(cx1Style));
 
         cx2Writer.writeFullAspectFragment(Arrays.asList(cx2VisualProps));
-
+        
+        // write bypasses    
+    	List<CxNodeBypass> nodeBypasses = VisualPropertiesGatherer.getNodeBypasses(
+				view, all_visual_properties, useCxId, nodeSizeLocked );
+    	cx2Writer.writeFullAspectFragment(nodeBypasses);
+    	
+       	List<CxEdgeBypass> edgeBypasses = VisualPropertiesGatherer.getEdgeBypasses(
+    				view, all_visual_properties, useCxId, arrowColorMatchesEdge );
+        	cx2Writer.writeFullAspectFragment(edgeBypasses);
+    	
+		
 	}
 	
 	//Creators
-	private EdgesElement createEdgeElement(CyEdge edge, CyNetwork network) throws JsonProcessingException {
+	private EdgesElement createEdgeElement(CyEdge edge, CyNetwork network) {
 		Long cxId = CxUtil.getElementId(edge, network, useCxId);
 		Long sourceId = CxUtil.getElementId(edge.getSource(), network, useCxId);
 		Long targetId = CxUtil.getElementId(edge.getTarget(), network, useCxId);
@@ -1800,24 +1822,12 @@ public final class CxExporter {
 			}
 			
 			//write nodes. TODO: Handles CyGroups and internal nodes/edges
-			writeCx2Nodes(cx2Writer, subNet,firstView);
+			writeCx2Nodes(cx2Writer, subNet,firstView);		
 			
 			writeCx2Edges(cx2Writer);
+			writeCX2VisualProperties (cx2Writer, firstView);	
+			writeTableVisualStyles(cx2Writer);
 			
-			writeCX2VisualProperties (cx2Writer, firstView);
-	/*	
-
-			// Writes Cartesian layout and visual props, only writes subnets for collections
-			writeSubNetworks();
-			
-			// write table visual styles
-			writeTableVisualStyles();
-			
-			// Also handles Opaque aspects
-			writeHiddenAttributes(); 
-
-			final AspectElementCounts aspects_counts = writer.getAspectElementCounts(); */
-
 		} catch (final Exception e) {
 			e.printStackTrace();
 			msg = "Failed to create cx network: " + e.getMessage();
@@ -1831,17 +1841,10 @@ public final class CxExporter {
 				}
 			});
 		}
-		
-		cx2Writer.finish();
-
-/*		if (success) {
-			final AspectElementCounts counts = writer.getAspectElementCounts();
-			if (counts != null) {
-				System.out.println("Aspects elements written out:");
-				System.out.println(counts);
-			}
-
-		} */
+		if ( success)
+			cx2Writer.finish();
+		else 
+			cx2Writer.printError(msg);
 	} 
 
 }
