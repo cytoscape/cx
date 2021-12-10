@@ -685,11 +685,7 @@ public final class VisualPropertiesGatherer {
 				Long nodeId = CxUtil.getElementId(cy_node, view.getModel(), use_cxId);
 
 				if (nodeSizeLocked) { // handle node size
-					String v = cx1VPTable.remove("NODE_SIZE");
-					if (v != null) {
-						cx1VPTable.put("NODE_WIDTH", v);
-						cx1VPTable.put("NODE_HEIGHT", v);
-					}
+					CXToCX2VisualPropertyConverter.cvtCx1NodeSize(cx1VPTable);
 				}
 				VisualPropertyTable t = CXToCX2VisualPropertyConverter.getInstance().convertEdgeOrNodeVPs(cx1VPTable);
 				nodeByPasses.add(new CxNodeBypass(nodeId, t));
@@ -723,12 +719,7 @@ public final class VisualPropertiesGatherer {
 				Long edgeId = CxUtil.getElementId(cyEdge, view.getModel(), use_cxId);
 
 				if (arrowColorMatchesEdge) { // handle node size
-					String v = cx1VPTable.remove("EDGE_UNSELECTED_PAINT");
-					if (v != null) {
-						cx1VPTable.put("EDGE_SOURCE_ARROW_UNSELECTED_PAINT", v);
-						cx1VPTable.put("EDGE_STROKE_UNSELECTED_PAINT", v);
-						cx1VPTable.put("EDGE_TARGET_ARROW_UNSELECTED_PAINT", v);
-					}
+					CXToCX2VisualPropertyConverter.cvtCx1EdgeColor(cx1VPTable);
 				}
 				VisualPropertyTable t = CXToCX2VisualPropertyConverter.getInstance().convertEdgeOrNodeVPs(cx1VPTable);
 				edgeByPasses.add(new CxEdgeBypass(edgeId, t));

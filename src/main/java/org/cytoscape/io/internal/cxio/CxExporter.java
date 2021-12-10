@@ -16,68 +16,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.ndexbio.cx2.aspect.element.core.CxAttributeDeclaration;
-import org.ndexbio.cx2.aspect.element.core.CxEdge;
-import org.ndexbio.cx2.aspect.element.core.CxEdgeBypass;
-import org.ndexbio.cx2.aspect.element.core.CxMetadata;
-import org.ndexbio.cx2.aspect.element.core.CxNetworkAttribute;
-import org.ndexbio.cx2.aspect.element.core.CxNode;
-import org.ndexbio.cx2.aspect.element.core.CxNodeBypass;
-import org.ndexbio.cx2.aspect.element.core.CxVisualProperty;
-import org.ndexbio.cx2.aspect.element.core.DeclarationEntry;
-import org.ndexbio.cx2.aspect.element.core.DefaultVisualProperties;
-import org.ndexbio.cx2.aspect.element.core.MappingDefinition;
-import org.ndexbio.cx2.aspect.element.core.TableColumnVisualStyle;
-import org.ndexbio.cx2.aspect.element.core.VPMappingType;
-import org.ndexbio.cx2.aspect.element.core.VisualPropertyMapping;
-import org.ndexbio.cx2.aspect.element.core.VisualPropertyTable;
-import org.ndexbio.cx2.aspect.element.cytoscape.AbstractTableVisualProperty;
-import org.ndexbio.cx2.aspect.element.cytoscape.CxTableVisualProperty;
-import org.ndexbio.cx2.aspect.element.cytoscape.DefaultTableType;
-import org.ndexbio.cx2.aspect.element.cytoscape.VisualEditorProperties;
-import org.ndexbio.cx2.converter.CXToCX2VisualPropertyConverter;
-import org.ndexbio.cx2.io.CXWriter;
-import org.ndexbio.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
-import org.ndexbio.cxio.aspects.datamodels.AbstractAttributesAspectElement;
-import org.ndexbio.cxio.aspects.datamodels.AttributesAspectUtils;
-import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
-import org.ndexbio.cxio.aspects.datamodels.CyGroupsElement;
-import org.ndexbio.cxio.aspects.datamodels.CyTableColumnElement;
-import org.ndexbio.cxio.aspects.datamodels.CyTableVisualPropertiesElement;
-import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
-import org.ndexbio.cxio.aspects.datamodels.EdgeAttributesElement;
-import org.ndexbio.cxio.aspects.datamodels.EdgesElement;
-import org.ndexbio.cxio.aspects.datamodels.HiddenAttributesElement;
-import org.ndexbio.cxio.aspects.datamodels.NetworkAttributesElement;
-import org.ndexbio.cxio.aspects.datamodels.NetworkRelationsElement;
-import org.ndexbio.cxio.aspects.datamodels.NodeAttributesElement;
-import org.ndexbio.cxio.aspects.datamodels.NodesElement;
-import org.ndexbio.cxio.aspects.datamodels.SubNetworkElement;
-import org.ndexbio.cxio.core.CxWriter;
-import org.ndexbio.cxio.core.OpaqueAspectIterator;
-import org.ndexbio.cxio.core.interfaces.AspectElement;
-import org.ndexbio.cxio.core.interfaces.AspectFragmentWriter;
-import org.ndexbio.cxio.core.writers.NiceCXCX2Writer;
-import org.ndexbio.cxio.metadata.MetaDataCollection;
-import org.ndexbio.cxio.metadata.MetaDataElement;
-import org.ndexbio.cxio.misc.AspectElementCounts;
-import org.ndexbio.cxio.misc.OpaqueElement;
-import org.ndexbio.cxio.util.CxioUtil;
-import org.ndexbio.model.exceptions.NdexException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.TableViewRenderer;
 import org.cytoscape.group.CyGroup;
@@ -111,6 +49,65 @@ import org.cytoscape.view.vizmap.mappings.ContinuousMapping;
 import org.cytoscape.view.vizmap.mappings.ContinuousMappingPoint;
 import org.cytoscape.view.vizmap.mappings.DiscreteMapping;
 import org.cytoscape.view.vizmap.mappings.PassthroughMapping;
+import org.ndexbio.cx2.aspect.element.core.CxAttributeDeclaration;
+import org.ndexbio.cx2.aspect.element.core.CxEdge;
+import org.ndexbio.cx2.aspect.element.core.CxEdgeBypass;
+import org.ndexbio.cx2.aspect.element.core.CxMetadata;
+import org.ndexbio.cx2.aspect.element.core.CxNetworkAttribute;
+import org.ndexbio.cx2.aspect.element.core.CxNode;
+import org.ndexbio.cx2.aspect.element.core.CxNodeBypass;
+import org.ndexbio.cx2.aspect.element.core.CxVisualProperty;
+import org.ndexbio.cx2.aspect.element.core.DeclarationEntry;
+import org.ndexbio.cx2.aspect.element.core.DefaultVisualProperties;
+import org.ndexbio.cx2.aspect.element.core.MappingDefinition;
+import org.ndexbio.cx2.aspect.element.core.TableColumnVisualStyle;
+import org.ndexbio.cx2.aspect.element.core.VPMappingType;
+import org.ndexbio.cx2.aspect.element.core.VisualPropertyMapping;
+import org.ndexbio.cx2.aspect.element.cytoscape.AbstractTableVisualProperty;
+import org.ndexbio.cx2.aspect.element.cytoscape.CxTableVisualProperty;
+import org.ndexbio.cx2.aspect.element.cytoscape.DefaultTableType;
+import org.ndexbio.cx2.aspect.element.cytoscape.VisualEditorProperties;
+import org.ndexbio.cx2.converter.CXToCX2VisualPropertyConverter;
+import org.ndexbio.cx2.io.CXWriter;
+import org.ndexbio.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
+import org.ndexbio.cxio.aspects.datamodels.AbstractAttributesAspectElement;
+import org.ndexbio.cxio.aspects.datamodels.AttributesAspectUtils;
+import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
+import org.ndexbio.cxio.aspects.datamodels.CyGroupsElement;
+import org.ndexbio.cxio.aspects.datamodels.CyTableColumnElement;
+import org.ndexbio.cxio.aspects.datamodels.CyTableVisualPropertiesElement;
+import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
+import org.ndexbio.cxio.aspects.datamodels.EdgeAttributesElement;
+import org.ndexbio.cxio.aspects.datamodels.EdgesElement;
+import org.ndexbio.cxio.aspects.datamodels.HiddenAttributesElement;
+import org.ndexbio.cxio.aspects.datamodels.NetworkAttributesElement;
+import org.ndexbio.cxio.aspects.datamodels.NetworkRelationsElement;
+import org.ndexbio.cxio.aspects.datamodels.NodeAttributesElement;
+import org.ndexbio.cxio.aspects.datamodels.NodesElement;
+import org.ndexbio.cxio.aspects.datamodels.SubNetworkElement;
+import org.ndexbio.cxio.core.CxWriter;
+import org.ndexbio.cxio.core.OpaqueAspectIterator;
+import org.ndexbio.cxio.core.interfaces.AspectElement;
+import org.ndexbio.cxio.core.interfaces.AspectFragmentWriter;
+import org.ndexbio.cxio.metadata.MetaDataCollection;
+import org.ndexbio.cxio.metadata.MetaDataElement;
+import org.ndexbio.cxio.misc.AspectElementCounts;
+import org.ndexbio.cxio.misc.OpaqueElement;
+import org.ndexbio.cxio.util.CxioUtil;
+import org.ndexbio.model.exceptions.NdexException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 /**
  * This class is for serializing Cytoscape networks, views, and attribute tables
@@ -481,7 +478,7 @@ public final class CxExporter {
 	}
 
 	
-	private Map<String, DeclarationEntry> getTableAttributes(CyNetwork network, String applies_to) {
+	private static Map<String, DeclarationEntry> getTableAttributes(CyNetwork network, String applies_to) {
 		String namespace = CyNetwork.DEFAULT_ATTRS;
 		CyTable table = null;
 		Set<String> additional_ignore;
@@ -1083,7 +1080,7 @@ public final class CxExporter {
 
 	
 	// Aggregators
-	private void addDataToMetaDataCollection(final MetaDataCollection meta_data, final String aspect_name,
+	private static void addDataToMetaDataCollection(final MetaDataCollection meta_data, final String aspect_name,
 			final Long count, final Long id_counter) {
 
 		if (count != null && count == 0) {
@@ -1531,11 +1528,7 @@ public final class CxExporter {
             }
         }
         if (nodeSizeLocked) { //handle node size
-        	String v = cx1Style.remove("NODE_SIZE");
-        	if ( v!=null) { 
-        		cx1Style.put("NODE_WIDTH", v);
-        		cx1Style.put("NODE_HEIGHT",v);
-        	}	
+        	CXToCX2VisualPropertyConverter.cvtCx1NodeSize(cx1Style);
         }
         defaultProps.setNodeProperties(cvtr.convertEdgeOrNodeVPs(cx1Style));
 
@@ -1543,6 +1536,7 @@ public final class CxExporter {
         cx1Style.clear();
         table = view.getModel().getTable(CyEdge.class, CyNetwork.DEFAULT_ATTRS);
         for (final VisualProperty<?> visual_property : all_visual_properties) {
+        	String idStr = visual_property.getIdString();
             if (visual_property.getTargetDataType() == CyEdge.class) {
             	String value_str = VisualPropertiesGatherer.getDefaultPropertyAsString(current_visual_style, visual_property);
                 if (value_str !=null && !CxioUtil.isEmpty(value_str)) {
@@ -1551,12 +1545,39 @@ public final class CxExporter {
 
                 VisualPropertyMapping cx2Mapping = 
                 		VisualPropertiesGatherer.getCX2Mapping(current_visual_style, visual_property, table);
+                
+                if ( cx2Mapping!=null) {
+                	if  (idStr.equals("EDGE_UNSELECTED_PAINT")) {  //Handle this specially.
+                		if ( arrowColorMatchesEdge) {
+                    		cx2VisualProps.getEdgeMappings().put("EDGE_SOURCE_ARROW_UNSELECTED_PAINT",
+                        			cx2Mapping);
+                    		cx2VisualProps.getEdgeMappings().put("EDGE_STROKE_UNSELECTED_PAINT",
+                        			cx2Mapping);
+                    		cx2VisualProps.getEdgeMappings().put("EDGE_TARGET_ARROW_UNSELECTED_PAINT",
+                        			cx2Mapping);
+                			
+                		}
+                	} else {
+                		if ( !arrowColorMatchesEdge || !idStr.equals("EDGE_SOURCE_ARROW_UNSELECTED_PAINT") 
+                				|| !idStr.equals("EDGE_STROKE_UNSELECTED_PAINT")
+                				|| !idStr.equals("EDGE_TARGET_ARROW_UNSELECTED_PAINT")) {
+                			cx2VisualProps.getEdgeMappings()
+                			.put(cvtr.getNewEdgeOrNodeProperty(idStr), cx2Mapping);
+                		}
+                	}
+                }
+
+                
                 if ( cx2Mapping!=null) {
                 	cx2VisualProps.getEdgeMappings().put(cvtr.getNewEdgeOrNodeProperty(visual_property.getIdString()),
                 			cx2Mapping);
                 }
                 
             }
+        }
+        
+        if (arrowColorMatchesEdge) { //handle edge color
+        	CXToCX2VisualPropertyConverter.cvtCx1EdgeColor(cx1Style);
         }
         defaultProps.setEdgeProperties(cvtr.convertEdgeOrNodeVPs(cx1Style));
 
