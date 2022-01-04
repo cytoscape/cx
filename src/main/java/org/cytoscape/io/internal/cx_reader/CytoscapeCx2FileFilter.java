@@ -50,7 +50,7 @@ public class CytoscapeCx2FileFilter extends CytoscapeCxFileFilter {
      * @param stream
      * @return null if not an CX file
      */
-    protected String getCX2startElement(final InputStream stream) {
+    protected static String getCX2startElement(final InputStream stream) {
         final String header = getHeaderCharacters(stream, 400);
         final Matcher matcher = CX2_HEADER_PATTERN.matcher(header);
         String root = null;

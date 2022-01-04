@@ -73,7 +73,7 @@ public class CytoscapeCxFileFilter extends BasicCyFileFilter {
      * @param stream
      * @return null if not an CX file
      */
-    protected String getCXstartElement(final InputStream stream) {
+    protected static String getCXstartElement(final InputStream stream) {
         final String header = getHeaderCharacters(stream, 400);
         final Matcher matcher = CX_HEADER_PATTERN.matcher(header);
         String root = null;
@@ -92,7 +92,7 @@ public class CytoscapeCxFileFilter extends BasicCyFileFilter {
         return root;
     }
     
-    protected String getHeaderCharacters(InputStream stream, int numCharacters) {
+    protected static String getHeaderCharacters(InputStream stream, int numCharacters) {
 
 		String header;
 		BufferedReader br = new BufferedReader(new InputStreamReader(stream));

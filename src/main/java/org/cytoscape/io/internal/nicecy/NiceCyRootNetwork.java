@@ -98,7 +98,7 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 			NamespacesElement.ASPECT_NAME,
 			CyVisualPropertiesElement.ASPECT_NAME,
 			"visualProperties",
-			CyTableVisualPropertiesElement.ASPECT_NAME
+			AbstractTableVisualProperty.ASPECT_NAME
 	};
 	
 	private Map<Long, Long> suid_to_cxid_map;

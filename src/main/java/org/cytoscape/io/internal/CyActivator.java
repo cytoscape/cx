@@ -5,6 +5,7 @@ import static org.cytoscape.work.ServiceProperties.ID;
 import java.util.Properties;
 
 import org.cytoscape.io.internal.cx_reader.CytoscapeCx2FileFilter;
+import org.cytoscape.io.internal.cx_reader.CytoscapeCx2NetworkReaderFactory;
 import org.cytoscape.io.internal.cx_reader.CytoscapeCxFileFilter;
 import org.cytoscape.io.internal.cx_reader.CytoscapeCxNetworkReaderFactory;
 import org.cytoscape.io.internal.cx_writer.CxNetworkWriterFactory;
@@ -41,9 +42,9 @@ public class CyActivator extends AbstractCyActivator {
 
         registerAllServices(bc, network_writer_factory, cx_writer_factory_properties);
 
-       // final CytoscapeCxFileFilter cx2Filter = new CytoscapeCx2FileFilter(streamUtil);
+        final CytoscapeCxFileFilter cx2Filter = new CytoscapeCx2FileFilter(streamUtil);
         final CxNetworkWriterFactory cx2networkWriterFactory = 
-        		new CxNetworkWriterFactory(new CytoscapeCx2FileFilter(streamUtil),true);
+        		new CxNetworkWriterFactory(cx2Filter,true);
         final Properties cx2_writer_factory_properties = new Properties();
 
         cx2_writer_factory_properties.put(ID, "cx2NetworkWriterFactory");
@@ -73,5 +74,11 @@ public class CyActivator extends AbstractCyActivator {
         reader_factory_properties.put(ID, "cytoscapeCxNetworkReaderFactory");
         registerService(bc, cx_reader_factory, InputStreamTaskFactory.class, reader_factory_properties);
 
+        // cx2 reader
+        final CytoscapeCx2NetworkReaderFactory cx2ReaderFactory = new CytoscapeCx2NetworkReaderFactory(cx2Filter);
+        final Properties cx2ReaderFactoryProperties = new Properties();
+        cx2ReaderFactoryProperties.put(ID, "cytoscapeCx2NetworkReaderFactory");
+        registerService(bc, cx2ReaderFactory, InputStreamTaskFactory.class, cx2ReaderFactoryProperties);
+        
     }
 }
