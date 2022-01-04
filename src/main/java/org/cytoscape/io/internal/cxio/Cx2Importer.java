@@ -14,7 +14,9 @@ import java.util.Set;
 import org.apache.commons.lang3.ArrayUtils;
 import org.cytoscape.event.CyEventHelper;
 import org.cytoscape.io.internal.AspectSet;
+import org.cytoscape.io.internal.CxPreferences;
 import org.cytoscape.io.internal.CyServiceModule;
+import org.cytoscape.io.internal.cx_reader.ViewMaker;
 import org.cytoscape.io.internal.nicecy.NiceCyNetwork;
 import org.cytoscape.io.internal.nicecy.NiceCyRootNetwork;
 import org.cytoscape.model.CyEdge;
@@ -29,6 +31,11 @@ import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.model.View;
+import org.cytoscape.view.presentation.RenderingEngineManager;
+import org.cytoscape.view.presentation.property.BasicVisualLexicon;
+import org.cytoscape.view.vizmap.VisualMappingManager;
+import org.cytoscape.view.vizmap.VisualStyle;
+import org.cytoscape.view.vizmap.VisualStyleFactory;
 import org.ndexbio.cx2.aspect.element.core.CxAspectElement;
 import org.ndexbio.cx2.aspect.element.core.CxAttributeDeclaration;
 import org.ndexbio.cx2.aspect.element.core.CxEdge;
@@ -119,7 +126,7 @@ public final class Cx2Importer {
 
 
   
-    public /*NiceCyRootNetwork*/ void importNetwork() throws IOException, NdexException {
+    public CyNetwork importNetwork() throws IOException, NdexException {
         long t0 = System.currentTimeMillis();
 		
         long nodeIdCounter = 0;
@@ -132,14 +139,6 @@ public final class Cx2Importer {
 		base = network_factory.createNetwork();
 		root = ((CySubNetwork)base).getRootNetwork();
 		
-		if ( createView) {
-			CyNetworkViewFactory view_factory = CyServiceModule.getService(CyNetworkViewFactory.class);
-			CyNetworkViewManager view_manager = CyServiceModule.getService(CyNetworkViewManager.class);
-
-			currentView = view_factory.createNetworkView(root);		
-			view_manager.addNetworkView(currentView);
-		}
-			
 		  
 		for ( CxAspectElement elmt : cxreader ) {
 			switch ( elmt.getAspectName() ) {
@@ -176,9 +175,10 @@ public final class Cx2Importer {
 		serializeOpaqueAspects();
 		
      	// create the view
-		CyEventHelper cyEventHelper = CyServiceModule.getService(CyEventHelper.class);
+	/*	CyEventHelper cyEventHelper = CyServiceModule.getService(CyEventHelper.class);
 		cyEventHelper.flushPayloadEvents();
-		 
+	*/
+		return base;
     }
     
     private void initializeTables() {
@@ -331,4 +331,55 @@ public final class Cx2Importer {
 		return name;
 	}
     
+	public void createView() {
+		if ( createView) {
+			CyNetworkViewFactory view_factory = CyServiceModule.getService(CyNetworkViewFactory.class);
+			CyNetworkViewManager view_manager = CyServiceModule.getService(CyNetworkViewManager.class);
+
+			currentView = view_factory.createNetworkView(root);		
+			view_manager.addNetworkView(currentView);
+			
+			currentView.setVisualProperty(BasicVisualLexicon.NETWORK_TITLE, name);
+			makeView();
+
+		}
+			
+		// add table styles
+	}
+	
+	
+	private void makeView() {
+		final VisualMappingManager visual_mapping_manager = CyServiceModule.getService(VisualMappingManager.class);
+    	final VisualStyleFactory visual_style_factory = CyServiceModule.getService(VisualStyleFactory.class);
+    	final RenderingEngineManager rendering_engine_manager = CyServiceModule.getService(RenderingEngineManager.class);
+	
+    	String doLayout = currentView.getEdgeViews().size() < CxPreferences.getLargeLayoutThreshold() ? "force-directed" : "grid";
+
+        final boolean have_default_visual_properties = 
+        		(visualProperties != null) ||
+                (!nodeBypasses.isEmpty()) || 
+                (!edgeBypasses.isEmpty());
+        
+        VisualStyle new_visual_style = visual_mapping_manager.getDefaultVisualStyle();
+        if (have_default_visual_properties) {
+            int counter = 1;
+            final VisualStyle default_visual_style = visual_mapping_manager.getDefaultVisualStyle();
+            new_visual_style = visual_style_factory.createVisualStyle(default_visual_style);
+            
+            final String viz_style_title_base = ViewMaker.createTitleForNewVisualStyle(name);
+            
+            String viz_style_title = viz_style_title_base;
+            while (counter < 101) {
+                if (ViewMaker.containsVisualStyle(viz_style_title, visual_mapping_manager)) {
+                    viz_style_title = viz_style_title_base + "-" + counter;
+                }
+                counter++;
+            }
+            //ViewMaker.removeVisualStyle(viz_style_title, visual_mapping_manager);
+            new_visual_style.setTitle(viz_style_title);
+        }
+
+
+	}
+	
 }

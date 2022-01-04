@@ -53,6 +53,8 @@ public class CytoscapeCx2NetworkReader extends AbstractCyNetworkReader {
 	@Override
 	public CyNetworkView buildCyNetworkView(final CyNetwork network) {
 	
+		cx2Importer.createView();
+		
 			System.out.println("Creating view for " + network);
 			List<CyNetworkView> views = niceCy.createViews(network, createView);
 			if (views.isEmpty()) {
@@ -97,7 +99,7 @@ public class CytoscapeCx2NetworkReader extends AbstractCyNetworkReader {
 		}
 
 		long t1 = System.currentTimeMillis();
-		/*niceCy = */ cx2Importer.importNetwork();
+		CyNetwork newSubnetwork =  cx2Importer.importNetwork();
 		if (Settings.INSTANCE.isTiming()) {
 			TimingUtil.reportTimeDifference(t1, "Time to create NiceCyNetwork", -1);
 		}
@@ -115,8 +117,8 @@ public class CytoscapeCx2NetworkReader extends AbstractCyNetworkReader {
 		if (Settings.INSTANCE.isTiming()) {
 			TimingUtil.reportTimeDifference(t1, "Time to create networks in Cytoscape", -1);
 		}
-		_networks = new CyNetwork[importedNetworks.size()];
-		importedNetworks.toArray(_networks);
+		_networks = new CyNetwork[1];
+		_networks[0] = newSubnetwork;
 
 		if (Settings.INSTANCE.isTiming()) {
 			TimingUtil.reportTimeDifference(t0, "total time to build network(s) (not views)", -1);
