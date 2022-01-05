@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cxio.Cx2Importer;
-import org.cytoscape.io.internal.cxio.CxImporter;
 import org.cytoscape.io.internal.cxio.Settings;
 import org.cytoscape.io.internal.cxio.TimingUtil;
 import org.cytoscape.io.internal.nicecy.NiceCyRootNetwork;
@@ -19,7 +17,6 @@ import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.work.TaskMonitor;
 import org.cytoscape.work.util.ListSingleSelection;
-import org.ndexbio.model.cx.NiceCXNetwork;
 import org.ndexbio.model.exceptions.NdexException;
 
 public class CytoscapeCx2NetworkReader extends AbstractCyNetworkReader {
@@ -53,8 +50,8 @@ public class CytoscapeCx2NetworkReader extends AbstractCyNetworkReader {
 	@Override
 	public CyNetworkView buildCyNetworkView(final CyNetwork network) {
 	
-		cx2Importer.createView();
-		
+		return cx2Importer.createView();
+	/*	
 			System.out.println("Creating view for " + network);
 			List<CyNetworkView> views = niceCy.createViews(network, createView);
 			if (views.isEmpty()) {
@@ -71,7 +68,9 @@ public class CytoscapeCx2NetworkReader extends AbstractCyNetworkReader {
 				System.out.println("Failed to create table style for " + network + ": " + e.getMessage());
 
 			}
-			return views.get(0);
+			return views.get(0);*/
+		
+		
 		
 	}
 
@@ -104,7 +103,7 @@ public class CytoscapeCx2NetworkReader extends AbstractCyNetworkReader {
 			TimingUtil.reportTimeDifference(t1, "Time to create NiceCyNetwork", -1);
 		}
 
-		if (cx2Importer.getNetworkName() == null) {
+	/*	if (cx2Importer.getNetworkName() == null) {
 			// Set the name of collection/network to be imported
 			if (_network_collection_name == null) {
 				_network_collection_name = "Unnamed CX Network";
@@ -116,7 +115,7 @@ public class CytoscapeCx2NetworkReader extends AbstractCyNetworkReader {
 		List<CyNetwork> importedNetworks = niceCy.apply();
 		if (Settings.INSTANCE.isTiming()) {
 			TimingUtil.reportTimeDifference(t1, "Time to create networks in Cytoscape", -1);
-		}
+		} */
 		_networks = new CyNetwork[1];
 		_networks[0] = newSubnetwork;
 

@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.cytoscape.event.CyEventHelper;
@@ -31,6 +32,7 @@ import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.model.View;
+import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.presentation.RenderingEngineManager;
 import org.cytoscape.view.presentation.property.BasicVisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingManager;
@@ -46,9 +48,11 @@ import org.ndexbio.cx2.aspect.element.core.CxNodeBypass;
 import org.ndexbio.cx2.aspect.element.core.CxOpaqueAspectElement;
 import org.ndexbio.cx2.aspect.element.core.CxVisualProperty;
 import org.ndexbio.cx2.aspect.element.core.DeclarationEntry;
+import org.ndexbio.cx2.aspect.element.cytoscape.VisualEditorProperties;
 import org.ndexbio.cx2.io.CXReader;
 import org.ndexbio.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
 import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
+import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.ndexbio.cxio.aspects.datamodels.EdgeAttributesElement;
 import org.ndexbio.cxio.aspects.datamodels.EdgesElement;
 import org.ndexbio.cxio.aspects.datamodels.NetworkAttributesElement;
@@ -110,11 +114,17 @@ public final class Cx2Importer {
 	private Map<String, Collection<CxOpaqueAspectElement>> opaqueAspects;
 	
 	private String name;
+	
+	private VisualEditorProperties editorProperties;
 
     public Cx2Importer(InputStream in, boolean createView) {
 
     	this.input = in;
     	this.createView = createView;
+    	nodeIdMap = new TreeMap<>();
+    	edgeIdMap = new TreeMap<>();
+    	cxNodes = new TreeMap<>();
+    	
     	base = null;
     	currentView = null;
     	visualProperties = null;
@@ -122,6 +132,7 @@ public final class Cx2Importer {
     	edgeBypasses = new LinkedList<>();
     	opaqueAspects = new HashMap<>();
     	name = null;
+    	editorProperties = null;
     }
 
 
@@ -166,6 +177,9 @@ public final class Cx2Importer {
 				case CxEdgeBypass.ASPECT_NAME:
 					edgeBypasses.add((CxEdgeBypass) elmt);
 					break;
+				case VisualEditorProperties.ASPECT_NAME: 
+					this.editorProperties = (VisualEditorProperties) elmt;
+					break;
 				default:    // opaque aspect
 					addOpaqueAspectElement((CxOpaqueAspectElement)elmt);
 			}
@@ -193,7 +207,7 @@ public final class Cx2Importer {
 		createTableAttrs(attrDecls.getDeclarations().get(CxNode.ASPECT_NAME),nodeTable);
 
 		edgeTable = root.getTable(CyEdge.class, CyNetwork.DEFAULT_ATTRS);
-		createTableAttrs(attrDecls.getDeclarations().get(CxNetworkAttribute.ASPECT_NAME),edgeTable);
+		createTableAttrs(attrDecls.getDeclarations().get(CxEdge.ASPECT_NAME),edgeTable);
 		
     }
 
@@ -210,8 +224,9 @@ public final class Cx2Importer {
     
     
     private void createNode(CxNode node) throws NdexException {
-    	node.extendToFullNode(attrDecls.getAttributesInAspect(CxNode.ASPECT_NAME));
-		
+    	Map<String,DeclarationEntry> attributeDeclarations = attrDecls.getAttributesInAspect(CxNode.ASPECT_NAME);
+    	node.extendToFullNode(attributeDeclarations);
+		node.validateAttribute(attributeDeclarations, true);
     	// add node to cy data model.
     	Long nodesuid = this.nodeIdMap.get(node.getId());
     	if ( nodesuid == null) {
@@ -247,8 +262,11 @@ public final class Cx2Importer {
     }
     
     private void createEdge(CxEdge edge) throws NdexException {
-    	edge.extendToFullNode(attrDecls.getAttributesInAspect(CxEdge.ASPECT_NAME));
-    	
+
+    	Map<String,DeclarationEntry> attributeDeclarations = attrDecls.getAttributesInAspect(CxEdge.ASPECT_NAME);
+    	edge.extendToFullNode(attributeDeclarations);
+		edge.validateAttribute(attributeDeclarations, true);
+ 	    	
     	// add edge 
     	CyNode src,tgt;
     	
@@ -331,12 +349,12 @@ public final class Cx2Importer {
 		return name;
 	}
     
-	public void createView() {
+	public CyNetworkView createView() {
 		if ( createView) {
 			CyNetworkViewFactory view_factory = CyServiceModule.getService(CyNetworkViewFactory.class);
 			CyNetworkViewManager view_manager = CyServiceModule.getService(CyNetworkViewManager.class);
 
-			currentView = view_factory.createNetworkView(root);		
+			currentView = view_factory.createNetworkView(base);		
 			view_manager.addNetworkView(currentView);
 			
 			currentView.setVisualProperty(BasicVisualLexicon.NETWORK_TITLE, name);
@@ -345,6 +363,8 @@ public final class Cx2Importer {
 		}
 			
 		// add table styles
+		
+		return currentView;
 	}
 	
 	
@@ -378,6 +398,8 @@ public final class Cx2Importer {
             //ViewMaker.removeVisualStyle(viz_style_title, visual_mapping_manager);
             new_visual_style.setTitle(viz_style_title);
         }
+
+        final VisualLexicon lexicon = rendering_engine_manager.getDefaultVisualLexicon();
 
 
 	}
