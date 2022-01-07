@@ -10,7 +10,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.cytoscape.event.CyEventHelper;
@@ -33,8 +35,13 @@ import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.model.View;
 import org.cytoscape.view.model.VisualLexicon;
+import org.cytoscape.view.model.VisualProperty;
 import org.cytoscape.view.presentation.RenderingEngineManager;
 import org.cytoscape.view.presentation.property.BasicVisualLexicon;
+import org.cytoscape.view.presentation.property.BooleanVisualProperty;
+import org.cytoscape.view.presentation.property.DoubleVisualProperty;
+import org.cytoscape.view.presentation.property.IntegerVisualProperty;
+import org.cytoscape.view.presentation.property.ObjectPositionVisualProperty;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.view.vizmap.VisualStyle;
 import org.cytoscape.view.vizmap.VisualStyleFactory;
@@ -48,6 +55,8 @@ import org.ndexbio.cx2.aspect.element.core.CxNodeBypass;
 import org.ndexbio.cx2.aspect.element.core.CxOpaqueAspectElement;
 import org.ndexbio.cx2.aspect.element.core.CxVisualProperty;
 import org.ndexbio.cx2.aspect.element.core.DeclarationEntry;
+import org.ndexbio.cx2.aspect.element.core.VisualPropertyMapping;
+import org.ndexbio.cx2.aspect.element.core.VisualPropertyTable;
 import org.ndexbio.cx2.aspect.element.cytoscape.VisualEditorProperties;
 import org.ndexbio.cx2.io.CXReader;
 import org.ndexbio.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
@@ -55,6 +64,7 @@ import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
 import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.ndexbio.cxio.aspects.datamodels.EdgeAttributesElement;
 import org.ndexbio.cxio.aspects.datamodels.EdgesElement;
+import org.ndexbio.cxio.aspects.datamodels.Mapping;
 import org.ndexbio.cxio.aspects.datamodels.NetworkAttributesElement;
 import org.ndexbio.cxio.aspects.datamodels.NodeAttributesElement;
 import org.ndexbio.cxio.aspects.datamodels.NodesElement;
@@ -68,6 +78,8 @@ import org.ndexbio.cxio.misc.OpaqueElement;
 import org.ndexbio.model.cx.NdexNetworkStatus;
 import org.ndexbio.model.cx.NiceCXNetwork;
 import org.ndexbio.model.exceptions.NdexException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -80,6 +92,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *
  */
 public final class Cx2Importer {
+	
+	private static final Logger logger = LoggerFactory.getLogger("CX2 Importer");
 
     private InputStream input;
 	
@@ -103,7 +117,7 @@ public final class Cx2Importer {
     //CX ID to suid mapping table
     private Map<Long,Long> edgeIdMap;
     
-    // CX ID to CxNodes mapping table. 
+    // node suid to CxNodes mapping table. 
     private Map<Long, CxNode> cxNodes;
     
     private CxVisualProperty visualProperties;
@@ -116,6 +130,8 @@ public final class Cx2Importer {
 	private String name;
 	
 	private VisualEditorProperties editorProperties;
+	
+	private boolean hasLayout;
 
     public Cx2Importer(InputStream in, boolean createView) {
 
@@ -124,6 +140,7 @@ public final class Cx2Importer {
     	nodeIdMap = new TreeMap<>();
     	edgeIdMap = new TreeMap<>();
     	cxNodes = new TreeMap<>();
+    	hasLayout = false;
     	
     	base = null;
     	currentView = null;
@@ -224,6 +241,12 @@ public final class Cx2Importer {
     
     
     private void createNode(CxNode node) throws NdexException {
+    	
+    	if (!hasLayout) {
+    		if ( node.getX()!=null)
+    			hasLayout = true;
+    	}
+    	
     	Map<String,DeclarationEntry> attributeDeclarations = attrDecls.getAttributesInAspect(CxNode.ASPECT_NAME);
     	node.extendToFullNode(attributeDeclarations);
 		node.validateAttribute(attributeDeclarations, true);
@@ -245,7 +268,7 @@ public final class Cx2Importer {
 		}
     	
 		// add cxnode to table
-		cxNodes.put(node.getId(), node);
+		cxNodes.put(nodesuid, node);
 		
 		/*if ( currentView !=null) {
             final View<CyNode> node_view = currentView.getNodeView(cyNode);
@@ -399,9 +422,103 @@ public final class Cx2Importer {
             new_visual_style.setTitle(viz_style_title);
         }
 
-        final VisualLexicon lexicon = rendering_engine_manager.getDefaultVisualLexicon();
+        
+        if(hasLayout) {
+        	for ( Map.Entry<Long, CxNode> e: cxNodes.entrySet()) {
+        		CyNode node = base.getNode(e.getKey());
+                final View<CyNode> nodeView = currentView.getNodeView(node);
+                if (nodeView != null) {
+                	CxNode n = e.getValue();
+                    nodeView.setVisualProperty(BasicVisualLexicon.NODE_X_LOCATION, n.getX());
+                    nodeView.setVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION, n.getY());
+                    if (n.getZ() !=null) {
+                        nodeView.setVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION,
+                                                    n.getZ());
+                    }
+                }
+        	}
+        }
+        
+        if ( visualProperties != null) {
+        	VisualLexicon lexicon = rendering_engine_manager.getDefaultVisualLexicon();
+
+        	setNetworkVPs(lexicon,visualProperties.getDefaultProps().getNetworkProperties(),new_visual_style);
+        }
+
+	}
+	
+	private void setNetworkVPs(final VisualLexicon lexicon,
+			 Map<String,Object> defaults, VisualStyle style) {
+		if (defaults != null) {
+			for (final Map.Entry<String, Object> entry : defaults.entrySet()) {
+				final VisualProperty vp = lexicon.lookup(CyNetwork.class, entry.getKey());
+				if (vp != null) {
+					Object cyVPValue  = getCyVPValueFromCX2VPValue(vp, entry.getValue());	
+				    if ( cyVPValue != null) {
+				    	style.setDefaultValue(vp, cyVPValue);
+				    }
+				}
+			}
+		}
+		
+	}
+	
+	private void setDefaultVisualPropertiesAndMappings(final VisualLexicon lexicon,
+			 VisualPropertyTable defaults, Map<String, VisualPropertyMapping> mappings,
+			 VisualStyle style, final Class my_class) {
+
+		if (defaults != null) {
+			for (final Map.Entry<String, Object> entry : defaults.getVisualProperties().entrySet()) {
+				final VisualProperty vp = lexicon.lookup(my_class, entry.getKey());
+				if (vp != null) {
+					Object cyVPValue  = getCyVPValueFromCX2VPValue(vp, entry.getValue());	
+				    if ( cyVPValue != null) {
+				    	style.setDefaultValue(vp, cyVPValue);
+				    }
+				}
+			}
+		}
 
 
+/*		if (maps != null) {
+			for (final Entry<String, Mapping> entry : maps.entrySet()) {
+				try {
+					parseVisualMapping(entry.getKey(), entry.getValue(), lexicon, style, my_class);
+				} catch (IOException e) {
+					logger.warn("Failed to parse visual mapping: " + e);
+				}
+
+			}
+		} */
+
+	/*	if (dependencies != null) {
+			for (final Entry<String, String> entry : dependencies.entrySet()) {
+				try {
+					parseVisualDependency(entry.getKey(), entry.getValue(), style);
+				} catch (IOException e) {
+					logger.warn("Failed to parse visual dependency: " + e);
+				}
+			}
+		} */
+	}
+
+	
+	public static <T> T getCyVPValueFromCX2VPValue(VisualProperty<T> vp, Object cx2Value) {
+		if  (vp instanceof ObjectPositionVisualProperty )
+			return null;
+		if ( vp.getIdString().startsWith("NODE_IMAGE_", 0))
+			return null;
+		if(vp instanceof DoubleVisualProperty)
+			return  (T)Double.valueOf(  ((Number)cx2Value).doubleValue()); 
+		if ( vp instanceof BooleanVisualProperty)
+	  		return (T)cx2Value;
+	  	if (vp instanceof IntegerVisualProperty)
+	  		return  (T)Integer.valueOf(  ((Number)cx2Value).intValue());
+		
+	  	if ( cx2Value instanceof String)
+	  		return vp.parseSerializableString((String)cx2Value);
+	  	
+	  	return null;
 	}
 	
 }

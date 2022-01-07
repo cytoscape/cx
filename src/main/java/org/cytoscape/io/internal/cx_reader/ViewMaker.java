@@ -596,7 +596,7 @@ public final class ViewMaker {
         final CyVisualPropertiesElement networkVisualProperties = visualProperties.get("network");
         
         ViewMaker.setDefaultVisualPropertiesAndMappings(lexicon,
-        																							networkVisualProperties,
+        													networkVisualProperties,
 			                                                new_visual_style,
 			                                                CyNetwork.class);
 

@@ -392,6 +392,7 @@ public final class VisualPropertiesGatherer {
     	
     	String col = mapping.getMappingColumnName();
     	String vpName = vp.getIdString();
+		String catVPStr = vpName.equals("NODE_SIZE") ? "NODE_HEIGHT" : vpName ;
 		VisualPropertyMapping cx2Mapping = new VisualPropertyMapping();
 		MappingDefinition def = new MappingDefinition (col);
 		cx2Mapping.setMappingDef(def);
@@ -431,7 +432,7 @@ public final class VisualPropertiesGatherer {
     				continue;
     			}	
     			Map<String,Object> mapEntry = new HashMap<>();
-    			String catVPStr = vpName.equals("NODE_SIZE") ? "NODE_HEIGHT" : vpName ;
+    			//String catVPStr = vpName.equals("NODE_SIZE") ? "NODE_HEIGHT" : vpName ;
     			Object newVP = cvtr.getNewEdgeOrNodePropertyValue(catVPStr, vp.toSerializableString(value));
     			if ( newVP!=null) {
     				mapEntry.put("v",  entry.getKey());
@@ -468,7 +469,7 @@ public final class VisualPropertiesGatherer {
 			for (ContinuousMappingPoint<?, T> cp : cm.getAllPoints()) {
 				T L = cp.getRange().lesserValue;
 				
-				Object LO = cvtr.getNewEdgeOrNodePropertyValue(vpName, vp.toSerializableString(L));
+				Object LO = cvtr.getNewEdgeOrNodePropertyValue(catVPStr, vp.toSerializableString(L));
 
 				T E = cp.getRange().equalValue;
 				
@@ -478,7 +479,7 @@ public final class VisualPropertiesGatherer {
 				if (G == null) {
 					break;
 				}
-				Object GO = cvtr.getNewEdgeOrNodePropertyValue(vpName, vp.toSerializableString(G));
+				Object GO = cvtr.getNewEdgeOrNodePropertyValue(catVPStr, vp.toSerializableString(G));
 
 				Object OV = cp.getValue();
 				
@@ -672,13 +673,15 @@ public final class VisualPropertiesGatherer {
 		for (View<CyNode> node_view : view.getNodeViews()) {
 			Map<String,String> cx1VPTable = new HashMap<>();
 			for (final VisualProperty<?> visual_property : filteredVPs) {
-				final String value_str = getSerializableVisualProperty(node_view, visual_property);
-	        	if (!CxioUtil.isEmpty(value_str)) {
-		        	final String id_string = visual_property.getIdString();
-		            if (!id_string.equals("NODE") && !id_string.equals("EDGE") && !id_string.equals("NETWORK")) {
-		                cx1VPTable.put(id_string, value_str);   
-		            }
-	            }
+				if (node_view.isSet(visual_property) && node_view.isValueLocked(visual_property)) {
+					final String value_str = getSerializableVisualProperty(node_view, visual_property);
+					if (!CxioUtil.isEmpty(value_str)) {
+						final String id_string = visual_property.getIdString();
+						if (!id_string.equals("NODE") && !id_string.equals("EDGE") && !id_string.equals("NETWORK")) {
+							cx1VPTable.put(id_string, value_str);
+						}
+					}
+				}
 			}
 			if (!cx1VPTable.isEmpty()) {
 				final CyNode cy_node = node_view.getModel();
@@ -706,13 +709,15 @@ public final class VisualPropertiesGatherer {
 		for (View<CyEdge> edgeView : view.getEdgeViews()) {
 			Map<String,String> cx1VPTable = new HashMap<>();
 			for (final VisualProperty<?> visual_property : filteredVPs) {
-				final String value_str = getSerializableVisualProperty(edgeView, visual_property);
-	        	if (!CxioUtil.isEmpty(value_str)) {
-		        	final String id_string = visual_property.getIdString();
-		            if (!id_string.equals("NODE") && !id_string.equals("EDGE") && !id_string.equals("NETWORK")) {
-		                cx1VPTable.put(id_string, value_str);   
-		            }
-	            }
+				if (edgeView.isSet(visual_property) && edgeView.isValueLocked(visual_property)) {
+					final String value_str = getSerializableVisualProperty(edgeView, visual_property);
+					if (!CxioUtil.isEmpty(value_str)) {
+						final String id_string = visual_property.getIdString();
+						if (!id_string.equals("NODE") && !id_string.equals("EDGE") && !id_string.equals("NETWORK")) {
+							cx1VPTable.put(id_string, value_str);
+						}
+					}
+				}
 			}
 			if (!cx1VPTable.isEmpty()) {
 				final CyEdge cyEdge = edgeView.getModel();

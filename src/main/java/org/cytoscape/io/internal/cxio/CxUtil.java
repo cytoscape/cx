@@ -101,7 +101,7 @@ public final class CxUtil {
 		CyRow row = hidden_network_table.getRow(network.getSUID());
 		if (row != null) {
 			String metaDataStr = row.get(CxUtil.CX_METADATA, String.class);
-			if (metaDataStr != null) {
+			if (metaDataStr != null && metaDataStr.length()>1) {
 				try {
 					ObjectMapper mapper = new ObjectMapper();
 					MetaDataCollection cx2MetadataCollection = mapper.readValue(metaDataStr, MetaDataCollection.class);
