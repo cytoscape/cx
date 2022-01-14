@@ -80,7 +80,7 @@ public final class ViewMaker {
         return true;
     }
     
-    private static CyNetworkView applyStyle (
+    public static CyNetworkView applyStyle (
     		VisualStyle style, 
     		CyNetworkView network_view,
     		String layout, boolean fitContent) {
@@ -101,9 +101,9 @@ public final class ViewMaker {
         style.apply(network_view);
         network_view.updateView();
         
-        CyNetworkViewManager view_manager = CyServiceModule.getService(CyNetworkViewManager.class);
+    /*    CyNetworkViewManager view_manager = CyServiceModule.getService(CyNetworkViewManager.class);
         
-        view_manager.addNetworkView(network_view);
+        view_manager.addNetworkView(network_view); */
         
         if (fitContent) {
         	network_view.fitContent();

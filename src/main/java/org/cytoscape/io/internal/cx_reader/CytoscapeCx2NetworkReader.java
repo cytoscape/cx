@@ -18,6 +18,7 @@ import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.work.TaskMonitor;
 import org.cytoscape.work.util.ListSingleSelection;
 import org.ndexbio.model.exceptions.NdexException;
+import org.slf4j.LoggerFactory;
 
 public class CytoscapeCx2NetworkReader extends AbstractCyNetworkReader {
 
@@ -50,7 +51,13 @@ public class CytoscapeCx2NetworkReader extends AbstractCyNetworkReader {
 	@Override
 	public CyNetworkView buildCyNetworkView(final CyNetwork network) {
 	
-		return cx2Importer.createView();
+		 
+		try {
+			return cx2Importer.createView();
+		} catch (NdexException e) {
+			LoggerFactory.getLogger("CX2 Importer").error(e.getMessage());
+			return null;
+		}
 	/*	
 			System.out.println("Creating view for " + network);
 			List<CyNetworkView> views = niceCy.createViews(network, createView);

@@ -106,8 +106,11 @@ public final class CxUtil {
 					ObjectMapper mapper = new ObjectMapper();
 					MetaDataCollection cx2MetadataCollection = mapper.readValue(metaDataStr, MetaDataCollection.class);
 					for ( MetaDataElement e : cx2MetadataCollection) {
-					  if ( !AspectSet.getAspectNames().contains(e))
-						  result.add(new CxMetadata(e.getName(),e.getElementCount().longValue()));
+					  if ( !AspectSet.getAspectNames().contains(e.getName())) {
+						  CxMetadata metadata = new CxMetadata(e.getName());
+						  metadata.setElementCount(e.getElementCount());
+						  result.add(metadata);
+					  }	  
 					}
 				}catch(IOException e) {
 					logger.info("Get Metadata threw an IOException: " + e);

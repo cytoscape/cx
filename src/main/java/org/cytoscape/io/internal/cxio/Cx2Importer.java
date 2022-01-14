@@ -43,6 +43,7 @@ import org.cytoscape.view.presentation.property.DoubleVisualProperty;
 import org.cytoscape.view.presentation.property.IntegerVisualProperty;
 import org.cytoscape.view.presentation.property.ObjectPositionVisualProperty;
 import org.cytoscape.view.vizmap.VisualMappingManager;
+import org.cytoscape.view.vizmap.VisualPropertyDependency;
 import org.cytoscape.view.vizmap.VisualStyle;
 import org.cytoscape.view.vizmap.VisualStyleFactory;
 import org.ndexbio.cx2.aspect.element.core.CxAspectElement;
@@ -58,6 +59,7 @@ import org.ndexbio.cx2.aspect.element.core.DeclarationEntry;
 import org.ndexbio.cx2.aspect.element.core.VisualPropertyMapping;
 import org.ndexbio.cx2.aspect.element.core.VisualPropertyTable;
 import org.ndexbio.cx2.aspect.element.cytoscape.VisualEditorProperties;
+import org.ndexbio.cx2.converter.CX2ToCXVisualPropertyConverter;
 import org.ndexbio.cx2.io.CXReader;
 import org.ndexbio.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
 import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
@@ -195,7 +197,10 @@ public final class Cx2Importer {
 					edgeBypasses.add((CxEdgeBypass) elmt);
 					break;
 				case VisualEditorProperties.ASPECT_NAME: 
-					this.editorProperties = (VisualEditorProperties) elmt;
+					if ( this.editorProperties == null) 
+						this.editorProperties = (VisualEditorProperties) elmt;
+					else 
+						throw new NdexException("Only one " + VisualEditorProperties.ASPECT_NAME + " element is allowed in CX2.");
 					break;
 				default:    // opaque aspect
 					addOpaqueAspectElement((CxOpaqueAspectElement)elmt);
@@ -372,7 +377,7 @@ public final class Cx2Importer {
 		return name;
 	}
     
-	public CyNetworkView createView() {
+	public CyNetworkView createView() throws NdexException {
 		if ( createView) {
 			CyNetworkViewFactory view_factory = CyServiceModule.getService(CyNetworkViewFactory.class);
 			CyNetworkViewManager view_manager = CyServiceModule.getService(CyNetworkViewManager.class);
@@ -391,7 +396,7 @@ public final class Cx2Importer {
 	}
 	
 	
-	private void makeView() {
+	private void makeView() throws NdexException {
 		final VisualMappingManager visual_mapping_manager = CyServiceModule.getService(VisualMappingManager.class);
     	final VisualStyleFactory visual_style_factory = CyServiceModule.getService(VisualStyleFactory.class);
     	final RenderingEngineManager rendering_engine_manager = CyServiceModule.getService(RenderingEngineManager.class);
@@ -437,31 +442,102 @@ public final class Cx2Importer {
                     }
                 }
         	}
+        	doLayout = null;
         }
         
         if ( visualProperties != null) {
         	VisualLexicon lexicon = rendering_engine_manager.getDefaultVisualLexicon();
 
         	setNetworkVPs(lexicon,visualProperties.getDefaultProps().getNetworkProperties(),new_visual_style);
-        }
+        
+        	setNodeVPs (lexicon, visualProperties.getDefaultProps().getNodeProperties(), new_visual_style);
+        	
+			if (editorProperties != null) {
+				for (Map.Entry<String, Object> e : editorProperties.getProperties().entrySet()) {
+					String vpName = e.getKey();
+					if (vpName.startsWith("NETWORK_")) {
+						final VisualProperty vp = lexicon.lookup(CyNetwork.class, vpName);
+						if (vp != null) {
+							Object cyVPValue  = getCyVPValueFromCX2VPValue(vp, e.getValue());	
+							if ( cyVPValue != null) {
+								new_visual_style.setDefaultValue(vp, cyVPValue);
+							}
+						}
+					} else {  //set the dependencies
+				    	for (final VisualPropertyDependency<?> d : new_visual_style.getAllVisualPropertyDependencies()) {
+				            if (d.getIdString().equals(vpName)) {
+				                try {
+				                    d.setDependency((Boolean)e.getValue());
+				                }
+				                catch (final Exception ex) {
+				                    throw new NdexException("could not parse boolean from '" + vpName + "'");
+				                }
+				            }
+				            break;
+				        }
 
+					}
+					
+				}
+
+			}
+
+        }
+        
+        ViewMaker.applyStyle(new_visual_style,currentView,doLayout, false);
+        
+        
 	}
 	
 	private void setNetworkVPs(final VisualLexicon lexicon,
 			 Map<String,Object> defaults, VisualStyle style) {
 		if (defaults != null) {
 			for (final Map.Entry<String, Object> entry : defaults.entrySet()) {
-				final VisualProperty vp = lexicon.lookup(CyNetwork.class, entry.getKey());
-				if (vp != null) {
-					Object cyVPValue  = getCyVPValueFromCX2VPValue(vp, entry.getValue());	
-				    if ( cyVPValue != null) {
-				    	style.setDefaultValue(vp, cyVPValue);
-				    }
+				String cyVPName = CX2ToCXVisualPropertyConverter.getInstance().getCx1NetworkPropertyName(entry.getKey());
+				if ( cyVPName != null) {
+					final VisualProperty vp = lexicon.lookup(CyNetwork.class, cyVPName);
+					if (vp != null) {
+						Object cyVPValue  = getCyVPValueFromCX2VPValue(vp, entry.getValue());	
+						if ( cyVPValue != null) {
+							style.setDefaultValue(vp, cyVPValue);
+						}
+					}
 				}
 			}
 		}
 		
 	}
+
+	private void setNodeVPs(final VisualLexicon lexicon,
+			VisualPropertyTable defaults, VisualStyle style) {
+		if (defaults != null) {
+			//preprocess NODE_SIZE 
+			if (editorProperties !=null && editorProperties.getProperties().get("nodeSizeLocked")!=null &&
+					editorProperties.getProperties().get("nodeSizeLocked").equals(Boolean.TRUE)) {
+				VisualProperty<Double> vp = BasicVisualLexicon.NODE_SIZE;
+				Object v = defaults.get("NODE_WIDTH");
+				if ( v!=null) {
+					Object cyVPValue  = getCyVPValueFromCX2VPValue(vp, v);
+					style.setDefaultValue(vp, (Double)cyVPValue);
+				}
+			}
+			
+			for (final Map.Entry<String, Object> entry : defaults.getVisualProperties().entrySet()) {
+				String cyVPName = CX2ToCXVisualPropertyConverter.getInstance().getCx1EdgeOrNodeProperty(entry.getKey());
+				if ( cyVPName != null) {
+					VisualProperty vp = lexicon.lookup(CyNode.class, cyVPName);
+					if (vp != null) {
+						Object cyVPValue  = getCyVPValueFromCX2VPValue(vp, entry.getValue());	
+						if ( cyVPValue != null) {
+							style.setDefaultValue(vp, cyVPValue);
+						}
+					}
+				}
+			}
+		}
+		
+	}
+	
 	
 	private void setDefaultVisualPropertiesAndMappings(final VisualLexicon lexicon,
 			 VisualPropertyTable defaults, Map<String, VisualPropertyMapping> mappings,
@@ -506,17 +582,16 @@ public final class Cx2Importer {
 	public static <T> T getCyVPValueFromCX2VPValue(VisualProperty<T> vp, Object cx2Value) {
 		if  (vp instanceof ObjectPositionVisualProperty )
 			return null;
-		if ( vp.getIdString().startsWith("NODE_IMAGE_", 0))
+		if ( vp.getIdString().startsWith("NODE_CUSTOMGRAPHICS_SIZE_", 0))
 			return null;
+	  	if ( cx2Value instanceof String)
+	  		return vp.parseSerializableString((String)cx2Value);
 		if(vp instanceof DoubleVisualProperty)
 			return  (T)Double.valueOf(  ((Number)cx2Value).doubleValue()); 
 		if ( vp instanceof BooleanVisualProperty)
 	  		return (T)cx2Value;
 	  	if (vp instanceof IntegerVisualProperty)
 	  		return  (T)Integer.valueOf(  ((Number)cx2Value).intValue());
-		
-	  	if ( cx2Value instanceof String)
-	  		return vp.parseSerializableString((String)cx2Value);
 	  	
 	  	return null;
 	}
