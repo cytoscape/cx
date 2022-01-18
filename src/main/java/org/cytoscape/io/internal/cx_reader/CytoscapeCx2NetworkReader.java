@@ -45,6 +45,7 @@ public class CytoscapeCx2NetworkReader extends AbstractCyNetworkReader {
 		cx2Importer = new Cx2Importer(input_stream, true);
 		_network_collection_name = network_collection_name;
 		
+		this._networks=null;
 		this.createView = Boolean.TRUE;
 	}
 

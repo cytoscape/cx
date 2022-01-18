@@ -1,5 +1,6 @@
 package org.cytoscape.io.internal.cxio;
 
+import java.awt.Paint;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -383,10 +384,11 @@ public final class Cx2Importer {
 			CyNetworkViewManager view_manager = CyServiceModule.getService(CyNetworkViewManager.class);
 
 			currentView = view_factory.createNetworkView(base);		
-			view_manager.addNetworkView(currentView);
 			
 			currentView.setVisualProperty(BasicVisualLexicon.NETWORK_TITLE, name);
 			makeView();
+
+			view_manager.addNetworkView(currentView);
 
 		}
 			
@@ -452,6 +454,8 @@ public final class Cx2Importer {
         
         	setNodeVPs (lexicon, visualProperties.getDefaultProps().getNodeProperties(), new_visual_style);
         	
+        	setEdgeVPs(lexicon, visualProperties.getDefaultProps().getEdgeProperties(), new_visual_style);
+        		
 			if (editorProperties != null) {
 				for (Map.Entry<String, Object> e : editorProperties.getProperties().entrySet()) {
 					String vpName = e.getKey();
@@ -464,16 +468,16 @@ public final class Cx2Importer {
 							}
 						}
 					} else {  //set the dependencies
-				    	for (final VisualPropertyDependency<?> d : new_visual_style.getAllVisualPropertyDependencies()) {
+				    	for ( VisualPropertyDependency<?> d : new_visual_style.getAllVisualPropertyDependencies()) {
 				            if (d.getIdString().equals(vpName)) {
 				                try {
 				                    d.setDependency((Boolean)e.getValue());
+				                    break;
 				                }
 				                catch (final Exception ex) {
 				                    throw new NdexException("could not parse boolean from '" + vpName + "'");
 				                }
 				            }
-				            break;
 				        }
 
 					}
@@ -484,6 +488,12 @@ public final class Cx2Importer {
 
         }
         
+        if (have_default_visual_properties) {
+        	// Simply add & assign style.  VMM automatically apply this later.
+            visual_mapping_manager.addVisualStyle(new_visual_style);
+            visual_mapping_manager.setVisualStyle(new_visual_style, currentView);
+        }
+
         ViewMaker.applyStyle(new_visual_style,currentView,doLayout, false);
         
         
@@ -511,9 +521,21 @@ public final class Cx2Importer {
 	private void setNodeVPs(final VisualLexicon lexicon,
 			VisualPropertyTable defaults, VisualStyle style) {
 		if (defaults != null) {
+			Map<String,String> cyVPTable = CX2ToCXVisualPropertyConverter.getInstance().convertEdgeOrNodeVPs(defaults);
+			for (final Map.Entry<String, String> entry : cyVPTable.entrySet()) {
+					VisualProperty vp = lexicon.lookup(CyNode.class, entry.getKey());
+					if (vp != null) {
+						Object cyVPValue  = vp.parseSerializableString(entry.getValue());	
+						if ( cyVPValue != null) {
+							style.setDefaultValue(vp, cyVPValue);
+						}
+					}
+			}
+			
 			//preprocess NODE_SIZE 
-			if (editorProperties !=null && editorProperties.getProperties().get("nodeSizeLocked")!=null &&
-					editorProperties.getProperties().get("nodeSizeLocked").equals(Boolean.TRUE)) {
+			if (editorProperties !=null && 
+					editorProperties.getProperties().get(VisualEditorProperties.NODE_SIZE_LOCKED)!=null &&
+					editorProperties.getProperties().get(VisualEditorProperties.NODE_SIZE_LOCKED).equals(Boolean.TRUE)) {
 				VisualProperty<Double> vp = BasicVisualLexicon.NODE_SIZE;
 				Object v = defaults.get("NODE_WIDTH");
 				if ( v!=null) {
@@ -522,7 +544,7 @@ public final class Cx2Importer {
 				}
 			}
 			
-			for (final Map.Entry<String, Object> entry : defaults.getVisualProperties().entrySet()) {
+		/*	for (final Map.Entry<String, Object> entry : defaults.getVisualProperties().entrySet()) {
 				String cyVPName = CX2ToCXVisualPropertyConverter.getInstance().getCx1EdgeOrNodeProperty(entry.getKey());
 				if ( cyVPName != null) {
 					VisualProperty vp = lexicon.lookup(CyNode.class, cyVPName);
@@ -533,7 +555,50 @@ public final class Cx2Importer {
 						}
 					}
 				}
+			} */
+		}
+		
+	}
+
+	private void setEdgeVPs(final VisualLexicon lexicon,
+			VisualPropertyTable defaults, VisualStyle style) {
+		if (defaults != null) {
+			Map<String,String> cyVPTable = CX2ToCXVisualPropertyConverter.getInstance().convertEdgeOrNodeVPs(defaults);
+			for (final Map.Entry<String, String> entry : cyVPTable.entrySet()) {
+					VisualProperty vp = lexicon.lookup(CyEdge.class, entry.getKey());
+					if (vp != null) {
+						Object cyVPValue  = vp.parseSerializableString(entry.getValue());	
+						if ( cyVPValue != null) {
+							style.setDefaultValue(vp, cyVPValue);
+						}
+					}
 			}
+			
+			
+			//preprocess edge color
+			if (editorProperties !=null && 
+					editorProperties.getProperties().get(VisualEditorProperties.ARROW_COLOR_MATCHES_EDGES)!=null &&
+					editorProperties.getProperties().get(VisualEditorProperties.ARROW_COLOR_MATCHES_EDGES).equals(Boolean.TRUE)) {
+				VisualProperty<Paint> vp = BasicVisualLexicon.EDGE_PAINT;
+				Object v = defaults.get("EDGE_LINE_COLOR");
+				if ( v!=null) {
+					Paint cyVPValue  = getCyVPValueFromCX2VPValue(vp, v);
+					style.setDefaultValue(vp, cyVPValue);
+				}
+			}
+/*			
+			for (final Map.Entry<String, Object> entry : defaults.getVisualProperties().entrySet()) {
+				String cyVPName = CX2ToCXVisualPropertyConverter.getInstance().getCx1EdgeOrNodeProperty(entry.getKey());
+				if ( cyVPName != null) {
+					VisualProperty vp = lexicon.lookup(CyEdge.class, cyVPName);
+					if (vp != null) {
+						Object cyVPValue  = getCyVPValueFromCX2VPValue(vp, entry.getValue());	
+						if ( cyVPValue != null) {
+							style.setDefaultValue(vp, cyVPValue);
+						}
+					}
+				}
+			} */
 		}
 		
 	}
