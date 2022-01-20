@@ -57,6 +57,7 @@ import org.ndexbio.cx2.aspect.element.core.CxNodeBypass;
 import org.ndexbio.cx2.aspect.element.core.CxOpaqueAspectElement;
 import org.ndexbio.cx2.aspect.element.core.CxVisualProperty;
 import org.ndexbio.cx2.aspect.element.core.DeclarationEntry;
+import org.ndexbio.cx2.aspect.element.core.MappingDefinition;
 import org.ndexbio.cx2.aspect.element.core.VisualPropertyMapping;
 import org.ndexbio.cx2.aspect.element.core.VisualPropertyTable;
 import org.ndexbio.cx2.aspect.element.cytoscape.VisualEditorProperties;
@@ -455,6 +456,8 @@ public final class Cx2Importer {
         	setNodeVPs (lexicon, visualProperties.getDefaultProps().getNodeProperties(), new_visual_style);
         	
         	setEdgeVPs(lexicon, visualProperties.getDefaultProps().getEdgeProperties(), new_visual_style);
+        	
+        	setMapping(CyNode.class, visualProperties.getNodeMappings(), lexicon, new_visual_style);
         		
 			if (editorProperties != null) {
 				for (Map.Entry<String, Object> e : editorProperties.getProperties().entrySet()) {
@@ -659,6 +662,41 @@ public final class Cx2Importer {
 	  		return  (T)Integer.valueOf(  ((Number)cx2Value).intValue());
 	  	
 	  	return null;
+	}
+	
+	private static VisualProperty getCyVPFromCX2VPName(Class myClass, VisualLexicon lexicon, String cx2Name) {
+		String cx1Name = CX2ToCXVisualPropertyConverter.getInstance().getCx1EdgeOrNodeProperty(cx2Name);
+		if ( cx1Name !=null) {
+			return lexicon.lookup(myClass, cx1Name);
+		}
+		return lexicon.lookup(myClass,cx2Name);
+	}
+	
+	private static void setMapping(Class myClass, Map<String,VisualPropertyMapping> mappings, 
+			VisualLexicon lexicon, VisualStyle style) {
+		for (Map.Entry<String, VisualPropertyMapping> mapping : mappings.entrySet()) {
+			String cx2VpName = mapping.getKey();
+			VisualProperty vp = getCyVPFromCX2VPName(myClass, lexicon, cx2VpName);
+			if (vp != null) {
+				MappingDefinition defination = mapping.getValue().getMappingDef();
+				String attrName = defination.getAttributeName();
+				switch (mapping.getValue().getType()) {
+				case PASSTHROUGH:
+					ViewMaker.addPasstroughMapping(style, vp,attrName,myClass);
+					break;
+				case DISCRETE:
+					
+					
+					break;
+				case CONTINUOUS:
+					break;
+				default:
+					break;
+
+				}
+			}
+		}
+		
 	}
 	
 }

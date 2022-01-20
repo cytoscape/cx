@@ -225,8 +225,7 @@ public final class ViewMaker {
 	public final static void addPasstroughMapping(final VisualStyle style,
                                                   final VisualProperty vp,
                                                   final String col,
-                                                  final Class<?> type_class,
-                                                  final VisualMappingFunctionFactory vmf_factory_p) {
+                                                  final Class<?> type_class) {
         
     	try {
     		final PassthroughMapping pmf = (PassthroughMapping) 
@@ -372,7 +371,7 @@ public final class ViewMaker {
 
 	@SuppressWarnings("rawtypes")
 	private static void parseVisualMapping(
-    		final String mapping_target, 
+    		final String mapping_target, //VP name
     		final Mapping mapping, 
     		final VisualLexicon lexicon, 
     		final VisualStyle style, 
@@ -388,7 +387,7 @@ public final class ViewMaker {
         }
         
         if (mapping_type.equals(CxUtil.PASSTHROUGH)) {
-            addPasstroughMapping(style, vp, col, type_class, vmf_factory_p);
+            addPasstroughMapping(style, vp, col, type_class);
         }
         else if (mapping_type.equals(CxUtil.CONTINUOUS)) {
             addContinuousMapping(style, vp, sp, col, type, type_class, vmf_factory_c);
@@ -503,7 +502,8 @@ public final class ViewMaker {
         }
         else if (type.equals("boolean")) {
             return Boolean.class;
-        }
+        } else if ( type.startsWith("list_of_"))
+        	return List.class;
         else {
             throw new IllegalArgumentException("don't know how to deal with type '" + type + "'");
         }

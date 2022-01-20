@@ -19,6 +19,7 @@ import org.ndexbio.cx2.aspect.element.cytoscape.VisualEditorProperties;
 import org.ndexbio.cx2.converter.CXToCX2VisualPropertyConverter;
 import org.ndexbio.cx2.converter.ConverterUtilities;
 import org.ndexbio.cx2.converter.ConverterUtilitiesResult;
+import org.ndexbio.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
 import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.ndexbio.cxio.core.interfaces.AspectElement;
 import org.ndexbio.cxio.util.CxioUtil;
@@ -735,25 +736,21 @@ public final class VisualPropertiesGatherer {
     
     private final static String toAttributeType(final Class<?> attr_class, final CyTable table, final String col_name)
             throws IOException {
-        if (attr_class == String.class) {
-            return "string";
-        }
-        else if ((attr_class == Float.class) || (attr_class == Double.class)) {
-            return "double";
-        }
-        else if ((attr_class == Integer.class) || (attr_class == Short.class)) {
-            return "integer";
-        }
-        else if (attr_class == Long.class) {
-            return "long";
-        }
-        else if (attr_class == Boolean.class) {
-            return "boolean";
-        }
-        else if (Number.class.isAssignableFrom(attr_class)) {
+    	
+    	ATTRIBUTE_DATA_TYPE attrType = null;
+    	
+    	try {
+    		attrType = CxUtil.toAttributeType(attr_class);
+    	} catch (IllegalArgumentException e) {}
+    	
+    	if ( attrType != null)
+    		return attrType.toString();
+    	
+        if (Number.class.isAssignableFrom(attr_class) || List.class.isAssignableFrom(attr_class)) {
             Class<?> col_type = null;
+            CyColumn col = null;
             if ((table != null) && (col_name != null)) {
-                final CyColumn col = table.getColumn(col_name);
+                col = table.getColumn(col_name);
                 if (col != null) {
                     col_type = table.getColumn(col_name).getType();
                 }
@@ -764,27 +761,18 @@ public final class VisualPropertiesGatherer {
             if (col_type != null) {
                 logger.info("mapping type is '" + attr_class + "' will use (from table column) '" + col_type
                                    + "' instead");
-                if ((col_type == Float.class) || (col_type == Double.class)) {
-                    return "double";
-                }
-                else if ((col_type == Integer.class) || (col_type == Short.class)) {
-                    return "integer";
-                }
-                else if (col_type == Long.class) {
-                    return "long";
-                }
-                else {
-                    throw new IllegalArgumentException("don't know how to deal with type '" + col_type
-                                                       + "' (from table column "+ col_name + ")");
-                }
+				if (List.class.isAssignableFrom(col_type)) {
+					Class<?> elmt_type = col.getListElementType();
+					return CxUtil.toListAttributeType(elmt_type).toString();
+				} 
+				return CxUtil.toAttributeType(col_type).toString();
             }
-            
             throw new IllegalStateException("failed to obtain type for mapping from table");
             
         }
-        else {
-            throw new IllegalArgumentException("don't know how to deal with type '" + attr_class + "' for column " + col_name);
-        }
+        
+        throw new IllegalArgumentException("don't know how to deal with type '" + attr_class + "' for column " + col_name);
+        
     }
 
 }
