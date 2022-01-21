@@ -47,6 +47,8 @@ import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.view.vizmap.VisualPropertyDependency;
 import org.cytoscape.view.vizmap.VisualStyle;
 import org.cytoscape.view.vizmap.VisualStyleFactory;
+import org.cytoscape.view.vizmap.mappings.DiscreteMapping;
+import org.ndexbio.cx2.aspect.element.core.AttributeDeclaredAspect;
 import org.ndexbio.cx2.aspect.element.core.CxAspectElement;
 import org.ndexbio.cx2.aspect.element.core.CxAttributeDeclaration;
 import org.ndexbio.cx2.aspect.element.core.CxEdge;
@@ -136,6 +138,9 @@ public final class Cx2Importer {
 	private VisualEditorProperties editorProperties;
 	
 	private boolean hasLayout;
+	
+	private boolean nodeSizeLocked;
+	private boolean arrowColorMatchesEdges;
 
     public Cx2Importer(InputStream in, boolean createView) {
 
@@ -154,6 +159,8 @@ public final class Cx2Importer {
     	opaqueAspects = new HashMap<>();
     	name = null;
     	editorProperties = null;
+    	nodeSizeLocked=false;
+    	arrowColorMatchesEdges = false;
     }
 
 
@@ -448,16 +455,43 @@ public final class Cx2Importer {
         	doLayout = null;
         }
         
+        this.nodeSizeLocked = editorProperties !=null && 
+				editorProperties.getProperties().get(VisualEditorProperties.NODE_SIZE_LOCKED)!=null &&
+				editorProperties.getProperties().get(VisualEditorProperties.NODE_SIZE_LOCKED).equals(Boolean.TRUE);
+        
+        this.arrowColorMatchesEdges = editorProperties !=null && 
+				editorProperties.getProperties().get(VisualEditorProperties.ARROW_COLOR_MATCHES_EDGES)!=null &&
+				editorProperties.getProperties().get(VisualEditorProperties.ARROW_COLOR_MATCHES_EDGES).equals(Boolean.TRUE);
+        
         if ( visualProperties != null) {
         	VisualLexicon lexicon = rendering_engine_manager.getDefaultVisualLexicon();
 
         	setNetworkVPs(lexicon,visualProperties.getDefaultProps().getNetworkProperties(),new_visual_style);
         
-        	setNodeVPs (lexicon, visualProperties.getDefaultProps().getNodeProperties(), new_visual_style);
+        	setNodeVPs (lexicon, visualProperties.getDefaultProps().getNodeProperties(), new_visual_style,  nodeSizeLocked);
         	
         	setEdgeVPs(lexicon, visualProperties.getDefaultProps().getEdgeProperties(), new_visual_style);
         	
-        	setMapping(CyNode.class, visualProperties.getNodeMappings(), lexicon, new_visual_style);
+        	// process node mapping
+        	Map<String,VisualPropertyMapping> nodeMapping = visualProperties.getNodeMappings();
+        	if ( nodeSizeLocked) {
+        		VisualPropertyMapping m = nodeMapping.remove("NODE_WIDTH");
+        		if (m !=null) {
+        			//nodeMapping.remove("NODE_HEIGHT");
+        			nodeMapping.put("NODE_SIZE", m);
+        		}
+        	}
+        	setMapping(CyNode.class, nodeMapping, lexicon, new_visual_style);
+        	
+        	// Process edge mapping
+        	Map<String,VisualPropertyMapping> edgeMapping = visualProperties.getEdgeMappings();
+
+        	if (this.arrowColorMatchesEdges) {
+        		VisualPropertyMapping m = edgeMapping.remove("EDGE_LINE_COLOR");
+        		edgeMapping.put(BasicVisualLexicon.EDGE_PAINT.getIdString(),
+        				m);
+        	}
+        	setMapping(CyEdge.class, edgeMapping,lexicon,new_visual_style);
         		
 			if (editorProperties != null) {
 				for (Map.Entry<String, Object> e : editorProperties.getProperties().entrySet()) {
@@ -522,7 +556,7 @@ public final class Cx2Importer {
 	}
 
 	private void setNodeVPs(final VisualLexicon lexicon,
-			VisualPropertyTable defaults, VisualStyle style) {
+			VisualPropertyTable defaults, VisualStyle style, boolean nodeSizeLocked) {
 		if (defaults != null) {
 			Map<String,String> cyVPTable = CX2ToCXVisualPropertyConverter.getInstance().convertEdgeOrNodeVPs(defaults);
 			for (final Map.Entry<String, String> entry : cyVPTable.entrySet()) {
@@ -536,9 +570,7 @@ public final class Cx2Importer {
 			}
 			
 			//preprocess NODE_SIZE 
-			if (editorProperties !=null && 
-					editorProperties.getProperties().get(VisualEditorProperties.NODE_SIZE_LOCKED)!=null &&
-					editorProperties.getProperties().get(VisualEditorProperties.NODE_SIZE_LOCKED).equals(Boolean.TRUE)) {
+			if (nodeSizeLocked) {
 				VisualProperty<Double> vp = BasicVisualLexicon.NODE_SIZE;
 				Object v = defaults.get("NODE_WIDTH");
 				if ( v!=null) {
@@ -579,9 +611,7 @@ public final class Cx2Importer {
 			
 			
 			//preprocess edge color
-			if (editorProperties !=null && 
-					editorProperties.getProperties().get(VisualEditorProperties.ARROW_COLOR_MATCHES_EDGES)!=null &&
-					editorProperties.getProperties().get(VisualEditorProperties.ARROW_COLOR_MATCHES_EDGES).equals(Boolean.TRUE)) {
+			if (this.arrowColorMatchesEdges) {
 				VisualProperty<Paint> vp = BasicVisualLexicon.EDGE_PAINT;
 				Object v = defaults.get("EDGE_LINE_COLOR");
 				if ( v!=null) {
@@ -672,8 +702,8 @@ public final class Cx2Importer {
 		return lexicon.lookup(myClass,cx2Name);
 	}
 	
-	private static void setMapping(Class myClass, Map<String,VisualPropertyMapping> mappings, 
-			VisualLexicon lexicon, VisualStyle style) {
+	private void setMapping(Class myClass, Map<String,VisualPropertyMapping> mappings, 
+			VisualLexicon lexicon, VisualStyle style) throws NdexException {
 		for (Map.Entry<String, VisualPropertyMapping> mapping : mappings.entrySet()) {
 			String cx2VpName = mapping.getKey();
 			VisualProperty vp = getCyVPFromCX2VPName(myClass, lexicon, cx2VpName);
@@ -685,7 +715,7 @@ public final class Cx2Importer {
 					ViewMaker.addPasstroughMapping(style, vp,attrName,myClass);
 					break;
 				case DISCRETE:
-					
+					addDiscreteMapping(myClass,lexicon, defination,style,vp,cx2VpName);
 					
 					break;
 				case CONTINUOUS:
@@ -698,5 +728,41 @@ public final class Cx2Importer {
 		}
 		
 	}
+	
+	private void addDiscreteMapping(Class<?> typeClass, VisualLexicon lexicon, MappingDefinition def, VisualStyle style,
+                                                VisualProperty vp,String cx2VpName ) throws NdexException {
+        String colName = def.getAttributeName();
+        ATTRIBUTE_DATA_TYPE dtype = getAttrDataType(typeClass,colName); 
+		final DiscreteMapping dmf = (DiscreteMapping) ViewMaker.vmf_factory_d.createVisualMappingFunction(colName, CxUtil.getDataType(dtype), vp);
+    
+        for ( Map<String,Object> mappingEntry: def.getMapppingList()) {
+			
+			Object v = AttributeDeclaredAspect.processAttributeValue (dtype, mappingEntry.get("v") );
+			String cyValue = CX2ToCXVisualPropertyConverter.getInstance().
+					getCx1EdgeOrNodePropertyValue(cx2VpName, mappingEntry.get("vp"));
+			dmf.putMapValue(v, vp.parseSerializableString(cyValue));
+		}
+        style.addVisualMappingFunction(dmf);
+	}
+	
+	private ATTRIBUTE_DATA_TYPE getAttrDataType(Class<?> typeClass, String attrName) throws NdexException {
+		
+		Map<String,DeclarationEntry> decls = null;
+		if ( typeClass.equals(CyNode.class)) {
+			decls = attrDecls.getAttributesInAspect(CxNode.ASPECT_NAME);
+		} else if ( typeClass.equals(CyEdge.class)) {
+			decls = attrDecls.getAttributesInAspect(CxEdge.ASPECT_NAME) ;
+		} else 
+			decls= attrDecls.getAttributesInAspect(CxNetworkAttribute.ASPECT_NAME);
+		
+		if ( decls !=null) {
+			DeclarationEntry d = decls.get(attrName);
+			if ( d != null)
+			   return d.getDataType();    
+		}
+		return null;
+	}
+	
+
 	
 }
