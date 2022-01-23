@@ -47,6 +47,8 @@ import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.view.vizmap.VisualPropertyDependency;
 import org.cytoscape.view.vizmap.VisualStyle;
 import org.cytoscape.view.vizmap.VisualStyleFactory;
+import org.cytoscape.view.vizmap.mappings.BoundaryRangeValues;
+import org.cytoscape.view.vizmap.mappings.ContinuousMapping;
 import org.cytoscape.view.vizmap.mappings.DiscreteMapping;
 import org.ndexbio.cx2.aspect.element.core.AttributeDeclaredAspect;
 import org.ndexbio.cx2.aspect.element.core.CxAspectElement;
@@ -733,7 +735,7 @@ public final class Cx2Importer {
                                                 VisualProperty vp,String cx2VpName ) throws NdexException {
         String colName = def.getAttributeName();
         ATTRIBUTE_DATA_TYPE dtype = getAttrDataType(typeClass,colName); 
-		final DiscreteMapping dmf = (DiscreteMapping) ViewMaker.vmf_factory_d.createVisualMappingFunction(colName, CxUtil.getDataType(dtype), vp);
+		DiscreteMapping dmf = (DiscreteMapping) ViewMaker.vmf_factory_d.createVisualMappingFunction(colName, CxUtil.getDataType(dtype), vp);
     
         for ( Map<String,Object> mappingEntry: def.getMapppingList()) {
 			
@@ -749,17 +751,90 @@ public final class Cx2Importer {
 			VisualProperty vp, String cx2VpName) throws NdexException {
 		String colName = def.getAttributeName();
 		ATTRIBUTE_DATA_TYPE dtype = getAttrDataType(typeClass, colName);
-		final DiscreteMapping dmf = (DiscreteMapping) ViewMaker.vmf_factory_c.createVisualMappingFunction(colName,
+		ContinuousMapping cmf = (ContinuousMapping) ViewMaker.vmf_factory_c.createVisualMappingFunction(colName,
 				CxUtil.getDataType(dtype), vp);
-
-		for (Map<String, Object> mappingEntry : def.getMapppingList()) {
-
-			Object v = AttributeDeclaredAspect.processAttributeValue(dtype, mappingEntry.get("v"));
-			String cyValue = CX2ToCXVisualPropertyConverter.getInstance().getCx1EdgeOrNodePropertyValue(cx2VpName,
-					mappingEntry.get("vp"));
-			dmf.putMapValue(v, vp.parseSerializableString(cyValue));
+		
+		//int cyCounter = 0;
+		int counter = 0;
+		Object L = null;
+		Object E = null;
+		Object G = null;
+		Object ov = null;
+		CX2ToCXVisualPropertyConverter vpCvtr = CX2ToCXVisualPropertyConverter.getInstance();
+		for (Map<String, Object> m : def.getMapppingList()) {
+			Object minV = m.get("min");
+			Object maxV = m.get("max");
+			Boolean includeMin = (Boolean)m.get("includeMin");
+			Boolean includeMax = (Boolean)m.get("includeMax");
+			Object minVP = m.get("minVPValue");
+			Object maxVP = m.get("maxVPValue");
+			
+			if ( minVP == null && maxVP == null)
+				throw new NdexException ("minVPValue and maxVPValue are both missing in CONTINUOUS mapping of " + cx2VpName + " on column " + colName);
+			
+			if ( counter == 0) { // first range
+				
+				if ( minV != null) {  // no out of range definition
+					ov = AttributeDeclaredAspect.processAttributeValue(dtype, minV);
+					
+					L = vp.parseSerializableString(vpCvtr.getCx1EdgeOrNodePropertyValue(cx2VpName,minVP));
+					E = L;
+					G = L;					
+					BoundaryRangeValues point = new BoundaryRangeValues(L,E, G);
+					
+                    cmf.addPoint(cvtValueForContinuousMapping(ov), point);
+	                //cyCounter++;
+	                
+	                ov =AttributeDeclaredAspect.processAttributeValue(dtype, maxV);
+                	L = vp.parseSerializableString(vpCvtr.getCx1EdgeOrNodePropertyValue(cx2VpName,maxVP));
+                	E=L;
+                	G=L;
+					
+					point = new BoundaryRangeValues(L,E,G);
+                    cmf.addPoint(cvtValueForContinuousMapping(ov), point);
+                    
+                	//cyCounter++;
+				}
+			    L = vp.parseSerializableString(vpCvtr.getCx1EdgeOrNodePropertyValue(cx2VpName,maxVP));
+			    ov = AttributeDeclaredAspect.processAttributeValue(dtype, maxV);
+			    if ( includeMax.booleanValue()) 
+			    	E = L;
+			} else {  // middle ranges and the last range
+				G = vp.parseSerializableString(vpCvtr.getCx1EdgeOrNodePropertyValue(cx2VpName,minVP));
+				if (includeMin.booleanValue())
+					E=G;
+				
+				// create the mapping point
+				
+				BoundaryRangeValues point = new BoundaryRangeValues(L,E,G);
+               
+				cmf.addPoint(cvtValueForContinuousMapping(ov), point);
+				
+                //cyCounter++;
+                
+                // prepare for the next point
+                if ( maxV != null) {
+                	ov =AttributeDeclaredAspect.processAttributeValue(dtype, maxV);
+                	L = vp.parseSerializableString(vpCvtr.getCx1EdgeOrNodePropertyValue(cx2VpName,maxVP));
+                	if (includeMax.booleanValue())
+                		E = L;
+                	else 
+                		E = null;
+                }	
+                
+			}
+			counter++;
 		}
-		style.addVisualMappingFunction(dmf);
+		style.addVisualMappingFunction(cmf);
+	}
+	
+	private static Object cvtValueForContinuousMapping(Object v) {
+		if (v instanceof Number) {
+			
+			return Double.valueOf(  ((Number)v).doubleValue());
+		}
+			
+		return v;
 	}
 	
 	private ATTRIBUTE_DATA_TYPE getAttrDataType(Class<?> typeClass, String attrName) throws NdexException {
