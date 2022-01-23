@@ -715,10 +715,10 @@ public final class Cx2Importer {
 					ViewMaker.addPasstroughMapping(style, vp,attrName,myClass);
 					break;
 				case DISCRETE:
-					addDiscreteMapping(myClass,lexicon, defination,style,vp,cx2VpName);
-					
+					addDiscreteMapping(myClass,lexicon, defination,style,vp,cx2VpName);			
 					break;
 				case CONTINUOUS:
+					addContinuousMapping(myClass,lexicon, defination,style,vp,cx2VpName);			
 					break;
 				default:
 					break;
@@ -743,6 +743,23 @@ public final class Cx2Importer {
 			dmf.putMapValue(v, vp.parseSerializableString(cyValue));
 		}
         style.addVisualMappingFunction(dmf);
+	}
+	
+	private void addContinuousMapping(Class<?> typeClass, VisualLexicon lexicon, MappingDefinition def, VisualStyle style,
+			VisualProperty vp, String cx2VpName) throws NdexException {
+		String colName = def.getAttributeName();
+		ATTRIBUTE_DATA_TYPE dtype = getAttrDataType(typeClass, colName);
+		final DiscreteMapping dmf = (DiscreteMapping) ViewMaker.vmf_factory_c.createVisualMappingFunction(colName,
+				CxUtil.getDataType(dtype), vp);
+
+		for (Map<String, Object> mappingEntry : def.getMapppingList()) {
+
+			Object v = AttributeDeclaredAspect.processAttributeValue(dtype, mappingEntry.get("v"));
+			String cyValue = CX2ToCXVisualPropertyConverter.getInstance().getCx1EdgeOrNodePropertyValue(cx2VpName,
+					mappingEntry.get("vp"));
+			dmf.putMapValue(v, vp.parseSerializableString(cyValue));
+		}
+		style.addVisualMappingFunction(dmf);
 	}
 	
 	private ATTRIBUTE_DATA_TYPE getAttrDataType(Class<?> typeClass, String attrName) throws NdexException {
