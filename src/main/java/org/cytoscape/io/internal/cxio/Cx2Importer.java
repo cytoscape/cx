@@ -6,22 +6,16 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.Map.Entry;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.cytoscape.event.CyEventHelper;
-import org.cytoscape.io.internal.AspectSet;
 import org.cytoscape.io.internal.CxPreferences;
 import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cx_reader.ViewMaker;
-import org.cytoscape.io.internal.nicecy.NiceCyNetwork;
 import org.cytoscape.io.internal.nicecy.NiceCyRootNetwork;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
@@ -68,29 +62,11 @@ import org.ndexbio.cx2.aspect.element.cytoscape.VisualEditorProperties;
 import org.ndexbio.cx2.converter.CX2ToCXVisualPropertyConverter;
 import org.ndexbio.cx2.io.CXReader;
 import org.ndexbio.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
-import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
-import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
-import org.ndexbio.cxio.aspects.datamodels.EdgeAttributesElement;
-import org.ndexbio.cxio.aspects.datamodels.EdgesElement;
-import org.ndexbio.cxio.aspects.datamodels.Mapping;
-import org.ndexbio.cxio.aspects.datamodels.NetworkAttributesElement;
-import org.ndexbio.cxio.aspects.datamodels.NodeAttributesElement;
-import org.ndexbio.cxio.aspects.datamodels.NodesElement;
-import org.ndexbio.cxio.aspects.datamodels.SubNetworkElement;
-import org.ndexbio.cxio.core.CxElementReader2;
-import org.ndexbio.cxio.core.interfaces.AspectElement;
-import org.ndexbio.cxio.core.interfaces.AspectFragmentReader;
-import org.ndexbio.cxio.metadata.MetaDataCollection;
-import org.ndexbio.cxio.metadata.MetaDataElement;
-import org.ndexbio.cxio.misc.OpaqueElement;
-import org.ndexbio.model.cx.NdexNetworkStatus;
-import org.ndexbio.model.cx.NiceCXNetwork;
 import org.ndexbio.model.exceptions.NdexException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -465,12 +441,13 @@ public final class Cx2Importer {
 				editorProperties.getProperties().get(VisualEditorProperties.ARROW_COLOR_MATCHES_EDGES)!=null &&
 				editorProperties.getProperties().get(VisualEditorProperties.ARROW_COLOR_MATCHES_EDGES).equals(Boolean.TRUE);
         
-        if ( visualProperties != null) {
-        	VisualLexicon lexicon = rendering_engine_manager.getDefaultVisualLexicon();
+    	VisualLexicon lexicon = rendering_engine_manager.getDefaultVisualLexicon();
+
+    	if ( visualProperties != null) {
 
         	setNetworkVPs(lexicon,visualProperties.getDefaultProps().getNetworkProperties(),new_visual_style);
         
-        	setNodeVPs (lexicon, visualProperties.getDefaultProps().getNodeProperties(), new_visual_style,  nodeSizeLocked);
+        	setNodeVPs (lexicon, visualProperties.getDefaultProps().getNodeProperties(), new_visual_style);
         	
         	setEdgeVPs(lexicon, visualProperties.getDefaultProps().getEdgeProperties(), new_visual_style);
         	
@@ -527,6 +504,39 @@ public final class Cx2Importer {
 
         }
         
+    	//Node Bypasses
+        for (CxNodeBypass bypass: nodeBypasses) {
+        	Long suid = this.nodeIdMap.get(bypass.getId());
+        	CyNode n = this.base.getNode(suid);
+        	VisualPropertyTable vps = bypass.getVisualProperties();
+            final View<CyNode> nv = currentView.getNodeView(n);
+        	if ( nodeSizeLocked ) {
+        		Object v = vps.get("NODE_WIDTH");
+        		if (v!=null)
+        			vps.getVisualProperties().put("NODE_SIZE", v);
+        	}
+        	SortedMap<String,String> cyVPs = CX2ToCXVisualPropertyConverter.getInstance().convertEdgeOrNodeVPs(vps);
+        	ViewMaker.setVisualProperties(lexicon, cyVPs, nv, CyNode.class);
+        	
+        }
+        
+        //Edge bypasses
+        for (CxEdgeBypass bypass: edgeBypasses) {
+        	Long suid = this.edgeIdMap.get(bypass.getId());
+        	CyEdge e = this.base.getEdge(suid);
+            final View<CyEdge> ev = currentView.getEdgeView(e);
+
+        	VisualPropertyTable vps = bypass.getVisualProperties();
+        	if ( this.arrowColorMatchesEdges ) {
+        		Object v = vps.get("EDGE_LINE_COLOR");
+        		if (v!=null)
+        			vps.getVisualProperties().put(BasicVisualLexicon.EDGE_PAINT.getIdString(), v);
+        	}
+        	SortedMap<String,String> cyVPs = CX2ToCXVisualPropertyConverter.getInstance().convertEdgeOrNodeVPs(vps);
+        	ViewMaker.setVisualProperties(lexicon, cyVPs, ev, CyEdge.class);
+        	
+        }
+        
         if (have_default_visual_properties) {
         	// Simply add & assign style.  VMM automatically apply this later.
             visual_mapping_manager.addVisualStyle(new_visual_style);
@@ -558,7 +568,7 @@ public final class Cx2Importer {
 	}
 
 	private void setNodeVPs(final VisualLexicon lexicon,
-			VisualPropertyTable defaults, VisualStyle style, boolean nodeSizeLocked) {
+			VisualPropertyTable defaults, VisualStyle style) {
 		if (defaults != null) {
 			Map<String,String> cyVPTable = CX2ToCXVisualPropertyConverter.getInstance().convertEdgeOrNodeVPs(defaults);
 			for (final Map.Entry<String, String> entry : cyVPTable.entrySet()) {
