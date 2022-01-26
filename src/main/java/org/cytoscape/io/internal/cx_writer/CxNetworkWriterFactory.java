@@ -32,8 +32,8 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
     @Override
     public CyWriter createWriter(final OutputStream os, final CyNetworkView view) {
         return new CxNetworkWriter(os,
-                                   view.getModel(),
-                                   false,
+        						view.getModel(),
+                                   view,
                                    false, isCX2);
 
     }

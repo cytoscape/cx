@@ -28,6 +28,7 @@ import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyTable;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CySubNetwork;
+import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.work.TaskMonitor;
 import org.cytoscape.work.Tunable;
 import org.cytoscape.work.util.ListMultipleSelection;
@@ -48,6 +49,7 @@ public class CxNetworkWriter implements CyWriter {
 	private static final boolean USE_CXID_DEFAULT = true;
 	private final OutputStream _os;
 	private final CyNetwork _network;
+	private final CyNetworkView view;
 	
 	private boolean isCX2;
 
@@ -119,9 +121,23 @@ public class CxNetworkWriter implements CyWriter {
 		this.writeSiblings = writeSiblings;
 		this.useCxId = useCxId;
 		isCX2 = inCX2Format;
+		view = null;
 		populateFilters();
 	}
 
+	public CxNetworkWriter(final OutputStream os, final CyNetwork network, CyNetworkView view,
+			final boolean useCxId, boolean inCX2Format) {
+
+		_os = os;
+		_network = network;
+		this.writeSiblings = false;
+		this.view = view;
+		this.useCxId = useCxId;
+		isCX2 = inCX2Format;
+		populateFilters();
+	}
+
+	
 	private void populateFilters() {
 		List<String> aspects = AspectSet.getAspectNames();
 		aspectFilter.setPossibleValues(aspects);
@@ -189,7 +205,9 @@ public class CxNetworkWriter implements CyWriter {
 			taskMonitor.setStatusMessage("Exporting current network as CX...");
 		}
 		
-		final CxExporter exporter = new CxExporter(_network, writeSiblings, useCxId);
+		final CxExporter exporter = view == null? 
+				new CxExporter(_network, writeSiblings, useCxId):
+					new CxExporter (_network, view, useCxId);
 
 		List<String> aspects = aspectFilter.getSelectedValues();
 		exporter.setNodeColumnFilter(nodeColFilter.getSelectedValues().stream().filter( 

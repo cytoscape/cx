@@ -150,6 +150,8 @@ public final class CxExporter {
 	
 	private CxWriter writer;
 	private String ID_STRING = "_id";
+	
+	private CyNetworkView view;
 
 	/**
 	 * Constructor for CxExporter to write network (and it's collection) to CX. Specify 
@@ -158,8 +160,20 @@ public final class CxExporter {
 	 * @param network
 	 * @param writeSiblings
 	 * @param useCxId
+	 * @throws NdexException 
 	 */
 	
+	
+	public CxExporter(CyNetwork network, CyNetworkView view, boolean useCxId) throws NdexException {
+		this(network,false,useCxId);
+		if ( view.getModel().getSUID().equals(network.getSUID())) {
+			this.view = view;
+		}
+		else 
+			throw new NdexException("The specified network (SUID=" + 
+		network.getSUID()+") doesn't have a view with SUID="+view.getSUID() +".");
+	}
+
 	
 	public CxExporter(CyNetwork network, boolean writeSiblings, boolean useCxId) {
 		if (writeSiblings && useCxId) {
@@ -167,6 +181,7 @@ public final class CxExporter {
 		}
 		this.writeSiblings = writeSiblings;
 		this.useCxId = useCxId;
+		this.view = null;
 		
 		subnetworks = makeSubNetworkList((CySubNetwork) network);
 		if (subnetworks.isEmpty()) {
@@ -924,7 +939,7 @@ public final class CxExporter {
 		}
 	}
 	
-	private void writeCx2Nodes(CXWriter cx2Writer,CySubNetwork subnet, CyNetworkView view) throws IOException, NdexException {
+	private void writeCx2Nodes(CXWriter cx2Writer,CySubNetwork subnet) throws IOException, NdexException {
 		//TODO: handle cyGroups
 		if ( subnet.getNodeCount()==0)
 			return;
@@ -1364,7 +1379,9 @@ public final class CxExporter {
 		// write the visual properties and coordinates
 		for (final CySubNetwork subnet : subnetworks) {
 			
-			final Collection<CyNetworkView> views = _networkview_manager.getNetworkViews(subnet);
+			final Collection<CyNetworkView> views = this.view !=null ?
+					Arrays.asList(view)
+					:_networkview_manager.getNetworkViews(subnet);
 			
 			// Use node/edge in views, instead of from subnetwork to avoid hidden/group elements
 			HashSet<Long> edge_suids = new HashSet<Long>();
@@ -1456,7 +1473,7 @@ public final class CxExporter {
 	}
 
 	//write default, mapping and bypasses
-	private void writeCX2VisualProperties (CXWriter cx2Writer, CyNetworkView view) throws NdexException, JsonGenerationException, JsonMappingException, IOException {
+	private void writeCX2VisualProperties (CXWriter cx2Writer) throws NdexException, JsonGenerationException, JsonMappingException, IOException {
 		if ( view == null)
 			return;
 
@@ -1797,15 +1814,29 @@ public final class CxExporter {
 		
 		CySubNetwork subNet = this.subnetworks.get(0);
 		
-		CyNetworkView firstView = null;
-		final Collection<CyNetworkView> views = _networkview_manager.getNetworkViews(subNet);			
-		if ( !views.isEmpty()) {
-			for ( CyNetworkView view: views) {
-				firstView = view;
-				break;
-			}
-		}
+		var appManager = CyServiceModule.getService(CyApplicationManager.class);
 
+		
+		if ( view ==null ) {
+			CyNetworkView currentView = appManager.getCurrentNetworkView();
+			Collection<CyNetworkView> views = _networkview_manager.getNetworkViews(subNet);
+			if (!views.isEmpty()) {
+				CyNetworkView firstView = null;
+				int counter = 0;
+				for (CyNetworkView v : views) {
+					if ( counter == 0 )
+						firstView = v;
+					if ( v.getSUID().equals(currentView.getSUID())) {
+						view = v;
+						break;
+					}
+					counter++;
+				}
+				if ( view == null && firstView != null)
+					view = firstView;
+			} else
+				view = null;
+		}
 		
 		logger.info("Exporting network as " + net_type + " with " + id_type);
 		logger.info("Aspect filter: " + outputAspects);
@@ -1843,10 +1874,10 @@ public final class CxExporter {
 			}
 			
 			//write nodes. TODO: Handles CyGroups and internal nodes/edges
-			writeCx2Nodes(cx2Writer, subNet,firstView);		
+			writeCx2Nodes(cx2Writer, subNet);		
 			
 			writeCx2Edges(cx2Writer);
-			writeCX2VisualProperties (cx2Writer, firstView);	
+			writeCX2VisualProperties (cx2Writer);	
 			writeTableVisualStyles(cx2Writer);
 			
 		} catch (final Exception e) {
