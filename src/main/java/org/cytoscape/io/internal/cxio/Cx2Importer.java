@@ -119,8 +119,12 @@ public final class Cx2Importer {
 	
 	private boolean nodeSizeLocked;
 	private boolean arrowColorMatchesEdges;
+	
+	private String collectionName;
 
-    public Cx2Importer(InputStream in, boolean createView) {
+
+
+	public Cx2Importer(InputStream in, boolean createView) {
 
     	this.input = in;
     	this.createView = createView;
@@ -140,6 +144,17 @@ public final class Cx2Importer {
     	nodeSizeLocked=false;
     	arrowColorMatchesEdges = false;
     }
+
+
+    public String getCollectionName() {
+		return collectionName;
+	}
+
+
+
+	public void setCollectionName(String collectionName) {
+		this.collectionName = collectionName;
+	}
 
 
   
@@ -319,7 +334,7 @@ public final class Cx2Importer {
 		netAttrs.extendToFullNode(this.attrDecls.getAttributesInAspect(CxNetworkAttribute.ASPECT_NAME));
 
 		for ( Map.Entry<String,Object> e: netAttrs.getAttributes().entrySet()) {
-			if (edgeTable.getColumn(e.getKey()) != null) {
+			if (networkTable.getColumn(e.getKey()) != null) {
 				sharedRow.set(e.getKey(), e.getValue());
 				if ( e.getKey().equals(CxNetworkAttribute.nameAttribute))
 					this.name = (String)e.getValue();

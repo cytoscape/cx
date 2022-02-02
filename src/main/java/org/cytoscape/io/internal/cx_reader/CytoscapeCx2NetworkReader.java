@@ -107,6 +107,16 @@ public class CytoscapeCx2NetworkReader extends AbstractCyNetworkReader {
 
 		long t1 = System.currentTimeMillis();
 		CyNetwork newSubnetwork =  cx2Importer.importNetwork();
+		
+		if (cx2Importer.getNetworkName() == null) {
+			// Set the name of collection/network to be imported
+			if (_network_collection_name == null) {
+				_network_collection_name = "Unnamed CX Network";
+			}
+			cx2Importer.setCollectionName(_network_collection_name);
+		}
+
+		
 		if (Settings.INSTANCE.isTiming()) {
 			TimingUtil.reportTimeDifference(t1, "Time to create NiceCyNetwork", -1);
 		}
