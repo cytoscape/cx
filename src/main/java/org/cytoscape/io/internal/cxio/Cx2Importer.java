@@ -268,8 +268,12 @@ public final class Cx2Importer {
 		final CyRow localRow = nodeTable.getRow(nodesuid);
 
 		for ( Map.Entry<String,Object> e: node.getAttributes().entrySet()) {
-			if (nodeTable.getColumn(e.getKey()) != null) {
-				localRow.set(e.getKey(), e.getValue());
+			String attrName = e.getKey();
+			if (nodeTable.getColumn(attrName) != null) {
+				localRow.set(attrName, e.getValue());
+				if ( attrName.equals(CyNetwork.NAME) && (!node.getAttributes().containsKey(CyRootNetwork.SHARED_NAME)) ) {
+					localRow.set(CyRootNetwork.SHARED_NAME, e.getValue());
+				}
 			} else 
 				throw new NdexException("Node attribute " + e.getKey() + " is not declared.");
 		}
@@ -332,12 +336,17 @@ public final class Cx2Importer {
 		final CyRow sharedRow = networkTable.getRow(root.getSUID());
 		
 		netAttrs.extendToFullNode(this.attrDecls.getAttributesInAspect(CxNetworkAttribute.ASPECT_NAME));
-
+		netAttrs.validateAttribute(this.attrDecls.getAttributesInAspect(CxNetworkAttribute.ASPECT_NAME), true);
+		
 		for ( Map.Entry<String,Object> e: netAttrs.getAttributes().entrySet()) {
 			if (networkTable.getColumn(e.getKey()) != null) {
 				sharedRow.set(e.getKey(), e.getValue());
-				if ( e.getKey().equals(CxNetworkAttribute.nameAttribute))
+				if ( e.getKey().equals(CyNetwork.NAME)) {
 					this.name = (String)e.getValue();
+					if ( !netAttrs.getAttributes().containsKey(CyRootNetwork.SHARED_NAME)) {
+						sharedRow.set(CyRootNetwork.SHARED_NAME, e.getValue());
+					}
+				}	
 			} else 
 				throw new NdexException("Network attribute " + e.getKey() + " is not declared.");
 		}

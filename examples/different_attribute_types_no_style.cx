@@ -1,0 +1,380 @@
+[
+    {
+        "numberVerification": [
+            {
+                "longNumber": 281474976710655
+            }
+        ]
+    },
+    {
+        "metaData": [
+            {
+                "name": "nodeAttributes",
+                "version": "1.0"
+            },
+            {
+                "name": "edges",
+                "version": "1.0"
+            },
+            {
+                "name": "nodes",
+                "version": "1.0"
+            },
+            {
+                "name": "networkAttributes",
+                "version": "1.0"
+            },
+            {
+                "name": "edgeAttributes",
+                "version": "1.0"
+            }
+        ]
+    },
+    {
+        "networkAttributes": [
+            {
+                "n": "sl_net_attr",
+                "v": [
+                    "ab",
+                    "cd"
+                ],
+                "d": "list_of_string"
+            },
+            {
+                "n": "name",
+                "v": "Network with different type of attributes"
+            },
+            {
+                "n": "description",
+                "v": "This example network has attributes on nodes and edges. It has all possible attribute types that Cytoscape can support, and has no visual styles defined."
+            },
+            {
+                "n": "Network Long Attr",
+                "v": "123456789012",
+                "d": "long"
+            },
+            {
+                "n": "Network Integer Attr",
+                "v": "12",
+                "d": "integer"
+            },
+            {
+                "n": "Network_boolean_attr",
+                "v": "true",
+                "d": "boolean"
+            },
+            {
+                "n": "version",
+                "v": "2022-02"
+            },
+            {
+                "n": "Network_float_attr",
+                "v": "12345.6789",
+                "d": "double"
+            }
+        ]
+    },
+    {
+        "nodes": [
+            {
+                "@id": 238,
+                "n": "Node 3"
+            },
+            {
+                "@id": 180,
+                "n": "Node 2"
+            },
+            {
+                "@id": 175,
+                "n": "Node 1"
+            }
+        ]
+    },
+    {
+        "edges": [
+            {
+                "@id": 248,
+                "s": 238,
+                "t": 180
+            },
+            {
+                "@id": 243,
+                "s": 175,
+                "t": 238,
+                "i": "interacts with"
+            },
+            {
+                "@id": 185,
+                "s": 175,
+                "t": 180,
+                "i": "binds"
+            }
+        ]
+    },
+    {
+        "nodeAttributes": [
+            {
+                "po": 180,
+                "n": "Long attr",
+                "v": "987654321098",
+                "d": "long"
+            },
+            {
+                "po": 180,
+                "n": "source",
+                "v": "src1"
+            },
+            {
+                "po": 180,
+                "n": "boolean attr",
+                "v": "false",
+                "d": "boolean"
+            },
+            {
+                "po": 180,
+                "n": "Int Attr",
+                "v": "11",
+                "d": "integer"
+            },
+            {
+                "po": 180,
+                "n": "float attr",
+                "v": "9876543.21",
+                "d": "double"
+            },
+            {
+                "po": 180,
+                "n": "represent",
+                "v": "N2"
+            },
+            {
+                "po": 175,
+                "n": "float_list",
+                "v": [
+                    "12.34",
+                    "56.78"
+                ],
+                "d": "list_of_double"
+            },
+            {
+                "po": 175,
+                "n": "Long attr",
+                "v": "998877665544",
+                "d": "long"
+            },
+            {
+                "po": 175,
+                "n": "int_list",
+                "v": [
+                    "1",
+                    "2",
+                    "3"
+                ],
+                "d": "list_of_integer"
+            },
+            {
+                "po": 175,
+                "n": "boolean list",
+                "v": [
+                    "true",
+                    "false",
+                    "true"
+                ],
+                "d": "list_of_boolean"
+            },
+            {
+                "po": 175,
+                "n": "source",
+                "v": "src2"
+            },
+            {
+                "po": 175,
+                "n": "boolean attr",
+                "v": "true",
+                "d": "boolean"
+            },
+            {
+                "po": 175,
+                "n": "Int Attr",
+                "v": "22",
+                "d": "integer"
+            },
+            {
+                "po": 175,
+                "n": "float attr",
+                "v": "9.99888777666E8",
+                "d": "double"
+            },
+            {
+                "po": 175,
+                "n": "string_list",
+                "v": [
+                    "abc",
+                    "efg"
+                ],
+                "d": "list_of_string"
+            },
+            {
+                "po": 175,
+                "n": "long_list",
+                "v": [
+                    "11111",
+                    "2222",
+                    "3333"
+                ],
+                "d": "list_of_long"
+            },
+            {
+                "po": 175,
+                "n": "represent",
+                "v": "N1"
+            }
+        ]
+    },
+    {
+        "edgeAttributes": [
+            {
+                "po": 248,
+                "n": "il_edge_attr",
+                "v": [
+                    "1",
+                    "2",
+                    "3"
+                ],
+                "d": "list_of_integer"
+            },
+            {
+                "po": 248,
+                "n": "boolean_edge_attr",
+                "v": "true",
+                "d": "boolean"
+            },
+            {
+                "po": 248,
+                "n": "fl_edge_attr",
+                "v": [
+                    "12.34",
+                    "56.0",
+                    "78.0"
+                ],
+                "d": "list_of_double"
+            },
+            {
+                "po": 248,
+                "n": "bl_edge_attr",
+                "v": [
+                    "true",
+                    "false"
+                ],
+                "d": "list_of_boolean"
+            },
+            {
+                "po": 248,
+                "n": "int_edge_attr",
+                "v": "11",
+                "d": "integer"
+            },
+            {
+                "po": 248,
+                "n": "sl_edge_attr",
+                "v": [
+                    "abc",
+                    "def"
+                ],
+                "d": "list_of_string"
+            },
+            {
+                "po": 248,
+                "n": "ll_edge_attr",
+                "v": [
+                    "11112222",
+                    "22223333"
+                ],
+                "d": "list_of_long"
+            },
+            {
+                "po": 248,
+                "n": "Float_edge_attr",
+                "v": "9.98877663232E7",
+                "d": "double"
+            },
+            {
+                "po": 243,
+                "n": "source",
+                "v": "PUBMED"
+            },
+            {
+                "po": 243,
+                "n": "name",
+                "v": "Node 1 (interacts with) Node 3"
+            },
+            {
+                "po": 185,
+                "n": "boolean_edge_attr",
+                "v": "false",
+                "d": "boolean"
+            },
+            {
+                "po": 185,
+                "n": "source",
+                "v": "INDRA"
+            },
+            {
+                "po": 185,
+                "n": "int_edge_attr",
+                "v": "22",
+                "d": "integer"
+            },
+            {
+                "po": 185,
+                "n": "name",
+                "v": "Node 1 (interacts with) Node 2"
+            },
+            {
+                "po": 185,
+                "n": "Float_edge_attr",
+                "v": "1234567.89",
+                "d": "double"
+            }
+        ]
+    },
+    {
+        "metaData": [
+            {
+                "name": "nodeAttributes",
+                "elementCount": 17,
+                "version": "1.0"
+            },
+            {
+                "name": "edges",
+                "elementCount": 3,
+                "idCounter": 248,
+                "version": "1.0"
+            },
+            {
+                "name": "nodes",
+                "elementCount": 3,
+                "idCounter": 238,
+                "version": "1.0"
+            },
+            {
+                "name": "networkAttributes",
+                "elementCount": 8,
+                "version": "1.0"
+            },
+            {
+                "name": "edgeAttributes",
+                "elementCount": 15,
+                "version": "1.0"
+            }
+        ]
+    },
+    {
+        "status": [
+            {
+                "error": "",
+                "success": true
+            }
+        ]
+    }
+]

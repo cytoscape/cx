@@ -1,0 +1,272 @@
+[
+    {
+        "CXVersion": "2.0",
+        "hasFragments": false
+    },
+    {
+        "metaData": [
+            {
+                "name": "attributeDeclarations",
+                "elementCount": 1
+            },
+            {
+                "name": "networkAttributes",
+                "elementCount": 1
+            },
+            {
+                "name": "edges",
+                "elementCount": 3
+            },
+            {
+                "name": "nodes",
+                "elementCount": 3
+            }
+        ]
+    },
+    {
+        "attributeDeclarations": [
+            {
+                "nodes": {
+                    "Long attr": {
+                        "d": "long"
+                    },
+                    "float_list": {
+                        "d": "list_of_double"
+                    },
+                    "boolean attr": {
+                        "d": "boolean"
+                    },
+                    "Int Attr": {
+                        "d": "integer"
+                    },
+                    "float attr": {
+                        "d": "double"
+                    },
+                    "int_list": {
+                        "d": "list_of_integer"
+                    },
+                    "name": {
+                        "d": "string"
+                    },
+                    "boolean list": {
+                        "d": "list_of_boolean"
+                    },
+                    "string_list": {
+                        "d": "list_of_string"
+                    },
+                    "source": {
+                        "d": "string"
+                    },
+                    "long_list": {
+                        "d": "list_of_long"
+                    },
+                    "represent": {
+                        "d": "string"
+                    }
+                },
+                "networkAttributes": {
+                    "__Annotations": {
+                        "d": "list_of_string"
+                    },
+                    "sl_net_attr": {
+                        "d": "list_of_string"
+                    },
+                    "name": {
+                        "d": "string"
+                    },
+                    "description": {
+                        "d": "string"
+                    },
+                    "Network Long Attr": {
+                        "d": "long"
+                    },
+                    "Network Integer Attr": {
+                        "d": "integer"
+                    },
+                    "Network_boolean_attr": {
+                        "d": "boolean"
+                    },
+                    "version": {
+                        "d": "string"
+                    },
+                    "Network_float_attr": {
+                        "d": "double"
+                    }
+                },
+                "edges": {
+                    "il_edge_attr": {
+                        "d": "list_of_integer"
+                    },
+                    "boolean_edge_attr": {
+                        "d": "boolean"
+                    },
+                    "fl_edge_attr": {
+                        "d": "list_of_double"
+                    },
+                    "bl_edge_attr": {
+                        "d": "list_of_boolean"
+                    },
+                    "Long_edge_attr": {
+                        "d": "long"
+                    },
+                    "source": {
+                        "d": "string"
+                    },
+                    "int_edge_attr": {
+                        "d": "integer"
+                    },
+                    "sl_edge_attr": {
+                        "d": "list_of_string"
+                    },
+                    "ll_edge_attr": {
+                        "d": "list_of_long"
+                    },
+                    "interaction": {
+                        "d": "string"
+                    },
+                    "Float_edge_attr": {
+                        "d": "double"
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "networkAttributes": [
+            {
+                "sl_net_attr": [
+                    "ab",
+                    "cd"
+                ],
+                "name": "Network with different type of attributes",
+                "description": "This example network has attributes on nodes and edges. It has all possible attribute types that Cytoscape can support, and has no visual styles defined.",
+                "Network Long Attr": 123456789012,
+                "Network Integer Attr": 12,
+                "Network_boolean_attr": true,
+                "version": "2022-02",
+                "Network_float_attr": 12345.6789
+            }
+        ]
+    },
+    {
+        "nodes": [
+            {
+                "id": 238,
+                "v": {
+                    "name": "Node 3"
+                }
+            },
+            {
+                "id": 180,
+                "v": {
+                    "Long attr": 987654321098,
+                    "source": "src1",
+                    "boolean attr": false,
+                    "Int Attr": 11,
+                    "float attr": 9876543.21,
+                    "name": "Node 2",
+                    "represent": "N2"
+                }
+            },
+            {
+                "id": 175,
+                "v": {
+                    "float_list": [
+                        12.34,
+                        56.78
+                    ],
+                    "Long attr": 998877665544,
+                    "int_list": [
+                        1,
+                        2,
+                        3
+                    ],
+                    "boolean list": [
+                        true,
+                        false,
+                        true
+                    ],
+                    "source": "src2",
+                    "boolean attr": true,
+                    "Int Attr": 22,
+                    "float attr": 999888777.666,
+                    "name": "Node 1",
+                    "string_list": [
+                        "abc",
+                        "efg"
+                    ],
+                    "long_list": [
+                        11111,
+                        2222,
+                        3333
+                    ],
+                    "represent": "N1"
+                }
+            }
+        ]
+    },
+    {
+        "edges": [
+            {
+                "id": 248,
+                "s": 238,
+                "t": 180,
+                "v": {
+                    "il_edge_attr": [
+                        1,
+                        2,
+                        3
+                    ],
+                    "boolean_edge_attr": true,
+                    "fl_edge_attr": [
+                        12.34,
+                        56.0,
+                        78.0
+                    ],
+                    "bl_edge_attr": [
+                        true,
+                        false
+                    ],
+                    "int_edge_attr": 11,
+                    "sl_edge_attr": [
+                        "abc",
+                        "def"
+                    ],
+                    "ll_edge_attr": [
+                        11112222,
+                        22223333
+                    ],
+                    "Float_edge_attr": 99887766.3232
+                }
+            },
+            {
+                "id": 243,
+                "s": 175,
+                "t": 238,
+                "v": {
+                    "source": "PUBMED",
+                    "interaction": "interacts with"
+                }
+            },
+            {
+                "id": 185,
+                "s": 175,
+                "t": 180,
+                "v": {
+                    "boolean_edge_attr": false,
+                    "source": "INDRA",
+                    "int_edge_attr": 22,
+                    "interaction": "binds",
+                    "Float_edge_attr": 1234567.89
+                }
+            }
+        ]
+    },
+    {
+        "status": [
+            {
+                "success": true
+            }
+        ]
+    }
+]
