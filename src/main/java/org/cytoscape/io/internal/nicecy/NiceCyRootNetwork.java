@@ -602,7 +602,7 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 		throw new RuntimeException("No CySubNetwork found for " + currentNetwork);
 	}
 
-	private static <K,T> void addStyleToTable(CyTable table, Map<String, Map<String,TableColumnVisualStyle>> nodeTableStyles) throws Exception {
+	public static <K,T> void addStyleToTable(CyTable table, Map<String, Map<String,TableColumnVisualStyle>> nodeTableStyles) throws Exception {
 		var appManager = CyServiceModule.getService(CyApplicationManager.class);
         var tableViewManager = CyServiceModule.getService(CyTableViewManager.class);
 		var tableViewFactory = CyServiceModule.getService(CyTableViewFactory.class);

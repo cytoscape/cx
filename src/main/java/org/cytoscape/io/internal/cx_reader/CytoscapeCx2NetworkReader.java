@@ -2,12 +2,10 @@ package org.cytoscape.io.internal.cx_reader;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 import org.cytoscape.io.internal.cxio.Cx2Importer;
 import org.cytoscape.io.internal.cxio.Settings;
 import org.cytoscape.io.internal.cxio.TimingUtil;
-import org.cytoscape.io.internal.nicecy.NiceCyRootNetwork;
 import org.cytoscape.io.read.AbstractCyNetworkReader;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkFactory;
@@ -24,7 +22,6 @@ public class CytoscapeCx2NetworkReader extends AbstractCyNetworkReader {
 
 	private CyNetwork[] _networks;
 	private String _network_collection_name;
-	private NiceCyRootNetwork niceCy;
 
 	private Cx2Importer cx2Importer;
 
@@ -55,35 +52,13 @@ public class CytoscapeCx2NetworkReader extends AbstractCyNetworkReader {
 		 
 		try {
 			return cx2Importer.createView();
-		} catch (NdexException e) {
+		} catch (Exception e) {
 			LoggerFactory.getLogger("CX2 Importer").error(e.getMessage());
 			return null;
 		}
-	/*	
-			System.out.println("Creating view for " + network);
-			List<CyNetworkView> views = niceCy.createViews(network, createView);
-			if (views.isEmpty()) {
-				CyNetworkViewFactory view_factory = CyServiceModule.getService(CyNetworkViewFactory.class);
-				final CyNetworkView createdView = view_factory.createNetworkView(network);
-				return createdView;
-			} else {
-		
-			}
-			
-			try {
-				niceCy.addTableVisualStyles(network);
-			} catch (Exception e) {
-				System.out.println("Failed to create table style for " + network + ": " + e.getMessage());
-
-			}
-			return views.get(0);*/
-		
-		
-		
 	}
 
 	
-
 	@Override
 	public CyNetwork[] getNetworks() {
 		return _networks;

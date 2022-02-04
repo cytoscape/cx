@@ -557,10 +557,14 @@ public final class CxUtil {
 			return null;
 		}
 		if ( vp instanceof StringVisualProperty || 
-				vp instanceof IntegerVisualProperty ||
+			//	vp instanceof IntegerVisualProperty ||
 				vp instanceof DoubleVisualProperty ||
 				vp instanceof BooleanVisualProperty  ) {
 			return (T)value;
+		}
+		
+		if ( vp instanceof IntegerVisualProperty) {
+			return (T)Integer.valueOf(((Number)value).intValue());
 		}
 			
 	    if (vp.getDefault() instanceof Font) {

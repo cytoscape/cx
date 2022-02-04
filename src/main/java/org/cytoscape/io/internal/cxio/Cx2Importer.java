@@ -58,8 +58,11 @@ import org.ndexbio.cx2.aspect.element.core.CxOpaqueAspectElement;
 import org.ndexbio.cx2.aspect.element.core.CxVisualProperty;
 import org.ndexbio.cx2.aspect.element.core.DeclarationEntry;
 import org.ndexbio.cx2.aspect.element.core.MappingDefinition;
+import org.ndexbio.cx2.aspect.element.core.TableColumnVisualStyle;
 import org.ndexbio.cx2.aspect.element.core.VisualPropertyMapping;
 import org.ndexbio.cx2.aspect.element.core.VisualPropertyTable;
+import org.ndexbio.cx2.aspect.element.cytoscape.AbstractTableVisualProperty;
+import org.ndexbio.cx2.aspect.element.cytoscape.DefaultTableType;
 import org.ndexbio.cx2.aspect.element.cytoscape.VisualEditorProperties;
 import org.ndexbio.cx2.converter.CX2ToCXVisualPropertyConverter;
 import org.ndexbio.cx2.io.CXReader;
@@ -124,7 +127,7 @@ public final class Cx2Importer {
 	
 	private String collectionName;
 
-
+    private AbstractTableVisualProperty tableStyle;
 
 	public Cx2Importer(InputStream in, boolean createView) {
 
@@ -210,7 +213,13 @@ public final class Cx2Importer {
 					if ( this.editorProperties == null) 
 						this.editorProperties = (VisualEditorProperties) elmt;
 					else 
-						throw new NdexException("Only one " + VisualEditorProperties.ASPECT_NAME + " element is allowed in CX2.");
+						throw new NdexException("Only one " + VisualEditorProperties.ASPECT_NAME + " element is allowed in a CX2 network.");
+					break;
+				case AbstractTableVisualProperty.ASPECT_NAME:
+					if ( this.tableStyle == null)
+						this.tableStyle = (AbstractTableVisualProperty)elmt;
+					else
+						throw new NdexException ("Only one " + AbstractTableVisualProperty.ASPECT_NAME + " element is allowed in a CX2 network." );
 					break;
 				default:    // opaque aspect
 					addOpaqueAspectElement((CxOpaqueAspectElement)elmt);
@@ -404,7 +413,7 @@ public final class Cx2Importer {
 		return name;
 	}
     
-	public CyNetworkView createView() throws NdexException {
+	public CyNetworkView createView() throws Exception {
 		if ( createView) {
 			CyNetworkViewFactory view_factory = CyServiceModule.getService(CyNetworkViewFactory.class);
 			CyNetworkViewManager view_manager = CyServiceModule.getService(CyNetworkViewManager.class);
@@ -419,10 +428,26 @@ public final class Cx2Importer {
 		}
 			
 		// add table styles
+		if ( tableStyle != null)  {
+			Map<String, Map<String,TableColumnVisualStyle>> tableStyles = tableStyle.getStylesInTable(DefaultTableType.Network);
+			if ( tableStyles != null) {
+				NiceCyRootNetwork.addStyleToTable(base.getDefaultNetworkTable(), tableStyles);
+			}
+			
+			tableStyles = tableStyle.getStylesInTable(DefaultTableType.Node);
+			if ( tableStyles != null) {
+				NiceCyRootNetwork.addStyleToTable(base.getDefaultNodeTable(), tableStyles);
+			}
+			
+			tableStyles = tableStyle.getStylesInTable(DefaultTableType.Edge);
+			if ( tableStyles != null) {
+				NiceCyRootNetwork.addStyleToTable(base.getDefaultEdgeTable(), tableStyles);
+			}
+			
+		}
 		
 		return currentView;
 	}
-	
 	
 	private void makeView() throws NdexException {
 		final VisualMappingManager visual_mapping_manager = CyServiceModule.getService(VisualMappingManager.class);
