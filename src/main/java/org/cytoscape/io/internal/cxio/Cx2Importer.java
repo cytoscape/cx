@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -18,6 +19,7 @@ import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cx_reader.ViewMaker;
 import org.cytoscape.io.internal.nicecy.NiceCyRootNetwork;
 import org.cytoscape.model.CyEdge;
+import org.cytoscape.model.CyIdentifiable;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNode;
@@ -83,7 +85,7 @@ public final class Cx2Importer {
 	
     private CyNetwork base;
     
-    private CyRootNetwork root;
+ //   private CyRootNetwork root;
     
     private CxAttributeDeclaration attrDecls;
     
@@ -91,9 +93,9 @@ public final class Cx2Importer {
     
     private CyNetworkView currentView;
     
-    private CyTable nodeTable;
-    private CyTable edgeTable;
-    private CyTable networkTable;
+    private CyTable baseNodeTable;
+    private CyTable baseEdgeTable;
+    private CyTable baseNetworkTable;
     
     //CX ID to suid mapping table
     private Map<Long,Long> nodeIdMap;
@@ -143,6 +145,12 @@ public final class Cx2Importer {
     	editorProperties = null;
     	nodeSizeLocked=false;
     	arrowColorMatchesEdges = false;
+    	
+    	//tables
+    	baseNodeTable = null;
+    	baseEdgeTable = null;
+    	baseNetworkTable = null;
+    	
     }
 
 
@@ -169,7 +177,7 @@ public final class Cx2Importer {
 		CyNetworkFactory network_factory = CyServiceModule.getService(CyNetworkFactory.class);
 		
 		base = network_factory.createNetwork();
-		root = ((CySubNetwork)base).getRootNetwork();
+	//	root = ((CySubNetwork)base).getRootNetwork();
 		
 		  
 		for ( CxAspectElement elmt : cxreader ) {
@@ -224,24 +232,28 @@ public final class Cx2Importer {
     	if (attrDecls.getDeclarations().isEmpty())
     		return;
     	
-    	networkTable = root.getTable(CyNetwork.class, CyRootNetwork.DEFAULT_ATTRS); 
-		createTableAttrs(attrDecls.getDeclarations().get(CxNetworkAttribute.ASPECT_NAME),networkTable);
+    	baseNetworkTable = base.getDefaultNetworkTable();
+    	createTableAttrs(attrDecls.getDeclarations().get(CxNetworkAttribute.ASPECT_NAME),baseNetworkTable, Settings.cytoscapeBuiltinTableAttributes);
 		
-		nodeTable = root.getTable(CyNode.class, CyNetwork.DEFAULT_ATTRS);
-		createTableAttrs(attrDecls.getDeclarations().get(CxNode.ASPECT_NAME),nodeTable);
+		baseNodeTable = base.getDefaultNodeTable();
+		createTableAttrs(attrDecls.getDeclarations().get(CxNode.ASPECT_NAME), baseNodeTable, Settings.cytoscapeBuiltinTableAttributes);
 
-		edgeTable = root.getTable(CyEdge.class, CyNetwork.DEFAULT_ATTRS);
-		createTableAttrs(attrDecls.getDeclarations().get(CxEdge.ASPECT_NAME),edgeTable);
+		baseEdgeTable = base.getDefaultEdgeTable();
+		createTableAttrs(attrDecls.getDeclarations().get(CxEdge.ASPECT_NAME), baseEdgeTable, Settings.cytoscapeBuiltinEdgeTableAttributes);
 		
     }
 
-    private static void createTableAttrs(Map<String, DeclarationEntry> attrsDecls, CyTable table) {
+
+    private static void createTableAttrs(Map<String, DeclarationEntry> attrsDecls, CyTable sharedTable, Set<String> cytoscapeBuiltInAttrs) {
     	if ( attrsDecls!=null && !attrsDecls.isEmpty()) {
     		for ( Map.Entry<String, DeclarationEntry> e: attrsDecls.entrySet()) {
+    			String attrName = e.getKey();
+    			if ( cytoscapeBuiltInAttrs.contains(attrName))
+    				continue;
     			ATTRIBUTE_DATA_TYPE dtype= e.getValue().getDataType();
     			if (dtype == null)
     				dtype = ATTRIBUTE_DATA_TYPE.STRING;
-    			CxUtil.createColumn(table, e.getKey(), CxUtil.getDataType( dtype), dtype.isSingleValueType());
+    			CxUtil.createColumn(sharedTable, attrName, CxUtil.getDataType( dtype), dtype.isSingleValueType());
     		}
     	}	
     }
@@ -265,15 +277,14 @@ public final class Cx2Importer {
     	} 
 
     	// add attributes
-		final CyRow localRow = nodeTable.getRow(nodesuid);
+		final CyRow localRow = baseNodeTable.getRow(nodesuid);
 
 		for ( Map.Entry<String,Object> e: node.getAttributes().entrySet()) {
 			String attrName = e.getKey();
-			if (nodeTable.getColumn(attrName) != null) {
+			if(attrName.equals(CyNetwork.SUID))
+				continue;
+			if (baseNodeTable.getColumn(attrName) != null) {
 				localRow.set(attrName, e.getValue());
-				if ( attrName.equals(CyNetwork.NAME) && (!node.getAttributes().containsKey(CyRootNetwork.SHARED_NAME)) ) {
-					localRow.set(CyRootNetwork.SHARED_NAME, e.getValue());
-				}
 			} else 
 				throw new NdexException("Node attribute " + e.getKey() + " is not declared.");
 		}
@@ -308,23 +319,25 @@ public final class Cx2Importer {
     	if ( srcsuid == null) {
     		src = createCyNodeByCXId(edge.getSource());
     	} else 
-    		src = root.getNode(srcsuid);
+    		src = base.getNode(srcsuid);
     	
     	Long tgtsuid = this.nodeIdMap.get(edge.getTarget());
     	if ( tgtsuid == null) {
     		tgt = createCyNodeByCXId ( edge.getTarget());
     	} else
-    		tgt = root.getNode(tgtsuid);
+    		tgt = base.getNode(tgtsuid);
     	
 		CyEdge cyEdge = base.addEdge(src, tgt, true);
 		CxUtil.saveCxId(cyEdge, base, edge.getId() );
     	this.edgeIdMap.put(edge.getId(), cyEdge.getSUID());
     	
     	// edge edge attributes
-		final CyRow localRow = edgeTable.getRow(cyEdge.getSUID());
+		CyRow localRow = baseEdgeTable.getRow(cyEdge.getSUID());
 
 		for ( Map.Entry<String,Object> e: edge.getAttributes().entrySet()) {
-			if (edgeTable.getColumn(e.getKey()) != null) {
+			if (e.getKey().equals(CyNetwork.SUID))
+				continue;
+			if (baseEdgeTable.getColumn(e.getKey()) != null) {
 				localRow.set(e.getKey(), e.getValue());
 			} else 
 				throw new NdexException("Edge attribute " + e.getKey() + " is not declared.");
@@ -333,23 +346,26 @@ public final class Cx2Importer {
     }
     
     private void createNetworkAttribute(CxNetworkAttribute netAttrs) throws NdexException {
-		final CyRow sharedRow = networkTable.getRow(root.getSUID());
+		CyRow localRow = baseNetworkTable.getRow(base.getSUID());
 		
 		netAttrs.extendToFullNode(this.attrDecls.getAttributesInAspect(CxNetworkAttribute.ASPECT_NAME));
 		netAttrs.validateAttribute(this.attrDecls.getAttributesInAspect(CxNetworkAttribute.ASPECT_NAME), true);
 		
 		for ( Map.Entry<String,Object> e: netAttrs.getAttributes().entrySet()) {
-			if (networkTable.getColumn(e.getKey()) != null) {
-				sharedRow.set(e.getKey(), e.getValue());
-				if ( e.getKey().equals(CyNetwork.NAME)) {
-					this.name = (String)e.getValue();
-					if ( !netAttrs.getAttributes().containsKey(CyRootNetwork.SHARED_NAME)) {
-						sharedRow.set(CyRootNetwork.SHARED_NAME, e.getValue());
-					}
-				}	
-			} else 
-				throw new NdexException("Network attribute " + e.getKey() + " is not declared.");
-		}
+			String attrName = e.getKey();
+			if(attrName.equals(CyNetwork.SUID)|| attrName.equals(CyNetwork.SELECTED)) //igonore
+				continue;
+			else if (attrName.equals(CyNetwork.NAME) || attrName.equals(CxUtil.ANNOTATIONS)) {
+			   localRow.set(attrName, e.getValue());
+				if ( attrName.equals(CyNetwork.NAME))
+						this.name = (String)e.getValue();
+			} else {
+				if( (baseNetworkTable.getColumn(e.getKey()) != null) ){
+					localRow.set(e.getKey(), e.getValue());					
+				} else 
+					throw new NdexException("Network attribute " + e.getKey() + " is not declared.");
+			}
+		}	
     }
     
     private void addOpaqueAspectElement(CxOpaqueAspectElement e) {
