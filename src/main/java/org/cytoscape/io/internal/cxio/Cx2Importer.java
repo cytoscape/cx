@@ -788,9 +788,11 @@ public final class Cx2Importer {
 				MappingDefinition defination = mapping.getValue().getMappingDef();
 				String attrName = defination.getAttributeName();
 				switch (mapping.getValue().getType()) {
-				case PASSTHROUGH:
-					ViewMaker.addPasstroughMapping(style, vp,attrName,myClass);
+				case PASSTHROUGH: {
+			        ATTRIBUTE_DATA_TYPE dtype = getAttrDataType(myClass,attrName); 
+					ViewMaker.addPasstroughMapping(style, vp,attrName,CxUtil.getDataType(dtype));
 					break;
+				}
 				case DISCRETE:
 					addDiscreteMapping(myClass,lexicon, defination,style,vp,cx2VpName);			
 					break;
