@@ -923,7 +923,9 @@ public final class CxExporter {
 				}
 			} else {
 				if (namespace.equals(CyNetwork.HIDDEN_ATTRS)) {
-					element = new HiddenAttributesElement(subnet, column_name, String.valueOf(value), type);
+					if ( !column_name.equals(CxUtil.PARENT_NETWORK_COLUMN) || subnet !=null )
+					    element = new HiddenAttributesElement(subnet, column_name, String.valueOf(value),
+					    		type);
 				}else {
 					element = new NetworkAttributesElement(subnet, column_name, String.valueOf(value), type);
 				}
