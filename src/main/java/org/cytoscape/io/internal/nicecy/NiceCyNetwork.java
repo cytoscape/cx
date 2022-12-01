@@ -326,7 +326,9 @@ public abstract class NiceCyNetwork extends Identifiable {
 			// special handling of __parentNetwork.SUID column
 			if ( name.equals(CxUtil.PARENT_NETWORK_COLUMN)) {
 				if ( attr.getSubnetwork()!=null) {
-					//remap the suid of parent network
+			//		Long realSUID = ((NiceCySubNetwork)this).parent.getNetwork(attr.getSubnetwork()).network.getSUID();
+			//		CxUtil.createColumn(hiddenTable, name, CxUtil.getDataType(attr.getDataType()), attr.isSingleValue());					
+			//		hiddenRow.set(name, realSUID);
 				}
 				return;
 				

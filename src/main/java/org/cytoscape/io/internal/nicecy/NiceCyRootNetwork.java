@@ -471,7 +471,7 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 		
 	}
 	
-	private NiceCyNetwork getNetwork(Long suid) {
+	protected NiceCyNetwork getNetwork(Long suid) {
 		if (suid == null) {
 			if (!isCollection){// || subnetworks.size() == 1) {
 				return subnetworks.values().iterator().next();
