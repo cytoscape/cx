@@ -23,7 +23,14 @@ The goals of this major revision of CX are
 4. [Aspect Data Blocks](#aspect-data-blocks)
 5. [Status Aspect](#status-aspect)
 6. [CX Core Aspects](#cx-core-aspects)
-
+  - [attributeDeclarations](#attributedeclarations)
+  - [nodes](#nodes)
+  - [edges](#edges)
+  - [visualProperties](#visualproperties)
+  - [nodeBypasses](#nodebypasses)
+  - [edgeBypasses](#edgebypasses)
+7. [Opaque aspects](#opaque-aspects) 
+ 
 
 ## Top Level Structure of CX
 
@@ -153,4 +160,195 @@ For a single network, the networkAttributes aspect has only one element. This el
 - **description** - a brief description of the network 
 - **version** - version of the network
 
+# nodes
 
+{% highlight json %}
+{
+  "id":  long,
+  "v":   object
+  "x":   double,
+  "y":  double,
+  "z" :  double,
+}
+{% endhighlight %}
+
+- **"id"** -  the unique id in the scope of the nodes aspect. 
+- **"v"** - holds all node attributes as one JSON object. In this object, attributes "x","y" and "z" are treated as ordinary attributes instead of coordinates. To avoid confusion, the attribute name "id" is not allowed in this object. Also, there are 3 reserved node attribute names in CX:
+  - **"name"**: node name. Is normally used as a label for the node when the network is visualized as a graph. For biological networks, we recommend using gene symbols as node names (if possible) to increase the interoperability of your network with other applications in the Cytoscape ecosystem. Its type is string.
+  - **"represents"**:    a standard identifier defining what the node represents. Its type is string.
+  - "alias": alternative identifiers for the node. Its type is list-of-string.
+- **"x"** - the x coordinate of the node.  
+- **"y"** - the y coordinate of the node. x and y attributes are optional, but CX has these constraints on them
+If a node has an "x" value in it, it must also have a "y" value. 
+If one node has an "x" and "y" value, all nodes in this CX network must have x and y values. 
+- **“z”** -  z coordinate or z-order, depending on how the renderer interprets it. This property is optional. If a node has a ‘z’ attribute, it must also have x, and y. If one node has a ‘z’ coordinate, all nodes should have  "z" attributes.   
+
+The coordinates in this aspect are only for single networks. Node coordinates in Cytoscape Collections are stored in the cartesianLayout aspect because they are associated with a view.
+
+# edges
+
+{% highlight json %}
+{
+  "id": long,
+  "s" : long,
+  "t" : long, 
+  "v" : object
+}	
+{% endhighlight %}
+
+- **"id"** - is the unique id of the edge in the scope of this aspect. Required
+- **"s"** - id of the source node. Required.
+- **"t"** -  id of the target node. Required.
+- **"v"** - holds all attributes on this edge as a JSON object. Like the "v" attribute in nodes, this object doesn't allow the attribute "id" in it. It also treats "s" and "t" as normal attributes in it.
+
+# visualProperties
+
+This aspect defines the default visuals styles and data-driven mappings in this network. There is only one element in this aspect. This aspect should not be fragmented.
+
+The graphic properties in this aspect only support Cytoscape Portable Graphic Styles. If a user wants to store non-portable visual styles such as native Cytoscape desktop application specific visual properties, they can be stored in an opaque aspect such as cyVisualProperties. It is recommended to put all portable visual properties and styles in the visualProperties aspect so that they can be supported by a broad range of tools in the Cytoscape ecosystem. 
+
+The data type of visual attribute values is predefined either by Cytoscape or the portable visual style standard.
+
+Elements in this aspect has this structure:
+```
+{
+  "default": {
+	"network": {
+        attribute_1: value,
+        attribute_2: value,
+           ...
+      },
+     "node": {
+        attribute_1: value,
+        attribute_2: value,
+          ...
+    },
+    "edge": {
+        attribute_1: value,
+        attribute_2: value,
+         ... 
+    }
+   },
+  "nodeMapping":{
+      Attribute_1: {
+        "type":  "DISCRETE" | "PASSTHROUGH" | "CONTINUOUS",  
+        "definition": <mapping serialized to JSON>},
+      Attribute_2: {
+        "type": value
+        "definition": <<mapping serialized to JSON>},
+      ...        
+  }
+  "edgeMapping":{
+     ...
+  }
+}
+```
+Each type of mapping has a specific schema.
+The schema for the PASSTHROUGH mapping is:
+{% highlight json %}
+  {
+    "attribute": string, 
+    "selector":  object, 
+  } 
+{% endhighlight %}
+   
+- **"attribute"** - attribute name. This is the original attribute name as is used in node or edge attributes, or the expanded name defined in the attributeDefinitions aspect. A shortened attribute name cannot be used here. The Data type of the attribute will be inferred from this attribute name.
+- **"selector"** - the expression tree of the selector. Cytoscape doesn't support this now, if Cytoscape can implement this, we can add this to portable style which will increase the compatibility between CytoscapeJS and Cytoscape data model.
+
+Schema for DISCRETE mapping is
+```
+{
+  "attribute": string
+  "selector": object,
+  "map": [{ "v" : data_value, 
+            "vp": visual_property_value }]  
+}	
+```		
+Data type of data_value and visual_property_value can be inferred from attribute and visual property name.
+Schema for CONTINUOUS mapping is
+
+```
+{
+  "attribute": string
+  "map": [{
+             "min":       double,
+             "includeMin": true | false,
+             "max":       double,
+             "includeMax": true | false,
+             "minVPValue": visual_property_value,
+             "maxVPValue": visual_property_value
+          }]  
+}	
+ ```
+
+# nodeBypasses           
+
+This aspect stores all the bypass visual properties on nodes. Its element  has this data structure
+
+{% highlight json %}
+
+{
+   "id": long,
+   "v":  Object
+}
+{% endhighlight %}
+
+- **"id"** - is the node id.
+- **"v"** - is an object that stores visual properties. The values are simple objects with name-value pairs in it. The attribute name is the visual property name. This is an example element in this aspect: 
+
+{% highlight json %}
+
+{ 
+  "id": 245,
+  "v" : {
+        "NODE_BACKGROUND_COLOR": "#89D0F5"
+        "NODE_SHAPE":   "round-rectangle"
+     }
+}
+{% endhighlight %}
+
+# edgeBypasses
+
+Similar to the nodeBypasses aspect, this aspect stores all the bypass visual properties on edges. The data structure of its element is
+
+{% highlight json %}
+{
+   "id": long,
+   "v": Object
+}
+{% endhighlight %}
+
+- **"id"** - is the edge id.
+- **"v"** - is an object that stores visual properties. The values are simple objects with name-value pairs in it. The attribute name is the visual property name. This is an example element in this aspect: 
+
+{% highlight json %}
+{ 
+  "id": 245,
+  "v": {
+      "EDGE_BEND": [
+           0.8534737565017845, 
+           0.5211358239103628, 
+           0.6999978351246443
+         ],
+      "EDGE_WIDTH": 5
+    }
+}
+{% endhighlight %}
+
+## Opaque aspects
+Applications are allowed to add any non-core aspects to CX as extensions. These aspects are called 'opaque aspects'. The element of an opaque aspect is a JSON object, and all elements in an opaque aspect should have the same data structure. Attributes in opaque aspect elements can also be declared in the attributeDeclarations aspect.          
+
+An opaque aspect is in this format in a CX document:
+
+```
+{
+   Aspect_name: [
+    Element1, 
+    Element2,
+	...
+   ]
+}
+```
+
+## Example CX files:
+ 
