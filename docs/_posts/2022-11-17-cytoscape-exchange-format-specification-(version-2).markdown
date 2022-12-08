@@ -30,6 +30,7 @@ The goals of this major revision of CX are
   - [nodeBypasses](#nodebypasses)
   - [edgeBypasses](#edgebypasses)
 7. [Opaque aspects](#opaque-aspects) 
+8. [Example CX files](#example-cx-files)
  
 
 ## Top Level Structure of CX
@@ -350,5 +351,7 @@ An opaque aspect is in this format in a CX document:
 }
 ```
 
-## Example CX files:
+## Example CX files
+
+[Example 1](https://github.com/cytoscape/cx/blob/CYTOSCAPE-13006/examples/DLoc%20Hierarchy%20demo.cx2)
  
