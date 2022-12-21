@@ -71,6 +71,7 @@ public final class CxUtil {
 	public static final Long DEFAULT_SUBNET = Long.MIN_VALUE;
 	public static final Long DEFAULT_VIEW = Long.MIN_VALUE;
 	
+	public static final String PARENT_NETWORK_COLUMN = "__parentNetwork.SUID";	
 	
 	private static String CXID_NAMESPACE = CyNetwork.HIDDEN_ATTRS;
     
