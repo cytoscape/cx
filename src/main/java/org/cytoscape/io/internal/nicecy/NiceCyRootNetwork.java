@@ -229,8 +229,10 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 		}
 		aspects.forEach(aspect -> {
 			HiddenAttributesElement hae = (HiddenAttributesElement) aspect;
-			NiceCyNetwork net = getNetwork(hae.getSubnetwork());
-			net.hiddenAttributes.add(hae);
+			if ( (!hae.getName().equals(CxUtil.UUID_COLUMN)) && (!hae.getName().equals(CxUtil.MODIFICATION_COLUMN))) {
+				NiceCyNetwork net = getNetwork(hae.getSubnetwork());
+				net.hiddenAttributes.add(hae);
+			}
 		});
 	}
 
@@ -471,7 +473,7 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 		
 	}
 	
-	private NiceCyNetwork getNetwork(Long suid) {
+	protected NiceCyNetwork getNetwork(Long suid) {
 		if (suid == null) {
 			if (!isCollection){// || subnetworks.size() == 1) {
 				return subnetworks.values().iterator().next();

@@ -543,7 +543,7 @@ public final class CxExporter {
 	// Network Attributes
 	private final void writeNetworkAttributes() throws IOException {
 
-		final List<AspectElement> elements = new ArrayList<>();
+		final List<AbstractAttributesAspectElement> elements = new ArrayList<>();
 		
 		// Write root table
 		if (writeSiblings) {
@@ -553,8 +553,9 @@ public final class CxExporter {
 		for (final CySubNetwork subnet : subnetworks) {
 			addNetworkAttributesHelper(CyNetwork.DEFAULT_ATTRS, subnet, elements);
 		}
+		
 
-		writeAspectElements(elements);
+		writeAspectElements((List<AspectElement>)(List<? extends AspectElement>)elements);
 	}
 	
 	private void writeCx2NetworkAttributes(CXWriter cx2writer) throws JsonGenerationException, JsonMappingException, IOException, NdexException {
@@ -889,15 +890,19 @@ public final class CxExporter {
 	
 	private final void writeHiddenAttributes() throws IOException {
 
-		final List<AspectElement> elements = new ArrayList<>();
+		final List<AbstractAttributesAspectElement> elements = new ArrayList<>();
 		if (writeSiblings) {
 			addNetworkAttributesHelper(CyNetwork.HIDDEN_ATTRS, baseNetwork, elements);
 		}
 		for (final CySubNetwork subnet : subnetworks) {
 			addNetworkAttributesHelper(CyNetwork.HIDDEN_ATTRS, subnet, elements);
 		}
+		
+		List<AspectElement> cleanedAttributes = elements.stream().filter( x -> (!x.getName().equals(CxUtil.UUID_COLUMN) 
+				                        && !x.getName().equals(CxUtil.MODIFICATION_COLUMN)))
+		.collect(Collectors.toList());
 
-		writeAspectElements(elements);
+		writeAspectElements(cleanedAttributes);
 	}
 
 	private void writeOpaqueElement(String column, String value)
@@ -1124,9 +1129,9 @@ public final class CxExporter {
 	 * @throws IOException 
 	 * @throws JsonParseException 
 	 */
-	@SuppressWarnings("rawtypes")
+	//@SuppressWarnings("rawtypes")
 	private void addNetworkAttributesHelper(final String namespace, final CyNetwork my_network,
-			final List<AspectElement> elements) throws JsonParseException, IOException {
+			final List<AbstractAttributesAspectElement> elements) throws JsonParseException, IOException {
 
 		final CyRow row = my_network.getRow(my_network, namespace);
 		
@@ -1177,7 +1182,9 @@ public final class CxExporter {
 				}
 			} else {
 				if (namespace.equals(CyNetwork.HIDDEN_ATTRS)) {
-					element = new HiddenAttributesElement(subnet, column_name, String.valueOf(value), type);
+					if ( !column_name.equals(CxUtil.PARENT_NETWORK_COLUMN) || subnet !=null )
+					    element = new HiddenAttributesElement(subnet, column_name, String.valueOf(value),
+					    		type);
 				}else {
 					element = new NetworkAttributesElement(subnet, column_name, String.valueOf(value), type);
 				}

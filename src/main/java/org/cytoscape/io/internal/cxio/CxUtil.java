@@ -76,6 +76,11 @@ public final class CxUtil {
 	public static final Long DEFAULT_SUBNET = Long.MIN_VALUE;
 	public static final Long DEFAULT_VIEW = Long.MIN_VALUE;
 	
+	public static final String PARENT_NETWORK_COLUMN = "__parentNetwork.SUID";	
+	
+	// these 2 constants are added to fix Cytoscape-13007, filter out this 2 attributes in the hiddenAttributes aspect when importing a cx file.
+	public static final String UUID_COLUMN = "NDEx UUID";
+	public static final String MODIFICATION_COLUMN = "NDEx Modification Timestamp";
 	
 	private static String CXID_NAMESPACE = CyNetwork.HIDDEN_ATTRS;
     
