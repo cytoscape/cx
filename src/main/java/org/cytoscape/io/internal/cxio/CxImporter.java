@@ -251,5 +251,84 @@ public final class CxImporter {
 		}
         return niceCX;
     }
+
+    public NiceCXNetwork getCX2NetworkFromStream( final InputStream in) throws IOException {
+    	CxElementReader2 r = new CxElementReader2(in, all_readers, true);
+        long t0 = System.currentTimeMillis();
+        MetaDataCollection metadata = r.getPreMetaData();
+		
+        long nodeIdCounter = 0;
+        long edgeIdCounter = 0;
+        
+        NiceCXNetwork niceCX = new NiceCXNetwork ();
+        
+     	for ( AspectElement elmt : r ) {
+     		switch ( elmt.getAspectName() ) {
+     			case NodesElement.ASPECT_NAME :       //Node
+     				    NodesElement n = (NodesElement) elmt;
+     					niceCX.addNode(n);
+                        if (n.getId() > nodeIdCounter )
+                        	nodeIdCounter = n.getId();
+     					break;
+     				case NdexNetworkStatus.ASPECT_NAME:   //ndexStatus we ignore this in CX
+     					break; 
+     				case EdgesElement.ASPECT_NAME:       // Edge
+     					EdgesElement ee = (EdgesElement) elmt;
+     					niceCX.addEdge(ee);
+     					if( ee.getId() > edgeIdCounter)
+     						edgeIdCounter = ee.getId();
+     					break;
+     				case NodeAttributesElement.ASPECT_NAME:  // node attributes
+     					niceCX.addNodeAttribute((NodeAttributesElement) elmt );
+     					break;
+     				case NetworkAttributesElement.ASPECT_NAME: //network attributes
+     					niceCX.addNetworkAttribute(( NetworkAttributesElement) elmt);
+     					break;
+     				case EdgeAttributesElement.ASPECT_NAME: //edge attributes
+     					niceCX.addEdgeAttribute((EdgeAttributesElement)elmt);
+     					break;
+     				case CartesianLayoutElement.ASPECT_NAME: // cartesian layout
+     					CartesianLayoutElement e = (CartesianLayoutElement)elmt;
+     					niceCX.addNodeAssociatedAspectElement(e.getNode(), e);
+     					break;
+     				default:    // opaque aspect
+     					niceCX.addOpaqueAspect(elmt);
+     			}
+     	} 
+     	
+     	MetaDataCollection postmetadata = r.getPostMetaData();
+     	
+  	    if ( postmetadata !=null) {
+		  if( metadata == null) {
+			  metadata = postmetadata;
+		  } else {
+			  for (MetaDataElement e : postmetadata) {
+				  Long cnt = e.getIdCounter();
+				  if ( cnt !=null) {
+					 metadata.setIdCounter(e.getName(),cnt);
+				  }
+				  cnt = e.getElementCount() ;
+				  if ( cnt !=null) {
+					  metadata.setElementCount(e.getName(),cnt);
+				  }
+			  }
+		  }
+	    }
+  	    
+  	    Long cxNodeIdCounter = metadata.getIdCounter(NodesElement.ASPECT_NAME);
+  	    if (cxNodeIdCounter == null || cxNodeIdCounter.longValue() < nodeIdCounter)
+  	    	metadata.setIdCounter(NodesElement.ASPECT_NAME, Long.valueOf(nodeIdCounter));
+  	    
+  	    Long cxEdgeIdCounter = metadata.getIdCounter(EdgesElement.ASPECT_NAME);
+  	    if (cxEdgeIdCounter == null || cxEdgeIdCounter.longValue() < edgeIdCounter)
+  	        metadata.setIdCounter(EdgesElement.ASPECT_NAME, Long.valueOf(edgeIdCounter));
+  	
+  	    niceCX.setMetadata(metadata);
+  	    if (Settings.INSTANCE.isTiming()) {
+			TimingUtil.reportTimeDifference(t0, "niceCX", niceCX.getMetadata().size());
+		}
+        return niceCX;
+    }
+    
     
 }

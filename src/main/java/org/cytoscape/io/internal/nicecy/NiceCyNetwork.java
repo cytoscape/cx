@@ -36,11 +36,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class NiceCyNetwork extends Identifiable {
 	
-	protected final List<CyTableColumnElement> tableColumns = new ArrayList<CyTableColumnElement>();
-	protected List<NetworkAttributesElement> attributes = new ArrayList<NetworkAttributesElement>();
-	protected List<HiddenAttributesElement> hiddenAttributes = new ArrayList<HiddenAttributesElement>();
-	protected Map<Long, List<NodeAttributesElement>> nodeAttributes = new HashMap<Long, List<NodeAttributesElement>>();
-	protected Map<Long, List<EdgeAttributesElement>> edgeAttributes = new HashMap<Long, List<EdgeAttributesElement>>();
+	protected final List<CyTableColumnElement> tableColumns = new ArrayList<>();
+	protected List<NetworkAttributesElement> attributes = new ArrayList<>();
+	protected List<HiddenAttributesElement> hiddenAttributes = new ArrayList<>();
+	protected Map<Long, List<NodeAttributesElement>> nodeAttributes = new HashMap<>();
+	protected Map<Long, List<EdgeAttributesElement>> edgeAttributes = new HashMap<>();
 
 	protected CyNetwork network;
 
@@ -73,17 +73,17 @@ public abstract class NiceCyNetwork extends Identifiable {
 		public NiceCySubNetwork(long id, NiceCyRootNetwork parent) {
 			super(id);
 			this.parent = parent;
-			views = new HashMap<Long, NiceCyView>();
-			nodes = new ArrayList<Long>();
-			edges = new ArrayList<Long>();
-			groups = new ArrayList<Long>();
+			views = new HashMap<>();
+			nodes = new ArrayList<>();
+			edges = new ArrayList<>();
+			groups = new ArrayList<>();
 		}
 
-		protected void apply(CyNetwork network) {
-			if (network == null) {
+		protected void apply(CyNetwork cyNetwork) {
+			if (cyNetwork == null) {
 				throw new RuntimeException("Subnetwork can not be null");
 			}
-			this.network = network;
+			this.network = cyNetwork;
 
 			addElements();
 			addTableColumns();
@@ -119,15 +119,15 @@ public abstract class NiceCyNetwork extends Identifiable {
 		}
 
 		public Collection<? extends CyNetworkView> createViews(Boolean explicitCreateView) {
-			List<CyNetworkView> cy_views = new ArrayList<CyNetworkView>();
+			List<CyNetworkView> cy_views = new ArrayList<>();
 			CyNetworkViewFactory view_factory = CyServiceModule.getService(CyNetworkViewFactory.class);
 			CyNetworkViewManager view_manager = CyServiceModule.getService(CyNetworkViewManager.class);
 		
 			views.forEach((suid, view) -> {
-				final boolean hasExplicitView = !view.isCartesianLayoutEmpty() 
+			/*	final boolean hasExplicitView = !view.isCartesianLayoutEmpty() 
 						|| !view.isVisualPropertiesEmpty() 
 						|| !view.isNodeBypassEmpty() 
-						|| !view.isEdgeBypassEmpty();
+						|| !view.isEdgeBypassEmpty(); */
 				
 				final long networkSize = network.getEdgeCount() + network.getNodeCount();
 				
@@ -164,7 +164,7 @@ public abstract class NiceCyNetwork extends Identifiable {
 		
 		public void updateViewIds(NiceCySubNetwork otherNet) {
 			this.id = otherNet.getId();
-			Map<String, NiceCyView> nameMap = new HashMap<String, NiceCyView>();
+			Map<String, NiceCyView> nameMap = new HashMap<>();
 			for (NiceCyView view : otherNet.views.values()) {
 				String name = view.getName();
 				if (nameMap.containsKey(name)) {
@@ -244,7 +244,7 @@ public abstract class NiceCyNetwork extends Identifiable {
 			root = ((NiceCySubNetwork) this).parent;
 		}
 
-		Long t0 = System.currentTimeMillis();
+		long t0 = System.currentTimeMillis();
 		addNetworkAttributesHelper(network, attributes, hiddenAttributes);
 		// addNetworkAttributesHelper(hidden_table, network, hiddenAttributes);
 		nodeAttributes.forEach((suid, attrs) -> {

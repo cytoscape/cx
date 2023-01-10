@@ -52,9 +52,9 @@ public final class ViewMaker {
     public static final Pattern DIRECT_NET_PROPS_PATTERN = Pattern
             .compile("GRAPH_VIEW_(ZOOM|CENTER_(X|Y))|NETWORK_(WIDTH|HEIGHT|SCALE_FACTOR|CENTER_(X|Y|Z)_LOCATION)");
     
-    private static final VisualMappingFunctionFactory vmf_factory_c = CyServiceModule.getContinuousMapping();
-    private static final VisualMappingFunctionFactory vmf_factory_d = CyServiceModule.getDiscreteMapping();
-    private static final VisualMappingFunctionFactory vmf_factory_p = CyServiceModule.getPassthroughMapping();
+    public static final VisualMappingFunctionFactory vmf_factory_c = CyServiceModule.getContinuousMapping();
+    public static final VisualMappingFunctionFactory vmf_factory_d = CyServiceModule.getDiscreteMapping();
+    public static final VisualMappingFunctionFactory vmf_factory_p = CyServiceModule.getPassthroughMapping();
     
     // TODO: Cannot handle passthrough (or other?) mappings to list columns
     
@@ -80,7 +80,7 @@ public final class ViewMaker {
         return true;
     }
     
-    private static CyNetworkView applyStyle (
+    public static CyNetworkView applyStyle (
     		VisualStyle style, 
     		CyNetworkView network_view,
     		String layout, boolean fitContent) {
@@ -101,9 +101,9 @@ public final class ViewMaker {
         style.apply(network_view);
         network_view.updateView();
         
-        CyNetworkViewManager view_manager = CyServiceModule.getService(CyNetworkViewManager.class);
+    /*    CyNetworkViewManager view_manager = CyServiceModule.getService(CyNetworkViewManager.class);
         
-        view_manager.addNetworkView(network_view);
+        view_manager.addNetworkView(network_view); */
         
         if (fitContent) {
         	network_view.fitContent();
@@ -125,8 +125,7 @@ public final class ViewMaker {
                                                   final StringParser sp,
                                                   final String col,
                                                   final String type,
-                                                  final Class<?> type_class,
-                                                  final VisualMappingFunctionFactory vmf_factory_c) {
+                                                  final Class<?> type_class) {
         final ContinuousMapping cmf = (ContinuousMapping) vmf_factory_c
                 .createVisualMappingFunction(col, type_class, vp);
 
@@ -180,8 +179,7 @@ public final class ViewMaker {
                                                 final StringParser sp,
                                                 final String col,
                                                 final String type,
-                                                final Class<?> type_class,
-                                                final VisualMappingFunctionFactory vmf_factory_d) {
+                                                final Class<?> type_class) {
         final DiscreteMapping dmf = (DiscreteMapping) vmf_factory_d.createVisualMappingFunction(col, type_class, vp);
         try {
         	if (dmf == null) {
@@ -225,8 +223,7 @@ public final class ViewMaker {
 	public final static void addPasstroughMapping(final VisualStyle style,
                                                   final VisualProperty vp,
                                                   final String col,
-                                                  final Class<?> type_class,
-                                                  final VisualMappingFunctionFactory vmf_factory_p) {
+                                                  final Class<?> type_class) {
         
     	try {
     		final PassthroughMapping pmf = (PassthroughMapping) 
@@ -372,7 +369,7 @@ public final class ViewMaker {
 
 	@SuppressWarnings("rawtypes")
 	private static void parseVisualMapping(
-    		final String mapping_target, 
+    		final String mapping_target, //VP name
     		final Mapping mapping, 
     		final VisualLexicon lexicon, 
     		final VisualStyle style, 
@@ -388,13 +385,13 @@ public final class ViewMaker {
         }
         
         if (mapping_type.equals(CxUtil.PASSTHROUGH)) {
-            addPasstroughMapping(style, vp, col, type_class, vmf_factory_p);
+            addPasstroughMapping(style, vp, col, type_class);
         }
         else if (mapping_type.equals(CxUtil.CONTINUOUS)) {
-            addContinuousMapping(style, vp, sp, col, type, type_class, vmf_factory_c);
+            addContinuousMapping(style, vp, sp, col, type, type_class);
         }
         else if (mapping_type.equals(CxUtil.DISCRETE)) {
-            addDiscreteMapping(style, vp, sp, col, type, type_class, vmf_factory_d);
+            addDiscreteMapping(style, vp, sp, col, type, type_class);
         }
         else {
             throw new IOException("unknown mapping type: " + mapping_type);
@@ -503,7 +500,8 @@ public final class ViewMaker {
         }
         else if (type.equals("boolean")) {
             return Boolean.class;
-        }
+        } else if ( type.startsWith("list_of_"))
+        	return List.class;
         else {
             throw new IllegalArgumentException("don't know how to deal with type '" + type + "'");
         }
@@ -596,7 +594,7 @@ public final class ViewMaker {
         final CyVisualPropertiesElement networkVisualProperties = visualProperties.get("network");
         
         ViewMaker.setDefaultVisualPropertiesAndMappings(lexicon,
-        																							networkVisualProperties,
+        													networkVisualProperties,
 			                                                new_visual_style,
 			                                                CyNetwork.class);
 

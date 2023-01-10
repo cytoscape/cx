@@ -2,6 +2,7 @@ package org.cytoscape.io.internal.cxio;
 
 import java.awt.Font;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.NetworkViewRenderer;
+import org.cytoscape.io.internal.AspectSet;
 import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyEdge;
@@ -28,6 +30,7 @@ import org.cytoscape.view.presentation.property.BooleanVisualProperty;
 import org.cytoscape.view.presentation.property.DoubleVisualProperty;
 import org.cytoscape.view.presentation.property.IntegerVisualProperty;
 import org.cytoscape.view.presentation.property.StringVisualProperty;
+import org.ndexbio.cx2.aspect.element.core.CxMetadata;
 import org.ndexbio.cx2.aspect.element.core.FontFace;
 import org.ndexbio.cx2.converter.FontFaceConverter;
 import org.ndexbio.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
@@ -58,11 +61,13 @@ public final class CxUtil {
     public static final String NODE_CUSTOM_GRAPHICS_SIZE_SYNC = "nodeCustomGraphicsSizeSync";
     public static final String ARROW_COLOR_MATCHES_EDGE       = "arrowColorMatchesEdge";
     
-    public static final String NAME = "name";
-    public static final String SHARED_NAME = "shared name";
+//    public static final String NAME = "name";
+//    public static final String SHARED_NAME = "shared name";
     public static final String INTERACTION = "interaction";
-    public static final String SHARED_INTERACTION = "shared interaction";
-    public static final String SELECTED = "selected";
+//    public static final String SHARED_INTERACTION = "shared interaction";
+//    public static final String SELECTED = "selected";
+    
+    public static final String ANNOTATIONS = "__Annotations";
     
     public static final String CX_ID_MAPPING				  = "CX Element ID";
     public static final String CX_METADATA				  	  = "CX MetaData";
@@ -96,6 +101,34 @@ public final class CxUtil {
 		}
 		return new MetaDataCollection();
     }
+    
+    public static List<CxMetadata> getOpaqueAspects(CyNetwork network) {
+    	List<CxMetadata> result = new ArrayList<>();
+    	CyTable hidden_network_table = network.getTable(CyNetwork.class, CyNetwork.HIDDEN_ATTRS);
+		CyRow row = hidden_network_table.getRow(network.getSUID());
+		if (row != null) {
+			String metaDataStr = row.get(CxUtil.CX_METADATA, String.class);
+			if (metaDataStr != null && metaDataStr.length()>1) {
+				try {
+					ObjectMapper mapper = new ObjectMapper();
+					MetaDataCollection cx2MetadataCollection = mapper.readValue(metaDataStr, MetaDataCollection.class);
+					for ( MetaDataElement e : cx2MetadataCollection) {
+					  if ( !AspectSet.getAspectNames().contains(e.getName())) {
+						  CxMetadata metadata = new CxMetadata(e.getName());
+						  metadata.setElementCount(e.getElementCount());
+						  result.add(metadata);
+					  }	  
+					}
+				}catch(IOException e) {
+					logger.info("Get Metadata threw an IOException: " + e);
+				}
+			} else {
+				//TODO: get the CX2 opaque metatdata directly if the network is imported in cx2 format.
+			}
+		}
+		return result;
+    }
+
     
     public static void setMetaData(CyNetwork network, MetaDataCollection metaData) {
     	CyTable hidden_table = network.getTable(CyNetwork.class, CyNetwork.HIDDEN_ATTRS);
@@ -529,10 +562,14 @@ public final class CxUtil {
 			return null;
 		}
 		if ( vp instanceof StringVisualProperty || 
-				vp instanceof IntegerVisualProperty ||
+			//	vp instanceof IntegerVisualProperty ||
 				vp instanceof DoubleVisualProperty ||
 				vp instanceof BooleanVisualProperty  ) {
 			return (T)value;
+		}
+		
+		if ( vp instanceof IntegerVisualProperty) {
+			return (T)Integer.valueOf(((Number)value).intValue());
 		}
 			
 	    if (vp.getDefault() instanceof Font) {

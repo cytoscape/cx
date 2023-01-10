@@ -98,7 +98,7 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 			NamespacesElement.ASPECT_NAME,
 			CyVisualPropertiesElement.ASPECT_NAME,
 			"visualProperties",
-			CyTableVisualPropertiesElement.ASPECT_NAME
+			AbstractTableVisualProperty.ASPECT_NAME
 	};
 	
 	private Map<Long, Long> suid_to_cxid_map;
@@ -604,7 +604,7 @@ public class NiceCyRootNetwork extends NiceCyNetwork{
 		throw new RuntimeException("No CySubNetwork found for " + currentNetwork);
 	}
 
-	private static <K,T> void addStyleToTable(CyTable table, Map<String, Map<String,TableColumnVisualStyle>> nodeTableStyles) throws Exception {
+	public static <K,T> void addStyleToTable(CyTable table, Map<String, Map<String,TableColumnVisualStyle>> nodeTableStyles) throws Exception {
 		var appManager = CyServiceModule.getService(CyApplicationManager.class);
         var tableViewManager = CyServiceModule.getService(CyTableViewManager.class);
 		var tableViewFactory = CyServiceModule.getService(CyTableViewFactory.class);

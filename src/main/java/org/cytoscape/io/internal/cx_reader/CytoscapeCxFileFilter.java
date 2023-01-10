@@ -16,28 +16,27 @@ import org.slf4j.LoggerFactory;
 
 public class CytoscapeCxFileFilter extends BasicCyFileFilter {
 	
-	private static final String[] extensions = new String[] { "cx" };
-    private static final String[] types = new String[] { "application/json" };
-    private static final String description = "CX JSON";
-    private static final DataCategory category = DataCategory.NETWORK;
+	private static final String[] cxExtensions = new String[] { "cx" };
+    protected static final String[] types = new String[] { "application/json" };
+    private static final String cxDescription = "CX JSON";
+    //private static final DataCategory dataCategory = DataCategory.NETWORK;
     
 
     private static final Logger locallogger            = LoggerFactory.getLogger(CytoscapeCxFileFilter.class);
-    public static final Pattern CX_HEADER_PATTERN = Pattern
+    private static final Pattern CX_HEADER_PATTERN = Pattern
     													.compile("\\s*\\{\\s*\"\\s*metaData\"\\s*:");
-    public static final Pattern CX_HEADER_PATTERN_OLD = Pattern
+    private static final Pattern CX_HEADER_PATTERN_OLD = Pattern
                                                           .compile("\\s*\\[\\s*\\{\\s*\"\\s*numberVerification\"\\s*:");
 
     public CytoscapeCxFileFilter(final String[] extensions,
             final String[] contentTypes,
             final String description,
-            final DataCategory category,
             final StreamUtil streamUtil) {
-		super(extensions, contentTypes, description, category, streamUtil);
+		super(extensions, contentTypes, description, DataCategory.NETWORK, streamUtil);
 	}
     
     public CytoscapeCxFileFilter(final StreamUtil streamUtil) {
-        this(extensions, types, description, category, streamUtil);
+        this(cxExtensions, types, cxDescription, streamUtil);
     }
 
     @Override
@@ -74,7 +73,7 @@ public class CytoscapeCxFileFilter extends BasicCyFileFilter {
      * @param stream
      * @return null if not an CX file
      */
-    protected String getCXstartElement(final InputStream stream) {
+    protected static String getCXstartElement(final InputStream stream) {
         final String header = getHeaderCharacters(stream, 400);
         final Matcher matcher = CX_HEADER_PATTERN.matcher(header);
         String root = null;
@@ -93,7 +92,7 @@ public class CytoscapeCxFileFilter extends BasicCyFileFilter {
         return root;
     }
     
-    protected String getHeaderCharacters(InputStream stream, int numCharacters) {
+    protected static String getHeaderCharacters(InputStream stream, int numCharacters) {
 
 		String header;
 		BufferedReader br = new BufferedReader(new InputStreamReader(stream));

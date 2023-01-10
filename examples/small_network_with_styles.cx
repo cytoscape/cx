@@ -1,0 +1,870 @@
+[
+    {
+        "numberVerification": [
+            {
+                "longNumber": 281474976710655
+            }
+        ]
+    },
+    {
+        "metaData": [
+            {
+                "elementCount": 56,
+                "name": "nodeAttributes",
+                "properties": [],
+                "version": "1.0"
+            },
+            {
+                "elementCount": 2,
+                "name": "cyHiddenAttributes",
+                "properties": [],
+                "version": "1.0"
+            },
+            {
+                "elementCount": 6,
+                "idCounter": 137,
+                "name": "nodes",
+                "properties": [],
+                "version": "1.0"
+            },
+            {
+                "elementCount": 1,
+                "name": "networkAttributes",
+                "properties": [],
+                "version": "1.0"
+            },
+            {
+                "elementCount": 23,
+                "name": "cyTableColumn",
+                "properties": [],
+                "version": "1.0"
+            },
+            {
+                "elementCount": 6,
+                "name": "cartesianLayout",
+                "properties": [],
+                "version": "1.0"
+            },
+            {
+                "elementCount": 12,
+                "name": "edgeAttributes",
+                "properties": [],
+                "version": "1.0"
+            },
+            {
+                "elementCount": 6,
+                "idCounter": 248,
+                "name": "edges",
+                "properties": [],
+                "version": "1.0"
+            },
+            {
+                "elementCount": 7,
+                "name": "cyVisualProperties",
+                "properties": [],
+                "version": "1.0"
+            }
+        ]
+    },
+    {
+        "nodeAttributes": [
+            {
+                "d": "double",
+                "n": "jaccard",
+                "po": 115,
+                "v": "-1.0"
+            },
+            {
+                "d": "double",
+                "n": "align_score",
+                "po": 115,
+                "v": "-1.0"
+            },
+            {
+                "d": "double",
+                "n": "align_fdr",
+                "po": 115,
+                "v": "-1.0"
+            },
+            {
+                "n": "annot_source",
+                "po": 115,
+                "v": "novel"
+            },
+            {
+                "n": "genes",
+                "po": 115,
+                "v": "DHX15,SNRPC,SNRPB2,CDC40,SNRNP70,SRRM1,CCDC12,GEMIN4,CD2BP2,SNRPA1,GEMIN7,"
+            },
+            {
+                "d": "integer",
+                "n": "Size",
+                "po": 115,
+                "v": "11"
+            },
+            {
+                "n": "cc_overlap",
+                "po": 115,
+                "v": "6/61;6/115;5/60;8/619;3/21;5/297;3/30;2/8;2/19;2/21;2/24;3/408"
+            },
+            {
+                "n": "annot",
+                "po": 115,
+                "v": "COMP:753"
+            },
+            {
+                "n": "overlap",
+                "po": 115,
+                "v": "None"
+            },
+            {
+                "d": "double",
+                "n": "jaccard",
+                "po": 137,
+                "v": "-1.0"
+            },
+            {
+                "d": "double",
+                "n": "align_score",
+                "po": 137,
+                "v": "-1.0"
+            },
+            {
+                "d": "double",
+                "n": "align_fdr",
+                "po": 137,
+                "v": "-1.0"
+            },
+            {
+                "n": "annot_source",
+                "po": 137,
+                "v": "novel"
+            },
+            {
+                "n": "genes",
+                "po": 137,
+                "v": "DHX15,SNRPC,SNRPB2,SNRNP70,CCDC12,GEMIN7,"
+            },
+            {
+                "d": "integer",
+                "n": "Size",
+                "po": 137,
+                "v": "6"
+            },
+            {
+                "n": "cc_overlap",
+                "po": 137,
+                "v": "4/61;4/115;3/21;3/60;2/8;4/619;2/24"
+            },
+            {
+                "n": "annot",
+                "po": 137,
+                "v": "COMP:737"
+            },
+            {
+                "n": "overlap",
+                "po": 137,
+                "v": "None"
+            },
+            {
+                "d": "double",
+                "n": "jaccard",
+                "po": 124,
+                "v": "0.3076923077"
+            },
+            {
+                "d": "double",
+                "n": "align_score",
+                "po": 124,
+                "v": "0.25474"
+            },
+            {
+                "d": "double",
+                "n": "align_fdr",
+                "po": 124,
+                "v": "0.004"
+            },
+            {
+                "n": "annot_source",
+                "po": 124,
+                "v": "CC"
+            },
+            {
+                "n": "genes",
+                "po": 124,
+                "v": "SNRPB2,CDC40,NAA38,RNPC3,EXO1,CCDC12,DHX8,SNRPA1,"
+            },
+            {
+                "d": "integer",
+                "n": "Size",
+                "po": 124,
+                "v": "8"
+            },
+            {
+                "n": "cc_overlap",
+                "po": 124,
+                "v": "5/61;4/30;5/115;3/21;3/60;2/21;4/619;3/408"
+            },
+            {
+                "n": "annot",
+                "po": 124,
+                "v": "catalytic step 2 spliceosome"
+            },
+            {
+                "n": "align_goID",
+                "po": 124,
+                "v": "GO:0071013"
+            },
+            {
+                "n": "overlap",
+                "po": 124,
+                "v": "4/9"
+            },
+            {
+                "d": "double",
+                "n": "jaccard",
+                "po": 123,
+                "v": "0.5"
+            },
+            {
+                "d": "double",
+                "n": "align_score",
+                "po": 123,
+                "v": "0.459948"
+            },
+            {
+                "d": "double",
+                "n": "align_fdr",
+                "po": 123,
+                "v": "0.0"
+            },
+            {
+                "n": "annot_source",
+                "po": 123,
+                "v": "CC"
+            },
+            {
+                "n": "genes",
+                "po": 123,
+                "v": "SNRPB2,CDC40,CCDC12,SNRPA1,"
+            },
+            {
+                "d": "integer",
+                "n": "Size",
+                "po": 123,
+                "v": "4"
+            },
+            {
+                "n": "cc_overlap",
+                "po": 123,
+                "v": "3/30;3/61;3/115;2/21;2/60"
+            },
+            {
+                "n": "annot",
+                "po": 123,
+                "v": "U2-type catalytic step 2 spliceosome"
+            },
+            {
+                "n": "align_goID",
+                "po": 123,
+                "v": "GO:0071007"
+            },
+            {
+                "n": "overlap",
+                "po": 123,
+                "v": "3/5"
+            },
+            {
+                "d": "double",
+                "n": "jaccard",
+                "po": 119,
+                "v": "-1.0"
+            },
+            {
+                "d": "double",
+                "n": "align_score",
+                "po": 119,
+                "v": "-1.0"
+            },
+            {
+                "d": "double",
+                "n": "align_fdr",
+                "po": 119,
+                "v": "-1.0"
+            },
+            {
+                "n": "annot_source",
+                "po": 119,
+                "v": "novel"
+            },
+            {
+                "n": "genes",
+                "po": 119,
+                "v": "DHX15,SNRPC,SNRPB2,CDC40,SNRNP70,SRRM1,CCDC12,SNRPA1,GEMIN7,"
+            },
+            {
+                "d": "integer",
+                "n": "Size",
+                "po": 119,
+                "v": "9"
+            },
+            {
+                "n": "cc_overlap",
+                "po": 119,
+                "v": "6/61;6/115;4/60;6/619;3/21;3/30;2/8;4/297;2/21;2/24"
+            },
+            {
+                "n": "annot",
+                "po": 119,
+                "v": "COMP:751"
+            },
+            {
+                "n": "overlap",
+                "po": 119,
+                "v": "None"
+            },
+            {
+                "d": "double",
+                "n": "jaccard",
+                "po": 103,
+                "v": "-1.0"
+            },
+            {
+                "d": "double",
+                "n": "align_score",
+                "po": 103,
+                "v": "-1.0"
+            },
+            {
+                "d": "double",
+                "n": "align_fdr",
+                "po": 103,
+                "v": "-1.0"
+            },
+            {
+                "n": "annot_source",
+                "po": 103,
+                "v": "novel"
+            },
+            {
+                "n": "genes",
+                "po": 103,
+                "v": "SRRM2,DHX15,COIL,SNRPC,SNRPB2,CDC40,NAA38,RNPC3,SNRNP70,SRSF10,SRRM1,EXO1,CCDC12,DHX8,GEMIN4,CD2BP2,SNRPA1,GEMIN7,SF3A2,"
+            },
+            {
+                "d": "integer",
+                "n": "Size",
+                "po": 103,
+                "v": "19"
+            },
+            {
+                "n": "cc_overlap",
+                "po": 103,
+                "v": "10/61;9/115;13/619;7/60;5/30;4/21;4/21;4/24;7/297;3/19;3/19;6/408;3/35;2/8;2/23;3/132;2/28;3/154"
+            },
+            {
+                "n": "annot",
+                "po": 103,
+                "v": "COMP:764"
+            },
+            {
+                "n": "overlap",
+                "po": 103,
+                "v": "None"
+            }
+        ]
+    },
+    {
+        "cyHiddenAttributes": [
+            {
+                "n": "NDEx UUID",
+                "v": "ed43e087-493e-11ea-bfdc-0ac135e8bacf"
+            },
+            {
+                "d": "long",
+                "n": "__parentNetwork.SUID",
+                "v": "51"
+            }
+        ]
+    },
+    {
+        "nodes": [
+            {
+                "@id": 115,
+                "n": "753"
+            },
+            {
+                "@id": 137,
+                "n": "737"
+            },
+            {
+                "@id": 124,
+                "n": "747"
+            },
+            {
+                "@id": 123,
+                "n": "721"
+            },
+            {
+                "@id": 119,
+                "n": "751"
+            },
+            {
+                "@id": 103,
+                "n": "764"
+            }
+        ]
+    },
+    {
+        "networkAttributes": [
+            {
+                "n": "name",
+                "v": "DLoc Hierarchy demo"
+            }, 
+            {
+              "n": "description",
+              "v": "A small network that has attributes on network, nodes and edges. It also has visualstyles and bypasses on nodes and edges."
+
+            }
+        ]
+    },
+    {
+        "cyTableColumn": [
+            {
+                "applies_to": "node_table",
+                "n": "shared name"
+            },
+            {
+                "applies_to": "node_table",
+                "d": "integer",
+                "n": "Size"
+            },
+            {
+                "applies_to": "node_table",
+                "n": "genes"
+            },
+            {
+                "applies_to": "node_table",
+                "n": "annot"
+            },
+            {
+                "applies_to": "node_table",
+                "d": "double",
+                "n": "align_score"
+            },
+            {
+                "applies_to": "node_table",
+                "d": "double",
+                "n": "align_fdr"
+            },
+            {
+                "applies_to": "node_table",
+                "n": "annot_source"
+            },
+            {
+                "applies_to": "node_table",
+                "d": "double",
+                "n": "jaccard"
+            },
+            {
+                "applies_to": "node_table",
+                "n": "overlap"
+            },
+            {
+                "applies_to": "node_table",
+                "n": "align_goID"
+            },
+            {
+                "applies_to": "node_table",
+                "n": "cc_overlap"
+            },
+            {
+                "applies_to": "node_table",
+                "n": "Comment"
+            },
+            {
+                "applies_to": "node_table",
+                "n": "name"
+            },
+            {
+                "applies_to": "edge_table",
+                "n": "shared name"
+            },
+            {
+                "applies_to": "edge_table",
+                "n": "shared interaction"
+            },
+            {
+                "applies_to": "edge_table",
+                "n": "Is_Tree_Edge"
+            },
+            {
+                "applies_to": "edge_table",
+                "n": "name"
+            },
+            {
+                "applies_to": "edge_table",
+                "n": "interaction"
+            },
+            {
+                "applies_to": "network_table",
+                "n": "shared name"
+            },
+            {
+                "applies_to": "network_table",
+                "d": "list_of_string",
+                "n": "__Annotations"
+            },
+            {
+                "applies_to": "network_table",
+                "n": "description"
+            },
+            {
+                "applies_to": "network_table",
+                "n": "version"
+            },
+            {
+                "applies_to": "network_table",
+                "n": "name"
+            }
+        ]
+    },
+    {
+        "cartesianLayout": [
+            {
+                "node": 103,
+                "x": 123.14439668294953,
+                "y": -297.131767510978
+            },
+            {
+                "node": 137,
+                "x": 326.15462133852697,
+                "y": -295.3667175710825
+            },
+            {
+                "node": 115,
+                "x": 193.35932771937667,
+                "y": -287.25515529706604
+            },
+            {
+                "node": 119,
+                "x": 256.8421551008104,
+                "y": -292.45574205548394
+            },
+            {
+                "node": 123,
+                "x": 299.8616030219418,
+                "y": -366.0878683881494
+            },
+            {
+                "node": 124,
+                "x": 173.69852672302636,
+                "y": -347.7649365389975
+            }
+        ]
+    },
+    {
+        "edgeAttributes": [
+            {
+                "n": "Is_Tree_Edge",
+                "po": 239,
+                "v": "Tree"
+            },
+            {
+                "n": "name",
+                "po": 239,
+                "v": "753 (interacts with) 751"
+            },
+            {
+                "n": "Is_Tree_Edge",
+                "po": 248,
+                "v": "Tree"
+            },
+            {
+                "n": "name",
+                "po": 248,
+                "v": "747 (interacts with) 721"
+            },
+            {
+                "n": "Is_Tree_Edge",
+                "po": 245,
+                "v": "Not_Tree"
+            },
+            {
+                "n": "name",
+                "po": 245,
+                "v": "751 (interacts with) 721"
+            },
+            {
+                "n": "Is_Tree_Edge",
+                "po": 244,
+                "v": "Tree"
+            },
+            {
+                "n": "name",
+                "po": 244,
+                "v": "751 (interacts with) 737"
+            },
+            {
+                "n": "Is_Tree_Edge",
+                "po": 223,
+                "v": "Tree"
+            },
+            {
+                "n": "name",
+                "po": 223,
+                "v": "764 (interacts with) 747"
+            },
+            {
+                "n": "Is_Tree_Edge",
+                "po": 222,
+                "v": "Tree"
+            },
+            {
+                "n": "name",
+                "po": 222,
+                "v": "764 (interacts with) 753"
+            }
+        ]
+    },
+    {
+        "edges": [
+            {
+                "@id": 239,
+                "i": "interacts with",
+                "s": 115,
+                "t": 119
+            },
+            {
+                "@id": 248,
+                "i": "interacts with",
+                "s": 124,
+                "t": 123
+            },
+            {
+                "@id": 245,
+                "i": "interacts with",
+                "s": 119,
+                "t": 123
+            },
+            {
+                "@id": 244,
+                "i": "interacts with",
+                "s": 119,
+                "t": 137
+            },
+            {
+                "@id": 223,
+                "i": "interacts with",
+                "s": 103,
+                "t": 124
+            },
+            {
+                "@id": 222,
+                "i": "interacts with",
+                "s": 103,
+                "t": 115
+            }
+        ]
+    },
+    {
+        "cyVisualProperties": [
+            {
+                "properties": {
+                    "NETWORK_ANNOTATION_SELECTION": "false",
+                    "NETWORK_BACKGROUND_PAINT": "#FFFFFF",
+                    "NETWORK_CENTER_X_LOCATION": "277.94120699843256",
+                    "NETWORK_CENTER_Y_LOCATION": "-338.62628577647894",
+                    "NETWORK_CENTER_Z_LOCATION": "0.0",
+                    "NETWORK_DEPTH": "0.0",
+                    "NETWORK_EDGE_SELECTION": "true",
+                    "NETWORK_FORCE_HIGH_DETAIL": "false",
+                    "NETWORK_HEIGHT": "602.0",
+                    "NETWORK_NODE_LABEL_SELECTION": "false",
+                    "NETWORK_NODE_SELECTION": "true",
+                    "NETWORK_SCALE_FACTOR": "2.644015711481058",
+                    "NETWORK_SIZE": "550.0",
+                    "NETWORK_TITLE": "DLoc Hierarchy demo",
+                    "NETWORK_WIDTH": "1415.0"
+                },
+                "properties_of": "network"
+            },
+            {
+                "dependencies": {
+                    "nodeCustomGraphicsSizeSync": "true",
+                    "nodeSizeLocked": "true"
+                },
+                "mappings": {
+                    "NODE_FILL_COLOR": {
+                        "definition": "COL=annot_source,T=string,K=0=CC,V=0=#CCFFFF,K=1=HPA,V=1=#CCFFCC,K=2=novel,V=2=#FFCCCC",
+                        "type": "DISCRETE"
+                    },
+                    "NODE_LABEL": {
+                        "definition": "COL=annot,T=string",
+                        "type": "PASSTHROUGH"
+                    },
+                    "NODE_LABEL_FONT_SIZE": {
+                        "definition": "COL=Size,T=integer,L=0=1,E=0=7,G=0=7,OV=0=3,L=1=45,E=1=45,G=1=45,OV=1=195,L=2=47,E=2=47,G=2=1,OV=2=661",
+                        "type": "CONTINUOUS"
+                    },
+                    "NODE_SIZE": {
+                        "definition": "COL=Size,T=integer,K=0=3,V=0=20.0,K=1=4,V=1=20.0,K=2=5,V=2=20.0,K=3=6,V=3=20.0,K=4=7,V=4=20.0,K=5=8,V=5=20.0,K=6=9,V=6=20.0,K=7=11,V=7=35.0,K=8=75,V=8=80.0,K=9=12,V=9=35.0,K=10=13,V=10=35.0,K=11=14,V=11=35.0,K=12=15,V=12=35.0,K=13=16,V=13=35.0,K=14=18,V=14=35.0,K=15=19,V=15=35.0,K=16=20,V=16=35.0,K=17=661,V=17=100.0,K=18=21,V=18=50.0,K=19=22,V=19=50.0,K=20=23,V=20=50.0,K=21=88,V=21=80.0,K=22=25,V=22=50.0,K=23=28,V=23=50.0,K=24=29,V=24=50.0,K=25=33,V=25=65.0,K=26=37,V=26=65.0,K=27=39,V=27=65.0,K=28=40,V=28=65.0,K=29=43,V=29=65.0,K=30=53,V=30=80.0,K=31=63,V=31=80.0",
+                        "type": "DISCRETE"
+                    }
+                },
+                "properties": {
+                    "COMPOUND_NODE_PADDING": "10.0",
+                    "COMPOUND_NODE_SHAPE": "ROUND_RECTANGLE",
+                    "NODE_BORDER_PAINT": "#CCCCCC",
+                    "NODE_BORDER_STROKE": "SOLID",
+                    "NODE_BORDER_TRANSPARENCY": "255",
+                    "NODE_BORDER_WIDTH": "0.0",
+                    "NODE_CUSTOMGRAPHICS_1": "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+                    "NODE_CUSTOMGRAPHICS_2": "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+                    "NODE_CUSTOMGRAPHICS_3": "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+                    "NODE_CUSTOMGRAPHICS_4": "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+                    "NODE_CUSTOMGRAPHICS_5": "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+                    "NODE_CUSTOMGRAPHICS_6": "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+                    "NODE_CUSTOMGRAPHICS_7": "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+                    "NODE_CUSTOMGRAPHICS_8": "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+                    "NODE_CUSTOMGRAPHICS_9": "org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],",
+                    "NODE_CUSTOMGRAPHICS_POSITION_1": "C,C,c,0.00,0.00",
+                    "NODE_CUSTOMGRAPHICS_POSITION_2": "C,C,c,0.00,0.00",
+                    "NODE_CUSTOMGRAPHICS_POSITION_3": "C,C,c,0.00,0.00",
+                    "NODE_CUSTOMGRAPHICS_POSITION_4": "C,C,c,0.00,0.00",
+                    "NODE_CUSTOMGRAPHICS_POSITION_5": "C,C,c,0.00,0.00",
+                    "NODE_CUSTOMGRAPHICS_POSITION_6": "C,C,c,0.00,0.00",
+                    "NODE_CUSTOMGRAPHICS_POSITION_7": "C,C,c,0.00,0.00",
+                    "NODE_CUSTOMGRAPHICS_POSITION_8": "C,C,c,0.00,0.00",
+                    "NODE_CUSTOMGRAPHICS_POSITION_9": "C,C,c,0.00,0.00",
+                    "NODE_CUSTOMGRAPHICS_SIZE_1": "50.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_2": "50.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_3": "50.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_4": "50.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_5": "50.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_6": "50.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_7": "50.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_8": "50.0",
+                    "NODE_CUSTOMGRAPHICS_SIZE_9": "50.0",
+                    "NODE_CUSTOMPAINT_1": "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_1, name=Node Custom Paint 1)",
+                    "NODE_CUSTOMPAINT_2": "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_2, name=Node Custom Paint 2)",
+                    "NODE_CUSTOMPAINT_3": "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_3, name=Node Custom Paint 3)",
+                    "NODE_CUSTOMPAINT_4": "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_4, name=Node Custom Paint 4)",
+                    "NODE_CUSTOMPAINT_5": "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_5, name=Node Custom Paint 5)",
+                    "NODE_CUSTOMPAINT_6": "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_6, name=Node Custom Paint 6)",
+                    "NODE_CUSTOMPAINT_7": "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_7, name=Node Custom Paint 7)",
+                    "NODE_CUSTOMPAINT_8": "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_8, name=Node Custom Paint 8)",
+                    "NODE_CUSTOMPAINT_9": "DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_9, name=Node Custom Paint 9)",
+                    "NODE_DEPTH": "0.0",
+                    "NODE_FILL_COLOR": "#89D0F5",
+                    "NODE_HEIGHT": "35.0",
+                    "NODE_LABEL_COLOR": "#000000",
+                    "NODE_LABEL_FONT_FACE": "SansSerif,plain,12",
+                    "NODE_LABEL_FONT_SIZE": "12",
+                    "NODE_LABEL_POSITION": "C,C,c,0.00,0.00",
+                    "NODE_LABEL_TRANSPARENCY": "255",
+                    "NODE_LABEL_WIDTH": "200.0",
+                    "NODE_NESTED_NETWORK_IMAGE_VISIBLE": "true",
+                    "NODE_PAINT": "#1E90FF",
+                    "NODE_SELECTED": "false",
+                    "NODE_SELECTED_PAINT": "#FFFF00",
+                    "NODE_SHAPE": "ELLIPSE",
+                    "NODE_SIZE": "35.0",
+                    "NODE_TRANSPARENCY": "255",
+                    "NODE_VISIBLE": "true",
+                    "NODE_WIDTH": "75.0",
+                    "NODE_X_LOCATION": "0.0",
+                    "NODE_Y_LOCATION": "0.0",
+                    "NODE_Z_LOCATION": "0.0"
+                },
+                "properties_of": "nodes:default"
+            },
+            {
+                "dependencies": {
+                    "arrowColorMatchesEdge": "false"
+                },
+                "mappings": {
+                    "EDGE_BEND": {
+                        "definition": "COL=Is_Tree_Edge,T=string",
+                        "type": "DISCRETE"
+                    },
+                    "EDGE_CURVED": {
+                        "definition": "COL=Is_Tree_Edge,T=string,K=0=Tree,V=0=false,K=1=Not_Tree,V=1=true",
+                        "type": "DISCRETE"
+                    },
+                    "EDGE_SOURCE_ARROW_UNSELECTED_PAINT": {
+                        "definition": "COL=Is_Tree_Edge,T=string,K=0=Tree,V=0=#666666,K=1=Not_Tree,V=1=#CCCCCC",
+                        "type": "DISCRETE"
+                    },
+                    "EDGE_STROKE_UNSELECTED_PAINT": {
+                        "definition": "COL=Is_Tree_Edge,T=string,K=0=Tree,V=0=#666666,K=1=Not_Tree,V=1=#CCCCCC",
+                        "type": "DISCRETE"
+                    }
+                },
+                "properties": {
+                    "EDGE_CURVED": "true",
+                    "EDGE_LABEL_COLOR": "#000000",
+                    "EDGE_LABEL_FONT_FACE": "Dialog,plain,10",
+                    "EDGE_LABEL_FONT_SIZE": "10",
+                    "EDGE_LABEL_TRANSPARENCY": "255",
+                    "EDGE_LABEL_WIDTH": "200.0",
+                    "EDGE_LINE_TYPE": "SOLID",
+                    "EDGE_PAINT": "#323232",
+                    "EDGE_SELECTED": "false",
+                    "EDGE_SELECTED_PAINT": "#FF0000",
+                    "EDGE_SOURCE_ARROW_SELECTED_PAINT": "#FFFF00",
+                    "EDGE_SOURCE_ARROW_SHAPE": "DELTA",
+                    "EDGE_SOURCE_ARROW_SIZE": "6.0",
+                    "EDGE_SOURCE_ARROW_UNSELECTED_PAINT": "#666666",
+                    "EDGE_STROKE_SELECTED_PAINT": "#FF0000",
+                    "EDGE_STROKE_UNSELECTED_PAINT": "#666666",
+                    "EDGE_TARGET_ARROW_SELECTED_PAINT": "#FFFF00",
+                    "EDGE_TARGET_ARROW_SHAPE": "NONE",
+                    "EDGE_TARGET_ARROW_SIZE": "6.0",
+                    "EDGE_TARGET_ARROW_UNSELECTED_PAINT": "#000000",
+                    "EDGE_TRANSPARENCY": "255",
+                    "EDGE_UNSELECTED_PAINT": "#404040",
+                    "EDGE_VISIBLE": "true",
+                    "EDGE_WIDTH": "2.0"
+                },
+                "properties_of": "edges:default"
+            },
+            {
+                "applies_to": 137,
+                "properties": {
+                    "NODE_LABEL_POSITION": "C,C,c,-4.44,14.57"
+                },
+                "properties_of": "nodes"
+            },
+            {
+                "applies_to": 115,
+                "properties": {
+                    "NODE_LABEL_POSITION": "C,C,c,0.25,7.65"
+                },
+                "properties_of": "nodes"
+            },
+            {
+                "applies_to": 119,
+                "properties": {
+                    "NODE_LABEL_POSITION": "C,C,c,0.25,10.86"
+                },
+                "properties_of": "nodes"
+            },
+            {
+                "applies_to": 245,
+                "properties": {
+                    "EDGE_BEND": "0.8534737565017845,0.5211358239103628,0.6999978351246443"
+                },
+                "properties_of": "edges"
+            }
+        ]
+    },
+    {
+        "status": [
+            {
+                "error": "",
+                "success": true
+            }
+        ]
+    }
+]

@@ -2,13 +2,28 @@ package org.cytoscape.io.internal.cx_writer;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.ndexbio.cx2.aspect.element.core.CxEdgeBypass;
+import org.ndexbio.cx2.aspect.element.core.CxNodeBypass;
+import org.ndexbio.cx2.aspect.element.core.MappingDefinition;
+import org.ndexbio.cx2.aspect.element.core.VPMappingType;
+import org.ndexbio.cx2.aspect.element.core.VisualPropertyMapping;
+import org.ndexbio.cx2.aspect.element.core.VisualPropertyTable;
+import org.ndexbio.cx2.aspect.element.cytoscape.VisualEditorProperties;
+import org.ndexbio.cx2.converter.CXToCX2VisualPropertyConverter;
+import org.ndexbio.cx2.converter.ConverterUtilities;
+import org.ndexbio.cx2.converter.ConverterUtilitiesResult;
+import org.ndexbio.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
 import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.ndexbio.cxio.core.interfaces.AspectElement;
 import org.ndexbio.cxio.util.CxioUtil;
+import org.ndexbio.model.exceptions.NdexException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -206,6 +221,25 @@ public final class VisualPropertiesGatherer {
             }
         }
     }
+
+    public final static <T> String getDefaultPropertyAsString(final VisualStyle style,
+            final VisualProperty<T> vp) {
+		final String id_string = vp.getIdString();
+		if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")
+				|| id_string.startsWith("NODE_CUSTOM") ) {
+			return null;
+		}
+
+    	final T vp_value = style.getDefaultValue(vp);
+    	if (vp_value != null) {
+    		final String value_str = vp.toSerializableString(vp_value);
+    		if (!CxioUtil.isEmpty(value_str)) {
+        		return value_str;
+    		}
+    	}
+    	return null;
+}
+
     
     final public static char COMMA = ',';
     
@@ -349,6 +383,154 @@ public final class VisualPropertiesGatherer {
         }
     }
 
+    public static <T> VisualPropertyMapping getCX2Mapping(final VisualStyle style,
+            final VisualProperty<T> vp,
+            final CyTable table) throws NdexException {
+    	final VisualMappingFunction<?, T> mapping = style.getVisualMappingFunction(vp);
+    	if (mapping == null) {
+    		return null;
+    	}
+    	
+    	String col = mapping.getMappingColumnName();
+    	String vpName = vp.getIdString();
+		String catVPStr = vpName.equals("NODE_SIZE") ? "NODE_HEIGHT" : vpName ;
+		VisualPropertyMapping cx2Mapping = new VisualPropertyMapping();
+		MappingDefinition def = new MappingDefinition (col);
+		cx2Mapping.setMappingDef(def);
+		CXToCX2VisualPropertyConverter cvtr = CXToCX2VisualPropertyConverter.getInstance();
+		
+    	if (mapping instanceof PassthroughMapping<?, ?>) {
+    		cx2Mapping.setType(VPMappingType.PASSTHROUGH);
+    		final PassthroughMapping<?, T> pm = (PassthroughMapping<?, T>) mapping;
+    		String type = null;
+    		try {
+    			type = toAttributeType(pm.getMappingColumnType(), table, col);
+    		}
+    		catch (final IOException e) {
+    			logger.info("WARNING: problem with mapping/column '" + col
+    					+ "': column not present, ignoring corresponding passthrough mapping. " + e.getMessage());
+    			return null;
+    		}
+    	} else if (mapping instanceof DiscreteMapping<?, ?>) {
+    		cx2Mapping.setType(VPMappingType.DISCRETE);
+    		final DiscreteMapping<?, T> dm = (DiscreteMapping<?, T>) mapping;
+    		String type = null;
+    		try {
+    			type = toAttributeType(dm.getMappingColumnType(), table, col);
+    		}
+    		catch (final IOException e) {
+    			logger.info("WARNING: problem with mapping/column '" + col
+    					+ "': column not present, ignoring corresponding discrete mapping. " + e.getMessage());
+    			return null;
+    		}
+    		
+    		final Map<?, T> map = dm.getAll();
+    		
+    		List<Map<String, Object>> mappingList = new ArrayList<>();
+    		for (final Map.Entry<?, T> entry : map.entrySet()) {
+    			final T value = entry.getValue();
+    			if (value == null) {
+    				continue;
+    			}	
+    			Map<String,Object> mapEntry = new HashMap<>();
+    			//String catVPStr = vpName.equals("NODE_SIZE") ? "NODE_HEIGHT" : vpName ;
+    			Object newVP = cvtr.getNewEdgeOrNodePropertyValue(catVPStr, vp.toSerializableString(value));
+    			if ( newVP!=null) {
+    				mapEntry.put("v",  entry.getKey());
+        			mapEntry.put("vp", newVP);
+        			mappingList.add(mapEntry);
+    			}
+    		}
+    		if (!mappingList.isEmpty())
+    			def.setMapppingList(mappingList);
+    	}	else if (mapping instanceof ContinuousMapping<?, ?>) {
+    		cx2Mapping.setType(VPMappingType.CONTINUOUS);
+    		final ContinuousMapping<?, T> cm = (ContinuousMapping<?, T>) mapping;
+    		String type = null;
+    		try {
+    			type = toAttributeType(cm.getMappingColumnType(), table, col);
+    		}
+    		catch (final IOException e) {
+    			logger.info("WARNING: problem with mapping/column '" + col
+    					+ "': column not present, ignoring corresponding continuous mapping." + e.getMessage());
+    			return null;
+    		}
+    		
+			List<Map<String, Object>> m = new ArrayList<>();
+
+			Object min = null;
+			Boolean includeMin = null;
+			// Object max = null;
+			Object minVP = null;
+			// Object maxVP = null;
+
+			int counter = 0;
+			Map<String, Object> currentMapping = new HashMap<>();
+
+			for (ContinuousMappingPoint<?, T> cp : cm.getAllPoints()) {
+				T L = cp.getRange().lesserValue;
+				
+				Object LO = cvtr.getNewEdgeOrNodePropertyValue(catVPStr, vp.toSerializableString(L));
+
+				T E = cp.getRange().equalValue;
+				
+				// Object EO = vpConverter.getNewEdgeOrNodePropertyValue(vpName,E);
+
+				T G = cp.getRange().greaterValue;
+				if (G == null) {
+					break;
+				}
+				Object GO = cvtr.getNewEdgeOrNodePropertyValue(catVPStr, vp.toSerializableString(G));
+
+				Object OV = cp.getValue();
+				
+				Object OVO = cp.getValue();
+
+				if (counter == 0) { // min side
+					currentMapping.put("includeMin", Boolean.FALSE);
+					currentMapping.put("includeMax", Boolean.valueOf(E.equals(L)));
+					currentMapping.put("maxVPValue", LO);
+					currentMapping.put("max", OVO);
+					m.add(currentMapping);
+				} else {
+					currentMapping.put("includeMin", includeMin);
+					currentMapping.put("includeMax", Boolean.valueOf(E.equals(L)));
+					currentMapping.put("minVPValue", minVP);
+					currentMapping.put("min", min);
+					currentMapping.put("maxVPValue", LO);
+					currentMapping.put("max", OVO);
+					m.add(currentMapping);
+				}
+
+				// store the max values as min for the next segment
+				includeMin = Boolean.valueOf(E.equals(G));
+
+				min = OVO;
+				minVP = GO;
+
+				currentMapping = new HashMap<>();
+				counter++;
+			}
+
+			// add the last entry
+			currentMapping.put("includeMin", includeMin);
+			currentMapping.put("includeMax", Boolean.FALSE);
+			currentMapping.put("minVPValue", minVP);
+			currentMapping.put("min", min);
+			m.add(currentMapping);
+
+			// add the list
+			if (!m.isEmpty())
+    			def.setMapppingList(m);
+    	} else {
+    		throw new NdexException("Mapping type on column " +col + " is not supported by CX2.");
+    	}
+		return cx2Mapping;
+
+    }
+
+    
+    
     private static void gatherEdgesDefaultVisualProperties(final CyNetworkView view,
                                                            final List<AspectElement> visual_properties,
                                                            final VisualStyle current_visual_style,
@@ -441,15 +623,32 @@ public final class VisualPropertiesGatherer {
         }
     }
 
+    /** add editor property into the give props object.
+     * 
+     * @param id_string dependency property name
+     * @param style current style
+     * @param props property object that this dependency should be added to.
+     */
+    public static void addCx2EditorPropsDependency(final String id_string,
+            final VisualStyle style,
+            VisualEditorProperties props) {
+    	for (final VisualPropertyDependency<?> d : style.getAllVisualPropertyDependencies()) {
+    		if (d.getIdString().equals(id_string)) {
+    			props.getProperties().put(id_string, d.isDependencyEnabled());
+    		}
+    	}
+    }
+
+    
     private static void gatherNodeVisualProperties(final CyNetworkView view,
                                                    final List<AspectElement> visual_properties,
                                                    final Set<VisualProperty<?>> all_visual_properties,
                                                    final Long viewId,
-                                                   boolean use_cxId) throws JsonProcessingException {
+                                                   boolean use_cxId) {
         for (View<CyNode> node_view : view.getNodeViews()) {
             final CyNode cy_node = node_view.getModel();
             final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.NODES.asString(),
-            																CxUtil.getElementId(cy_node, (CySubNetwork)view.getModel(), use_cxId),
+            																CxUtil.getElementId(cy_node, view.getModel(), use_cxId),
                                                                             viewId);
      
             for (final VisualProperty<?> visual_property : all_visual_properties) {
@@ -463,27 +662,95 @@ public final class VisualPropertiesGatherer {
         }
     }
 
+	public static List<CxNodeBypass> getNodeBypasses(final CyNetworkView view,
+			final Set<VisualProperty<?>> all_visual_properties, boolean use_cxId, boolean nodeSizeLocked) throws NdexException {
+		
+		List<CxNodeBypass> nodeByPasses = new LinkedList<>();
+
+		List<VisualProperty<?>> filteredVPs = all_visual_properties
+				.stream().filter(x -> x.getTargetDataType() == CyNode.class)
+				.collect(Collectors.toList());
+		
+		for (View<CyNode> node_view : view.getNodeViews()) {
+			Map<String,String> cx1VPTable = new HashMap<>();
+			for (final VisualProperty<?> visual_property : filteredVPs) {
+				if (node_view.isSet(visual_property) && node_view.isValueLocked(visual_property)) {
+					final String value_str = getSerializableVisualProperty(node_view, visual_property);
+					if (!CxioUtil.isEmpty(value_str)) {
+						final String id_string = visual_property.getIdString();
+						if (!id_string.equals("NODE") && !id_string.equals("EDGE") && !id_string.equals("NETWORK")) {
+							cx1VPTable.put(id_string, value_str);
+						}
+					}
+				}
+			}
+			if (!cx1VPTable.isEmpty()) {
+				final CyNode cy_node = node_view.getModel();
+				Long nodeId = CxUtil.getElementId(cy_node, view.getModel(), use_cxId);
+
+				if (nodeSizeLocked) { // handle node size
+					CXToCX2VisualPropertyConverter.cvtCx1NodeSize(cx1VPTable);
+				}
+				VisualPropertyTable t = CXToCX2VisualPropertyConverter.getInstance().convertEdgeOrNodeVPs(cx1VPTable);
+				nodeByPasses.add(new CxNodeBypass(nodeId, t));
+			}
+		}
+		return nodeByPasses;
+	}
+ 
+	public static List<CxEdgeBypass> getEdgeBypasses(final CyNetworkView view,
+			final Set<VisualProperty<?>> all_visual_properties, boolean use_cxId, boolean arrowColorMatchesEdge) throws NdexException {
+		
+		List<CxEdgeBypass> edgeByPasses = new LinkedList<>();
+
+		List<VisualProperty<?>> filteredVPs = all_visual_properties
+				.stream().filter(x -> x.getTargetDataType() == CyEdge.class)
+				.collect(Collectors.toList());
+		
+		for (View<CyEdge> edgeView : view.getEdgeViews()) {
+			Map<String,String> cx1VPTable = new HashMap<>();
+			for (final VisualProperty<?> visual_property : filteredVPs) {
+				if (edgeView.isSet(visual_property) && edgeView.isValueLocked(visual_property)) {
+					final String value_str = getSerializableVisualProperty(edgeView, visual_property);
+					if (!CxioUtil.isEmpty(value_str)) {
+						final String id_string = visual_property.getIdString();
+						if (!id_string.equals("NODE") && !id_string.equals("EDGE") && !id_string.equals("NETWORK")) {
+							cx1VPTable.put(id_string, value_str);
+						}
+					}
+				}
+			}
+			if (!cx1VPTable.isEmpty()) {
+				final CyEdge cyEdge = edgeView.getModel();
+				Long edgeId = CxUtil.getElementId(cyEdge, view.getModel(), use_cxId);
+
+				if (arrowColorMatchesEdge) { // handle node size
+					CXToCX2VisualPropertyConverter.cvtCx1EdgeColor(cx1VPTable);
+				}
+				VisualPropertyTable t = CXToCX2VisualPropertyConverter.getInstance().convertEdgeOrNodeVPs(cx1VPTable);
+				edgeByPasses.add(new CxEdgeBypass(edgeId, t));
+			}
+		}
+		return edgeByPasses;
+	}
+    
     private final static String toAttributeType(final Class<?> attr_class, final CyTable table, final String col_name)
             throws IOException {
-        if (attr_class == String.class) {
-            return "string";
-        }
-        else if ((attr_class == Float.class) || (attr_class == Double.class)) {
-            return "double";
-        }
-        else if ((attr_class == Integer.class) || (attr_class == Short.class)) {
-            return "integer";
-        }
-        else if (attr_class == Long.class) {
-            return "long";
-        }
-        else if (attr_class == Boolean.class) {
-            return "boolean";
-        }
-        else if (Number.class.isAssignableFrom(attr_class)) {
+    	
+    	ATTRIBUTE_DATA_TYPE attrType = null;
+    	
+    	try {
+    		attrType = CxUtil.toAttributeType(attr_class);
+    	} catch (IllegalArgumentException e) {}
+    	
+    	if ( attrType != null)
+    		return attrType.toString();
+    	
+        if (Number.class.isAssignableFrom(attr_class) || List.class.isAssignableFrom(attr_class)) {
             Class<?> col_type = null;
+            CyColumn col = null;
             if ((table != null) && (col_name != null)) {
-                final CyColumn col = table.getColumn(col_name);
+                col = table.getColumn(col_name);
                 if (col != null) {
                     col_type = table.getColumn(col_name).getType();
                 }
@@ -494,27 +761,18 @@ public final class VisualPropertiesGatherer {
             if (col_type != null) {
                 logger.info("mapping type is '" + attr_class + "' will use (from table column) '" + col_type
                                    + "' instead");
-                if ((col_type == Float.class) || (col_type == Double.class)) {
-                    return "double";
-                }
-                else if ((col_type == Integer.class) || (col_type == Short.class)) {
-                    return "integer";
-                }
-                else if (col_type == Long.class) {
-                    return "long";
-                }
-                else {
-                    throw new IllegalArgumentException("don't know how to deal with type '" + col_type
-                                                       + "' (from table column "+ col_name + ")");
-                }
+				if (List.class.isAssignableFrom(col_type)) {
+					Class<?> elmt_type = col.getListElementType();
+					return CxUtil.toListAttributeType(elmt_type).toString();
+				} 
+				return CxUtil.toAttributeType(col_type).toString();
             }
-            
             throw new IllegalStateException("failed to obtain type for mapping from table");
             
         }
-        else {
-            throw new IllegalArgumentException("don't know how to deal with type '" + attr_class + "' for column " + col_name);
-        }
+        
+        throw new IllegalArgumentException("don't know how to deal with type '" + attr_class + "' for column " + col_name);
+        
     }
 
 }
