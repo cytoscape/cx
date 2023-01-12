@@ -69,6 +69,12 @@ public final class CxUtil {
     
     public static final String ANNOTATIONS = "__Annotations";
     
+    
+    // "mapSourceAndTarget" app adds 2 columns to edge table. They needs to be ignored when exporting cx and cx2.
+    public static final String sourceNodeMappingPrefix = "node::Source_";
+    public static final String targetNodeMappingPrefix = "node::Target_";
+    
+    
     public static final String CX_ID_MAPPING				  = "CX Element ID";
     public static final String CX_METADATA				  	  = "CX MetaData";
 	public static final String OPAQUE_ASPECT_PREFIX 		  = "CX_OPAQUE::";
@@ -84,6 +90,8 @@ public final class CxUtil {
 	
 	private static String CXID_NAMESPACE = CyNetwork.HIDDEN_ATTRS;
     
+	
+	
     
     public static MetaDataCollection getMetaData(CyNetwork network) {
     	CyTable hidden_network_table = network.getTable(CyNetwork.class, CyNetwork.HIDDEN_ATTRS);
