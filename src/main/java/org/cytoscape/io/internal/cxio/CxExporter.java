@@ -467,10 +467,16 @@ public final class CxExporter {
 		
 		for (CyColumn col : c) {
 			
-			if (Settings.isIgnore(col.getName(), additional_ignore, null)){
+			String colName = col.getName();
+			if (Settings.isIgnore(colName, additional_ignore, null)){
 				continue;
 			}
-			if (col.getName().startsWith(CxUtil.OPAQUE_ASPECT_PREFIX)) {
+			if (colName.startsWith(CxUtil.OPAQUE_ASPECT_PREFIX)) {
+				continue;
+			}
+			
+			if ( applies_to.equals("edge_table") && (
+					colName.startsWith(CxUtil.sourceNodeMappingPrefix) || colName.startsWith(CxUtil.targetNodeMappingPrefix))) {
 				continue;
 			}
 			ATTRIBUTE_DATA_TYPE type = ATTRIBUTE_DATA_TYPE.STRING;
@@ -520,12 +526,20 @@ public final class CxExporter {
 		
 		for (CyColumn col : c) {
 			
-			if (Settings.isIgnore(col.getName(), additional_ignore, null)){
+			String colName = col.getName();
+			if (Settings.isIgnore(colName, additional_ignore, null)){
 				continue;
 			}
-			if ( applies_to.equals("network_table") && col.getName().startsWith(CxUtil.OPAQUE_ASPECT_PREFIX)) {
+			if ( applies_to.equals("network_table") && colName.startsWith(CxUtil.OPAQUE_ASPECT_PREFIX)) {
 				continue;
 			}
+			if ( applies_to.equals("edge_table") &&
+					(colName.startsWith(CxUtil.sourceNodeMappingPrefix) || 
+					 colName.startsWith(CxUtil.targetNodeMappingPrefix))) {
+				continue;
+			}
+			
+			
 			ATTRIBUTE_DATA_TYPE type = ATTRIBUTE_DATA_TYPE.STRING;
 			if (col.getType() != List.class) {
 				type = CxUtil.toAttributeType(col.getType());
@@ -1016,7 +1030,8 @@ public final class CxExporter {
 					String name = e.getKey();
 					Object value = e.getValue();
 					if (value != null && !Settings.isIgnore(name, Settings.IGNORE_NODE_ATTRIBUTES, value) &&
-						   	(edgeColumns == null || edgeColumns.contains(name))) {
+						   	(edgeColumns == null || edgeColumns.contains(name)) && 
+						   	!name.startsWith( CxUtil.sourceNodeMappingPrefix) && !name.startsWith(CxUtil.targetNodeMappingPrefix)) {
 							edgeAttrs.put(name, value);	
 						}
 					
@@ -1302,7 +1317,8 @@ public final class CxExporter {
 
 	private void addEdgeAttributesElement(final List<AspectElement> elements, CyNetwork network, CyEdge edge, String name, Object value) {
 		
-		if (value == null || (value instanceof String && ((String) value).length() == 0)) {
+		if (value == null || (value instanceof String && ((String) value).length() == 0) ||
+			 name.startsWith(CxUtil.sourceNodeMappingPrefix) || name.startsWith(CxUtil.targetNodeMappingPrefix)) {
 			return;
 		}
 
