@@ -608,7 +608,7 @@ public final class Cx2Importer {
             visual_mapping_manager.setVisualStyle(new_visual_style, currentView);
         }
 
-        ViewMaker.applyStyle(new_visual_style,currentView,doLayout, false);
+        ViewMaker.applyStyle(new_visual_style,currentView,doLayout, true);
         
         
 	}
