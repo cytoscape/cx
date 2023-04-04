@@ -1,23 +1,17 @@
 package org.cytoscape.io.internal.cxio;
 
+import java.awt.Font;
 import java.io.IOException;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.ndexbio.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
-import org.ndexbio.cxio.aspects.datamodels.AbstractAttributesAspectElement;
-import org.ndexbio.cxio.aspects.datamodels.EdgesElement;
-import org.ndexbio.cxio.aspects.datamodels.NetworkRelationsElement;
-import org.ndexbio.cxio.aspects.datamodels.NodesElement;
-import org.ndexbio.cxio.metadata.MetaDataCollection;
-import org.ndexbio.cxio.metadata.MetaDataElement;
-import org.ndexbio.model.cx.NiceCXNetwork;
 import org.apache.log4j.Logger;
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.NetworkViewRenderer;
+import org.cytoscape.io.internal.AspectSet;
 import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyEdge;
@@ -30,7 +24,23 @@ import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CySubNetwork;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.VisualLexicon;
+import org.cytoscape.view.model.VisualProperty;
 import org.cytoscape.view.presentation.RenderingEngineFactory;
+import org.cytoscape.view.presentation.property.BooleanVisualProperty;
+import org.cytoscape.view.presentation.property.DoubleVisualProperty;
+import org.cytoscape.view.presentation.property.IntegerVisualProperty;
+import org.cytoscape.view.presentation.property.StringVisualProperty;
+import org.ndexbio.cx2.aspect.element.core.CxMetadata;
+import org.ndexbio.cx2.aspect.element.core.FontFace;
+import org.ndexbio.cx2.converter.FontFaceConverter;
+import org.ndexbio.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
+import org.ndexbio.cxio.aspects.datamodels.AbstractAttributesAspectElement;
+import org.ndexbio.cxio.aspects.datamodels.EdgesElement;
+import org.ndexbio.cxio.aspects.datamodels.NetworkRelationsElement;
+import org.ndexbio.cxio.aspects.datamodels.NodesElement;
+import org.ndexbio.cxio.metadata.MetaDataCollection;
+import org.ndexbio.cxio.metadata.MetaDataElement;
+import org.ndexbio.model.cx.NiceCXNetwork;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,11 +61,19 @@ public final class CxUtil {
     public static final String NODE_CUSTOM_GRAPHICS_SIZE_SYNC = "nodeCustomGraphicsSizeSync";
     public static final String ARROW_COLOR_MATCHES_EDGE       = "arrowColorMatchesEdge";
     
-    public static final String NAME = "name";
-    public static final String SHARED_NAME = "shared name";
+//    public static final String NAME = "name";
+//    public static final String SHARED_NAME = "shared name";
     public static final String INTERACTION = "interaction";
-    public static final String SHARED_INTERACTION = "shared interaction";
-    public static final String SELECTED = "selected";
+//    public static final String SHARED_INTERACTION = "shared interaction";
+//    public static final String SELECTED = "selected";
+    
+    public static final String ANNOTATIONS = "__Annotations";
+    
+    
+    // "mapSourceAndTarget" app adds 2 columns to edge table. They needs to be ignored when exporting cx and cx2.
+    public static final String sourceNodeMappingPrefix = "node::Source_";
+    public static final String targetNodeMappingPrefix = "node::Target_";
+    
     
     public static final String CX_ID_MAPPING				  = "CX Element ID";
     public static final String CX_METADATA				  	  = "CX MetaData";
@@ -64,9 +82,16 @@ public final class CxUtil {
 	public static final Long DEFAULT_SUBNET = Long.MIN_VALUE;
 	public static final Long DEFAULT_VIEW = Long.MIN_VALUE;
 	
+	public static final String PARENT_NETWORK_COLUMN = "__parentNetwork.SUID";	
+	
+	// these 2 constants are added to fix Cytoscape-13007, filter out this 2 attributes in the hiddenAttributes aspect when importing a cx file.
+	public static final String UUID_COLUMN = "NDEx UUID";
+	public static final String MODIFICATION_COLUMN = "NDEx Modification Timestamp";
 	
 	private static String CXID_NAMESPACE = CyNetwork.HIDDEN_ATTRS;
     
+	
+	
     
     public static MetaDataCollection getMetaData(CyNetwork network) {
     	CyTable hidden_network_table = network.getTable(CyNetwork.class, CyNetwork.HIDDEN_ATTRS);
@@ -84,6 +109,34 @@ public final class CxUtil {
 		}
 		return new MetaDataCollection();
     }
+    
+    public static List<CxMetadata> getOpaqueAspects(CyNetwork network) {
+    	List<CxMetadata> result = new ArrayList<>();
+    	CyTable hidden_network_table = network.getTable(CyNetwork.class, CyNetwork.HIDDEN_ATTRS);
+		CyRow row = hidden_network_table.getRow(network.getSUID());
+		if (row != null) {
+			String metaDataStr = row.get(CxUtil.CX_METADATA, String.class);
+			if (metaDataStr != null && metaDataStr.length()>1) {
+				try {
+					ObjectMapper mapper = new ObjectMapper();
+					MetaDataCollection cx2MetadataCollection = mapper.readValue(metaDataStr, MetaDataCollection.class);
+					for ( MetaDataElement e : cx2MetadataCollection) {
+					  if ( !AspectSet.getAspectNames().contains(e.getName())) {
+						  CxMetadata metadata = new CxMetadata(e.getName());
+						  metadata.setElementCount(e.getElementCount());
+						  result.add(metadata);
+					  }	  
+					}
+				}catch(IOException e) {
+					logger.info("Get Metadata threw an IOException: " + e);
+				}
+			} else {
+				//TODO: get the CX2 opaque metatdata directly if the network is imported in cx2 format.
+			}
+		}
+		return result;
+    }
+
     
     public static void setMetaData(CyNetwork network, MetaDataCollection metaData) {
     	CyTable hidden_table = network.getTable(CyNetwork.class, CyNetwork.HIDDEN_ATTRS);
@@ -476,4 +529,75 @@ public final class CxUtil {
         
     }
     
+    /**
+     * Convert a visual property value to a CX2 object
+     * @param <T>
+     * @param style
+     * @param vp
+     * @return
+     */
+	public static <T> Object cvtVisualPropertyValueAsCX2Obj(T value, VisualProperty<T> vp) {
+		if (value == null) {
+			return null;
+		}
+		if ( value instanceof String || 
+				value instanceof Integer ||
+				value instanceof Double ||
+				value instanceof Boolean  ) {
+			return value;
+		}
+			
+	    if (value instanceof Font) {
+	    	
+	    	//FontFace ff = 
+	    	return FontFaceConverter.convertFont(((Font) value).getName());
+	    	
+	    	/*ff.setFamily(((Font) value).getFamily());
+	    	if (((Font) value).isBold())
+	    		ff.setWeight(FontFace.BOLD);
+	    	if(((Font) value).isItalic())
+	    		ff.setStyle(FontFace.ITALIC);
+	    	return ff; */
+	    }
+
+	    // for all other vp values, just use cytoscape serialization function. 
+		return vp.toSerializableString(value);		
+	}
+
+
+	public static <T> T cvtCX2ObjToVisualPropertyValue(Object value, VisualProperty<T> vp) {
+		if (value == null) {
+			return null;
+		}
+		if ( vp instanceof StringVisualProperty || 
+			//	vp instanceof IntegerVisualProperty ||
+				vp instanceof DoubleVisualProperty ||
+				vp instanceof BooleanVisualProperty  ) {
+			return (T)value;
+		}
+		
+		if ( vp instanceof IntegerVisualProperty) {
+			return (T)Integer.valueOf(((Number)value).intValue());
+		}
+			
+	    if (vp.getDefault() instanceof Font) {
+	    	
+	    	FontFace ff = (value instanceof Map<?,?>) ? 
+	    			FontFace.createFromMap((Map<String,String>)value) : (FontFace) value;
+	    			
+	    	return (T) (new Font(ff.getName(),Font.PLAIN,11));
+	    	
+	    	/*ff.setFamily(((Font) value).getFamily());
+	    	if (((Font) value).isBold())
+	    		ff.setWeight(FontFace.BOLD);
+	    	if(((Font) value).isItalic())
+	    		ff.setStyle(FontFace.ITALIC);
+	    	return ff; */
+	    }
+
+	    // for all other vp values, just use cytoscape serialization function. 
+		return vp.parseSerializableString((String)value);		
+	}
+
+	
 }

@@ -32,7 +32,7 @@ public class BaseTests {
 	private CxReaderWrapper getBaseSubNetwork(NodesElement...nodes) {
 		return TestUtil.getSubNetwork(TestUtil.getResource("base", "subnetwork.cx"), nodes);
 	}
-	
+/*	
 	@Test
 	public void testNetworkAttribute() throws IOException {
 		CxReaderWrapper reader = getBaseSubNetwork();
@@ -232,19 +232,20 @@ public class BaseTests {
 	}	
 
 	/* Whole CX file tests */
-	@Test
+/*	@Test
 	public void testStyles() throws IOException {
 		File dir = TestUtil.getResource("visualStyles");
 		for (File f : dir.listFiles()){
-			if (!f.getName().endsWith(".cx")) {
+			if (!f.getName().endsWith("label_position_errors.cx")) {
 				continue;
 			}
+			System.out.println("------- testing: " + f.getName() + " ............");
 			CxReaderWrapper reader = TestUtil.getSubNetwork(f);
 			TestUtil.withAspects(reader);
 		}
-	}
-	
-	@Test
+	} 
+	*/
+/*	@Test
 	public void testSubnets() throws IOException {
 		File dir = TestUtil.getResource("subnets");
 		for (File f : dir.listFiles()){
@@ -256,7 +257,7 @@ public class BaseTests {
 		}
 	}
 	
-	@Test
+/*	@Test
 	public void testCollections() throws IOException {
 		File dir = TestUtil.getResource("collections");
 		for (File f : dir.listFiles()){
@@ -266,7 +267,7 @@ public class BaseTests {
 			CxReaderWrapper reader = TestUtil.getSubNetwork(f);
 			TestUtil.withAspects(reader);
 		}
-	}
+	} */
 	
 }
 

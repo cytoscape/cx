@@ -28,9 +28,11 @@ import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyTable;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CySubNetwork;
+import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.work.TaskMonitor;
 import org.cytoscape.work.Tunable;
 import org.cytoscape.work.util.ListMultipleSelection;
+import org.ndexbio.model.exceptions.NdexException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +49,9 @@ public class CxNetworkWriter implements CyWriter {
 	private static final boolean USE_CXID_DEFAULT = true;
 	private final OutputStream _os;
 	private final CyNetwork _network;
+	private final CyNetworkView view;
+	
+	private boolean isCX2;
 
 	public ListMultipleSelection<String> aspectFilter = new ListMultipleSelection<>();
 	public ListMultipleSelection<String> nodeColFilter = new ListMultipleSelection<>();
@@ -109,18 +114,32 @@ public class CxNetworkWriter implements CyWriter {
     }
 
 	public CxNetworkWriter(final OutputStream os, final CyNetwork network, final boolean writeSiblings,
-			final boolean useCxId) {
+			final boolean useCxId, boolean inCX2Format) {
 
 		_os = os;
 		_network = network;
 		this.writeSiblings = writeSiblings;
 		this.useCxId = useCxId;
-
+		isCX2 = inCX2Format;
+		view = null;
 		populateFilters();
 	}
 
+	public CxNetworkWriter(final OutputStream os, final CyNetwork network, CyNetworkView view,
+			final boolean useCxId, boolean inCX2Format) {
+
+		_os = os;
+		_network = network;
+		this.writeSiblings = false;
+		this.view = view;
+		this.useCxId = useCxId;
+		isCX2 = inCX2Format;
+		populateFilters();
+	}
+
+	
 	private void populateFilters() {
-		ArrayList<String> aspects = AspectSet.getAspectNames();
+		List<String> aspects = AspectSet.getAspectNames();
 		aspectFilter.setPossibleValues(aspects);
 
 		// Node Column filter
@@ -139,7 +158,7 @@ public class CxNetworkWriter implements CyWriter {
 		networkColFilter.setSelectedValues(networkColumnNames);
 	}
 
-	private final Set<String> getAllColumnNames(final Class<? extends CyIdentifiable> type, CyNetwork subnet){
+	private final static Set<String> getAllColumnNames(final Class<? extends CyIdentifiable> type, CyNetwork subnet){
 		final SortedSet<String> colNames = new TreeSet<>();
 		
 		// Shared
@@ -179,25 +198,31 @@ public class CxNetworkWriter implements CyWriter {
 	}
 
 	@Override
-	public void run(final TaskMonitor taskMonitor) throws FileNotFoundException, IOException {
+	public void run(final TaskMonitor taskMonitor) throws FileNotFoundException, IOException, NdexException {
 		if (taskMonitor != null) {
 			taskMonitor.setProgress(0.0);
 			taskMonitor.setTitle("Exporting to CX");
 			taskMonitor.setStatusMessage("Exporting current network as CX...");
 		}
 		
-		final CxExporter exporter = new CxExporter(_network, writeSiblings, useCxId);
+		final CxExporter exporter = view == null? 
+				new CxExporter(_network, writeSiblings, useCxId):
+					new CxExporter (_network, view, useCxId);
 
 		List<String> aspects = aspectFilter.getSelectedValues();
 		exporter.setNodeColumnFilter(nodeColFilter.getSelectedValues().stream().filter( 
 				columnName 
-				-> writeSiblings 
-				|| !Settings.IGNORE_SINGLE_NETWORK_NODE_ATTRIBUTES.contains(columnName)
+				-> (isCX2 ?
+					!Settings.CX2_IGNORE_NODE_ATTRIBUTES.contains(columnName):
+				writeSiblings 
+				|| !Settings.IGNORE_SINGLE_NETWORK_NODE_ATTRIBUTES.contains(columnName))
 				).collect(Collectors.toList()));
 		exporter.setEdgeColumnFilter(edgeColFilter.getSelectedValues().stream().filter(
 				columnName
-				-> writeSiblings
-				|| !Settings.IGNORE_SINGLE_NETWORK_EDGE_ATTRIBUTES.contains(columnName)
+				-> (isCX2 ?
+					!Settings.CX2_IGNORE_EDGE_ATTRIBUTES.contains(columnName)	:
+					(writeSiblings
+				|| !Settings.IGNORE_SINGLE_NETWORK_EDGE_ATTRIBUTES.contains(columnName)))
 				).collect(Collectors.toList()));
 		
 		exporter.setNetworkColumnFilter(networkColFilter.getSelectedValues().stream().filter(
@@ -212,7 +237,10 @@ public class CxNetworkWriter implements CyWriter {
 		} else if (TimingUtil.WRITE_TO_BYTE_ARRAY_OUTPUTSTREAM) {
 			exporter.writeNetwork(aspects, new ByteArrayOutputStream());
 		} else {
-			exporter.writeNetwork(aspects, _os);
+			if ( isCX2 ) {
+				exporter.writeNetworkInCX2(null, _os);
+			} else
+				exporter.writeNetwork(aspects, _os);
 			_os.close();
 
 		}

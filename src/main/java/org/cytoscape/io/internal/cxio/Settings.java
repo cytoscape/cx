@@ -1,10 +1,12 @@
 package org.cytoscape.io.internal.cxio;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.cytoscape.model.CyNetwork;
+import org.cytoscape.model.subnetwork.CyRootNetwork;
 
 public final class Settings {
 
@@ -22,20 +24,33 @@ public final class Settings {
 	public final static Set<String> IGNORE_SINGLE_NETWORK_EDGE_ATTRIBUTES = new HashSet<>();
 	public final static Set<String> IGNORE_SINGLE_NETWORK_NODE_ATTRIBUTES = new HashSet<>();
 	public final static Set<String> IGNORE_SINGLE_NETWORK_NETWORK_ATTRIBUTES = new HashSet<>();
+	
+	public final static Set<String> CX2_IGNORE_NODE_ATTRIBUTES = new HashSet<>(
+			Arrays.asList(CyRootNetwork.SHARED_NAME));
 
+	public final static Set<String> CX2_IGNORE_EDGE_ATTRIBUTES = 
+			new HashSet<>(Arrays.asList(CyNetwork.NAME,CyRootNetwork.SHARED_NAME, CyRootNetwork.SHARED_INTERACTION));
+	
+	public final static Set<String> cytoscapeBuiltinEdgeTableAttributes = 
+			new HashSet<>(Arrays.asList(CyNetwork.NAME, CyNetwork.SELECTED, CyNetwork.SUID,CxUtil.INTERACTION,
+					CyRootNetwork.SHARED_NAME, CyRootNetwork.SHARED_INTERACTION));
+
+	public final static Set<String> cytoscapeBuiltinTableAttributes = 
+			new HashSet<>(Arrays.asList(CyNetwork.NAME, CyNetwork.SELECTED, CyNetwork.SUID,
+					CyRootNetwork.SHARED_NAME));	
 	
 	static {
 		IGNORE_NODE_ATTRIBUTES.add(CxUtil.REPRESENTS);
 		
-		IGNORE_SINGLE_NETWORK_NODE_ATTRIBUTES.add(CxUtil.NAME);
-		IGNORE_SINGLE_NETWORK_NODE_ATTRIBUTES.add(CxUtil.SHARED_NAME);
+		IGNORE_SINGLE_NETWORK_NODE_ATTRIBUTES.add(CyNetwork.NAME);
+		IGNORE_SINGLE_NETWORK_NODE_ATTRIBUTES.add(CyRootNetwork.SHARED_NAME);
 		
 		IGNORE_SINGLE_NETWORK_EDGE_ATTRIBUTES.add(CxUtil.INTERACTION);
-		IGNORE_SINGLE_NETWORK_EDGE_ATTRIBUTES.add(CxUtil.SHARED_INTERACTION);
-		IGNORE_SINGLE_NETWORK_EDGE_ATTRIBUTES.add(CxUtil.SHARED_NAME);
+		IGNORE_SINGLE_NETWORK_EDGE_ATTRIBUTES.add(CyRootNetwork.SHARED_INTERACTION);
+		IGNORE_SINGLE_NETWORK_EDGE_ATTRIBUTES.add(CyRootNetwork.SHARED_NAME);
 		
-		IGNORE_SINGLE_NETWORK_NETWORK_ATTRIBUTES.add(CxUtil.SHARED_NAME);
-		IGNORE_SINGLE_NETWORK_NETWORK_ATTRIBUTES.add(CxUtil.SELECTED);
+		IGNORE_SINGLE_NETWORK_NETWORK_ATTRIBUTES.add(CyRootNetwork.SHARED_NAME);
+		IGNORE_SINGLE_NETWORK_NETWORK_ATTRIBUTES.add(CyNetwork.SELECTED);
 		
 	}
 	

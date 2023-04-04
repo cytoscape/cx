@@ -51,7 +51,7 @@ public class FilterTest {
 			CyNetwork[] networks = TestUtil.loadNetworks(reader);
 			StreamUtil streamUtil = CyServiceModule.getService(StreamUtil.class);
 			CytoscapeCxFileFilter filter = new CytoscapeCxFileFilter(streamUtil);
-			CxNetworkWriterFactory writerFactory = new CxNetworkWriterFactory(filter);
+			CxNetworkWriterFactory writerFactory = new CxNetworkWriterFactory(filter,false);
 			
 			out = new ByteArrayOutputStream();
 			writer = (CxNetworkWriter) writerFactory.createWriter(out, networks[0]);
@@ -61,7 +61,7 @@ public class FilterTest {
 		
 	}
 	
-	public JsonObject getOutput() throws IOException {
+	public JsonObject getOutput() throws IOException, NdexException {
 		writer.writeSiblings = false;
 		writer.useCxId = true;
 		writer.run(null);
@@ -105,7 +105,7 @@ public class FilterTest {
 	}
 	
 	@Test 
-	public void testUnknownAspectFilter2() {
+	public void testUnknownAspectFilter2() throws NdexException {
 		List<String> values = new ArrayList<String>();
 		values.add("INVALID");
 		writer.aspectFilter.setPossibleValues(values);
@@ -142,7 +142,7 @@ public class FilterTest {
 	}
 	
 	@Test
-	public void testNodeColFilter() throws IOException {
+	public void testNodeColFilter() throws IOException, NdexException {
 		List<String> values = new ArrayList<String>();
 		values.add("nodeCol");
 		writer.nodeColFilter.setSelectedValues(values);
@@ -157,7 +157,7 @@ public class FilterTest {
 	}
 	
 	@Test
-	public void testEdgeColFilter() throws IOException{
+	public void testEdgeColFilter() throws IOException, NdexException{
 		List<String> values = new ArrayList<String>();
 		values.add("edgeCol");
 		writer.edgeColFilter.setSelectedValues(values);
@@ -172,7 +172,7 @@ public class FilterTest {
 	}
 	
 	@Test
-	public void testNetworkColFilter() throws IOException{
+	public void testNetworkColFilter() throws IOException, NdexException{
 		List<String> values = new ArrayList<String>();
 		values.add("networkCol");
 		writer.networkColFilter.setSelectedValues(values);
@@ -187,7 +187,7 @@ public class FilterTest {
 	}
 	
 	@Test
-	public void testAllFilters() throws IOException {
+	public void testAllFilters() throws IOException, NdexException {
 		List<String> values = new ArrayList<String>();
 		values.add(NetworkAttributesElement.ASPECT_NAME);
 		values.add(NodeAttributesElement.ASPECT_NAME);

@@ -17,6 +17,7 @@ import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CySubNetwork;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.ndexbio.model.exceptions.NdexException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -30,7 +31,7 @@ public class CxUtilTest {
 	
 	
 	@Test
-	public void testIsCollection() throws IOException {
+	public void testIsCollection() throws IOException, NdexException {
 		File f = TestUtil.getResource("collections", "groups_1.cx");
 		CxReaderWrapper reader = TestUtil.getSubNetwork(f);
 		assertTrue(CxUtil.isCollection(reader.getNiceCX()));

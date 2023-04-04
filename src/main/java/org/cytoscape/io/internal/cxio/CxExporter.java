@@ -6,48 +6,18 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import org.ndexbio.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
-import org.ndexbio.cxio.aspects.datamodels.AbstractAttributesAspectElement;
-import org.ndexbio.cxio.aspects.datamodels.AttributesAspectUtils;
-import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
-import org.ndexbio.cxio.aspects.datamodels.CyGroupsElement;
-import org.ndexbio.cxio.aspects.datamodels.CyTableColumnElement;
-import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
-import org.ndexbio.cxio.aspects.datamodels.EdgeAttributesElement;
-import org.ndexbio.cxio.aspects.datamodels.EdgesElement;
-import org.ndexbio.cxio.aspects.datamodels.HiddenAttributesElement;
-import org.ndexbio.cxio.aspects.datamodels.NetworkAttributesElement;
-import org.ndexbio.cxio.aspects.datamodels.NetworkRelationsElement;
-import org.ndexbio.cxio.aspects.datamodels.NodeAttributesElement;
-import org.ndexbio.cxio.aspects.datamodels.NodesElement;
-import org.ndexbio.cxio.aspects.datamodels.SubNetworkElement;
-import org.ndexbio.cxio.core.CxWriter;
-import org.ndexbio.cxio.core.OpaqueAspectIterator;
-import org.ndexbio.cxio.core.interfaces.AspectElement;
-import org.ndexbio.cxio.core.interfaces.AspectFragmentWriter;
-import org.ndexbio.cxio.metadata.MetaDataCollection;
-import org.ndexbio.cxio.metadata.MetaDataElement;
-import org.ndexbio.cxio.misc.AspectElementCounts;
-import org.ndexbio.cxio.misc.OpaqueElement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
+import org.cytoscape.application.CyApplicationManager;
+import org.cytoscape.application.TableViewRenderer;
 import org.cytoscape.group.CyGroup;
 import org.cytoscape.group.CyGroupManager;
 import org.cytoscape.io.internal.AspectSet;
@@ -66,7 +36,78 @@ import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.model.View;
 import org.cytoscape.view.model.VisualLexicon;
+import org.cytoscape.view.model.VisualProperty;
+import org.cytoscape.view.model.table.CyTableView;
+import org.cytoscape.view.model.table.CyTableViewManager;
+import org.cytoscape.view.presentation.RenderingEngineFactory;
 import org.cytoscape.view.presentation.property.BasicVisualLexicon;
+import org.cytoscape.view.vizmap.TableVisualMappingManager;
+import org.cytoscape.view.vizmap.VisualMappingFunction;
+import org.cytoscape.view.vizmap.VisualMappingManager;
+import org.cytoscape.view.vizmap.VisualStyle;
+import org.cytoscape.view.vizmap.mappings.ContinuousMapping;
+import org.cytoscape.view.vizmap.mappings.ContinuousMappingPoint;
+import org.cytoscape.view.vizmap.mappings.DiscreteMapping;
+import org.cytoscape.view.vizmap.mappings.PassthroughMapping;
+import org.ndexbio.cx2.aspect.element.core.CxAttributeDeclaration;
+import org.ndexbio.cx2.aspect.element.core.CxEdge;
+import org.ndexbio.cx2.aspect.element.core.CxEdgeBypass;
+import org.ndexbio.cx2.aspect.element.core.CxMetadata;
+import org.ndexbio.cx2.aspect.element.core.CxNetworkAttribute;
+import org.ndexbio.cx2.aspect.element.core.CxNode;
+import org.ndexbio.cx2.aspect.element.core.CxNodeBypass;
+import org.ndexbio.cx2.aspect.element.core.CxVisualProperty;
+import org.ndexbio.cx2.aspect.element.core.DeclarationEntry;
+import org.ndexbio.cx2.aspect.element.core.DefaultVisualProperties;
+import org.ndexbio.cx2.aspect.element.core.MappingDefinition;
+import org.ndexbio.cx2.aspect.element.core.TableColumnVisualStyle;
+import org.ndexbio.cx2.aspect.element.core.VPMappingType;
+import org.ndexbio.cx2.aspect.element.core.VisualPropertyMapping;
+import org.ndexbio.cx2.aspect.element.cytoscape.AbstractTableVisualProperty;
+import org.ndexbio.cx2.aspect.element.cytoscape.CxTableVisualProperty;
+import org.ndexbio.cx2.aspect.element.cytoscape.DefaultTableType;
+import org.ndexbio.cx2.aspect.element.cytoscape.VisualEditorProperties;
+import org.ndexbio.cx2.converter.CXToCX2VisualPropertyConverter;
+import org.ndexbio.cx2.io.CXWriter;
+import org.ndexbio.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
+import org.ndexbio.cxio.aspects.datamodels.AbstractAttributesAspectElement;
+import org.ndexbio.cxio.aspects.datamodels.AttributesAspectUtils;
+import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
+import org.ndexbio.cxio.aspects.datamodels.CyGroupsElement;
+import org.ndexbio.cxio.aspects.datamodels.CyTableColumnElement;
+import org.ndexbio.cxio.aspects.datamodels.CyTableVisualPropertiesElement;
+import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
+import org.ndexbio.cxio.aspects.datamodels.EdgeAttributesElement;
+import org.ndexbio.cxio.aspects.datamodels.EdgesElement;
+import org.ndexbio.cxio.aspects.datamodels.HiddenAttributesElement;
+import org.ndexbio.cxio.aspects.datamodels.NetworkAttributesElement;
+import org.ndexbio.cxio.aspects.datamodels.NetworkRelationsElement;
+import org.ndexbio.cxio.aspects.datamodels.NodeAttributesElement;
+import org.ndexbio.cxio.aspects.datamodels.NodesElement;
+import org.ndexbio.cxio.aspects.datamodels.SubNetworkElement;
+import org.ndexbio.cxio.core.CxWriter;
+import org.ndexbio.cxio.core.OpaqueAspectIterator;
+import org.ndexbio.cxio.core.interfaces.AspectElement;
+import org.ndexbio.cxio.core.interfaces.AspectFragmentWriter;
+import org.ndexbio.cxio.metadata.MetaDataCollection;
+import org.ndexbio.cxio.metadata.MetaDataElement;
+import org.ndexbio.cxio.misc.AspectElementCounts;
+import org.ndexbio.cxio.misc.OpaqueElement;
+import org.ndexbio.cxio.util.CxioUtil;
+import org.ndexbio.model.exceptions.NdexException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 /**
  * This class is for serializing Cytoscape networks, views, and attribute tables
@@ -99,7 +140,7 @@ public final class CxExporter {
 	private boolean omitOpaqueAspects = false;
 	private List<String> nodeColumns, edgeColumns, networkColumns;
 	
-	private HashMap<String, Long> idCounters = new HashMap<String, Long>();
+	private HashMap<String, Long> idCounters = new HashMap<>();
 	
 	private Set<CyGroup> collapsed_groups;
 	
@@ -109,6 +150,8 @@ public final class CxExporter {
 	
 	private CxWriter writer;
 	private String ID_STRING = "_id";
+	
+	private CyNetworkView view;
 
 	/**
 	 * Constructor for CxExporter to write network (and it's collection) to CX. Specify 
@@ -117,8 +160,20 @@ public final class CxExporter {
 	 * @param network
 	 * @param writeSiblings
 	 * @param useCxId
+	 * @throws NdexException 
 	 */
 	
+	
+	public CxExporter(CyNetwork network, CyNetworkView view, boolean useCxId) throws NdexException {
+		this(network,false,useCxId);
+		if ( view.getModel().getSUID().equals(network.getSUID())) {
+			this.view = view;
+		}
+		else 
+			throw new NdexException("The specified network (SUID=" + 
+		network.getSUID()+") doesn't have a view with SUID="+view.getSUID() +".");
+	}
+
 	
 	public CxExporter(CyNetwork network, boolean writeSiblings, boolean useCxId) {
 		if (writeSiblings && useCxId) {
@@ -126,6 +181,7 @@ public final class CxExporter {
 		}
 		this.writeSiblings = writeSiblings;
 		this.useCxId = useCxId;
+		this.view = null;
 		
 		subnetworks = makeSubNetworkList((CySubNetwork) network);
 		if (subnetworks.isEmpty()) {
@@ -227,6 +283,9 @@ public final class CxExporter {
 			// Writes Cartesian layout and visual props, only writes subnets for collections
 			writeSubNetworks();
 			
+			// write table visual styles
+			writeTableVisualStyles(null);
+			
 			// Also handles Opaque aspects
 			writeHiddenAttributes(); 
 
@@ -284,6 +343,56 @@ public final class CxExporter {
 		writer.addPreMetaData(pre_meta_data);
 		return pre_meta_data;
 	}
+	
+	private List<CxMetadata> getCx2Metadata(Collection<String> aspects, CxAttributeDeclaration attrDecls) {
+		List<CxMetadata> result = new ArrayList<>();
+		List<CxMetadata> opapqueAspects = CxUtil.getOpaqueAspects(baseNetwork);
+		if( !attrDecls.getDeclarations().isEmpty())
+			result.add(new CxMetadata(CxAttributeDeclaration.ASPECT_NAME,1));
+		
+		if ( aspects == null || aspects.size() == 0) {
+			
+			// get all aspects including opaque ones.
+			if (attrDecls.getAttributesInAspect(CxNetworkAttribute.ASPECT_NAME) != null)
+				result.add(new CxMetadata(CxNetworkAttribute.ASPECT_NAME,1));
+			
+			int edgeCount= baseNetwork.getEdgeCount();
+			if ( edgeCount>0 )
+				result.add(new CxMetadata(CxEdge.ASPECT_NAME,edgeCount));
+			
+			int nodeCount= baseNetwork.getNodeCount();
+			if ( nodeCount>0)
+				result.add(new CxMetadata(CxNode.ASPECT_NAME,nodeCount));
+			
+			//add metadata for visual properties etc
+			for (final CySubNetwork subnet : subnetworks) {
+				
+				final Collection<CyNetworkView> views = _networkview_manager.getNetworkViews(subnet);
+				
+				if ( views.isEmpty()) 
+					break;
+				
+				result.add(new CxMetadata(CxVisualProperty.ASPECT_NAME,1));
+				result.add(new CxMetadata(VisualEditorProperties.ASPECT_NAME,1));
+				result.add(new CxMetadata(CxEdgeBypass.ASPECT_NAME));
+				result.add(new CxMetadata(CxNodeBypass.ASPECT_NAME));
+				
+				break;
+			}	
+		
+			result.add(new CxMetadata(AbstractTableVisualProperty.ASPECT_NAME));
+			//add the opaqueAspect matadata
+			result.addAll(opapqueAspects);
+			
+		} else {
+			//TODO: only get the specified. 
+			
+		}
+		
+		
+		return result;
+	}
+	
 	private final void writePostMetadata(final MetaDataCollection meta_data,
 			final AspectElementCounts aspects_counts) {
 
@@ -358,10 +467,16 @@ public final class CxExporter {
 		
 		for (CyColumn col : c) {
 			
-			if (Settings.isIgnore(col.getName(), additional_ignore, null)){
+			String colName = col.getName();
+			if (Settings.isIgnore(colName, additional_ignore, null)){
 				continue;
 			}
-			if (col.getName().startsWith(CxUtil.OPAQUE_ASPECT_PREFIX)) {
+			if (colName.startsWith(CxUtil.OPAQUE_ASPECT_PREFIX)) {
+				continue;
+			}
+			
+			if ( applies_to.equals("edge_table") && (
+					colName.startsWith(CxUtil.sourceNodeMappingPrefix) || colName.startsWith(CxUtil.targetNodeMappingPrefix))) {
 				continue;
 			}
 			ATTRIBUTE_DATA_TYPE type = ATTRIBUTE_DATA_TYPE.STRING;
@@ -382,36 +497,426 @@ public final class CxExporter {
 			elements.add(x);
 		}
 	}
+
+	
+	private static Map<String, DeclarationEntry> getTableAttributes(CyNetwork network, String applies_to) {
+		String namespace = CyNetwork.DEFAULT_ATTRS;
+		CyTable table = null;
+		Set<String> additional_ignore;
+		switch (applies_to) {
+		case "node_table":
+			table = network.getTable(CyNode.class, namespace);
+			additional_ignore = Settings.CX2_IGNORE_NODE_ATTRIBUTES;
+			break;
+		case "edge_table":
+			table = network.getTable(CyEdge.class, namespace);
+			additional_ignore = Settings.IGNORE_EDGE_ATTRIBUTES;
+			break;
+		case "network_table":
+			table = network.getTable(CyNetwork.class, namespace);
+			additional_ignore = Settings.IGNORE_NETWORK_ATTRIBUTES;
+			break;
+		default:
+			throw new IllegalArgumentException("Unknown applies_to in CyTableColumn: " + applies_to);
+		}
+		
+		Map<String, DeclarationEntry> result = new HashMap<>();
+		
+		Collection<CyColumn> c = table.getColumns();
+		
+		for (CyColumn col : c) {
+			
+			String colName = col.getName();
+			if (Settings.isIgnore(colName, additional_ignore, null)){
+				continue;
+			}
+			if ( applies_to.equals("network_table") && colName.startsWith(CxUtil.OPAQUE_ASPECT_PREFIX)) {
+				continue;
+			}
+			if ( applies_to.equals("edge_table") &&
+					(colName.startsWith(CxUtil.sourceNodeMappingPrefix) || 
+					 colName.startsWith(CxUtil.targetNodeMappingPrefix))) {
+				continue;
+			}
+			
+			
+			ATTRIBUTE_DATA_TYPE type = ATTRIBUTE_DATA_TYPE.STRING;
+			if (col.getType() != List.class) {
+				type = CxUtil.toAttributeType(col.getType());
+			} else {
+				type = CxUtil.toListAttributeType(col.getListElementType());
+			}
+
+			result.put(col.getName(), new DeclarationEntry(type,null,null));
+		}
+		
+		return result;
+	}
 	
 	
 	// Network Attributes
 	private final void writeNetworkAttributes() throws IOException {
 
-		final List<AspectElement> elements = new ArrayList<>();
+		final List<AbstractAttributesAspectElement> elements = new ArrayList<>();
 		
 		// Write root table
 		if (writeSiblings) {
-			addNetworkAttributesHelper(CyRootNetwork.DEFAULT_ATTRS, baseNetwork, elements);
+			addNetworkAttributesHelper(CyNetwork.DEFAULT_ATTRS, baseNetwork, elements);
 		}
 		
 		for (final CySubNetwork subnet : subnetworks) {
 			addNetworkAttributesHelper(CyNetwork.DEFAULT_ATTRS, subnet, elements);
 		}
+		
 
-		writeAspectElements(elements);
+		writeAspectElements((List<AspectElement>)(List<? extends AspectElement>)elements);
 	}
+	
+	private void writeCx2NetworkAttributes(CXWriter cx2writer) throws JsonGenerationException, JsonMappingException, IOException, NdexException {
+		CxNetworkAttribute result = new CxNetworkAttribute();
+		for (final CySubNetwork subnet : subnetworks) {
+		
+			final CyRow row = subnet.getRow(subnet, CyNetwork.DEFAULT_ATTRS);
+			
+			if (row==null)
+				break;
+
+			final Map<String, Object> values = row.getAllValues();
+			if (values == null) {
+				break;
+			}
+			
+			for ( Map.Entry<String, Object> e: values.entrySet()) {
+				String columnName = e.getKey();
+				if ( e.getValue() != null && 
+					!Settings.isIgnore(columnName, Settings.IGNORE_NETWORK_ATTRIBUTES, e.getValue()) &&
+					(networkColumns == null || networkColumns.contains(columnName))) {
+					if (columnName.startsWith(CxUtil.OPAQUE_ASPECT_PREFIX)) {
+						String opaqueAspName = columnName.substring(CxUtil.OPAQUE_ASPECT_PREFIX.length()); 
+						cx2writer.writeAspectFromJSONString(columnName, (String) e.getValue());
+					} else {
+						// add network attribute.
+						result.add(columnName, e.getValue());
+					}
+				}
+			}
+			
+			cx2writer.writeFullAspectFragment(Arrays.asList(result));
+			break;
+		}	
+	
+	}
+	
+	
+	private void writeTableVisualStyles(CXWriter cx2Writer) throws IOException, NdexException {
+		var appManager = CyServiceModule.getService(CyApplicationManager.class);
+        var tableViewManager = CyServiceModule.getService(CyTableViewManager.class);
+        var tableVisualMappingManager = CyServiceModule.getService(TableVisualMappingManager.class);
+        
+
+        List<CyTableVisualPropertiesElement> tableStyles = new ArrayList<>();
+
+    	if (writeSiblings) {
+		/*	addTableColumnsHelper(baseNetwork, "network_table", elements, CyRootNetwork.SHARED_ATTRS);
+			addTableColumnsHelper(baseNetwork, "node_table", elements, CyRootNetwork.SHARED_ATTRS);
+			addTableColumnsHelper(baseNetwork, "edge_table", elements, CyRootNetwork.SHARED_ATTRS);
+		*/
+			for (final CySubNetwork subnet : subnetworks) {
+		        CyTableVisualPropertiesElement styles = new CyTableVisualPropertiesElement();
+		        styles.setSubnetId(getAspectSubnetworkId(subnet));
+				processCyTableVisualStyles(DefaultTableType.Network, subnet.getDefaultNetworkTable(),
+						appManager, tableVisualMappingManager,tableViewManager,styles);
+		        
+				processCyTableVisualStyles(DefaultTableType.Node,subnet.getDefaultNodeTable(),
+		        				appManager, tableVisualMappingManager,tableViewManager,styles);
+		     
+				processCyTableVisualStyles(DefaultTableType.Edge, subnet.getDefaultEdgeTable(),
+		        				appManager, tableVisualMappingManager,tableViewManager,styles);
+
+				
+				if ( !styles.getTableStyles().isEmpty()) {
+			        
+			        tableStyles.add(styles);
+
+				}		
+
+				/*	addTableColumnsHelper(subnet, "node_table", elements, CyNetwork.DEFAULT_ATTRS);
+				addTableColumnsHelper(subnet, "edge_table", elements, CyNetwork.DEFAULT_ATTRS);
+				addTableColumnsHelper(subnet, "network_table", elements, CyNetwork.DEFAULT_ATTRS);*/
+			}
+		} else {
+	        CyTableVisualPropertiesElement styles = new CyTableVisualPropertiesElement();
+
+	        processCyTableVisualStyles(DefaultTableType.Network, baseNetwork.getDefaultNetworkTable(),
+				appManager, tableVisualMappingManager,tableViewManager,styles);
+        
+			processCyTableVisualStyles(DefaultTableType.Node,baseNetwork.getDefaultNodeTable(),
+        				appManager, tableVisualMappingManager,tableViewManager,styles);
+     
+			processCyTableVisualStyles(DefaultTableType.Edge, baseNetwork.getDefaultEdgeTable(),
+        				appManager, tableVisualMappingManager,tableViewManager,styles);
+
+			if ( !styles.getTableStyles().isEmpty()) {
+		        
+		        tableStyles.add(styles);
+
+			}		
+
+		}
+    	
+    	if ( !tableStyles.isEmpty()) {
+    		if (cx2Writer != null) {   	    			
+    			cx2Writer.writeFullAspectFragment(
+    					tableStyles
+    	    			.stream()
+    	    			.map( (CyTableVisualPropertiesElement x) -> { return new CxTableVisualProperty(x);})
+    	    			.collect(Collectors.toList()));
+    		} else
+    			writeAspectElements(tableStyles.stream().map(x -> (AspectElement)x).collect(Collectors.toList()));
+    	}	
+	}
+
+	private static <T> void processCyTableVisualStyles(DefaultTableType type, CyTable table,
+			CyApplicationManager appManager, TableVisualMappingManager tableVisualMappingManager,
+			CyTableViewManager tableViewManager, CyTableVisualPropertiesElement tableStyles) {
+
+		if (table != null) {
+			CyTableView tableView = tableViewManager.getTableView(table);
+
+			if (tableView != null) {
+
+				//CyTableVisualPropertiesElement styleEntry = new CyTableVisualPropertiesElement();
+
+				TableViewRenderer renderer = appManager.getTableViewRenderer(tableView.getRendererId());
+
+				RenderingEngineFactory<CyTable> factory = renderer
+						.getRenderingEngineFactory(TableViewRenderer.DEFAULT_CONTEXT);
+				VisualLexicon lexicon = factory.getVisualLexicon();
+
+				final Set<VisualProperty<?>> allVisualProperties = lexicon.getAllVisualProperties();
+
+				Map<String, Map<String,TableColumnVisualStyle>> styleEntry = new HashMap<>();
+
+				for (View<CyColumn> colView : tableView.getColumnViews()) {
+					VisualStyle style = tableVisualMappingManager.getVisualStyle(colView);
+					if (style != null) {
+						for (VisualProperty<?> vpo : allVisualProperties) {
+							VisualProperty<T> vp = (VisualProperty<T>) vpo;
+							T v = style.getDefaultValue(vp);
+							if (v == null)
+								continue;
+
+							VisualMappingFunction<?, T> f = style.getVisualMappingFunction(vp);
+
+							if (v.equals(vp.getDefault()) && f == null)
+								continue;
+
+							TableColumnVisualStyle s = new TableColumnVisualStyle();
+							if (!v.equals(vp.getDefault()))
+								s.setDefaultValue(
+										CxUtil.cvtVisualPropertyValueAsCX2Obj(v, vp));
+
+							if (f != null) {
+								s.setMapping(cvtMapping(f, vp));
+							}
+
+							CyColumn col = colView.getModel();
+							String colName = col.getName();
+							boolean isVirtual = col.getVirtualColumnInfo().isVirtual();
+							System.out.println(colName + " is virtual = " + isVirtual);
+							
+							Map<String, TableColumnVisualStyle> columStyle = styleEntry.get(colName);
+							
+							if ( columStyle == null) 
+								columStyle = new HashMap<>();
+							 
+							columStyle.put(vp.getIdString(), s);
+
+							styleEntry.put(colView.getModel().getName(), columStyle);
+
+							// System.out.println(colView.getModel().getName() + " -- " +
+							// vp.getDisplayName() + ": " + v.toString() + "(" );
+						}
+					}
+				}
+				
+				if (!styleEntry.isEmpty())
+					tableStyles.getTableStyles().put(type, styleEntry);			
+			}
+		}
+	}
+	
+	/*   private static <T> String getSerializableVisualProperty(VisualStyle style, VisualProperty<T> vp) {
+	    	T prop = style.getDefaultValue(vp);
+			if (prop == null) {
+				return null;
+			}
+			String val = null;
+				val = vp.toSerializableString(prop);		
+			return val;
+		}
+*/
+	
+    private static <T> VisualPropertyMapping cvtMapping(VisualMappingFunction<?, T> mapping, VisualProperty<T> vp) {
+        
+    	VisualPropertyMapping result = new VisualPropertyMapping();
+ 
+		MappingDefinition defObj = new MappingDefinition();
+		result.setMappingDef(defObj);
+
+    	final String col = mapping.getMappingColumnName();
+    	defObj.setAttributeName(col);
+        
+        
+        if (mapping instanceof PassthroughMapping<?, ?>) {
+        	result.setType(VPMappingType.PASSTHROUGH);
+        }
+        else if (mapping instanceof DiscreteMapping<?, ?>) {
+            final DiscreteMapping<?, T> dm = (DiscreteMapping<?, T>) mapping;
+          /*  String type = null;
+            try {
+                type = toAttributeType(dm.getMappingColumnType(), table, col);
+            }
+            catch (final IOException e) {
+                logger.info("WARNING: problem with mapping/column '" + col
+                        + "': column not present, ignoring corresponding discrete mapping. " + e.getMessage());
+                return;
+            } */
+            final Map<?, T> map = dm.getAll();
+
+			List<Map<String,Object>> m = new ArrayList<> ();
+
+			for (final Map.Entry<?, T> entry : map.entrySet()) {
+                T value = entry.getValue();
+                if (value == null) {
+                    continue;
+                }
+
+	            Map<String,Object> mapEntry = new HashMap<>(2);
+                
+	            mapEntry.put("v", entry.getKey());
+	            mapEntry.put("vp",CxUtil.cvtVisualPropertyValueAsCX2Obj(value, vp) );
+	            m.add(mapEntry);
+            }
+			defObj.setMapppingList(m);
+			result.setType(VPMappingType.DISCRETE);
+        }
+        else if (mapping instanceof ContinuousMapping<?, ?>) {
+            final ContinuousMapping<?, T> cm = (ContinuousMapping<?, T>) mapping;
+         /*   String type = null;
+            try {
+                type = toAttributeType(cm.getMappingColumnType(), table, col);
+            }
+            catch (final IOException e) {
+                logger.info("WARNING: problem with mapping/column '" + col
+                        + "': column not present, ignoring corresponding continuous mapping." + e.getMessage());
+                return;
+            } */
+			List<Map<String, Object>> m = new ArrayList<>();
+
+			Object min = null;
+			Boolean includeMin = null;
+			Object minVP = null;
+
+			int counter = 0;
+			
+			Map<String, Object> currentMapping = new HashMap<>();
+
+            for ( ContinuousMappingPoint<?,T> cp : cm.getAllPoints()) {
+                T lesser = cp.getRange().lesserValue;
+                T equal = cp.getRange().equalValue;
+                T greater = cp.getRange().greaterValue;
+                
+                Object OV = cp.getValue();
+
+				currentMapping.put("maxVPValue", CxUtil.cvtVisualPropertyValueAsCX2Obj(lesser, vp));
+				currentMapping.put("includeMax", Boolean.valueOf(equal.equals(lesser)));
+				currentMapping.put("max", OV);
+
+				if (counter == 0) { // min side
+					currentMapping.put("includeMin", Boolean.FALSE);
+
+				} else {
+					currentMapping.put("includeMin", includeMin);
+					currentMapping.put("minVPValue", minVP);
+					currentMapping.put("min", min);
+				}
+
+				m.add(currentMapping);
+
+				// store the max values as min for the next segment
+				includeMin = Boolean.valueOf(equal.equals(greater));
+
+				min = OV;
+				minVP = CxUtil.cvtVisualPropertyValueAsCX2Obj(greater, vp);
+
+				currentMapping = new HashMap<>();
+				counter++;
+
+            }
+            
+			// add the last entry
+			currentMapping.put("includeMin", includeMin);
+			currentMapping.put("includeMax", Boolean.FALSE);
+			currentMapping.put("minVPValue", minVP);
+			currentMapping.put("min", min);
+			m.add(currentMapping);
+
+            
+      /*      final StringBuilder sb = new StringBuilder();
+            sb.append(CxUtil.VM_COL);
+            sb.append("=");
+            sb.append(escapeString(col));
+            sb.append(",");
+            sb.append(CxUtil.VM_TYPE);
+            sb.append("=");
+            sb.append(escapeString(type));
+            int counter = 0;
+            for (final ContinuousMappingPoint<?, T> cp : cm.getAllPoints()) {
+                final T lesser = cp.getRange().lesserValue;
+                final T equal = cp.getRange().equalValue;
+                final T greater = cp.getRange().greaterValue;
+                sb.append(",L=");
+                sb.append(counter);
+                sb.append("=");
+                sb.append(escapeString(vp.toSerializableString(lesser)));
+                sb.append(",E=");
+                sb.append(counter);
+                sb.append("=");
+                sb.append(escapeString(vp.toSerializableString(equal)));
+                sb.append(",G=");
+                sb.append(counter);
+                sb.append("=");
+                sb.append(escapeString(vp.toSerializableString(greater)));
+                sb.append(",OV=");
+                sb.append(counter);
+                sb.append("=");
+                sb.append(escapeString(cp.getValue().toString()));
+                ++counter;
+            }*/
+            //cvp.putMapping(vp.getIdString(), CxUtil.CONTINUOUS, sb.toString());
+			defObj.setMapppingList(m);
+            result.setType(VPMappingType.CONTINUOUS);
+        }
+
+        return result;
+    }
 	
 	private final void writeHiddenAttributes() throws IOException {
 
-		final List<AspectElement> elements = new ArrayList<>();
+		final List<AbstractAttributesAspectElement> elements = new ArrayList<>();
 		if (writeSiblings) {
 			addNetworkAttributesHelper(CyNetwork.HIDDEN_ATTRS, baseNetwork, elements);
 		}
 		for (final CySubNetwork subnet : subnetworks) {
 			addNetworkAttributesHelper(CyNetwork.HIDDEN_ATTRS, subnet, elements);
 		}
+		
+		List<AspectElement> cleanedAttributes = elements.stream().filter( x -> (!x.getName().equals(CxUtil.UUID_COLUMN) 
+				                        && !x.getName().equals(CxUtil.MODIFICATION_COLUMN)))
+		.collect(Collectors.toList());
 
-		writeAspectElements(elements);
+		writeAspectElements(cleanedAttributes);
 	}
 
 	private void writeOpaqueElement(String column, String value)
@@ -453,6 +958,51 @@ public final class CxExporter {
 		}
 	}
 	
+	private void writeCx2Nodes(CXWriter cx2Writer,CySubNetwork subnet) throws IOException, NdexException {
+		//TODO: handle cyGroups
+		if ( subnet.getNodeCount()==0)
+			return;
+			
+		
+		boolean z_used = false;
+		if ( view!=null) {
+			for (View<CyNode> node_view : view.getNodeViews()) {
+				Double z = node_view.getVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION);
+				if (z != null && Math.abs(z.doubleValue()) > 0.000000001) {
+					z_used = true;
+					break;
+				}
+			}
+		}
+			
+		cx2Writer.startAspectFragment(CxNode.ASPECT_NAME);
+		for (final CyNode cyNode : subnet.getNodeList()) {
+			Long nodeId = CxUtil.getElementId(cyNode, subnet, useCxId);
+			LinkedHashMap<String,Object> nodeAttrs = new LinkedHashMap<>();
+			CyRow row = subnet.getRow(cyNode, CyNetwork.DEFAULT_ATTRS);
+			for ( Map.Entry<String, Object> e: row.getAllValues().entrySet()) {
+				Object value = e.getValue();
+				String name = e.getKey();
+				if (value != null && !Settings.isIgnore(name, Settings.IGNORE_NODE_ATTRIBUTES, value) &&
+					   (nodeColumns == null || nodeColumns.contains(name))) {
+					nodeAttrs.put(name, value);	
+				}
+			}
+			CxNode cx2Node = new CxNode(nodeId, nodeAttrs);
+			if (view !=null) {
+					View<CyNode> nodeView = view.getNodeView(cyNode);
+					cx2Node.setX(nodeView.getVisualProperty(BasicVisualLexicon.NODE_X_LOCATION));
+					cx2Node.setY(nodeView.getVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION));
+					if (z_used) {
+						cx2Node.setZ(nodeView.getVisualProperty(BasicVisualLexicon.NODE_Z_LOCATION));
+					}	
+			}
+			cx2Writer.writeElementInFragment(cx2Node);
+		}	
+		cx2Writer.endAspectFragment();
+		
+	}
+	
 	private final void writeEdges() throws IOException {
 
 		final List<AspectElement> edgeElements = new ArrayList<>();
@@ -461,6 +1011,39 @@ public final class CxExporter {
 			edgeElements.add(createEdgeElement(edge, baseNetwork));
 		}
 		writeAspectElements(edgeElements);
+	}
+	
+	private void writeCx2Edges(CXWriter cx2Writer) throws IOException, NdexException {
+		for (final CySubNetwork subnet : subnetworks) {
+			if ( subnet.getEdgeCount()==0)
+				return;
+			cx2Writer.startAspectFragment(CxEdge.ASPECT_NAME);
+			for (CyEdge cyEdge : subnet.getEdgeList()) {
+
+				CxEdge cxEdge = new CxEdge(CxUtil.getElementId(cyEdge, subnet, useCxId),
+						CxUtil.getElementId(cyEdge.getSource(), subnet, useCxId),
+						CxUtil.getElementId(cyEdge.getTarget(), subnet, useCxId));
+				
+				LinkedHashMap<String,Object> edgeAttrs = new LinkedHashMap<>();
+				CyRow row = subnet.getRow(cyEdge, CyNetwork.DEFAULT_ATTRS);
+				for (Map.Entry<String,Object>e: row.getAllValues().entrySet()) {
+					String name = e.getKey();
+					Object value = e.getValue();
+					if (value != null && !Settings.isIgnore(name, Settings.IGNORE_NODE_ATTRIBUTES, value) &&
+						   	(edgeColumns == null || edgeColumns.contains(name)) && 
+						   	!name.startsWith( CxUtil.sourceNodeMappingPrefix) && !name.startsWith(CxUtil.targetNodeMappingPrefix)) {
+							edgeAttrs.put(name, value);	
+						}
+					
+				}
+				if ( !edgeAttrs.isEmpty())
+					cxEdge.setAttributes(edgeAttrs);
+
+				cx2Writer.writeElementInFragment(cxEdge);
+			}
+			cx2Writer.endAspectFragment();
+			break;
+		}	
 	}
 
 	private void writeNodeAttributes() throws IOException {
@@ -532,7 +1115,7 @@ public final class CxExporter {
 
 	
 	// Aggregators
-	private void addDataToMetaDataCollection(final MetaDataCollection meta_data, final String aspect_name,
+	private static void addDataToMetaDataCollection(final MetaDataCollection meta_data, final String aspect_name,
 			final Long count, final Long id_counter) {
 
 		if (count != null && count == 0) {
@@ -561,9 +1144,9 @@ public final class CxExporter {
 	 * @throws IOException 
 	 * @throws JsonParseException 
 	 */
-	@SuppressWarnings("rawtypes")
+	//@SuppressWarnings("rawtypes")
 	private void addNetworkAttributesHelper(final String namespace, final CyNetwork my_network,
-			final List<AspectElement> elements) throws JsonParseException, IOException {
+			final List<AbstractAttributesAspectElement> elements) throws JsonParseException, IOException {
 
 		final CyRow row = my_network.getRow(my_network, namespace);
 		
@@ -614,7 +1197,9 @@ public final class CxExporter {
 				}
 			} else {
 				if (namespace.equals(CyNetwork.HIDDEN_ATTRS)) {
-					element = new HiddenAttributesElement(subnet, column_name, String.valueOf(value), type);
+					if ( !column_name.equals(CxUtil.PARENT_NETWORK_COLUMN) || subnet !=null )
+					    element = new HiddenAttributesElement(subnet, column_name, String.valueOf(value),
+					    		type);
 				}else {
 					element = new NetworkAttributesElement(subnet, column_name, String.valueOf(value), type);
 				}
@@ -732,7 +1317,8 @@ public final class CxExporter {
 
 	private void addEdgeAttributesElement(final List<AspectElement> elements, CyNetwork network, CyEdge edge, String name, Object value) {
 		
-		if (value == null || (value instanceof String && ((String) value).length() == 0)) {
+		if (value == null || (value instanceof String && ((String) value).length() == 0) ||
+			 name.startsWith(CxUtil.sourceNodeMappingPrefix) || name.startsWith(CxUtil.targetNodeMappingPrefix)) {
 			return;
 		}
 
@@ -816,7 +1402,9 @@ public final class CxExporter {
 		// write the visual properties and coordinates
 		for (final CySubNetwork subnet : subnetworks) {
 			
-			final Collection<CyNetworkView> views = _networkview_manager.getNetworkViews(subnet);
+			final Collection<CyNetworkView> views = this.view !=null ?
+					Arrays.asList(view)
+					:_networkview_manager.getNetworkViews(subnet);
 			
 			// Use node/edge in views, instead of from subnetwork to avoid hidden/group elements
 			HashSet<Long> edge_suids = new HashSet<Long>();
@@ -907,9 +1495,148 @@ public final class CxExporter {
 		writeAspectElements(elements);
 	}
 
+	//write default, mapping and bypasses
+	private void writeCX2VisualProperties (CXWriter cx2Writer) throws NdexException, JsonGenerationException, JsonMappingException, IOException {
+		if ( view == null)
+			return;
+
+		VisualLexicon lexicon = CxUtil.getLexicon(view);
+		CxVisualProperty cx2VisualProps = new CxVisualProperty();
+		VisualEditorProperties editorProps = new VisualEditorProperties();
+		
+		CXToCX2VisualPropertyConverter cvtr = CXToCX2VisualPropertyConverter.getInstance();
+        VisualMappingManager vmm = CyServiceModule.getService(VisualMappingManager.class);
+        VisualStyle current_visual_style = vmm.getVisualStyle(view);
+        final Set<VisualProperty<?>> all_visual_properties = lexicon.getAllVisualProperties();
+
+        // handle editor properties
+        VisualPropertiesGatherer.addCx2EditorPropsDependency(CxUtil.NODE_CUSTOM_GRAPHICS_SIZE_SYNC, 
+        		current_visual_style, editorProps);
+        VisualPropertiesGatherer.addCx2EditorPropsDependency(CxUtil.NODE_SIZE_LOCKED, current_visual_style, editorProps);
+        VisualPropertiesGatherer.addCx2EditorPropsDependency(CxUtil.ARROW_COLOR_MATCHES_EDGE, current_visual_style, editorProps);
+        cx2Writer.writeFullAspectFragment(Arrays.asList(editorProps));
+        
+        boolean nodeSizeLocked = editorProps.getProperties().get(CxUtil.NODE_SIZE_LOCKED).equals(Boolean.TRUE);
+        boolean arrowColorMatchesEdge = editorProps.getProperties().get(CxUtil.ARROW_COLOR_MATCHES_EDGE).equals(Boolean.TRUE);
+        
+        DefaultVisualProperties defaultProps = new DefaultVisualProperties();
+		cx2VisualProps.setDefaultProps(defaultProps);
+		
+        //getNetwork styles
+        Map<String,String> cx1Style = new HashMap<>();
+        for (final VisualProperty<?> visual_property : all_visual_properties) {
+            if (visual_property.getTargetDataType() == CyNetwork.class) {
+            	String value_str = VisualPropertiesGatherer.getDefaultPropertyAsString(current_visual_style, visual_property);
+                if (value_str !=null && !CxioUtil.isEmpty(value_str)) {
+                	cx1Style.put(visual_property.getIdString(), value_str);
+                }
+            }
+        }
+        defaultProps.setNetworkProperties(cvtr.convertNetworkVPs(cx1Style));
+     
+        //get node styles
+        cx1Style.clear();
+        CyTable table = view.getModel().getTable(CyNode.class, CyNetwork.DEFAULT_ATTRS);
+        for (final VisualProperty<?> visual_property : all_visual_properties) {
+            if (visual_property.getTargetDataType() == CyNode.class) {
+            	String idStr = visual_property.getIdString();
+
+            	String value_str = VisualPropertiesGatherer.getDefaultPropertyAsString(current_visual_style, visual_property);
+                if (value_str !=null && !CxioUtil.isEmpty(value_str)) {
+                	cx1Style.put(idStr, value_str);
+                }
+
+                VisualPropertyMapping cx2Mapping = 
+                		VisualPropertiesGatherer.getCX2Mapping(current_visual_style, visual_property, table);
+                if ( cx2Mapping!=null) {
+                	if  (idStr.equals("NODE_SIZE")) {  //Node size is special.
+                		if ( nodeSizeLocked) {
+                    		cx2VisualProps.getNodeMappings().put("NODE_WIDTH",
+                        			cx2Mapping);
+                    		cx2VisualProps.getNodeMappings().put("NODE_HEIGHT",
+                        			cx2Mapping);
+                			
+                		}
+                	} else {
+                		if ( !nodeSizeLocked || !idStr.equals("NODE_WIDTH") || !idStr.equals("NODE_HEIGHT")) {
+                			cx2VisualProps.getNodeMappings()
+                			.put(cvtr.getNewEdgeOrNodeProperty(idStr), cx2Mapping);
+                		}
+                	}
+                }
+                
+            }
+        }
+        if (nodeSizeLocked) { //handle node size
+        	CXToCX2VisualPropertyConverter.cvtCx1NodeSize(cx1Style);
+        }
+        defaultProps.setNodeProperties(cvtr.convertEdgeOrNodeVPs(cx1Style));
+
+        // get edge styles 
+        cx1Style.clear();
+        table = view.getModel().getTable(CyEdge.class, CyNetwork.DEFAULT_ATTRS);
+        for (final VisualProperty<?> visual_property : all_visual_properties) {
+        	String idStr = visual_property.getIdString();
+            if (visual_property.getTargetDataType() == CyEdge.class) {
+            	String value_str = VisualPropertiesGatherer.getDefaultPropertyAsString(current_visual_style, visual_property);
+                if (value_str !=null && !CxioUtil.isEmpty(value_str)) {
+                	cx1Style.put(visual_property.getIdString(), value_str);
+                }
+
+                VisualPropertyMapping cx2Mapping = 
+                		VisualPropertiesGatherer.getCX2Mapping(current_visual_style, visual_property, table);
+                
+                if ( cx2Mapping!=null) {
+                	if  (idStr.equals("EDGE_UNSELECTED_PAINT")) {  //Handle this specially.
+                		if ( arrowColorMatchesEdge) {
+                    		cx2VisualProps.getEdgeMappings().put("EDGE_SOURCE_ARROW_UNSELECTED_PAINT",
+                        			cx2Mapping);
+                    		cx2VisualProps.getEdgeMappings().put("EDGE_STROKE_UNSELECTED_PAINT",
+                        			cx2Mapping);
+                    		cx2VisualProps.getEdgeMappings().put("EDGE_TARGET_ARROW_UNSELECTED_PAINT",
+                        			cx2Mapping);
+                			
+                		}
+                	} else {
+                		if ( !arrowColorMatchesEdge || !idStr.equals("EDGE_SOURCE_ARROW_UNSELECTED_PAINT") 
+                				|| !idStr.equals("EDGE_STROKE_UNSELECTED_PAINT")
+                				|| !idStr.equals("EDGE_TARGET_ARROW_UNSELECTED_PAINT")) {
+                			cx2VisualProps.getEdgeMappings()
+                			.put(cvtr.getNewEdgeOrNodeProperty(idStr), cx2Mapping);
+                		}
+                	}
+                }
+
+                
+                if ( cx2Mapping!=null) {
+                	cx2VisualProps.getEdgeMappings().put(cvtr.getNewEdgeOrNodeProperty(visual_property.getIdString()),
+                			cx2Mapping);
+                }
+                
+            }
+        }
+        
+        if (arrowColorMatchesEdge) { //handle edge color
+        	CXToCX2VisualPropertyConverter.cvtCx1EdgeColor(cx1Style);
+        }
+        defaultProps.setEdgeProperties(cvtr.convertEdgeOrNodeVPs(cx1Style));
+
+        cx2Writer.writeFullAspectFragment(Arrays.asList(cx2VisualProps));
+        
+        // write bypasses    
+    	List<CxNodeBypass> nodeBypasses = VisualPropertiesGatherer.getNodeBypasses(
+				view, all_visual_properties, useCxId, nodeSizeLocked );
+    	cx2Writer.writeFullAspectFragment(nodeBypasses);
+    	
+       	List<CxEdgeBypass> edgeBypasses = VisualPropertiesGatherer.getEdgeBypasses(
+    				view, all_visual_properties, useCxId, arrowColorMatchesEdge );
+        	cx2Writer.writeFullAspectFragment(edgeBypasses);
+    	
+		
+	}
 	
 	//Creators
-	private EdgesElement createEdgeElement(CyEdge edge, CyNetwork network) throws JsonProcessingException {
+	private EdgesElement createEdgeElement(CyEdge edge, CyNetwork network) {
 		Long cxId = CxUtil.getElementId(edge, network, useCxId);
 		Long sourceId = CxUtil.getElementId(edge.getSource(), network, useCxId);
 		Long targetId = CxUtil.getElementId(edge.getTarget(), network, useCxId);
@@ -1067,5 +1794,133 @@ public final class CxExporter {
 		}
 	}
 	
+	private CxAttributeDeclaration getAttributeDeclarations() {
+		
+		CxAttributeDeclaration result = new CxAttributeDeclaration();
+		for (final CySubNetwork subnet : subnetworks) {
+			Map<String,DeclarationEntry> networkAttributes = getTableAttributes(subnet, "network_table");
+		
+			if ( !networkAttributes.isEmpty())
+				result.add(CxNetworkAttribute.ASPECT_NAME, networkAttributes);
+		
+			Map<String,DeclarationEntry> edgeAttributes = getTableAttributes(subnet, "edge_table");
+			if ( !edgeAttributes.isEmpty())
+				result.add(CxEdge.ASPECT_NAME, edgeAttributes);
+		
+			Map<String,DeclarationEntry> nodeAttributes = getTableAttributes(subnet, "node_table");
+		
+			if ( !nodeAttributes.isEmpty())
+				result.add(CxNode.ASPECT_NAME, nodeAttributes);
+			break;
+		}
+			return result;
+		
+	}
+	
+	
+	public final void writeNetworkInCX2(Collection<String> aspects, final OutputStream out) throws IOException, NdexException {
+		
+		
+		Collection<String> outputAspects = aspects;
+		if (aspects == null || aspects.isEmpty()) {
+			outputAspects = AspectSet.getCx2AspectNames();
+		}
+		
+		// if specific aspects are specified, do not write opaque aspects
+		//TODO: this seems to be wrong when the size matches but aspects sets are different.
+		if (outputAspects.size() != AspectSet.getCx2AspectNames().size()) {
+			omitOpaqueAspects = true;
+		}
+		
+		String net_type = "subnetwork";
+		String id_type = useCxId ? "CX IDs" : "SUIDs";
+		
+		CySubNetwork subNet = this.subnetworks.get(0);
+		
+		var appManager = CyServiceModule.getService(CyApplicationManager.class);
+
+		
+		if ( view ==null ) {
+			CyNetworkView currentView = appManager.getCurrentNetworkView();
+			Collection<CyNetworkView> views = _networkview_manager.getNetworkViews(subNet);
+			if (!views.isEmpty()) {
+				CyNetworkView firstView = null;
+				int counter = 0;
+				for (CyNetworkView v : views) {
+					if ( counter == 0 )
+						firstView = v;
+					if ( v.getSUID().equals(currentView.getSUID())) {
+						view = v;
+						break;
+					}
+					counter++;
+				}
+				if ( view == null && firstView != null)
+					view = firstView;
+			} else
+				view = null;
+		}
+		
+		logger.info("Exporting network as " + net_type + " with " + id_type);
+		logger.info("Aspect filter: " + outputAspects);
+		logger.info("NodeCol filter: " + nodeColumns);
+		logger.info("EdgeCol filter: " + edgeColumns);
+		logger.info("NetworkCol filter: " + networkColumns);
+		
+		
+		// Build session info that will be exported with network
+		CySessionManager session_manager = CyServiceModule.getService(CySessionManager.class);
+		session_manager.getCurrentSession();
+
+		CXWriter cx2Writer = new CXWriter(out, false);
+
+		CxAttributeDeclaration attrDecls = getAttributeDeclarations();
+		List<CxMetadata> metadata = getCx2Metadata(aspects, attrDecls);
+		
+		cx2Writer.writeMetadata(metadata);
+
+		String msg = null;
+		boolean success = true;
+		
+		// Must expand all groups beforehand to reveal nodes
+		collapsed_groups = expandGroups();
+		
+		try {
+			
+			//Write attribute declarations first
+			if ( !attrDecls.getDeclarations().isEmpty())
+				cx2Writer.writeFullAspectFragment(Arrays.asList(attrDecls));
+			
+			//Write network attributes and opaque aspects
+			if ( attrDecls.getAttributesInAspect(CxNetworkAttribute.ASPECT_NAME)!=null) {
+				writeCx2NetworkAttributes(cx2Writer);
+			}
+			
+			//write nodes. TODO: Handles CyGroups and internal nodes/edges
+			writeCx2Nodes(cx2Writer, subNet);		
+			
+			writeCx2Edges(cx2Writer);
+			writeCX2VisualProperties (cx2Writer);	
+			writeTableVisualStyles(cx2Writer);
+			
+		} catch (final Exception e) {
+			e.printStackTrace();
+			msg = "Failed to create cx network: " + e.getMessage();
+			success = false;
+		} finally {
+			collapsed_groups.forEach(group -> {
+				for (CyNetwork net : group.getNetworkSet()) {
+					if (net instanceof CySubNetwork) {
+						group.collapse(net);
+					}
+				}
+			});
+		}
+		if ( success)
+			cx2Writer.finish();
+		else 
+			cx2Writer.printError(msg);
+	} 
+
 }
 
