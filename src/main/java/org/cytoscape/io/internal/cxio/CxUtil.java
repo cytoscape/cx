@@ -64,7 +64,7 @@ public final class CxUtil {
 //    public static final String NAME = "name";
 //    public static final String SHARED_NAME = "shared name";
     public static final String INTERACTION = "interaction";
-//    public static final String SHARED_INTERACTION = "shared interaction";
+    public static final String SHARED_INTERACTION = "shared interaction";
 //    public static final String SELECTED = "selected";
     
     public static final String ANNOTATIONS = "__Annotations";

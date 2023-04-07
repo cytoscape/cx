@@ -352,6 +352,12 @@ public final class Cx2Importer {
 				throw new NdexException("Edge attribute " + e.getKey() + " is not declared.");
 		}
 		
+		if ( ! attributeDeclarations.containsKey(CxUtil.SHARED_INTERACTION) && 
+				attributeDeclarations.containsKey(CxUtil.INTERACTION)) {
+			Object v = edge.getAttributes().get(CxUtil.INTERACTION);
+			localRow.set(CxUtil.SHARED_INTERACTION,v);			
+		}
+		
     }
     
     private void createNetworkAttribute(CxNetworkAttribute netAttrs) throws NdexException {
