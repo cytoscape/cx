@@ -815,8 +815,8 @@ public final class Cx2Importer {
 		DiscreteMapping dmf = (DiscreteMapping) ViewMaker.vmf_factory_d.createVisualMappingFunction(colName, CxUtil.getDataType(dtype), vp);
     
         for ( Map<String,Object> mappingEntry: def.getMapppingList()) {
-			
-			Object v = AttributeDeclaredAspect.processAttributeValue (dtype, mappingEntry.get("v") );
+			ATTRIBUTE_DATA_TYPE elmtDType = dtype.isSingleValueType()? dtype: dtype.elementType();
+			Object v = AttributeDeclaredAspect.processAttributeValue (elmtDType, mappingEntry.get("v") );
 			String cyValue = CX2ToCXVisualPropertyConverter.getInstance().
 					getCx1EdgeOrNodePropertyValue(cx2VpName, mappingEntry.get("vp"));
 			dmf.putMapValue(v, vp.parseSerializableString(cyValue));

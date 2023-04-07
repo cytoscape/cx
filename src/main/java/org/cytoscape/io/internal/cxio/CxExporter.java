@@ -527,7 +527,7 @@ public final class CxExporter {
 		for (CyColumn col : c) {
 			
 			String colName = col.getName();
-			if (Settings.isIgnore(colName, additional_ignore, null)){
+			if (Settings.isIgnore(colName, additional_ignore, true)){
 				continue;
 			}
 			if ( applies_to.equals("network_table") && colName.startsWith(CxUtil.OPAQUE_ASPECT_PREFIX)) {
