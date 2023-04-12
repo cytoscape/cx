@@ -352,6 +352,12 @@ public final class Cx2Importer {
 				throw new NdexException("Edge attribute " + e.getKey() + " is not declared.");
 		}
 		
+		if ( ! attributeDeclarations.containsKey(CxUtil.SHARED_INTERACTION) && 
+				attributeDeclarations.containsKey(CxUtil.INTERACTION)) {
+			Object v = edge.getAttributes().get(CxUtil.INTERACTION);
+			localRow.set(CxUtil.SHARED_INTERACTION,v);			
+		}
+		
     }
     
     private void createNetworkAttribute(CxNetworkAttribute netAttrs) throws NdexException {
@@ -815,8 +821,8 @@ public final class Cx2Importer {
 		DiscreteMapping dmf = (DiscreteMapping) ViewMaker.vmf_factory_d.createVisualMappingFunction(colName, CxUtil.getDataType(dtype), vp);
     
         for ( Map<String,Object> mappingEntry: def.getMapppingList()) {
-			
-			Object v = AttributeDeclaredAspect.processAttributeValue (dtype, mappingEntry.get("v") );
+			ATTRIBUTE_DATA_TYPE elmtDType = dtype.isSingleValueType()? dtype: dtype.elementType();
+			Object v = AttributeDeclaredAspect.processAttributeValue (elmtDType, mappingEntry.get("v") );
 			String cyValue = CX2ToCXVisualPropertyConverter.getInstance().
 					getCx1EdgeOrNodePropertyValue(cx2VpName, mappingEntry.get("vp"));
 			dmf.putMapValue(v, vp.parseSerializableString(cyValue));

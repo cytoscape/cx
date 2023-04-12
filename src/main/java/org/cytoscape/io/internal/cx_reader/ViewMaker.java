@@ -8,11 +8,6 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.regex.Pattern;
 
-import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
-import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
-import org.ndexbio.cxio.aspects.datamodels.Mapping;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.cytoscape.io.internal.CxPreferences;
 import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cxio.CxUtil;
@@ -28,7 +23,6 @@ import org.cytoscape.model.subnetwork.CySubNetwork;
 import org.cytoscape.view.layout.CyLayoutAlgorithm;
 import org.cytoscape.view.layout.CyLayoutAlgorithmManager;
 import org.cytoscape.view.model.CyNetworkView;
-import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.model.View;
 import org.cytoscape.view.model.VisualLexicon;
 import org.cytoscape.view.model.VisualProperty;
@@ -45,6 +39,11 @@ import org.cytoscape.view.vizmap.mappings.DiscreteMapping;
 import org.cytoscape.view.vizmap.mappings.PassthroughMapping;
 import org.cytoscape.work.TaskIterator;
 import org.cytoscape.work.swing.DialogTaskManager;
+import org.ndexbio.cxio.aspects.datamodels.CartesianLayoutElement;
+import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
+import org.ndexbio.cxio.aspects.datamodels.Mapping;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class ViewMaker {
 	private static final Logger logger = LoggerFactory.getLogger("CX ViewMaker");
