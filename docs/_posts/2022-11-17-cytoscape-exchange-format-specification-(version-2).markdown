@@ -15,6 +15,8 @@ The goals of this major revision of CX are
 2. Better support for processing networks while streaming. The 2.0 spec will significantly reduce the memory footprint for operations such as filtering nodes and edges based on node/edge properties and converting the CX network to other formats. 
 3. Making CX networks more compact to improve data transfer speed.
 
+**_NOTE_**: CX version 2 is commonly referred to as CX2. In the Cytoscape ecosystem, CX2 files are typically denoted with the .cx2 extension, distinguishing them from CX version 1 networks, which are usually represented with the .cx suffix.
+
 ## Table of contents
 
 1. [Top Level Structure of CX](#top-level-structure-of-cx)
@@ -30,7 +32,8 @@ The goals of this major revision of CX are
   - [nodeBypasses](#nodebypasses)
   - [edgeBypasses](#edgebypasses)
 7. [Opaque aspects](#opaque-aspects) 
-8. [Example CX files](#example-cx-files)
+8. [Numeric values in this version of CX](#numeric-values-in-this-version-of-cx)
+9. [Example CX files](#example-cx-files)
  
 
 ## Top Level Structure of CX
@@ -350,6 +353,16 @@ An opaque aspect is in this format in a CX document:
    ]
 }
 ```
+
+## Numeric values in this version of CX
+
+CX supports these 3 numeric data types:
+
+ - long
+ - integer
+ - double
+
+A CX network is a JSON document that follows the JSON specification. However, the JSON specification only includes a generic number type, which can lead to imprecision in numeric data types for node and edge attribute values. To ensure precision, it is necessary to use the attribute declaration aspect to cast the CX2 numeric values to their declared data type. Note that the double data type has special values like `NaN`, `-Infinity`, and `Infinity`, which are not supported in the JSON specification. Consequently, when converting a CX network into CX2, NDEx server will convert these values to nulls. If your application requires the preservation of NaNs, you can save the corresponding column as a string and handle the string-to-double conversion in your application.
 
 ## Example CX files
 
