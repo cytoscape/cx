@@ -596,7 +596,9 @@ public final class CxExporter {
 						cx2writer.writeAspectFromJSONString(columnName, (String) e.getValue());
 					} else {
 						// add network attribute.
-						result.add(columnName, e.getValue());
+						Object v = e.getValue();
+						if (isNotNullandFinite(v))
+							result.add(columnName, v);
 					}
 				}
 			}
@@ -983,7 +985,7 @@ public final class CxExporter {
 			for ( Map.Entry<String, Object> e: row.getAllValues().entrySet()) {
 				Object value = e.getValue();
 				String name = e.getKey();
-				if (value != null && !Settings.isIgnore(name, Settings.IGNORE_NODE_ATTRIBUTES, value) &&
+				if (isNotNullandFinite(value) && !Settings.isIgnore(name, Settings.IGNORE_NODE_ATTRIBUTES, value) &&
 					   (nodeColumns == null || nodeColumns.contains(name))) {
 					nodeAttrs.put(name, value);	
 				}
@@ -1001,6 +1003,17 @@ public final class CxExporter {
 		}	
 		cx2Writer.endAspectFragment();
 		
+	}
+	
+	/*
+	 * Check if the value is a null, NaN, Inf or -Inf. Attributes with these values should be ignored when exporting to cx2. 
+	 */
+	private static boolean isNotNullandFinite(Object value) {
+		if (value == null) return false;
+		if(value instanceof Double) {
+			return Double.isFinite((Double)value);
+		}
+		return true;
 	}
 	
 	private final void writeEdges() throws IOException {
@@ -1029,7 +1042,7 @@ public final class CxExporter {
 				for (Map.Entry<String,Object>e: row.getAllValues().entrySet()) {
 					String name = e.getKey();
 					Object value = e.getValue();
-					if (value != null && !Settings.isIgnore(name, Settings.IGNORE_NODE_ATTRIBUTES, value) &&
+					if (isNotNullandFinite(value) && !Settings.isIgnore(name, Settings.IGNORE_NODE_ATTRIBUTES, value) &&
 						   	(edgeColumns == null || edgeColumns.contains(name)) && 
 						   	!name.startsWith( CxUtil.sourceNodeMappingPrefix) && !name.startsWith(CxUtil.targetNodeMappingPrefix)) {
 							edgeAttrs.put(name, value);	
