@@ -52,6 +52,7 @@ It should contain these attributes
 
      Value: uuid of the interaction network. If the interaction network is stored on a NDEx server, this attribute should contain the uuid of that network. If the interaction network is a local network in users current Cytoscape Web workspace, this attribute contains the local uuid of that network. 
    
+<!---
    - Attribute name: **HCX::interactionNetworkHost**
 
      Attribute type: string
@@ -61,7 +62,7 @@ It should contain these attributes
      NOTE: For production NDEx, use www.ndexbio.org as the hostname.
 
      This attribute should only be populated when HCX::interactionNetworkUUID is defined. If this value is null or this attribute is missing, the HCX::interactionNetworkUUID value should be treated as a Cytoscape Web local network UUID in the currently opened workspace.
-
+--->
    - Attribute name: **HCX::interactionNetworkName**
    
      Value: file name as a string, assume the file is located in the same directory of the hierarchy
@@ -146,7 +147,7 @@ A node in the hierarchy can link to a subnetwork in the parent interaction netwo
 
 #### edges
 
-Edges are directed. Target node should always be the child node on that edge.
+Edges are directed. In the majority of our hierarchical networks, we adhere to the convention of designating the child node as the target node for each edge. However, users can opt to reverse the edge direction if it aligns more effectively with their use case.
 
 #### Visualization of the hierarchy
 
