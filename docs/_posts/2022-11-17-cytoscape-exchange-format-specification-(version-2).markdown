@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Cytoscape Exchange Format Specification (Version 2)"
-date:   2023-05-24 
+date:   2023-08-30 
 categories: CX2 Specification
 ---
 
@@ -132,17 +132,17 @@ The schema of this aspect is:
 
 ```
 {
-  Aspect_Name1: { attribute1: {"d": string ,"v": value, "a": string},
-                  attribute2: {"d": string, "v": value},
+  Aspect_Name1: { attribute1: {"d": string, "a": string},
+                  attribute2: {"d": string},
                   …
-                  attributeN: {"d": string, "v": value}    } ,
+                  attributeN: {"d": string}    } ,
   Aspect_Name2: { attribute1: {"d": string, "v": value}, … },
    … 
 }
 ```
 - **Aspect_Name** - The name of the aspect that this attribute is in. It can be networkAttributes, nodes, edges, edgeAttributes, or nodeAttributes. edgeAttributes and nodeAttributes aspects are only for Cytoscape collections. 
-- **attributeN** - the name of the attribute in that aspect. 
-- **"d"** - declares the data type of that attribute. CX supports these data types in attributes:
+- **attributeN** - The name of the attribute in that aspect. 
+- **"d"** - Declares the data type of that attribute. CX supports these data types in attributes:
   - string
   - long
   - integer
@@ -153,8 +153,8 @@ The schema of this aspect is:
   - list_of_integer
   - list_of_double
   - list_of_boolean
-- **"v"** - declare a default value of that attribute. If “v” is defined for an attribute in an aspect, when an element doesn’t have that attribute in it, an attribute with the default value will be created for that attribute. Using this declaration can reduce the size of a CX document when one attribute value is repeated many times in an aspect. Developers need to be careful when they use this field. This field can only be used when there is no null value on that attribute. For the same network, different developers or applications might choose a different value as the default value for a given attribute.       
-- **"a"** - declare an alias for the attribute if you want to minimize the length of the attribute name. An alias should be unique in that aspect and should be different from any un-declared attribute in that aspect. If an alias is declared for an attribute, the full attribute name can no longer be used in that aspect.
+- **"v"** - Declare a default value for that attribute. This field (and also the next field **"a"**) is **ONLY** supported in the *nodes* or *edges* aspects. If “v” is defined for an attribute in an aspect, when an element doesn’t have that attribute in it, an attribute with the default value will be created in that element. Using this declaration can reduce the size of a CX document when one attribute value is repeated many times in an aspect. Developers need to be careful when using this field. This field can only be used when there is no null value on that attribute. For the same network, different developers or applications might choose a different value as the default value for a given attribute.       
+- **"a"** - Use an alias to shorten attribute names, mainly for *nodes* and *edges* aspect. Network attribute aliases are **NOT** allowed. An alias should be unique in that aspect and should be different from any un-declared attribute in that aspect. If an alias is declared for an attribute, the full attribute name can no longer be used in that aspect.
 
 # networkAttributes
 
