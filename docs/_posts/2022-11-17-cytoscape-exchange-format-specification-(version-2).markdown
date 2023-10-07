@@ -31,7 +31,7 @@ The goals of this major revision of CX are
   - [visualProperties](#visualproperties)
   - [nodeBypasses](#nodebypasses)
   - [edgeBypasses](#edgebypasses)
-  - [visualEditorProperties](#visualEditorProperties)
+  - [visualEditorProperties](#visualeditorproperties)
 7. [Opaque aspects](#opaque-aspects) 
 8. [Numeric values in this version of CX](#numeric-values-in-this-version-of-cx)
 9. [Example CX files](#example-cx-files)
