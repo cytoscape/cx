@@ -103,7 +103,21 @@ A node in the hierarchy can link to a subnetwork in the parent interaction netwo
 
     Attribute value: Using one of these attributes, a node can declare its own interaction network. When one of these attributes exists, it overwrites the value declared in the networkAttributes aspect.
 
+<!--
+  - Attribute name: **HCX::size**
+
+    type: integer
+
+    Description: Hiview utilizes this value to determine the node size in the circle-packing layout. Typically, this value represents the number of genes (or proteins) within a subsystem. However, users have the flexibility to assign alternative meanings to this attribute, provided the value assigned to a parent node consistently remains larger than that assigned to a child node. In instances where this attribute is absent, Hiview defaults to utilizing the element count of the attribute **HCX::member** for the **HCX::size** value. Should neither **HCX::member** nor **HCX::size** be defined for at least one node, the circle-packing layout option will be disabled in Hiview.
+ -->
+
+- Attribute name: **HCX::memberName**
+
+    type: list of string
+
+    Description: Hiview uses this value to tag each member node in the circle-packing layout. Each element in this list need to be unique. Typically, each value in this list is the gene symbol of a member within a subsystem. However, users have the flexibility to assign alternative identifiers to this attribute. If this attribute is absent, Hiview will default to using the name attribute of the nodes specified in the **HCX::member** attribute for the node label. If neither **HCX::member** nor **HCX::memberNames** is defined for at least one node, the circle-packing layout option will be deactivated in Hiview.
  
+
   - Attribute name: **HCX::memberQuery**
 
     Attribute value type: string

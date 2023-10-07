@@ -31,6 +31,7 @@ The goals of this major revision of CX are
   - [visualProperties](#visualproperties)
   - [nodeBypasses](#nodebypasses)
   - [edgeBypasses](#edgebypasses)
+  - [visualEditorProperties](#visualEditorProperties)
 7. [Opaque aspects](#opaque-aspects) 
 8. [Numeric values in this version of CX](#numeric-values-in-this-version-of-cx)
 9. [Example CX files](#example-cx-files)
@@ -251,29 +252,34 @@ Each type of mapping has a specific schema.
 The schema for the PASSTHROUGH mapping is:
 {% highlight json %}
   {
-    "attribute": string, 
-    "selector":  object, 
+    "attribute": string,
+    "type": string 
   } 
 {% endhighlight %}
    
-- **"attribute"** - attribute name. This is the original attribute name as is used in node or edge attributes, or the expanded name defined in the attributeDefinitions aspect. A shortened attribute name cannot be used here. The Data type of the attribute will be inferred from this attribute name.
-- **"selector"** - the expression tree of the selector. Cytoscape doesn't support this now, if Cytoscape can implement this, we can add this to portable style which will increase the compatibility between CytoscapeJS and Cytoscape data model.
+- **"attribute"** - attribute name. This is the original attribute name as is used in node or edge attributes, or the expanded name defined in the attributeDefinitions aspect. A shortened attribute name cannot be used here. 
+- **"type"** - data type of that attribute. The data type of this attribute is required only when it is not defined in the attributeDeclarations aspect. In cases where the attribute is declared in the attribute declaration, its data type is inferred from the attribute name.
+<!-- - **"selector"** - the expression tree of the selector. Cytoscape doesn't support this now, if Cytoscape can implement this, we can add this to portable style which will increase the compatibility between CytoscapeJS and Cytoscape data model.
+-->
 
 Schema for DISCRETE mapping is
 ```
 {
-  "attribute": string
-  "selector": object,
+  "attribute": string,
+  "type": string,
   "map": [{ "v" : data_value, 
             "vp": visual_property_value }]  
 }	
 ```		
-Data type of data_value and visual_property_value can be inferred from attribute and visual property name.
+The data types for 'data_value' and 'visual_property_value' can either be specified by the 'type' attribute or 
+inferred from the names of the corresponding attributes and visual properties
+
 Schema for CONTINUOUS mapping is
 
 ```
 {
-  "attribute": string
+  "attribute": string,
+  "type": string,
   "map": [{
              "min":       double,
              "includeMin": true | false,
@@ -287,7 +293,7 @@ Schema for CONTINUOUS mapping is
 
 # nodeBypasses           
 
-This aspect stores all the bypass visual properties on nodes. Its element  has this data structure
+This aspect stores all the bypass visual properties on nodes. Its element has this data structure
 
 {% highlight json %}
 
@@ -338,6 +344,21 @@ Similar to the nodeBypasses aspect, this aspect stores all the bypass visual pro
     }
 }
 {% endhighlight %}
+
+
+# visualEditorProperties
+
+This aspect determines the default visual styles for displaying the network in applications with editing capabilities.
+Currently, it's utilized in both the Cytoscape desktop and web applications. This aspect should contain only one element. 
+This singular element is an object endowed with the following attributes:
+
+- **arrowColorMatchesEdge** - If true then Color (Unselected) is used for the whole edge, including its line and arrows.  
+- **nodeSizeLocked**  - Lock node width and height when this value is set to true.  
+- **NETWORK_CENTER_X_LOCATION** - The X location of network view center when opened. When opening a CX network in Cytoscape,
+ Cytoscape will establish the the zoom level and the center of the network when **NETWORK_CENTER_X_LOCATION**, **NETWORK_CENTER_Y_LOCATION** and **NETWORK_SCALE_FACTOR** are all defined. Otherwise, when the nework is opened, Cytoscape will automatically fit the network within the viewport.
+- **NETWORK_CENTER_Y_LOCATION** - The Y location of network view center when it opened.
+- **NETWORK_SCALE_FACTOR** - The zoom level of the network view when opened.
+
 
 ## Opaque aspects
 Applications are allowed to add any non-core aspects to CX as extensions. These aspects are called 'opaque aspects'. The element of an opaque aspect is a JSON object, and all elements in an opaque aspect should have the same data structure. Attributes in opaque aspect elements can also be declared in the attributeDeclarations aspect.          
