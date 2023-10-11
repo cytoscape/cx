@@ -352,8 +352,8 @@ public final class Cx2Importer {
 				throw new NdexException("Edge attribute " + e.getKey() + " is not declared.");
 		}
 		
-		if ( ! attributeDeclarations.containsKey(CxUtil.SHARED_INTERACTION) && 
-				attributeDeclarations.containsKey(CxUtil.INTERACTION)) {
+		if ( attributeDeclarations!=null && (! attributeDeclarations.containsKey(CxUtil.SHARED_INTERACTION) && 
+				attributeDeclarations.containsKey(CxUtil.INTERACTION))) {
 			Object v = edge.getAttributes().get(CxUtil.INTERACTION);
 			localRow.set(CxUtil.SHARED_INTERACTION,v);			
 		}
@@ -796,6 +796,8 @@ public final class Cx2Importer {
 				switch (mapping.getValue().getType()) {
 				case PASSTHROUGH: {
 			        ATTRIBUTE_DATA_TYPE dtype = getAttrDataType(myClass,attrName); 
+			        if (dtype == null)
+			        	dtype = defination.getAttributeType();
 					ViewMaker.addPasstroughMapping(style, vp,attrName,CxUtil.getDataType(dtype));
 					break;
 				}
@@ -818,6 +820,8 @@ public final class Cx2Importer {
                                                 VisualProperty vp,String cx2VpName ) throws NdexException {
         String colName = def.getAttributeName();
         ATTRIBUTE_DATA_TYPE dtype = getAttrDataType(typeClass,colName); 
+        if ( dtype == null)
+        	dtype = def.getAttributeType();
 		DiscreteMapping dmf = (DiscreteMapping) ViewMaker.vmf_factory_d.createVisualMappingFunction(colName, CxUtil.getDataType(dtype), vp);
     
         for ( Map<String,Object> mappingEntry: def.getMapppingList()) {
@@ -834,6 +838,8 @@ public final class Cx2Importer {
 			VisualProperty vp, String cx2VpName) throws NdexException {
 		String colName = def.getAttributeName();
 		ATTRIBUTE_DATA_TYPE dtype = getAttrDataType(typeClass, colName);
+		if ( dtype == null)
+			dtype = def.getAttributeType();
 		ContinuousMapping cmf = (ContinuousMapping) ViewMaker.vmf_factory_c.createVisualMappingFunction(colName,
 				CxUtil.getDataType(dtype), vp);
 		

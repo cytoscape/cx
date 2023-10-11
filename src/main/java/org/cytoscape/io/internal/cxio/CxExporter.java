@@ -1813,18 +1813,22 @@ public final class CxExporter {
 		for (final CySubNetwork subnet : subnetworks) {
 			Map<String,DeclarationEntry> networkAttributes = getTableAttributes(subnet, "network_table");
 		
-			if ( !networkAttributes.isEmpty())
-				result.add(CxNetworkAttribute.ASPECT_NAME, networkAttributes);
-		
-			Map<String,DeclarationEntry> edgeAttributes = getTableAttributes(subnet, "edge_table");
-			if ( !edgeAttributes.isEmpty())
-				result.add(CxEdge.ASPECT_NAME, edgeAttributes);
-		
-			Map<String,DeclarationEntry> nodeAttributes = getTableAttributes(subnet, "node_table");
-		
-			if ( !nodeAttributes.isEmpty())
-				result.add(CxNode.ASPECT_NAME, nodeAttributes);
-			break;
+			try {
+				if (!networkAttributes.isEmpty())
+					result.add(CxNetworkAttribute.ASPECT_NAME, networkAttributes);
+
+				Map<String, DeclarationEntry> edgeAttributes = getTableAttributes(subnet, "edge_table");
+				if (!edgeAttributes.isEmpty())
+					result.add(CxEdge.ASPECT_NAME, edgeAttributes);
+
+				Map<String, DeclarationEntry> nodeAttributes = getTableAttributes(subnet, "node_table");
+
+				if (!nodeAttributes.isEmpty())
+					result.add(CxNode.ASPECT_NAME, nodeAttributes);
+				break;
+			} catch (NdexException e) {
+				// Exception won't happen in the use case of exporting cx.
+			}
 		}
 			return result;
 		
