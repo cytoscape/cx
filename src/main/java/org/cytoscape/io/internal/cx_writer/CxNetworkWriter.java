@@ -80,11 +80,13 @@ public class CxNetworkWriter implements CyWriter {
 
 	public boolean writeSiblings = WRITE_SIBLINGS_DEFAULT;
 
+	/* removing this UI option for now because we decided not to support collection outside Cytoscape desktop for now.
     @Tunable(description = "Write all networks in the collection")
     public Boolean getWriteSiblings() {
         return writeSiblings;
     }
-
+    */
+	
     public void setWriteSiblings(Boolean writeSiblings) {
         this.writeSiblings = writeSiblings;
     }
