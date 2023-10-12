@@ -1527,10 +1527,10 @@ public final class CxExporter {
         		current_visual_style, editorProps);
         VisualPropertiesGatherer.addCx2EditorPropsDependency(CxUtil.NODE_SIZE_LOCKED, current_visual_style, editorProps);
         VisualPropertiesGatherer.addCx2EditorPropsDependency(CxUtil.ARROW_COLOR_MATCHES_EDGE, current_visual_style, editorProps);
-        cx2Writer.writeFullAspectFragment(Arrays.asList(editorProps));
         
-        boolean nodeSizeLocked = editorProps.getProperties().get(CxUtil.NODE_SIZE_LOCKED).equals(Boolean.TRUE);
-        boolean arrowColorMatchesEdge = editorProps.getProperties().get(CxUtil.ARROW_COLOR_MATCHES_EDGE).equals(Boolean.TRUE);
+        Map<String, Object> rawProps = editorProps.getProperties();
+        boolean nodeSizeLocked = rawProps.get(CxUtil.NODE_SIZE_LOCKED).equals(Boolean.TRUE);
+        boolean arrowColorMatchesEdge = rawProps.get(CxUtil.ARROW_COLOR_MATCHES_EDGE).equals(Boolean.TRUE);
         
         DefaultVisualProperties defaultProps = new DefaultVisualProperties();
 		cx2VisualProps.setDefaultProps(defaultProps);
@@ -1546,6 +1546,17 @@ public final class CxExporter {
             }
         }
         defaultProps.setNetworkProperties(cvtr.convertNetworkVPs(cx1Style));
+        //Add the 3 spacial Network VPs to visualEditorProperties
+        String[] desiredKeys = { "NETWORK_CENTER_X_LOCATION", "NETWORK_CENTER_Y_LOCATION", "NETWORK_SCALE_FACTOR"};
+
+        for (String key : desiredKeys) {
+        	String v = cx1Style.get(key);
+        	if ( v !=null) {
+        		rawProps.put(key, Double.valueOf(v));
+        	}
+        }
+        
+        cx2Writer.writeFullAspectFragment(Arrays.asList(editorProps));
      
         //get node styles
         cx1Style.clear();
@@ -1614,16 +1625,20 @@ public final class CxExporter {
                 		if ( !arrowColorMatchesEdge || !idStr.equals("EDGE_SOURCE_ARROW_UNSELECTED_PAINT") 
                 				|| !idStr.equals("EDGE_STROKE_UNSELECTED_PAINT")
                 				|| !idStr.equals("EDGE_TARGET_ARROW_UNSELECTED_PAINT")) {
-                			cx2VisualProps.getEdgeMappings()
-                			.put(cvtr.getNewEdgeOrNodeProperty(idStr), cx2Mapping);
+                			String cx2VP = cvtr.getNewEdgeOrNodeProperty(idStr);
+                			if ( cx2VP != null)
+                				cx2VisualProps.getEdgeMappings().put(cx2VP, cx2Mapping);
                 		}
                 	}
                 }
 
                 
                 if ( cx2Mapping!=null) {
-                	cx2VisualProps.getEdgeMappings().put(cvtr.getNewEdgeOrNodeProperty(visual_property.getIdString()),
-                			cx2Mapping);
+                	String cx2VP = cvtr.getNewEdgeOrNodeProperty(visual_property.getIdString());
+                	
+                	// only add it if it is in the white list.
+                	if ( cx2VP!=null)
+                	   cx2VisualProps.getEdgeMappings().put(cx2VP,cx2Mapping);
                 }
                 
             }

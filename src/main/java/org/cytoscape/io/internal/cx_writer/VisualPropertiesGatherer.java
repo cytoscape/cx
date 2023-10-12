@@ -405,6 +405,8 @@ public final class VisualPropertiesGatherer {
     		String type = null;
     		try {
     			type = toAttributeType(pm.getMappingColumnType(), table, col);
+    			if ( type !=null)
+    				def.setAttributeType(ATTRIBUTE_DATA_TYPE.fromCxLabel(type));
     		}
     		catch (final IOException e) {
     			logger.info("WARNING: problem with mapping/column '" + col
@@ -417,6 +419,8 @@ public final class VisualPropertiesGatherer {
     		String type = null;
     		try {
     			type = toAttributeType(dm.getMappingColumnType(), table, col);
+    			if ( type !=null)
+    				def.setAttributeType(ATTRIBUTE_DATA_TYPE.fromCxLabel(type));
     		}
     		catch (final IOException e) {
     			logger.info("WARNING: problem with mapping/column '" + col
@@ -449,6 +453,8 @@ public final class VisualPropertiesGatherer {
     		String type = null;
     		try {
     			type = toAttributeType(cm.getMappingColumnType(), table, col);
+    			if ( type !=null)
+    				def.setAttributeType(ATTRIBUTE_DATA_TYPE.fromCxLabel(type));
     		}
     		catch (final IOException e) {
     			logger.info("WARNING: problem with mapping/column '" + col
