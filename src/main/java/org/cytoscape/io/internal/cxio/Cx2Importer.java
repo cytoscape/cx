@@ -514,6 +514,8 @@ public final class Cx2Importer {
         
     	VisualLexicon lexicon = rendering_engine_manager.getDefaultVisualLexicon();
 
+    	boolean fitContent = setNetworkVPFromVisualEditorProps(lexicon,new_visual_style);
+    	
     	if ( visualProperties != null) {
 
         	setNetworkVPs(lexicon,visualProperties.getDefaultProps().getNetworkProperties(),new_visual_style);
@@ -614,10 +616,45 @@ public final class Cx2Importer {
             visual_mapping_manager.setVisualStyle(new_visual_style, currentView);
         }
 
-        ViewMaker.applyStyle(new_visual_style,currentView,doLayout, true);
+        ViewMaker.applyStyle(new_visual_style,currentView,doLayout, fitContent);
         
         
 	}
+
+	/**
+	 * Return true if not all 3 VPs exists, which means fitcontent should be called.
+	 * @param lexicon
+	 * @param defaults
+	 * @param style
+	 * @return
+	 */
+	private boolean setNetworkVPFromVisualEditorProps(final VisualLexicon lexicon, VisualStyle style) {
+		
+		if (editorProperties == null)
+			return false;
+		
+        int count = 0;
+        Map<String,Object> defaults = editorProperties.getProperties();
+        
+		if (defaults != null) {
+	        String[] desiredKeys = {"NETWORK_CENTER_X_LOCATION","NETWORK_CENTER_Y_LOCATION","NETWORK_SCALE_FACTOR"};
+
+	        
+	        for (String key : desiredKeys) {
+	            if (defaults.containsKey(key)) {
+					final VisualProperty vp = lexicon.lookup(CyNetwork.class, key);
+					Object cyVPValue  = getCyVPValueFromCX2VPValue(vp, defaults.get(key));	
+					if ( cyVPValue != null) {
+						style.setDefaultValue(vp, cyVPValue);
+						count++;
+					}
+	            }
+	        }    
+			
+		}
+		return count != 3;
+	}
+
 	
 	private void setNetworkVPs(final VisualLexicon lexicon,
 			 Map<String,Object> defaults, VisualStyle style) {
