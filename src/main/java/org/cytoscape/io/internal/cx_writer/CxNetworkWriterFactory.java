@@ -21,7 +21,7 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
         return new CxNetworkWriter(os,
                                    network,
                                    false,
-                                   false, isCX2);
+                                   true, isCX2);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class CxNetworkWriterFactory implements CyNetworkViewWriterFactory {
         return new CxNetworkWriter(os,
         						view.getModel(),
                                    view,
-                                   false, isCX2);
+                                   true, isCX2);
 
     }
 
