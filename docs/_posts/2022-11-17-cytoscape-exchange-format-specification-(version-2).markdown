@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Cytoscape Exchange Format Specification (Version 2)"
-date:   2023-08-30 
+date:   2023-10-12 
 categories: CX2 Specification
 ---
 
