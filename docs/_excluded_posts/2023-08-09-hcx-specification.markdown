@@ -115,7 +115,7 @@ A node in the hierarchy can link to a subnetwork in the parent interaction netwo
 
     type: list of string
 
-    Description: Hiview uses this value to tag each member node in the circle-packing layout. Each element in this list need to be unique. Typically, each value in this list is the gene symbol of a member within a subsystem. However, users have the flexibility to assign alternative identifiers to this attribute. If this attribute is absent, Hiview will default to using the name attribute of the nodes specified in the **HCX::member** attribute for the node label. If neither **HCX::member** nor **HCX::memberNames** is defined for at least one node, the circle-packing layout option will be deactivated in Hiview.
+    Description: Hiview uses this value to tag each member node in the circle-packing layout. Each element in this list need to be unique. Typically, each value in this list is the gene symbol of a member within a subsystem. However, users have the flexibility to assign alternative identifiers to this attribute. If this attribute is absent, Hiview will default to using the name attribute of the nodes specified in the **HCX::members** attribute for the node label. If neither **HCX::members** nor **HCX::memberNames** is defined for at least one node, the circle-packing layout option will be deactivated in Hiview. If both **HCX::members** and **HCX::memberNames** exist on a node, Hiview uses **HCX::members**.
  
 
 - Attribute name: **HCX::memberQuery**
