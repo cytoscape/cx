@@ -540,8 +540,8 @@ public final class Cx2Importer {
 
         	if (this.arrowColorMatchesEdges) {
         		VisualPropertyMapping m = edgeMapping.remove("EDGE_LINE_COLOR");
-        		edgeMapping.put(BasicVisualLexicon.EDGE_PAINT.getIdString(),
-        				m);
+        		if ( m != null)
+        			edgeMapping.put(BasicVisualLexicon.EDGE_PAINT.getIdString(), m);
         	}
         	setMapping(CyEdge.class, edgeMapping,lexicon,new_visual_style);
         		
