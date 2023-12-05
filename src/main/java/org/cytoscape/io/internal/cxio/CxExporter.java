@@ -1613,18 +1613,18 @@ public final class CxExporter {
                 if ( cx2Mapping!=null) {
                 	if  (idStr.equals("EDGE_UNSELECTED_PAINT")) {  //Handle this specially.
                 		if ( arrowColorMatchesEdge) {
-                    		cx2VisualProps.getEdgeMappings().put("EDGE_SOURCE_ARROW_UNSELECTED_PAINT",
+                    		cx2VisualProps.getEdgeMappings().put("EDGE_SOURCE_ARROW_COLOR",
                         			cx2Mapping);
-                    		cx2VisualProps.getEdgeMappings().put("EDGE_STROKE_UNSELECTED_PAINT",
+                    		cx2VisualProps.getEdgeMappings().put("EDGE_LINE_COLOR",
                         			cx2Mapping);
-                    		cx2VisualProps.getEdgeMappings().put("EDGE_TARGET_ARROW_UNSELECTED_PAINT",
+                    		cx2VisualProps.getEdgeMappings().put("EDGE_TARGET_ARROW_COLOR",
                         			cx2Mapping);
                 			
                 		}
                 	} else {
-                		if ( !arrowColorMatchesEdge || !idStr.equals("EDGE_SOURCE_ARROW_UNSELECTED_PAINT") 
-                				|| !idStr.equals("EDGE_STROKE_UNSELECTED_PAINT")
-                				|| !idStr.equals("EDGE_TARGET_ARROW_UNSELECTED_PAINT")) {
+                		if ( !arrowColorMatchesEdge || !(idStr.equals("EDGE_SOURCE_ARROW_UNSELECTED_PAINT") 
+                				|| idStr.equals("EDGE_STROKE_UNSELECTED_PAINT")
+                				|| idStr.equals("EDGE_TARGET_ARROW_UNSELECTED_PAINT"))) {
                 			String cx2VP = cvtr.getNewEdgeOrNodeProperty(idStr);
                 			if ( cx2VP != null)
                 				cx2VisualProps.getEdgeMappings().put(cx2VP, cx2Mapping);
@@ -1632,14 +1632,14 @@ public final class CxExporter {
                 	}
                 }
 
-                
+                /*
                 if ( cx2Mapping!=null) {
                 	String cx2VP = cvtr.getNewEdgeOrNodeProperty(visual_property.getIdString());
                 	
                 	// only add it if it is in the white list.
                 	if ( cx2VP!=null)
                 	   cx2VisualProps.getEdgeMappings().put(cx2VP,cx2Mapping);
-                }
+                }*/
                 
             }
         }

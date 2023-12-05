@@ -393,7 +393,8 @@ public final class VisualPropertiesGatherer {
     	
     	String col = mapping.getMappingColumnName();
     	String vpName = vp.getIdString();
-		String catVPStr = vpName.equals("NODE_SIZE") ? "NODE_HEIGHT" : vpName ;
+		String catVPStr = vpName.equals("NODE_SIZE") ? "NODE_HEIGHT" : 
+			(vpName.equals("EDGE_UNSELECTED_PAINT")? "EDGE_STROKE_UNSELECTED_PAINT" : vpName) ;
 		VisualPropertyMapping cx2Mapping = new VisualPropertyMapping();
 		MappingDefinition def = new MappingDefinition (col);
 		cx2Mapping.setMappingDef(def);

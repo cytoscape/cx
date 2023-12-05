@@ -541,7 +541,7 @@ public final class Cx2Importer {
         	if (this.arrowColorMatchesEdges) {
         		VisualPropertyMapping m = edgeMapping.remove("EDGE_LINE_COLOR");
         		if ( m != null)
-        			edgeMapping.put(BasicVisualLexicon.EDGE_PAINT.getIdString(), m);
+        			edgeMapping.put(BasicVisualLexicon.EDGE_UNSELECTED_PAINT.getIdString(), m);
         	}
         	setMapping(CyEdge.class, edgeMapping,lexicon,new_visual_style);
         		
@@ -732,7 +732,7 @@ public final class Cx2Importer {
 			
 			//preprocess edge color
 			if (this.arrowColorMatchesEdges) {
-				VisualProperty<Paint> vp = BasicVisualLexicon.EDGE_PAINT;
+				VisualProperty<Paint> vp = BasicVisualLexicon.EDGE_UNSELECTED_PAINT;
 				Object v = defaults.get("EDGE_LINE_COLOR");
 				if ( v!=null) {
 					Paint cyVPValue  = getCyVPValueFromCX2VPValue(vp, v);
