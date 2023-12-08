@@ -204,17 +204,7 @@
 			<artifactId>ndex-object-model</artifactId>
 			<version>2.5.6-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.14.0</version>
-		</dependency>
-		<!--		<dependency>
-			<groupId>org.ndexbio.client</groupId>
-			<artifactId>ndex-java-client</artifactId>
-			<version>2.5.5</version>
-		</dependency>
--->
+	
 		<!-- Testing -->
 		<dependency>
 			<groupId>junit</groupId>

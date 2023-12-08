@@ -47,6 +47,7 @@ import org.cytoscape.view.vizmap.mappings.BoundaryRangeValues;
 import org.cytoscape.view.vizmap.mappings.ContinuousMapping;
 import org.cytoscape.view.vizmap.mappings.DiscreteMapping;
 import org.ndexbio.cx2.aspect.element.core.AttributeDeclaredAspect;
+import org.ndexbio.cx2.aspect.element.core.ComplexVPValue;
 import org.ndexbio.cx2.aspect.element.core.CxAspectElement;
 import org.ndexbio.cx2.aspect.element.core.CxAttributeDeclaration;
 import org.ndexbio.cx2.aspect.element.core.CxEdge;
@@ -202,6 +203,7 @@ public final class Cx2Importer {
 					break;
 				case CxVisualProperty.ASPECT_NAME: 
 					visualProperties = (CxVisualProperty) elmt;
+					visualProperties.evaluate();
 					break;
 				case CxNodeBypass.ASPECT_NAME: 
 					nodeBypasses.add((CxNodeBypass) elmt );
@@ -798,8 +800,10 @@ public final class Cx2Importer {
 
 	
 	public static <T> T getCyVPValueFromCX2VPValue(VisualProperty<T> vp, Object cx2Value) {
-		if  (vp instanceof ObjectPositionVisualProperty )
-			return null;
+		if  (vp instanceof ObjectPositionVisualProperty ) {
+		    String sv = ((ComplexVPValue)cx2Value).toCX1String();    
+			return vp.parseSerializableString(sv);
+		}	
 		if ( vp.getIdString().startsWith("NODE_CUSTOMGRAPHICS_SIZE_", 0))
 			return null;
 	  	if ( cx2Value instanceof String)
