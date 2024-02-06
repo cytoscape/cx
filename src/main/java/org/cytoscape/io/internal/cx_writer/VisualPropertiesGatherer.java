@@ -2,7 +2,9 @@ package org.cytoscape.io.internal.cx_writer;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -60,8 +62,15 @@ import org.cytoscape.view.vizmap.mappings.PassthroughMapping;
 public final class VisualPropertiesGatherer {
 
 	private static final Logger logger = Logger.getLogger("VisualPropertiesGatherer");
-    private static final boolean ALLOW_NODE_CUSTOM_PROPERTIES = true;
+    //private static final boolean ALLOW_NODE_CUSTOM_PROPERTIES = true;
 
+	
+	//visual properties that need to be excluded from exporting.
+    private static final Set<String> ignoredProperties = new HashSet<>(Arrays.asList(
+    				  "NODE","EDGE","NETWORK","NODE_CUSTOMPAINT_1","NODE_CUSTOMPAINT_2","NODE_CUSTOMPAINT_3",
+    				  "NODE_CUSTOMPAINT_4","NODE_CUSTOMPAINT_5","NODE_CUSTOMPAINT_6","NODE_CUSTOMPAINT_7","NODE_CUSTOMPAINT_8",
+    				  "NODE_CUSTOMPAINT_9"))  ;
+    
     /**
      * This method is for gathering visual properties from a view and network
      * into aspect elements.
@@ -207,15 +216,7 @@ public final class VisualPropertiesGatherer {
             final String value_str = vp.toSerializableString(vp_value);
             if (!CxioUtil.isEmpty(value_str)) {
                 final String id_string = vp.getIdString();
-                if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")) {
-                    // ignore
-                }
-                else if (id_string.startsWith("NODE_CUSTOM")) {
-                    if (ALLOW_NODE_CUSTOM_PROPERTIES) {
-                        cvp.putProperty(id_string, value_str);
-                    }
-                }
-                else {
+                if ( !ignoredProperties.contains(id_string)) {
                     cvp.putProperty(id_string, value_str);
                 }
             }

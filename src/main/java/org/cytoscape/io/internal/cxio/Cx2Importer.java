@@ -629,8 +629,9 @@ public final class Cx2Importer {
 	 * @param defaults
 	 * @param style
 	 * @return
+	 * @throws NdexException 
 	 */
-	private boolean setNetworkVPFromVisualEditorProps(final VisualLexicon lexicon, VisualStyle style) {
+	private boolean setNetworkVPFromVisualEditorProps(final VisualLexicon lexicon, VisualStyle style) throws NdexException {
 		
 		if (editorProperties == null)
 			return false;
@@ -659,7 +660,7 @@ public final class Cx2Importer {
 
 	
 	private void setNetworkVPs(final VisualLexicon lexicon,
-			 Map<String,Object> defaults, VisualStyle style) {
+			 Map<String,Object> defaults, VisualStyle style) throws NdexException {
 		if (defaults != null) {
 			for (final Map.Entry<String, Object> entry : defaults.entrySet()) {
 				String cyVPName = CX2ToCXVisualPropertyConverter.getInstance().getCx1NetworkPropertyName(entry.getKey());
@@ -678,7 +679,7 @@ public final class Cx2Importer {
 	}
 
 	private void setNodeVPs(final VisualLexicon lexicon,
-			VisualPropertyTable defaults, VisualStyle style) {
+			VisualPropertyTable defaults, VisualStyle style) throws NdexException {
 		if (defaults != null) {
 			Map<String,String> cyVPTable = CX2ToCXVisualPropertyConverter.getInstance().convertEdgeOrNodeVPs(defaults);
 			for (final Map.Entry<String, String> entry : cyVPTable.entrySet()) {
@@ -718,7 +719,7 @@ public final class Cx2Importer {
 	}
 
 	private void setEdgeVPs(final VisualLexicon lexicon,
-			VisualPropertyTable defaults, VisualStyle style) {
+			VisualPropertyTable defaults, VisualStyle style) throws NdexException {
 		if (defaults != null) {
 			Map<String,String> cyVPTable = CX2ToCXVisualPropertyConverter.getInstance().convertEdgeOrNodeVPs(defaults);
 			for (final Map.Entry<String, String> entry : cyVPTable.entrySet()) {
@@ -761,7 +762,7 @@ public final class Cx2Importer {
 	
 	private void setDefaultVisualPropertiesAndMappings(final VisualLexicon lexicon,
 			 VisualPropertyTable defaults, Map<String, VisualPropertyMapping> mappings,
-			 VisualStyle style, final Class my_class) {
+			 VisualStyle style, final Class my_class) throws NdexException {
 
 		if (defaults != null) {
 			for (final Map.Entry<String, Object> entry : defaults.getVisualProperties().entrySet()) {
@@ -799,7 +800,7 @@ public final class Cx2Importer {
 	}
 
 	
-	public static <T> T getCyVPValueFromCX2VPValue(VisualProperty<T> vp, Object cx2Value) {
+	public static <T> T getCyVPValueFromCX2VPValue(VisualProperty<T> vp, Object cx2Value) throws NdexException {
 		if  (vp instanceof ObjectPositionVisualProperty ) {
 		    String sv = ((ComplexVPValue)cx2Value).toCX1String();    
 			return vp.parseSerializableString(sv);
