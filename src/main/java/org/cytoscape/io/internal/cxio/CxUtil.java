@@ -2,6 +2,8 @@ package org.cytoscape.io.internal.cxio;
 
 import java.awt.Font;
 import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -599,5 +601,59 @@ public final class CxUtil {
 		return vp.parseSerializableString((String)value);		
 	}
 
+	
+	/**
+	 * Cytoscape visual property value data type validator. These are the table for valid data types for :
+	 * 
+	 * type in this table can take string and these types.
+	 * 
+	 * Boolean -> Boolean
+	 * Double -> float, integer, long
+	 * Integer -> integer, long, float
+	 * 
+	 * 
+	 * Types can only takes string are:
+	 * 
+	 * ArrowShape
+	 * CellFormat
+	 * EdgeBend
+	 * EdgeStacking
+	 * Font
+	 * LabelBackgroundShape
+	 * LineType
+	 * NodeShape
+	 * ObjectPosition
+	 * Paint
+	 * @param <T>
+	 * 
+	 * 
+	 */
+	
+	public static <T> boolean dataTypeIsValid(VisualProperty<T> vp, String columnDataType ) {
+		if ( columnDataType.equals(ATTRIBUTE_DATA_TYPE.STRING.toString())) 
+				return true;
+		
+	    Type superclass = vp.getClass().getGenericSuperclass();
+        Type VPCoreType = ((ParameterizedType)superclass).getActualTypeArguments()[0];
+        
+        
+        System.out.println("VPCoreType: " + VPCoreType.getTypeName());
+        
+        String typeName = VPCoreType.getTypeName();
+        
+		if (typeName.equals(Boolean.class.getName())) {
+			if (columnDataType.equals(ATTRIBUTE_DATA_TYPE.BOOLEAN.toString())) {
+				return true;
+			}
+		} else if (typeName.equals(Double.class.getName()) || typeName.equals(Integer.class.getName())) {
+			if (columnDataType.equals(ATTRIBUTE_DATA_TYPE.DOUBLE.toString()) ||
+					columnDataType.equals(ATTRIBUTE_DATA_TYPE.INTEGER.toString()) || 
+					columnDataType.equals(ATTRIBUTE_DATA_TYPE.LONG.toString())) {
+				return true;
+			}
+		} 
+		return false;
+	}
+	
 	
 }

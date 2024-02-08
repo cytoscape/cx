@@ -49,6 +49,7 @@ import org.cytoscape.view.vizmap.mappings.ContinuousMapping;
 import org.cytoscape.view.vizmap.mappings.ContinuousMappingPoint;
 import org.cytoscape.view.vizmap.mappings.DiscreteMapping;
 import org.cytoscape.view.vizmap.mappings.PassthroughMapping;
+import org.cytoscape.work.TaskMonitor;
 import org.ndexbio.cx2.aspect.element.core.CxAttributeDeclaration;
 import org.ndexbio.cx2.aspect.element.core.CxEdge;
 import org.ndexbio.cx2.aspect.element.core.CxEdgeBypass;
@@ -152,6 +153,8 @@ public final class CxExporter {
 	private String ID_STRING = "_id";
 	
 	private CyNetworkView view;
+	
+	private TaskMonitor taskMonitor;
 
 	/**
 	 * Constructor for CxExporter to write network (and it's collection) to CX. Specify 
@@ -164,8 +167,8 @@ public final class CxExporter {
 	 */
 	
 	
-	public CxExporter(CyNetwork network, CyNetworkView view, boolean useCxId) throws NdexException {
-		this(network,false,useCxId);
+	public CxExporter(CyNetwork network, CyNetworkView view, boolean useCxId, TaskMonitor taskMonitor) throws NdexException {
+		this(network,false,useCxId,taskMonitor);
 		if ( view.getModel().getSUID().equals(network.getSUID())) {
 			this.view = view;
 		}
@@ -175,13 +178,14 @@ public final class CxExporter {
 	}
 
 	
-	public CxExporter(CyNetwork network, boolean writeSiblings, boolean useCxId) {
+	public CxExporter(CyNetwork network, boolean writeSiblings, boolean useCxId, TaskMonitor taskMonitor) {
 		if (writeSiblings && useCxId) {
 			throw new IllegalArgumentException("Cannot export a collection with CX IDs.");
 		}
 		this.writeSiblings = writeSiblings;
 		this.useCxId = useCxId;
 		this.view = null;
+		this.taskMonitor = taskMonitor;
 		
 		subnetworks = makeSubNetworkList((CySubNetwork) network);
 		if (subnetworks.isEmpty()) {
@@ -1504,7 +1508,7 @@ public final class CxExporter {
 
 		final Long viewId = getViewId(view);
 		
-		final List<AspectElement> elements = VisualPropertiesGatherer.gatherVisualPropertiesAsAspectElements(view, lexicon, types, viewId, useCxId);
+		final List<AspectElement> elements = VisualPropertiesGatherer.gatherVisualPropertiesAsAspectElements(view, lexicon, types, viewId, useCxId, taskMonitor);
 		writeAspectElements(elements);
 	}
 
@@ -1571,7 +1575,7 @@ public final class CxExporter {
                 }
 
                 VisualPropertyMapping cx2Mapping = 
-                		VisualPropertiesGatherer.getCX2Mapping(current_visual_style, visual_property, table);
+                		VisualPropertiesGatherer.getCX2Mapping(current_visual_style, visual_property, table, taskMonitor);
                 if ( cx2Mapping!=null) {
                 	if  (idStr.equals("NODE_SIZE")) {  //Node size is special.
                 		if ( nodeSizeLocked) {
@@ -1608,7 +1612,7 @@ public final class CxExporter {
                 }
 
                 VisualPropertyMapping cx2Mapping = 
-                		VisualPropertiesGatherer.getCX2Mapping(current_visual_style, visual_property, table);
+                		VisualPropertiesGatherer.getCX2Mapping(current_visual_style, visual_property, table, taskMonitor);
                 
                 if ( cx2Mapping!=null) {
                 	if  (idStr.equals("EDGE_UNSELECTED_PAINT")) {  //Handle this specially.

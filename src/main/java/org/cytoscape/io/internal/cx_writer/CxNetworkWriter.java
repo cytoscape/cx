@@ -203,13 +203,13 @@ public class CxNetworkWriter implements CyWriter {
 	public void run(final TaskMonitor taskMonitor) throws FileNotFoundException, IOException, NdexException {
 		if (taskMonitor != null) {
 			taskMonitor.setProgress(0.0);
-			taskMonitor.setTitle("Exporting to CX");
-			taskMonitor.setStatusMessage("Exporting current network as CX...");
+			taskMonitor.setTitle("Exporting to CX" + (isCX2 ? "2" : "") + " format");
+			taskMonitor.setStatusMessage("Exporting current network as CX"+ (isCX2? "2" : "")+ "...");
 		}
 		
 		final CxExporter exporter = view == null? 
-				new CxExporter(_network, writeSiblings, useCxId):
-					new CxExporter (_network, view, useCxId);
+				new CxExporter(_network, writeSiblings, useCxId,taskMonitor):
+					new CxExporter (_network, view, useCxId,taskMonitor);
 
 		List<String> aspects = aspectFilter.getSelectedValues();
 		exporter.setNodeColumnFilter(nodeColFilter.getSelectedValues().stream().filter( 
@@ -244,6 +244,7 @@ public class CxNetworkWriter implements CyWriter {
 			} else
 				exporter.writeNetwork(aspects, _os);
 			_os.close();
+			taskMonitor.setStatusMessage("Done.");
 
 		}
 

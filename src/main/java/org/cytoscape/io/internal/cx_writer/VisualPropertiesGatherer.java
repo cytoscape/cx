@@ -19,8 +19,6 @@ import org.ndexbio.cx2.aspect.element.core.VisualPropertyMapping;
 import org.ndexbio.cx2.aspect.element.core.VisualPropertyTable;
 import org.ndexbio.cx2.aspect.element.cytoscape.VisualEditorProperties;
 import org.ndexbio.cx2.converter.CXToCX2VisualPropertyConverter;
-import org.ndexbio.cx2.converter.ConverterUtilities;
-import org.ndexbio.cx2.converter.ConverterUtilitiesResult;
 import org.ndexbio.cxio.aspects.datamodels.ATTRIBUTE_DATA_TYPE;
 import org.ndexbio.cxio.aspects.datamodels.CyVisualPropertiesElement;
 import org.ndexbio.cxio.core.interfaces.AspectElement;
@@ -52,6 +50,7 @@ import org.cytoscape.view.vizmap.mappings.ContinuousMapping;
 import org.cytoscape.view.vizmap.mappings.ContinuousMappingPoint;
 import org.cytoscape.view.vizmap.mappings.DiscreteMapping;
 import org.cytoscape.view.vizmap.mappings.PassthroughMapping;
+import org.cytoscape.work.TaskMonitor;
 
 /**
  * This class is used to gather visual properties from network views.
@@ -94,7 +93,8 @@ public final class VisualPropertiesGatherer {
                                                                                    final VisualLexicon lexicon,
                                                                                    final Set<VisualPropertyType> types,
                                                                                    final Long viewId,
-                                                                                   boolean use_cxId) throws JsonProcessingException {
+                                                                                   boolean use_cxId,
+                                                                                   TaskMonitor taskMonitor) throws JsonProcessingException {
 
         final List<AspectElement> elements = new ArrayList<>();
         final VisualMappingManager vmm = CyServiceModule.getService(VisualMappingManager.class);
@@ -113,11 +113,11 @@ public final class VisualPropertiesGatherer {
         }
 
         if (types.contains(VisualPropertyType.NODES_DEFAULT)) {
-            gatherNodesDefaultVisualProperties(view, elements, current_visual_style, all_visual_properties, viewId);
+            gatherNodesDefaultVisualProperties(view, elements, current_visual_style, all_visual_properties, viewId, taskMonitor);
         }
 
         if (types.contains(VisualPropertyType.EDGES_DEFAULT)) {
-            gatherEdgesDefaultVisualProperties(view, elements, current_visual_style, all_visual_properties, viewId);
+            gatherEdgesDefaultVisualProperties(view, elements, current_visual_style, all_visual_properties, viewId, taskMonitor);
         }
 
         if (types.contains(VisualPropertyType.NODES)) {
@@ -145,7 +145,7 @@ public final class VisualPropertiesGatherer {
             	return;
             }
         	final String id_string = vp.getIdString();
-            if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")) {
+            if (ignoredProperties.contains(id_string)) {
                 // TODO
             	logger.info("Need to add handler for Property: " + id_string + " " + value_str);
             }
@@ -188,7 +188,7 @@ public final class VisualPropertiesGatherer {
         final String id_string = vp.getIdString();
         // TODO: Why is this conditional here?
         if (view.isSet(vp) && view.isValueLocked(vp)) {
-            if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")) {
+            if (ignoredProperties.contains(id_string)) {
                 // TODO
             	throw new RuntimeException("Failed to add property " + vp);
             }
@@ -198,11 +198,7 @@ public final class VisualPropertiesGatherer {
         
         }
         else {
-            if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")
-                    || id_string.startsWith("NODE_CUSTOM")) {
-                // TODO
-            }
-            else {
+            if ( !ignoredProperties.contains(id_string)) {
                 cvp.putProperty(id_string, value_str);
             }
         }
@@ -226,8 +222,7 @@ public final class VisualPropertiesGatherer {
     public final static <T> String getDefaultPropertyAsString(final VisualStyle style,
             final VisualProperty<T> vp) {
 		final String id_string = vp.getIdString();
-		if (id_string.equals("NODE") || id_string.equals("EDGE") || id_string.equals("NETWORK")
-				|| id_string.startsWith("NODE_CUSTOM") ) {
+		if ( ignoredProperties.contains(id_string)) {
 			return null;
 		}
 
@@ -265,7 +260,8 @@ public final class VisualPropertiesGatherer {
     private final static <T> void addMappings(final VisualStyle style,
                                           final VisualProperty<T> vp,
                                           final CyVisualPropertiesElement cvp,
-                                          final CyTable table) {
+                                          final CyTable table, 
+                                          TaskMonitor taskMonitor) {
         final VisualMappingFunction<?, T> mapping = style.getVisualMappingFunction(vp);
         if (mapping == null) {
         	return;
@@ -283,6 +279,13 @@ public final class VisualPropertiesGatherer {
                         + "': column not present, ignoring corresponding passthrough mapping. " + e.getMessage());
                 return;
             }
+            
+           if ( ! CxUtil.dataTypeIsValid(vp, type)) {
+        	   taskMonitor.showMessage(TaskMonitor.Level.WARN, 
+        			   "Pass through mapping for " + vp.getIdString() + " on column '" + col + "' is not valid. Ignoring it.");
+               return;
+            } 
+            
             final StringBuilder sb = new StringBuilder();
             sb.append(CxUtil.VM_COL);
             sb.append("=");
@@ -386,7 +389,8 @@ public final class VisualPropertiesGatherer {
 
     public static <T> VisualPropertyMapping getCX2Mapping(final VisualStyle style,
             final VisualProperty<T> vp,
-            final CyTable table) throws NdexException {
+            final CyTable table,
+            TaskMonitor taskMonitor) throws NdexException {
     	final VisualMappingFunction<?, T> mapping = style.getVisualMappingFunction(vp);
     	if (mapping == null) {
     		return null;
@@ -407,14 +411,22 @@ public final class VisualPropertiesGatherer {
     		String type = null;
     		try {
     			type = toAttributeType(pm.getMappingColumnType(), table, col);
-    			if ( type !=null)
-    				def.setAttributeType(ATTRIBUTE_DATA_TYPE.fromCxLabel(type));
+    			if ( type !=null ) {
+    				if  (CxUtil.dataTypeIsValid(vp, type))
+    				   def.setAttributeType(ATTRIBUTE_DATA_TYPE.fromCxLabel(type));
+    				else {
+						taskMonitor.showMessage(TaskMonitor.Level.WARN, "Pass through mapping for " + vp.getIdString()
+								+ " on column '" + col + "' is not valid. Ignoring it.");
+						return null;
+    				}
+    			}	
     		}
     		catch (final IOException e) {
-    			logger.info("WARNING: problem with mapping/column '" + col
+    			taskMonitor.showMessage(TaskMonitor.Level.WARN, "WARNING: problem with mapping/column '" + col
     					+ "': column not present, ignoring corresponding passthrough mapping. " + e.getMessage());
     			return null;
     		}
+    		
     	} else if (mapping instanceof DiscreteMapping<?, ?>) {
     		cx2Mapping.setType(VPMappingType.DISCRETE);
     		final DiscreteMapping<?, T> dm = (DiscreteMapping<?, T>) mapping;
@@ -543,7 +555,8 @@ public final class VisualPropertiesGatherer {
                                                            final List<AspectElement> visual_properties,
                                                            final VisualStyle current_visual_style,
                                                            final Set<VisualProperty<?>> all_visual_properties,
-                                                           final Long viewId) {
+                                                           final Long viewId, 
+                                                           TaskMonitor taskMonitor) {
 
         final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.EDGES_DEFAULT.asString(),
         		viewId,
@@ -553,7 +566,7 @@ public final class VisualPropertiesGatherer {
             if (visual_property.getTargetDataType() == CyEdge.class) {
                 addDefaultProperties(current_visual_style, visual_property, e);
                 final CyTable table = view.getModel().getTable(CyEdge.class, CyNetwork.DEFAULT_ATTRS);
-                addMappings(current_visual_style, visual_property, e, table);
+                addMappings(current_visual_style, visual_property, e, table, taskMonitor);
             }
         }
         addDependency(CxUtil.ARROW_COLOR_MATCHES_EDGE, current_visual_style, e);
@@ -604,7 +617,8 @@ public final class VisualPropertiesGatherer {
                                                            final List<AspectElement> visual_properties,
                                                            final VisualStyle current_visual_style,
                                                            final Set<VisualProperty<?>> all_visual_properties,
-                                                           final Long viewId) {
+                                                           final Long viewId, 
+                                                           TaskMonitor taskMonitor) {
         final CyVisualPropertiesElement e = new CyVisualPropertiesElement(VisualPropertyType.NODES_DEFAULT.asString(),
         											viewId, viewId);
         
@@ -612,7 +626,7 @@ public final class VisualPropertiesGatherer {
             if (visual_property.getTargetDataType() == CyNode.class) {
                 addDefaultProperties(current_visual_style, visual_property, e);
                 final CyTable table = view.getModel().getTable(CyNode.class, CyNetwork.DEFAULT_ATTRS);
-                addMappings(current_visual_style, visual_property, e, table);
+                addMappings(current_visual_style, visual_property, e, table, taskMonitor);
             }
         }
         addDependency(CxUtil.NODE_CUSTOM_GRAPHICS_SIZE_SYNC, current_visual_style, e);
