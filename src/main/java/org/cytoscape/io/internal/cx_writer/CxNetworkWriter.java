@@ -244,7 +244,8 @@ public class CxNetworkWriter implements CyWriter {
 			} else
 				exporter.writeNetwork(aspects, _os);
 			_os.close();
-			taskMonitor.setStatusMessage("Done.");
+			if(taskMonitor != null)
+				taskMonitor.setStatusMessage("Done.");
 
 		}
 

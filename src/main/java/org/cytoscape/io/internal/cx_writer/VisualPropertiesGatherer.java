@@ -281,7 +281,8 @@ public final class VisualPropertiesGatherer {
             }
             
            if ( ! CxUtil.dataTypeIsValid(vp, type)) {
-        	   taskMonitor.showMessage(TaskMonitor.Level.WARN, 
+        	   if ( taskMonitor != null)
+        		   taskMonitor.showMessage(TaskMonitor.Level.WARN, 
         			   "Pass through mapping for " + vp.getIdString() + " on column '" + col + "' is not valid. Ignoring it.");
                return;
             } 
@@ -415,14 +416,16 @@ public final class VisualPropertiesGatherer {
     				if  (CxUtil.dataTypeIsValid(vp, type))
     				   def.setAttributeType(ATTRIBUTE_DATA_TYPE.fromCxLabel(type));
     				else {
-						taskMonitor.showMessage(TaskMonitor.Level.WARN, "Pass through mapping for " + vp.getIdString()
+    					if ( taskMonitor != null)
+    						taskMonitor.showMessage(TaskMonitor.Level.WARN, "Pass through mapping for " + vp.getIdString()
 								+ " on column '" + col + "' is not valid. Ignoring it.");
 						return null;
     				}
     			}	
     		}
     		catch (final IOException e) {
-    			taskMonitor.showMessage(TaskMonitor.Level.WARN, "WARNING: problem with mapping/column '" + col
+    			if (taskMonitor	!=null)
+    				taskMonitor.showMessage(TaskMonitor.Level.WARN, "WARNING: problem with mapping/column '" + col
     					+ "': column not present, ignoring corresponding passthrough mapping. " + e.getMessage());
     			return null;
     		}
