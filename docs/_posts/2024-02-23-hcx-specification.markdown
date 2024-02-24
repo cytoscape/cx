@@ -251,4 +251,4 @@ The data of the interaction network are stored in aspects that are prefixed with
 interactionNetwsork::attributeDeclarations aspect stores the attributeDeclarations aspect of the interaction network, and interactionNetwork::nodes aspect stores the nodes aspect of the interaction network. The interaction network can contain any number of styles on it using the scheme we detailed in the "Visualization of the hierarchy" section. The only difference is that these aspects need to be prefixed with  "interactionNetwork::" in the single file model.
 
 ## **Example Files**
-[HCX example](https://github.com/cytoscape/cx/blob/master/examples/Small_HCX_Example.cx2)
+[HCX example](https://github.com/cytoscape/cx/blob/develop/examples/Small_HCX_Example.cx2)
