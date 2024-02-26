@@ -2,7 +2,7 @@
 layout: post
 title: Hierarchical Network Schema for CX (HCX) (Version 0.1)
 date: 2024-02-23
-categories: schema
+categories: cx2
 permalink: /:categories/:title/
 ---
 

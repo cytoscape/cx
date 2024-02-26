@@ -3,7 +3,7 @@ layout: post
 title: Hierarchical Network Schema for CX (Version 0.1)
 date: 2023-11-06
 collection: excluded_posts
-categories: cx2
+categories: schema
 permalink: /:categories/:title/
 published: true
 ---
