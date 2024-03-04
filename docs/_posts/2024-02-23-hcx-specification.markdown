@@ -4,6 +4,7 @@ title: Hierarchical Network Schema for CX (HCX) (Version 0.1)
 date: 2024-02-23
 categories: cx2
 permalink: /:categories/:title/
+order: 2
 ---
 
 This document outlines the CX schema designed to store hierarchical structures within a CX network. Within Ideker Lab's applications, a hierarchy typically encompasses two distinct data categories:
@@ -113,7 +114,7 @@ A node in the hierarchy can link to a subnetwork in the parent interaction netwo
 
     type: list of string
 
-    Description: Hiview uses this value to tag each member node in the circle-packing layout. Each element in this list need to be unique. Typically, each value in this list is the gene symbol of a member within a subsystem. However, users have the flexibility to assign alternative identifiers to this attribute. If this attribute is absent, Hiview will default to using the name attribute of the nodes specified in the **HCX::members** attribute for the node label. If neither **HCX::members** nor **HCX::memberNames** is defined for at least one node, the circle-packing layout option will be deactivated in Hiview. If both **HCX::members** and **HCX::memberNames** exist on a node, Hiview uses **HCX::members**.
+    Description: Hiview uses this value to label each member node in the circle-packing layout. Each element in this list needs to be unique. Typically, each value in this list is the gene symbol of a member within a subsystem. However, users have the flexibility to assign alternative identifiers to this attribute. If this attribute is absent, Hiview will default to using the name attribute of the nodes specified in the **HCX::members** attribute for the node label. If neither **HCX::members** nor **HCX::memberNames** is defined for at least one node, the circle-packing layout option will be deactivated in Hiview. If both **HCX::members** and **HCX::memberNames** exist on a node, Hiview uses **HCX::members**.
  
 
 - Attribute name: **HCX::memberQuery**
