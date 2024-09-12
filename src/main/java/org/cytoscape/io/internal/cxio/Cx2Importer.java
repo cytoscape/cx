@@ -869,9 +869,16 @@ public final class Cx2Importer {
         for ( Map<String,Object> mappingEntry: def.getMapppingList()) {
 			ATTRIBUTE_DATA_TYPE elmtDType = dtype.isSingleValueType()? dtype: dtype.elementType();
 			Object v = AttributeDeclaredAspect.processAttributeValue (elmtDType, mappingEntry.get("v") );
-			String cyValue = CX2ToCXVisualPropertyConverter.getInstance().
+			try {
+				String cyValue = CX2ToCXVisualPropertyConverter.getInstance().
+			
 					getCx1EdgeOrNodePropertyValue(cx2VpName, mappingEntry.get("vp"));
-			dmf.putMapValue(v, vp.parseSerializableString(cyValue));
+				dmf.putMapValue(v, vp.parseSerializableString(cyValue));
+			} catch (IllegalArgumentException e) {
+				throw new NdexException("Failed to parse value for mapping " + colName + 
+						" on " + cx2VpName + " : " + e.getMessage());
+			}
+        
 		}
         style.addVisualMappingFunction(dmf);
 	}
