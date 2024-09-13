@@ -155,7 +155,7 @@ public final class CxExporter {
 	private CyNetworkView view;
 	
 	private TaskMonitor taskMonitor;
-
+	
 	/**
 	 * Constructor for CxExporter to write network (and it's collection) to CX. Specify 
 	 * if the exporter should attempt to use CX IDs from a previous import
@@ -1662,7 +1662,7 @@ public final class CxExporter {
     	
        	List<CxEdgeBypass> edgeBypasses = VisualPropertiesGatherer.getEdgeBypasses(
     				view, all_visual_properties, useCxId, arrowColorMatchesEdge );
-        	cx2Writer.writeFullAspectFragment(edgeBypasses);
+    	cx2Writer.writeFullAspectFragment(edgeBypasses);
     	
 		
 	}
@@ -1852,8 +1852,7 @@ public final class CxExporter {
 			return result;
 		
 	}
-	
-	
+			
 	public final void writeNetworkInCX2(Collection<String> aspects, final OutputStream out) throws IOException, NdexException {
 		
 		
