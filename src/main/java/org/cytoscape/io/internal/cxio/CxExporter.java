@@ -1531,7 +1531,7 @@ public final class CxExporter {
         		current_visual_style, editorProps);
         VisualPropertiesGatherer.addCx2EditorPropsDependency(CxUtil.NODE_SIZE_LOCKED, current_visual_style, editorProps);
         VisualPropertiesGatherer.addCx2EditorPropsDependency(CxUtil.ARROW_COLOR_MATCHES_EDGE, current_visual_style, editorProps);
-        
+
         Map<String, Object> rawProps = editorProps.getProperties();
         boolean nodeSizeLocked = rawProps.get(CxUtil.NODE_SIZE_LOCKED).equals(Boolean.TRUE);
         boolean arrowColorMatchesEdge = rawProps.get(CxUtil.ARROW_COLOR_MATCHES_EDGE).equals(Boolean.TRUE);
@@ -1543,9 +1543,9 @@ public final class CxExporter {
         Map<String,String> cx1Style = new HashMap<>();
         for (final VisualProperty<?> visual_property : all_visual_properties) {
             if (visual_property.getTargetDataType() == CyNetwork.class) {
-            	String value_str = VisualPropertiesGatherer.getDefaultPropertyAsString(current_visual_style, visual_property);
-                if (value_str !=null && !CxioUtil.isEmpty(value_str)) {
-                	cx1Style.put(visual_property.getIdString(), value_str);
+            	String value_str = VisualPropertiesGatherer.getSerializableVisualProperty(view, visual_property);
+            	if (value_str !=null && !CxioUtil.isEmpty(value_str)) {
+            		cx1Style.put(visual_property.getIdString(), value_str);
                 }
             }
         }
