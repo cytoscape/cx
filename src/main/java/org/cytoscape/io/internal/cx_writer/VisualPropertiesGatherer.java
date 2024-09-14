@@ -657,7 +657,6 @@ public final class VisualPropertiesGatherer {
     public static void addCx2EditorPropsDependency(final String id_string,
             final VisualStyle style,
             VisualEditorProperties props) {
-    	Set<VisualPropertyDependency<?>> allDep = style.getAllVisualPropertyDependencies();
     	for (final VisualPropertyDependency<?> d : style.getAllVisualPropertyDependencies()) {
     		if (d.getIdString().equals(id_string)) {
     			props.getProperties().put(id_string, d.isDependencyEnabled());
