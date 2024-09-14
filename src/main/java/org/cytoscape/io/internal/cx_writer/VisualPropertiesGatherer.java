@@ -159,7 +159,7 @@ public final class VisualPropertiesGatherer {
         
     }
 
-    private static <T> String getSerializableVisualProperty(View<? extends CyIdentifiable> view, VisualProperty<T> vp) {
+    public static <T> String getSerializableVisualProperty(View<? extends CyIdentifiable> view, VisualProperty<T> vp) {
     	T prop = view.getVisualProperty(vp);
 		if (prop == null) {
 			return null;
