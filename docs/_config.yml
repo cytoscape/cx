@@ -24,7 +24,9 @@ description: >- # this means to ignore newlines until "baseurl:"
   Documentation of Cytoscape Exchange Format
 baseurl: "/cx" # the subpath of your site, e.g. /blog
 url: "https://www.cytoscape.org" # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: jekyllrb
+permalink: /:categories/:title/
+
+
 github_username:  jingjingbic
 
 # Build settings
@@ -34,6 +36,10 @@ github_username:  jingjingbic
 theme: minima
 plugins:
   - jekyll-feed
+
+collections:
+  excluded_posts:
+    output: true
 
 # Exclude from processing.
 # The following items will not be processed, by default.

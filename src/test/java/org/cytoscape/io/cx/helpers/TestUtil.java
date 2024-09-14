@@ -61,6 +61,7 @@ import org.cytoscape.view.model.internal.network.CyNetworkViewManagerImpl;
 import org.cytoscape.view.presentation.property.BasicVisualLexicon;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.work.SynchronousTaskManager;
+import org.cytoscape.work.TaskMonitor;
 import org.cytoscape.work.swing.DialogTaskManager;
 import org.ndexbio.cxio.aspects.datamodels.AbstractAttributesAspectElement;
 import org.ndexbio.cxio.aspects.datamodels.AbstractElementAttributesAspectElement;
@@ -271,8 +272,9 @@ public class TestUtil {
 		CxNetworkWriter writer = (CxNetworkWriter) writerFactory.createWriter(out, network);
 		writer.useCxId = useCxId;
 		writer.writeSiblings = writeSiblings;
+		TaskMonitor mockMonitor = mock(TaskMonitor.class);
 		try {
-			writer.run(null);
+			writer.run(mockMonitor);
 		} catch (FileNotFoundException e1) {
 			fail("Failed to export network to CX: " + e1.getMessage());
 			e1.printStackTrace();

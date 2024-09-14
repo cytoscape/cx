@@ -47,6 +47,7 @@ import org.cytoscape.view.vizmap.mappings.BoundaryRangeValues;
 import org.cytoscape.view.vizmap.mappings.ContinuousMapping;
 import org.cytoscape.view.vizmap.mappings.DiscreteMapping;
 import org.ndexbio.cx2.aspect.element.core.AttributeDeclaredAspect;
+import org.ndexbio.cx2.aspect.element.core.ComplexVPValue;
 import org.ndexbio.cx2.aspect.element.core.CxAspectElement;
 import org.ndexbio.cx2.aspect.element.core.CxAttributeDeclaration;
 import org.ndexbio.cx2.aspect.element.core.CxEdge;
@@ -202,6 +203,7 @@ public final class Cx2Importer {
 					break;
 				case CxVisualProperty.ASPECT_NAME: 
 					visualProperties = (CxVisualProperty) elmt;
+					visualProperties.evaluate();
 					break;
 				case CxNodeBypass.ASPECT_NAME: 
 					nodeBypasses.add((CxNodeBypass) elmt );
@@ -352,8 +354,8 @@ public final class Cx2Importer {
 				throw new NdexException("Edge attribute " + e.getKey() + " is not declared.");
 		}
 		
-		if ( ! attributeDeclarations.containsKey(CxUtil.SHARED_INTERACTION) && 
-				attributeDeclarations.containsKey(CxUtil.INTERACTION)) {
+		if ( attributeDeclarations!=null && (! attributeDeclarations.containsKey(CxUtil.SHARED_INTERACTION) && 
+				attributeDeclarations.containsKey(CxUtil.INTERACTION))) {
 			Object v = edge.getAttributes().get(CxUtil.INTERACTION);
 			localRow.set(CxUtil.SHARED_INTERACTION,v);			
 		}
@@ -514,6 +516,8 @@ public final class Cx2Importer {
         
     	VisualLexicon lexicon = rendering_engine_manager.getDefaultVisualLexicon();
 
+    	boolean fitContent = setNetworkVPFromVisualEditorProps(lexicon,new_visual_style);
+    	
     	if ( visualProperties != null) {
 
         	setNetworkVPs(lexicon,visualProperties.getDefaultProps().getNetworkProperties(),new_visual_style);
@@ -538,8 +542,8 @@ public final class Cx2Importer {
 
         	if (this.arrowColorMatchesEdges) {
         		VisualPropertyMapping m = edgeMapping.remove("EDGE_LINE_COLOR");
-        		edgeMapping.put(BasicVisualLexicon.EDGE_PAINT.getIdString(),
-        				m);
+        		if ( m != null)
+        			edgeMapping.put(BasicVisualLexicon.EDGE_UNSELECTED_PAINT.getIdString(), m);
         	}
         	setMapping(CyEdge.class, edgeMapping,lexicon,new_visual_style);
         		
@@ -614,13 +618,49 @@ public final class Cx2Importer {
             visual_mapping_manager.setVisualStyle(new_visual_style, currentView);
         }
 
-        ViewMaker.applyStyle(new_visual_style,currentView,doLayout, true);
+        ViewMaker.applyStyle(new_visual_style,currentView,doLayout, fitContent);
         
         
 	}
+
+	/**
+	 * Return true if not all 3 VPs exists, which means fitcontent should be called.
+	 * @param lexicon
+	 * @param defaults
+	 * @param style
+	 * @return
+	 * @throws NdexException 
+	 */
+	private boolean setNetworkVPFromVisualEditorProps(final VisualLexicon lexicon, VisualStyle style) throws NdexException {
+		
+		if (editorProperties == null)
+			return false;
+		
+        int count = 0;
+        Map<String,Object> defaults = editorProperties.getProperties();
+        
+		if (defaults != null) {
+	        String[] desiredKeys = {"NETWORK_CENTER_X_LOCATION","NETWORK_CENTER_Y_LOCATION","NETWORK_SCALE_FACTOR"};
+
+	        
+	        for (String key : desiredKeys) {
+	            if (defaults.containsKey(key)) {
+					final VisualProperty vp = lexicon.lookup(CyNetwork.class, key);
+					Object cyVPValue  = getCyVPValueFromCX2VPValue(vp, defaults.get(key));	
+					if ( cyVPValue != null) {
+						style.setDefaultValue(vp, cyVPValue);
+						count++;
+					}
+	            }
+	        }    
+			
+		}
+		return count != 3;
+	}
+
 	
 	private void setNetworkVPs(final VisualLexicon lexicon,
-			 Map<String,Object> defaults, VisualStyle style) {
+			 Map<String,Object> defaults, VisualStyle style) throws NdexException {
 		if (defaults != null) {
 			for (final Map.Entry<String, Object> entry : defaults.entrySet()) {
 				String cyVPName = CX2ToCXVisualPropertyConverter.getInstance().getCx1NetworkPropertyName(entry.getKey());
@@ -639,7 +679,7 @@ public final class Cx2Importer {
 	}
 
 	private void setNodeVPs(final VisualLexicon lexicon,
-			VisualPropertyTable defaults, VisualStyle style) {
+			VisualPropertyTable defaults, VisualStyle style) throws NdexException {
 		if (defaults != null) {
 			Map<String,String> cyVPTable = CX2ToCXVisualPropertyConverter.getInstance().convertEdgeOrNodeVPs(defaults);
 			for (final Map.Entry<String, String> entry : cyVPTable.entrySet()) {
@@ -679,7 +719,7 @@ public final class Cx2Importer {
 	}
 
 	private void setEdgeVPs(final VisualLexicon lexicon,
-			VisualPropertyTable defaults, VisualStyle style) {
+			VisualPropertyTable defaults, VisualStyle style) throws NdexException {
 		if (defaults != null) {
 			Map<String,String> cyVPTable = CX2ToCXVisualPropertyConverter.getInstance().convertEdgeOrNodeVPs(defaults);
 			for (final Map.Entry<String, String> entry : cyVPTable.entrySet()) {
@@ -695,7 +735,7 @@ public final class Cx2Importer {
 			
 			//preprocess edge color
 			if (this.arrowColorMatchesEdges) {
-				VisualProperty<Paint> vp = BasicVisualLexicon.EDGE_PAINT;
+				VisualProperty<Paint> vp = BasicVisualLexicon.EDGE_UNSELECTED_PAINT;
 				Object v = defaults.get("EDGE_LINE_COLOR");
 				if ( v!=null) {
 					Paint cyVPValue  = getCyVPValueFromCX2VPValue(vp, v);
@@ -722,7 +762,7 @@ public final class Cx2Importer {
 	
 	private void setDefaultVisualPropertiesAndMappings(final VisualLexicon lexicon,
 			 VisualPropertyTable defaults, Map<String, VisualPropertyMapping> mappings,
-			 VisualStyle style, final Class my_class) {
+			 VisualStyle style, final Class my_class) throws NdexException {
 
 		if (defaults != null) {
 			for (final Map.Entry<String, Object> entry : defaults.getVisualProperties().entrySet()) {
@@ -760,9 +800,11 @@ public final class Cx2Importer {
 	}
 
 	
-	public static <T> T getCyVPValueFromCX2VPValue(VisualProperty<T> vp, Object cx2Value) {
-		if  (vp instanceof ObjectPositionVisualProperty )
-			return null;
+	public static <T> T getCyVPValueFromCX2VPValue(VisualProperty<T> vp, Object cx2Value) throws NdexException {
+		if  (vp instanceof ObjectPositionVisualProperty ) {
+		    String sv = ((ComplexVPValue)cx2Value).toCX1String();    
+			return vp.parseSerializableString(sv);
+		}	
 		if ( vp.getIdString().startsWith("NODE_CUSTOMGRAPHICS_SIZE_", 0))
 			return null;
 	  	if ( cx2Value instanceof String)
@@ -796,6 +838,8 @@ public final class Cx2Importer {
 				switch (mapping.getValue().getType()) {
 				case PASSTHROUGH: {
 			        ATTRIBUTE_DATA_TYPE dtype = getAttrDataType(myClass,attrName); 
+			        if (dtype == null)
+			        	dtype = defination.getAttributeType();
 					ViewMaker.addPasstroughMapping(style, vp,attrName,CxUtil.getDataType(dtype));
 					break;
 				}
@@ -818,14 +862,23 @@ public final class Cx2Importer {
                                                 VisualProperty vp,String cx2VpName ) throws NdexException {
         String colName = def.getAttributeName();
         ATTRIBUTE_DATA_TYPE dtype = getAttrDataType(typeClass,colName); 
+        if ( dtype == null)
+        	dtype = def.getAttributeType();
 		DiscreteMapping dmf = (DiscreteMapping) ViewMaker.vmf_factory_d.createVisualMappingFunction(colName, CxUtil.getDataType(dtype), vp);
     
         for ( Map<String,Object> mappingEntry: def.getMapppingList()) {
 			ATTRIBUTE_DATA_TYPE elmtDType = dtype.isSingleValueType()? dtype: dtype.elementType();
 			Object v = AttributeDeclaredAspect.processAttributeValue (elmtDType, mappingEntry.get("v") );
-			String cyValue = CX2ToCXVisualPropertyConverter.getInstance().
+			try {
+				String cyValue = CX2ToCXVisualPropertyConverter.getInstance().
+			
 					getCx1EdgeOrNodePropertyValue(cx2VpName, mappingEntry.get("vp"));
-			dmf.putMapValue(v, vp.parseSerializableString(cyValue));
+				dmf.putMapValue(v, vp.parseSerializableString(cyValue));
+			} catch (IllegalArgumentException e) {
+				throw new NdexException("Failed to parse value for mapping " + colName + 
+						" on " + cx2VpName + " : " + e.getMessage());
+			}
+        
 		}
         style.addVisualMappingFunction(dmf);
 	}
@@ -834,6 +887,8 @@ public final class Cx2Importer {
 			VisualProperty vp, String cx2VpName) throws NdexException {
 		String colName = def.getAttributeName();
 		ATTRIBUTE_DATA_TYPE dtype = getAttrDataType(typeClass, colName);
+		if ( dtype == null)
+			dtype = def.getAttributeType();
 		ContinuousMapping cmf = (ContinuousMapping) ViewMaker.vmf_factory_c.createVisualMappingFunction(colName,
 				CxUtil.getDataType(dtype), vp);
 		

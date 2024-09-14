@@ -3,6 +3,7 @@ package org.cytoscape.io.cx;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
 
 import java.util.List;
 import java.util.Set;
@@ -19,6 +20,7 @@ import org.cytoscape.io.internal.cx_writer.CxNetworkWriter;
 import org.cytoscape.io.internal.cx_writer.CxNetworkWriterFactory;
 import org.cytoscape.io.util.StreamUtil;
 import org.cytoscape.model.CyNetwork;
+import org.cytoscape.work.TaskMonitor;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -64,7 +66,8 @@ public class FilterTest {
 	public JsonObject getOutput() throws IOException, NdexException {
 		writer.writeSiblings = false;
 		writer.useCxId = true;
-		writer.run(null);
+		TaskMonitor mockMonitor = mock(TaskMonitor.class);
+		writer.run(mockMonitor);
 		
 		InputStream in = TestUtil.pipe(out);
 //		NiceCXNetwork niceCX = reader.readNiceCXNetwork(in);

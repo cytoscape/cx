@@ -49,6 +49,7 @@ import org.cytoscape.view.vizmap.mappings.ContinuousMapping;
 import org.cytoscape.view.vizmap.mappings.ContinuousMappingPoint;
 import org.cytoscape.view.vizmap.mappings.DiscreteMapping;
 import org.cytoscape.view.vizmap.mappings.PassthroughMapping;
+import org.cytoscape.work.TaskMonitor;
 import org.ndexbio.cx2.aspect.element.core.CxAttributeDeclaration;
 import org.ndexbio.cx2.aspect.element.core.CxEdge;
 import org.ndexbio.cx2.aspect.element.core.CxEdgeBypass;
@@ -152,7 +153,9 @@ public final class CxExporter {
 	private String ID_STRING = "_id";
 	
 	private CyNetworkView view;
-
+	
+	private TaskMonitor taskMonitor;
+	
 	/**
 	 * Constructor for CxExporter to write network (and it's collection) to CX. Specify 
 	 * if the exporter should attempt to use CX IDs from a previous import
@@ -164,8 +167,8 @@ public final class CxExporter {
 	 */
 	
 	
-	public CxExporter(CyNetwork network, CyNetworkView view, boolean useCxId) throws NdexException {
-		this(network,false,useCxId);
+	public CxExporter(CyNetwork network, CyNetworkView view, boolean useCxId, TaskMonitor taskMonitor) throws NdexException {
+		this(network,false,useCxId,taskMonitor);
 		if ( view.getModel().getSUID().equals(network.getSUID())) {
 			this.view = view;
 		}
@@ -175,13 +178,14 @@ public final class CxExporter {
 	}
 
 	
-	public CxExporter(CyNetwork network, boolean writeSiblings, boolean useCxId) {
+	public CxExporter(CyNetwork network, boolean writeSiblings, boolean useCxId, TaskMonitor taskMonitor) {
 		if (writeSiblings && useCxId) {
 			throw new IllegalArgumentException("Cannot export a collection with CX IDs.");
 		}
 		this.writeSiblings = writeSiblings;
 		this.useCxId = useCxId;
 		this.view = null;
+		this.taskMonitor = taskMonitor;
 		
 		subnetworks = makeSubNetworkList((CySubNetwork) network);
 		if (subnetworks.isEmpty()) {
@@ -596,7 +600,9 @@ public final class CxExporter {
 						cx2writer.writeAspectFromJSONString(columnName, (String) e.getValue());
 					} else {
 						// add network attribute.
-						result.add(columnName, e.getValue());
+						Object v = e.getValue();
+						if (isNotNullandFinite(v))
+							result.add(columnName, v);
 					}
 				}
 			}
@@ -983,7 +989,7 @@ public final class CxExporter {
 			for ( Map.Entry<String, Object> e: row.getAllValues().entrySet()) {
 				Object value = e.getValue();
 				String name = e.getKey();
-				if (value != null && !Settings.isIgnore(name, Settings.IGNORE_NODE_ATTRIBUTES, value) &&
+				if (isNotNullandFinite(value) && !Settings.isIgnore(name, Settings.IGNORE_NODE_ATTRIBUTES, value) &&
 					   (nodeColumns == null || nodeColumns.contains(name))) {
 					nodeAttrs.put(name, value);	
 				}
@@ -1001,6 +1007,17 @@ public final class CxExporter {
 		}	
 		cx2Writer.endAspectFragment();
 		
+	}
+	
+	/*
+	 * Check if the value is a null, NaN, Inf or -Inf. Attributes with these values should be ignored when exporting to cx2. 
+	 */
+	private static boolean isNotNullandFinite(Object value) {
+		if (value == null) return false;
+		if(value instanceof Double) {
+			return Double.isFinite((Double)value);
+		}
+		return true;
 	}
 	
 	private final void writeEdges() throws IOException {
@@ -1029,7 +1046,7 @@ public final class CxExporter {
 				for (Map.Entry<String,Object>e: row.getAllValues().entrySet()) {
 					String name = e.getKey();
 					Object value = e.getValue();
-					if (value != null && !Settings.isIgnore(name, Settings.IGNORE_NODE_ATTRIBUTES, value) &&
+					if (isNotNullandFinite(value) && !Settings.isIgnore(name, Settings.IGNORE_NODE_ATTRIBUTES, value) &&
 						   	(edgeColumns == null || edgeColumns.contains(name)) && 
 						   	!name.startsWith( CxUtil.sourceNodeMappingPrefix) && !name.startsWith(CxUtil.targetNodeMappingPrefix)) {
 							edgeAttrs.put(name, value);	
@@ -1491,7 +1508,7 @@ public final class CxExporter {
 
 		final Long viewId = getViewId(view);
 		
-		final List<AspectElement> elements = VisualPropertiesGatherer.gatherVisualPropertiesAsAspectElements(view, lexicon, types, viewId, useCxId);
+		final List<AspectElement> elements = VisualPropertiesGatherer.gatherVisualPropertiesAsAspectElements(view, lexicon, types, viewId, useCxId, taskMonitor);
 		writeAspectElements(elements);
 	}
 
@@ -1514,10 +1531,10 @@ public final class CxExporter {
         		current_visual_style, editorProps);
         VisualPropertiesGatherer.addCx2EditorPropsDependency(CxUtil.NODE_SIZE_LOCKED, current_visual_style, editorProps);
         VisualPropertiesGatherer.addCx2EditorPropsDependency(CxUtil.ARROW_COLOR_MATCHES_EDGE, current_visual_style, editorProps);
-        cx2Writer.writeFullAspectFragment(Arrays.asList(editorProps));
-        
-        boolean nodeSizeLocked = editorProps.getProperties().get(CxUtil.NODE_SIZE_LOCKED).equals(Boolean.TRUE);
-        boolean arrowColorMatchesEdge = editorProps.getProperties().get(CxUtil.ARROW_COLOR_MATCHES_EDGE).equals(Boolean.TRUE);
+
+        Map<String, Object> rawProps = editorProps.getProperties();
+        boolean nodeSizeLocked = rawProps.get(CxUtil.NODE_SIZE_LOCKED).equals(Boolean.TRUE);
+        boolean arrowColorMatchesEdge = rawProps.get(CxUtil.ARROW_COLOR_MATCHES_EDGE).equals(Boolean.TRUE);
         
         DefaultVisualProperties defaultProps = new DefaultVisualProperties();
 		cx2VisualProps.setDefaultProps(defaultProps);
@@ -1526,13 +1543,24 @@ public final class CxExporter {
         Map<String,String> cx1Style = new HashMap<>();
         for (final VisualProperty<?> visual_property : all_visual_properties) {
             if (visual_property.getTargetDataType() == CyNetwork.class) {
-            	String value_str = VisualPropertiesGatherer.getDefaultPropertyAsString(current_visual_style, visual_property);
-                if (value_str !=null && !CxioUtil.isEmpty(value_str)) {
-                	cx1Style.put(visual_property.getIdString(), value_str);
+            	String value_str = VisualPropertiesGatherer.getSerializableVisualProperty(view, visual_property);
+            	if (value_str !=null && !CxioUtil.isEmpty(value_str)) {
+            		cx1Style.put(visual_property.getIdString(), value_str);
                 }
             }
         }
         defaultProps.setNetworkProperties(cvtr.convertNetworkVPs(cx1Style));
+        //Add the 3 spacial Network VPs to visualEditorProperties
+        String[] desiredKeys = { "NETWORK_CENTER_X_LOCATION", "NETWORK_CENTER_Y_LOCATION", "NETWORK_SCALE_FACTOR"};
+
+        for (String key : desiredKeys) {
+        	String v = cx1Style.get(key);
+        	if ( v !=null) {
+        		rawProps.put(key, Double.valueOf(v));
+        	}
+        }
+        
+        cx2Writer.writeFullAspectFragment(Arrays.asList(editorProps));
      
         //get node styles
         cx1Style.clear();
@@ -1547,7 +1575,7 @@ public final class CxExporter {
                 }
 
                 VisualPropertyMapping cx2Mapping = 
-                		VisualPropertiesGatherer.getCX2Mapping(current_visual_style, visual_property, table);
+                		VisualPropertiesGatherer.getCX2Mapping(current_visual_style, visual_property, table, taskMonitor);
                 if ( cx2Mapping!=null) {
                 	if  (idStr.equals("NODE_SIZE")) {  //Node size is special.
                 		if ( nodeSizeLocked) {
@@ -1584,34 +1612,38 @@ public final class CxExporter {
                 }
 
                 VisualPropertyMapping cx2Mapping = 
-                		VisualPropertiesGatherer.getCX2Mapping(current_visual_style, visual_property, table);
+                		VisualPropertiesGatherer.getCX2Mapping(current_visual_style, visual_property, table, taskMonitor);
                 
                 if ( cx2Mapping!=null) {
                 	if  (idStr.equals("EDGE_UNSELECTED_PAINT")) {  //Handle this specially.
                 		if ( arrowColorMatchesEdge) {
-                    		cx2VisualProps.getEdgeMappings().put("EDGE_SOURCE_ARROW_UNSELECTED_PAINT",
+                    		cx2VisualProps.getEdgeMappings().put("EDGE_SOURCE_ARROW_COLOR",
                         			cx2Mapping);
-                    		cx2VisualProps.getEdgeMappings().put("EDGE_STROKE_UNSELECTED_PAINT",
+                    		cx2VisualProps.getEdgeMappings().put("EDGE_LINE_COLOR",
                         			cx2Mapping);
-                    		cx2VisualProps.getEdgeMappings().put("EDGE_TARGET_ARROW_UNSELECTED_PAINT",
+                    		cx2VisualProps.getEdgeMappings().put("EDGE_TARGET_ARROW_COLOR",
                         			cx2Mapping);
                 			
                 		}
                 	} else {
-                		if ( !arrowColorMatchesEdge || !idStr.equals("EDGE_SOURCE_ARROW_UNSELECTED_PAINT") 
-                				|| !idStr.equals("EDGE_STROKE_UNSELECTED_PAINT")
-                				|| !idStr.equals("EDGE_TARGET_ARROW_UNSELECTED_PAINT")) {
-                			cx2VisualProps.getEdgeMappings()
-                			.put(cvtr.getNewEdgeOrNodeProperty(idStr), cx2Mapping);
+                		if ( !arrowColorMatchesEdge || !(idStr.equals("EDGE_SOURCE_ARROW_UNSELECTED_PAINT") 
+                				|| idStr.equals("EDGE_STROKE_UNSELECTED_PAINT")
+                				|| idStr.equals("EDGE_TARGET_ARROW_UNSELECTED_PAINT"))) {
+                			String cx2VP = cvtr.getNewEdgeOrNodeProperty(idStr);
+                			if ( cx2VP != null)
+                				cx2VisualProps.getEdgeMappings().put(cx2VP, cx2Mapping);
                 		}
                 	}
                 }
 
-                
+                /*
                 if ( cx2Mapping!=null) {
-                	cx2VisualProps.getEdgeMappings().put(cvtr.getNewEdgeOrNodeProperty(visual_property.getIdString()),
-                			cx2Mapping);
-                }
+                	String cx2VP = cvtr.getNewEdgeOrNodeProperty(visual_property.getIdString());
+                	
+                	// only add it if it is in the white list.
+                	if ( cx2VP!=null)
+                	   cx2VisualProps.getEdgeMappings().put(cx2VP,cx2Mapping);
+                }*/
                 
             }
         }
@@ -1630,7 +1662,7 @@ public final class CxExporter {
     	
        	List<CxEdgeBypass> edgeBypasses = VisualPropertiesGatherer.getEdgeBypasses(
     				view, all_visual_properties, useCxId, arrowColorMatchesEdge );
-        	cx2Writer.writeFullAspectFragment(edgeBypasses);
+    	cx2Writer.writeFullAspectFragment(edgeBypasses);
     	
 		
 	}
@@ -1800,24 +1832,27 @@ public final class CxExporter {
 		for (final CySubNetwork subnet : subnetworks) {
 			Map<String,DeclarationEntry> networkAttributes = getTableAttributes(subnet, "network_table");
 		
-			if ( !networkAttributes.isEmpty())
-				result.add(CxNetworkAttribute.ASPECT_NAME, networkAttributes);
-		
-			Map<String,DeclarationEntry> edgeAttributes = getTableAttributes(subnet, "edge_table");
-			if ( !edgeAttributes.isEmpty())
-				result.add(CxEdge.ASPECT_NAME, edgeAttributes);
-		
-			Map<String,DeclarationEntry> nodeAttributes = getTableAttributes(subnet, "node_table");
-		
-			if ( !nodeAttributes.isEmpty())
-				result.add(CxNode.ASPECT_NAME, nodeAttributes);
-			break;
+			try {
+				if (!networkAttributes.isEmpty())
+					result.add(CxNetworkAttribute.ASPECT_NAME, networkAttributes);
+
+				Map<String, DeclarationEntry> edgeAttributes = getTableAttributes(subnet, "edge_table");
+				if (!edgeAttributes.isEmpty())
+					result.add(CxEdge.ASPECT_NAME, edgeAttributes);
+
+				Map<String, DeclarationEntry> nodeAttributes = getTableAttributes(subnet, "node_table");
+
+				if (!nodeAttributes.isEmpty())
+					result.add(CxNode.ASPECT_NAME, nodeAttributes);
+				break;
+			} catch (NdexException e) {
+				// Exception won't happen in the use case of exporting cx.
+			}
 		}
 			return result;
 		
 	}
-	
-	
+			
 	public final void writeNetworkInCX2(Collection<String> aspects, final OutputStream out) throws IOException, NdexException {
 		
 		

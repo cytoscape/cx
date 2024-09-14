@@ -80,11 +80,13 @@ public class CxNetworkWriter implements CyWriter {
 
 	public boolean writeSiblings = WRITE_SIBLINGS_DEFAULT;
 
+	/* removing this UI option for now because we decided not to support collection outside Cytoscape desktop for now.
     @Tunable(description = "Write all networks in the collection")
     public Boolean getWriteSiblings() {
         return writeSiblings;
     }
-
+    */
+	
     public void setWriteSiblings(Boolean writeSiblings) {
         this.writeSiblings = writeSiblings;
     }
@@ -201,13 +203,13 @@ public class CxNetworkWriter implements CyWriter {
 	public void run(final TaskMonitor taskMonitor) throws FileNotFoundException, IOException, NdexException {
 		if (taskMonitor != null) {
 			taskMonitor.setProgress(0.0);
-			taskMonitor.setTitle("Exporting to CX");
-			taskMonitor.setStatusMessage("Exporting current network as CX...");
+			taskMonitor.setTitle("Exporting to CX" + (isCX2 ? "2" : "") + " format");
+			taskMonitor.setStatusMessage("Exporting current network as CX"+ (isCX2? "2" : "")+ "...");
 		}
 		
 		final CxExporter exporter = view == null? 
-				new CxExporter(_network, writeSiblings, useCxId):
-					new CxExporter (_network, view, useCxId);
+				new CxExporter(_network, writeSiblings, useCxId,taskMonitor):
+					new CxExporter (_network, view, useCxId,taskMonitor);
 
 		List<String> aspects = aspectFilter.getSelectedValues();
 		exporter.setNodeColumnFilter(nodeColFilter.getSelectedValues().stream().filter( 
@@ -242,6 +244,8 @@ public class CxNetworkWriter implements CyWriter {
 			} else
 				exporter.writeNetwork(aspects, _os);
 			_os.close();
+			if(taskMonitor != null)
+				taskMonitor.setStatusMessage("Done.");
 
 		}
 
