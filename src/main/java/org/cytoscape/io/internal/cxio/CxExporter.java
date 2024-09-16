@@ -156,6 +156,7 @@ public final class CxExporter {
 	
 	private TaskMonitor taskMonitor;
 	
+	private String INTERACTION_COL_NAME = "interation";
 	/**
 	 * Constructor for CxExporter to write network (and it's collection) to CX. Specify 
 	 * if the exporter should attempt to use CX IDs from a previous import
@@ -612,8 +613,7 @@ public final class CxExporter {
 		}	
 	
 	}
-	
-	
+		
 	private void writeTableVisualStyles(CXWriter cx2Writer) throws IOException, NdexException {
 		var appManager = CyServiceModule.getService(CyApplicationManager.class);
         var tableViewManager = CyServiceModule.getService(CyTableViewManager.class);
@@ -1046,7 +1046,7 @@ public final class CxExporter {
 				for (Map.Entry<String,Object>e: row.getAllValues().entrySet()) {
 					String name = e.getKey();
 					Object value = e.getValue();
-					if (isNotNullandFinite(value) && !Settings.isIgnore(name, Settings.IGNORE_NODE_ATTRIBUTES, value) &&
+					if (isNotNullandFinite(value) && !Settings.isIgnore(name, Settings.IGNORE_EDGE_ATTRIBUTES, value) &&
 						   	(edgeColumns == null || edgeColumns.contains(name)) && 
 						   	!name.startsWith( CxUtil.sourceNodeMappingPrefix) && !name.startsWith(CxUtil.targetNodeMappingPrefix)) {
 							edgeAttrs.put(name, value);	
@@ -1852,7 +1852,58 @@ public final class CxExporter {
 			return result;
 		
 	}
-			
+				
+	// Helper method to construct expected default name for name check
+	private final String getDefaultName(CyEdge edge, String interationVal) {
+		String defaultFormattedName;
+		Long sourceNodeId = CxUtil.getElementId(edge.getSource(), this.subnetworks.get(0), useCxId);
+		Long targetNodeId = CxUtil.getElementId(edge.getSource(), this.subnetworks.get(0), useCxId);
+		defaultFormattedName = String.valueOf(sourceNodeId) + " (" + interationVal + ") " + String.valueOf(targetNodeId);
+		return defaultFormattedName;
+	}
+	
+	// Update edge columns based on flags
+	private void updateEdgeColumns(boolean interactionColsMatch, boolean nameColsMatch, boolean isDefaultSharedName, boolean isDefaultName) {
+	    if (interactionColsMatch) {
+	        edgeColumns.remove(CyRootNetwork.SHARED_INTERACTION);
+	    }
+	    if (nameColsMatch || isDefaultSharedName) {
+	        edgeColumns.remove(CyRootNetwork.SHARED_NAME);
+	    }
+	    if (isDefaultName) {
+	        edgeColumns.remove(CyNetwork.NAME);
+	    }
+	}
+	
+	private void ignoreEdgeColumnsInCX2() {
+	    Set<String> ignoreColNames = new HashSet<>();
+	    
+	    boolean interactionColsMatch = true;
+	    boolean nameColsMatch = true;
+	    boolean isDefaultSharedName = true;
+	    boolean isDefaultName = true;
+
+	    // Iterate through each subnetwork and edge to determine column visibility
+	    for (final CySubNetwork subnet : subnetworks) {
+	        for (final CyEdge cyEdge : subnet.getEdgeList()) {
+	            CyRow row = subnet.getRow(cyEdge, CyNetwork.DEFAULT_ATTRS);
+	            String interactionVal = row.get(INTERACTION_COL_NAME, String.class);
+	            String sharedInteractionVal = row.get(CyRootNetwork.SHARED_INTERACTION, String.class);
+	            String nameVal = row.get(CyNetwork.NAME, String.class);
+	            String sharedNameVal = row.get(CyRootNetwork.SHARED_NAME, String.class);
+	            String defaultFormattedName = getDefaultName(cyEdge, interactionVal);
+	            // Update column match flags
+	            interactionColsMatch = interactionColsMatch && (interactionVal == null ? sharedInteractionVal == null : interactionVal.equals(sharedInteractionVal));
+	            nameColsMatch = nameColsMatch && (nameVal == null ? sharedNameVal == null : nameVal.equals(sharedNameVal));
+	            isDefaultSharedName = isDefaultSharedName && (sharedNameVal != null && sharedNameVal.equals(defaultFormattedName));
+	            isDefaultName = isDefaultName && (nameVal != null && nameVal.equals(defaultFormattedName));
+	        }
+	    }
+	
+	    // Remove columns based on match flags
+	    updateEdgeColumns(interactionColsMatch, nameColsMatch, isDefaultSharedName, isDefaultName);
+	}
+	
 	public final void writeNetworkInCX2(Collection<String> aspects, final OutputStream out) throws IOException, NdexException {
 		
 		
@@ -1921,6 +1972,7 @@ public final class CxExporter {
 		collapsed_groups = expandGroups();
 		
 		try {
+			//
 			
 			//Write attribute declarations first
 			if ( !attrDecls.getDeclarations().isEmpty())
@@ -1931,9 +1983,9 @@ public final class CxExporter {
 				writeCx2NetworkAttributes(cx2Writer);
 			}
 			
+			ignoreEdgeColumnsInCX2();
 			//write nodes. TODO: Handles CyGroups and internal nodes/edges
 			writeCx2Nodes(cx2Writer, subNet);		
-			
 			writeCx2Edges(cx2Writer);
 			writeCX2VisualProperties (cx2Writer);	
 			writeTableVisualStyles(cx2Writer);
@@ -1958,4 +2010,5 @@ public final class CxExporter {
 	} 
 
 }
+
 
