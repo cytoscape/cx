@@ -156,7 +156,7 @@ public final class CxExporter {
 	
 	private TaskMonitor taskMonitor;
 	
-	private String INTERACTION_COL_NAME = "interation";
+	private String INTERACTION_COL_NAME = "interaction";
 	/**
 	 * Constructor for CxExporter to write network (and it's collection) to CX. Specify 
 	 * if the exporter should attempt to use CX IDs from a previous import
@@ -1854,11 +1854,11 @@ public final class CxExporter {
 	}
 				
 	// Helper method to construct expected default name for name check
-	private final String getDefaultName(CyEdge edge, String interationVal) {
+	private final String getDefaultName(CyEdge edge, String interationVal,CySubNetwork subnet) {
 		String defaultFormattedName;
-		Long sourceNodeId = CxUtil.getElementId(edge.getSource(), this.subnetworks.get(0), useCxId);
-		Long targetNodeId = CxUtil.getElementId(edge.getSource(), this.subnetworks.get(0), useCxId);
-		defaultFormattedName = String.valueOf(sourceNodeId) + " (" + interationVal + ") " + String.valueOf(targetNodeId);
+		String sourceNodeName = subnet.getRow(edge.getSource(), CyNetwork.DEFAULT_ATTRS).get(CyNetwork.NAME,String.class);
+		String targetNodeName = subnet.getRow(edge.getTarget(), CyNetwork.DEFAULT_ATTRS).get(CyNetwork.NAME,String.class);
+		defaultFormattedName = sourceNodeName + " (" + interationVal + ") " + targetNodeName;
 		return defaultFormattedName;
 	}
 	
@@ -1875,9 +1875,18 @@ public final class CxExporter {
 	    }
 	}
 	
-	private void ignoreEdgeColumnsInCX2() {
-	    Set<String> ignoreColNames = new HashSet<>();
-	    
+	private void ignoreEdgeColumnsInCX2() throws NdexException{	    
+		VisualMappingManager vmm = CyServiceModule.getService(VisualMappingManager.class);
+		VisualStyle current_visual_style = vmm.getVisualStyle(view);
+		CyTable table = view.getModel().getTable(CyEdge.class, CyNetwork.DEFAULT_ATTRS);
+		
+		for(final VisualProperty<?> visual_property : CxUtil.getLexicon(view).getAllVisualProperties()) {
+			if (visual_property.getTargetDataType() == CyEdge.class) {
+				VisualPropertyMapping cx2Mapping = VisualPropertiesGatherer.getCX2Mapping(current_visual_style, visual_property, table, taskMonitor);
+				if (cx2Mapping!=null) {
+					
+			}
+		}
 	    boolean interactionColsMatch = true;
 	    boolean nameColsMatch = true;
 	    boolean isDefaultSharedName = true;
@@ -1891,7 +1900,7 @@ public final class CxExporter {
 	            String sharedInteractionVal = row.get(CyRootNetwork.SHARED_INTERACTION, String.class);
 	            String nameVal = row.get(CyNetwork.NAME, String.class);
 	            String sharedNameVal = row.get(CyRootNetwork.SHARED_NAME, String.class);
-	            String defaultFormattedName = getDefaultName(cyEdge, interactionVal);
+	            String defaultFormattedName = getDefaultName(cyEdge, interactionVal,subnet);
 	            // Update column match flags
 	            interactionColsMatch = interactionColsMatch && (interactionVal == null ? sharedInteractionVal == null : interactionVal.equals(sharedInteractionVal));
 	            nameColsMatch = nameColsMatch && (nameVal == null ? sharedNameVal == null : nameVal.equals(sharedNameVal));
@@ -2010,5 +2019,3 @@ public final class CxExporter {
 	} 
 
 }
-
-
