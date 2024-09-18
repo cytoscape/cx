@@ -1851,7 +1851,19 @@ public final class CxExporter {
 			return result;
 		
 	}
-				
+	
+	private String getNodeName(CyRow nodeRow) {
+	    if (nodeRow == null) {
+	        return "";
+	    }
+	    
+	    String nodeName = nodeRow.get(CyRootNetwork.SHARED_NAME, String.class);
+	    if (nodeName == null || nodeName == "") {
+	        nodeName = nodeRow.get(CyNetwork.NAME, String.class);
+	    }
+	    return nodeName != null ? nodeName : "";
+	}
+	
 	// Helper methods to construct expected default edge (shared)name
 	private final String getDefaultName(CyEdge edge, String interactionVal, CySubNetwork subnet) {
 	    String sourceNodeName = getNodeName(subnet.getRow(edge.getSource(), CyNetwork.DEFAULT_ATTRS));
@@ -1860,17 +1872,7 @@ public final class CxExporter {
 	    return sourceNodeName + " (" + interactionVal + ") " + targetNodeName;
 	}
 
-	private String getNodeName(CyRow nodeRow) {
-	    if (nodeRow == null) {
-	        return "";
-	    }
-	    
-	    String nodeName = nodeRow.get(CyRootNetwork.SHARED_NAME, String.class);
-	    if (nodeName == null) {
-	        nodeName = nodeRow.get(CyNetwork.NAME, String.class);
-	    }
-	    return nodeName != null ? nodeName : "";
-	}
+
 	
 	// Update edge columns based on flags
 	private void updateEdgeColumns(boolean interactionColsMatch, boolean nameColsMatch, boolean isDefaultSharedName, boolean isDefaultName) {
