@@ -418,21 +418,28 @@ public final class Cx2Importer {
 		});
 	}
 	
-    private String getNodeName(CxNode cxNode) {
-    	if(cxNode!=null) {
-    		return cxNode.getAttributes().get(CyNetwork.NAME).toString();
-    	}
-    	return "";
-    }
-    
+	// helper function to get the node name
+	private String getNodeName(CxNode cxNode) {
+	    if (cxNode == null) {
+	        return "";
+	    }
+
+	    Map<String, Object> attributes = cxNode.getAttributes();
+	    Object name = attributes.getOrDefault(CyRootNetwork.SHARED_NAME, attributes.get(CyNetwork.NAME));
+
+	    return name != null ? name.toString() : "";
+	}
+
+    // post-process after iteration through the Cx2 file
 	private void postProcessEdgeTable() {
 		// auto-fill specific columns("name", "shared name" and "shared interaction") if they are empty
 		for (final CyEdge cyEdge : base.getEdgeList()) {
 			CxEdge cxEdge = cxEdges.get(cyEdge.getSUID());
 		    CyRow row = baseEdgeTable.getRow(cyEdge.getSUID());
 			Set<String> allAttrNames = row.getAllValues().keySet();
-			if ( cxEdge!=null && allAttrNames.contains(CxUtil.INTERACTION)) {
-				Object v = row.get(CxUtil.INTERACTION,String.class);
+			Object v = row.get(CxUtil.INTERACTION,String.class);
+			if ( cxEdge != null && v != null && allAttrNames.contains(CxUtil.INTERACTION)) {
+				
 				if((!allAttrNames.contains(CxUtil.SHARED_INTERACTION)) || 
 						row.get(CxUtil.SHARED_INTERACTION,String.class) == null) {
 					row.set(CxUtil.SHARED_INTERACTION,v);			
