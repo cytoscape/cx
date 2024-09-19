@@ -25,8 +25,7 @@ public final class Settings {
 	public final static Set<String> IGNORE_SINGLE_NETWORK_NODE_ATTRIBUTES = new HashSet<>();
 	public final static Set<String> IGNORE_SINGLE_NETWORK_NETWORK_ATTRIBUTES = new HashSet<>();
 	
-	public final static Set<String> CX2_IGNORE_NODE_ATTRIBUTES = new HashSet<>(
-			Arrays.asList(CyRootNetwork.SHARED_NAME));
+	public final static Set<String> CX2_IGNORE_NODE_ATTRIBUTES = new HashSet<>();
 
 	public final static Set<String> CX2_IGNORE_EDGE_ATTRIBUTES = new HashSet<>();
 	

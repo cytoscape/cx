@@ -234,7 +234,7 @@ public final class Cx2Importer {
 			}
 
 		} 
-		postProcessEdgeTable(); 
+		postProcessTables(); 
 		serializeOpaqueAspects();
 		
      	// create the view
@@ -431,8 +431,18 @@ public final class Cx2Importer {
 	}
 
     // post-process after iteration through the Cx2 file
-	private void postProcessEdgeTable() {
-		// auto-fill specific columns("name", "shared name" and "shared interaction") if they are empty
+	private void postProcessTables() {
+		// auto-fill 'shared name' column in node table if it is empty
+		for(final CyNode cyNode : base.getNodeList()) {
+			CyRow row = baseNodeTable.getRow(cyNode.getSUID());
+			Set<String> allAttrNames = row.getAllValues().keySet();
+			Object nodeName = row.get(CyNetwork.NAME,String.class);
+			Object sharedName = row.get(CyRootNetwork.SHARED_NAME,String.class);
+			if(nodeName!= null && (!allAttrNames.contains(CyRootNetwork.SHARED_NAME) || sharedName == null)) {
+				row.set(CyRootNetwork.SHARED_NAME,nodeName);
+			}
+		}
+		// auto-fill specific columns("name", "shared name" and "shared interaction") in edge table if they are empty
 		for (final CyEdge cyEdge : base.getEdgeList()) {
 			CxEdge cxEdge = cxEdges.get(cyEdge.getSUID());
 		    CyRow row = baseEdgeTable.getRow(cyEdge.getSUID());
