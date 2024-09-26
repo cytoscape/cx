@@ -851,7 +851,7 @@ This section provides detailed descriptions of CX2 Visual Style properties, incl
   - `NODE_CUSTOMGRAPHICS_POSITION_<i>`
   - `NODE_CUSTOMGRAPHICS_SIZE_<i>`
 
-- **Description**: Allows embedding custom images within nodes at specified positions and sizes. The index `<i>` indicates the layer order, where lower numbers are rendered first (background) and higher numbers are rendered on top.
+- **Description**: Allows embedding custom images within nodes at specified positions and sizes. `<i>` indicates index of image (1-9). Each node can have up to 9 images assigned.
 
 - **Data Types**:
   - `NODE_CUSTOMGRAPHICS_<i>`: `object`
@@ -952,7 +952,7 @@ This section provides detailed descriptions of CX2 Visual Style properties, incl
         "type": "image",
         "name": "org.cytoscape.ding.customgraphics.bitmap.URLImageCustomGraphics",
         "properties": {
-          "url": "file:/Users/jingchen/CytoscapeConfiguration/images3/25.png",
+          "url": "file:/Users/user/CytoscapeConfiguration/images3/25.png",
           "tag": "bitmap image",
           "id": 2
         }
@@ -976,7 +976,7 @@ This section provides detailed descriptions of CX2 Visual Style properties, incl
   - `NODE_CUSTOMGRAPHICS_POSITION_<i>`
   - `NODE_CUSTOMGRAPHICS_SIZE_<i>`
 
-- **Description**: Embeds pie charts within nodes, displaying data-driven slices based on specified columns. Each pie chart is a custom graphic layer, allowing multiple charts per node.
+- **Description**: Embeds pie charts within nodes. `<i>` indicated index of pie chart (1-9). Each node can have up to 9 pie charts assigned.
 
 - **Data Types**:
   - `NODE_CUSTOMGRAPHICS_<i>`: `object`
