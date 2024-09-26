@@ -846,137 +846,262 @@ This section provides detailed descriptions of CX2 Visual Style properties, incl
 
 ### 2.2.8. Node Image
 
-- **CX2 Visual Property Name**: `NODE_IMAGE_<i>` (NODE_CUSTOMGRAPHICS_?)
-- **Description**: Specifies images associated with nodes and their placement.
-- **Data Type**: `string`
-- **Format**: `dataURI`
-- **Additional Properties**:
+- **CX2 Visual Property Names**:
+  - `NODE_CUSTOMGRAPHICS_<i>` (for images)
+  - `NODE_CUSTOMGRAPHICS_POSITION_<i>`
+  - `NODE_CUSTOMGRAPHICS_SIZE_<i>`
 
-  - **Image Size** (`NODE_IMAGE_<i>_SIZE`):
-    - **Data Type**: `object`
-    - **Properties**:
-      - `WIDTH`: `number`
-      - `HEIGHT`: `number`
-  - **Image Position** (`NODE_IMAGE_<i>_POSITION`):
-    - **Data Type**: `object`
-    - **Properties**:
-      - `HORIZONTAL_ALIGN`: `string` (Enum: `"left"`, `"center"`, `"right"`)
-      - `VERTICAL_ALIGN`: `string` (Enum: `"top"`, `"center"`, `"bottom"`)
-      - `HORIZONTAL_ANCHOR`: `string` (Enum: `"left"`, `"center"`, `"right"`)
-      - `VERTICAL_ANCHOR`: `string` (Enum: `"top"`, `"center"`, `"bottom"`)
-      - `MARGIN_X`: `number`
-      - `MARGIN_Y`: `number`
+- **Description**: Allows embedding custom images within nodes at specified positions and sizes. The index `<i>` indicates the layer order, where lower numbers are rendered first (background) and higher numbers are rendered on top.
 
-- **JSON Schema**:
+- **Data Types**:
+  - `NODE_CUSTOMGRAPHICS_<i>`: `object`
+  - `NODE_CUSTOMGRAPHICS_POSITION_<i>`: `object`
+  - `NODE_CUSTOMGRAPHICS_SIZE_<i>`: `number`
+
+- **JSON Schemas**:
+
+  **`NODE_CUSTOMGRAPHICS_<i>`**
 
   ```json
   {
-    "NODE_IMAGE_<i>": {
-      "type": "string",
-      "format": "dataURI"
-    },
-    "NODE_IMAGE_<i>_SIZE": {
+    "NODE_CUSTOMGRAPHICS_<i>": {
       "type": "object",
       "properties": {
-        "WIDTH": {
-          "type": "number"
+        "type": {
+          "type": "string",
+          "enum": ["image"]
         },
-        "HEIGHT": {
-          "type": "number"
+        "name": {
+          "type": "string"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "tag": {
+              "type": "string"
+            },
+            "id": {
+              "type": "integer"
+            }
+          },
+          "required": ["url"]
         }
-      }
-    },
-    "NODE_IMAGE_<i>_POSITION": {
+      },
+      "required": ["type", "name", "properties"]
+    }
+  }
+  ```
+
+  **`NODE_CUSTOMGRAPHICS_POSITION_<i>`**
+
+  ```json
+  {
+    "NODE_CUSTOMGRAPHICS_POSITION_<i>": {
       "type": "object",
       "properties": {
-        "HORIZONTAL_ALIGN": {
+        "JUSTIFICATION": {
           "type": "string",
-          "enum": ["left", "center", "right"]
-        },
-        "VERTICAL_ALIGN": {
-          "type": "string",
-          "enum": ["top", "center", "bottom"]
-        },
-        "HORIZONTAL_ANCHOR": {
-          "type": "string",
-          "enum": ["left", "center", "right"]
-        },
-        "VERTICAL_ANCHOR": {
-          "type": "string",
-          "enum": ["top", "center", "bottom"]
+          "enum": ["center", "left", "right"]
         },
         "MARGIN_X": {
           "type": "number"
         },
         "MARGIN_Y": {
           "type": "number"
+        },
+        "ENTITY_ANCHOR": {
+          "type": "string",
+          "enum": ["N", "S", "E", "W", "NE", "NW", "SE", "SW", "C"]
+        },
+        "GRAPHICS_ANCHOR": {
+          "type": "string",
+          "enum": ["N", "S", "E", "W", "NE", "NW", "SE", "SW", "C"]
         }
-      }
+      },
+      "required": ["JUSTIFICATION", "ENTITY_ANCHOR", "GRAPHICS_ANCHOR"]
     }
   }
   ```
 
-- **Cytoscape DT Name**: `NODE_CUSTOMGRAPHICS_<i>`
+  **`NODE_CUSTOMGRAPHICS_SIZE_<i>`**
 
-**Notes:**
+  ```json
+  {
+    "NODE_CUSTOMGRAPHICS_SIZE_<i>": {
+      "type": "number",
+      "minimum": 0
+    }
+  }
+  ```
 
-- `<i>` represents the index of the image when multiple images are used.
-- In Cytoscape DT, node images are handled as custom graphics layers.
+- **Cytoscape DT Names**:
+  - `NODE_CUSTOMGRAPHICS_<i>`
+  - `NODE_CUSTOMGRAPHICS_POSITION_<i>`
+  - `NODE_CUSTOMGRAPHICS_SIZE_<i>`
+
 - **Example**:
 
   ```json
   {
     "node": {
-      "NODE_CUSTOMGRAPHICS_SIZE_1": 50.0,
-      "NODE_CUSTOMGRAPHICS_POSITION_1": {
-        "HORIZONTAL_ALIGN": "center",
-        "VERTICAL_ALIGN": "center",
-        "HORIZONTAL_ANCHOR": "center",
-        "VERTICAL_ANCHOR": "center",
+      "NODE_CUSTOMGRAPHICS_8": {
+        "type": "image",
+        "name": "org.cytoscape.ding.customgraphics.bitmap.URLImageCustomGraphics",
+        "properties": {
+          "url": "file:/Users/jingchen/CytoscapeConfiguration/images3/25.png",
+          "tag": "bitmap image",
+          "id": 2
+        }
+      },
+      "NODE_CUSTOMGRAPHICS_POSITION_8": {
+        "JUSTIFICATION": "center",
         "MARGIN_X": 0.0,
-        "MARGIN_Y": 0.0
-      }
+        "MARGIN_Y": 0.0,
+        "ENTITY_ANCHOR": "SW",
+        "GRAPHICS_ANCHOR": "NE"
+      },
+      "NODE_CUSTOMGRAPHICS_SIZE_8": 50.0
     }
   }
   ```
 
 ### 2.2.9. Node Pie Chart
 
-- **CX2 Visual Property Name**: `NODE_PIE_CHART` (NODE_CUSTOMGRAPHICS_?)
-- **Description**: Defines pie charts within nodes, including slice colors and sizes.
-- **Data Type**: `object`
-- **Properties**:
-  - `PIE_SIZE`: `number` (Exclusive Minimum: `0`)
-  - `SLICE_<i>_COLOR`: `string` (Format: `rgbColor`)
-  - `SLICE_<i>_SIZE`: `number` (Minimum: `0`, Maximum: `1`)
-- **JSON Schema**:
+- **CX2 Visual Property Names**:
+  - `NODE_CUSTOMGRAPHICS_<i>` (for pie charts)
+  - `NODE_CUSTOMGRAPHICS_POSITION_<i>`
+  - `NODE_CUSTOMGRAPHICS_SIZE_<i>`
+
+- **Description**: Embeds pie charts within nodes, displaying data-driven slices based on specified columns. Each pie chart is a custom graphic layer, allowing multiple charts per node.
+
+- **Data Types**:
+  - `NODE_CUSTOMGRAPHICS_<i>`: `object`
+  - `NODE_CUSTOMGRAPHICS_POSITION_<i>`: `object`
+  - `NODE_CUSTOMGRAPHICS_SIZE_<i>`: `number`
+
+- **JSON Schemas**:
+
+  **`NODE_CUSTOMGRAPHICS_<i>`**
 
   ```json
   {
-    "NODE_PIE_CHART": {
+    "NODE_CUSTOMGRAPHICS_<i>": {
       "type": "object",
       "properties": {
-        "PIE_SIZE": {
-          "type": "number",
-          "exclusiveMinimum": 0
-        },
-        "SLICE_<i>_COLOR": {
+        "type": {
           "type": "string",
-          "format": "rgbColor"
+          "enum": ["chart"]
         },
-        "SLICE_<i>_SIZE": {
-          "type": "number",
-          "minimum": 0,
-          "maximum": 1
+        "name": {
+          "type": "string",
+          "enum": ["org.cytoscape.PieChart"]
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "cy_range": {
+              "type": "array",
+              "items": { "type": "number" },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "cy_colorScheme": {
+              "type": "string"
+            },
+            "cy_colors": {
+              "type": "array",
+              "items": { "type": "string", "format": "rgbColor" }
+            },
+            "cy_dataColumns": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          },
+          "required": ["cy_dataColumns"]
         }
-      }
+      },
+      "required": ["type", "name", "properties"]
     }
   }
   ```
 
-- **Cytoscape DT Name**: N/A (Pie charts are implemented via custom graphics in Cytoscape DT)
-- **Notes:**
-  - `<i>` represents the index of the pie slice.
+  **`NODE_CUSTOMGRAPHICS_POSITION_<i>`**
+
+  ```json
+  {
+    "NODE_CUSTOMGRAPHICS_POSITION_<i>": {
+      "type": "object",
+      "properties": {
+        "JUSTIFICATION": {
+          "type": "string",
+          "enum": ["center", "left", "right"]
+        },
+        "MARGIN_X": {
+          "type": "number"
+        },
+        "MARGIN_Y": {
+          "type": "number"
+        },
+        "ENTITY_ANCHOR": {
+          "type": "string",
+          "enum": ["N", "S", "E", "W", "NE", "NW", "SE", "SW", "C"]
+        },
+        "GRAPHICS_ANCHOR": {
+          "type": "string",
+          "enum": ["N", "S", "E", "W", "NE", "NW", "SE", "SW", "C"]
+        }
+      },
+      "required": ["JUSTIFICATION", "ENTITY_ANCHOR", "GRAPHICS_ANCHOR"]
+    }
+  }
+  ```
+
+  **`NODE_CUSTOMGRAPHICS_SIZE_<i>`**
+
+  ```json
+  {
+    "NODE_CUSTOMGRAPHICS_SIZE_<i>": {
+      "type": "number",
+      "minimum": 0
+    }
+  }
+  ```
+
+- **Cytoscape DT Names**:
+  - `NODE_CUSTOMGRAPHICS_<i>`
+  - `NODE_CUSTOMGRAPHICS_POSITION_<i>`
+  - `NODE_CUSTOMGRAPHICS_SIZE_<i>`
+
+- **Example**:
+
+  ```json
+  {
+    "node": {
+      "NODE_CUSTOMGRAPHICS_3": {
+        "type": "chart",
+        "name": "org.cytoscape.PieChart",
+        "properties": {
+          "cy_range": [1.0, 16.35887097],
+          "cy_colorScheme": "Set3 colors",
+          "cy_colors": ["#8DD3C7", "#BEBADA"],
+          "cy_dataColumns": ["Radiality", "Degree"]
+        }
+      },
+      "NODE_CUSTOMGRAPHICS_POSITION_3": {
+        "JUSTIFICATION": "center",
+        "MARGIN_X": 0.0,
+        "MARGIN_Y": 0.0,
+        "ENTITY_ANCHOR": "W",
+        "GRAPHICS_ANCHOR": "E"
+      },
+      "NODE_CUSTOMGRAPHICS_SIZE_3": 50.0
+    }
+  }
+  ```
 
 ### 2.2.10. Node Selected Properties
 
