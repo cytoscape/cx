@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -17,6 +18,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.cytoscape.io.internal.CxPreferences;
 import org.cytoscape.io.internal.CyServiceModule;
 import org.cytoscape.io.internal.cx_reader.ViewMaker;
+import org.cytoscape.io.internal.nicecy.NiceCyNetwork;
 import org.cytoscape.io.internal.nicecy.NiceCyRootNetwork;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyIdentifiable;
@@ -107,8 +109,11 @@ public final class Cx2Importer {
     //CX ID to suid mapping table
     private Map<Long,Long> edgeIdMap;
     
-    // node suid to CxNodes mapping table. 
+    // node suid to CxNodes mapping table
     private Map<Long, CxNode> cxNodes;
+    
+    // edge suid to CxEdges mapping table
+    private Map<Long, CxEdge> cxEdges;
     
     private CxVisualProperty visualProperties;
     
@@ -137,6 +142,7 @@ public final class Cx2Importer {
     	nodeIdMap = new TreeMap<>();
     	edgeIdMap = new TreeMap<>();
     	cxNodes = new TreeMap<>();
+    	cxEdges = new TreeMap<>();
     	hasLayout = false;
     	
     	base = null;
@@ -228,7 +234,7 @@ public final class Cx2Importer {
 			}
 
 		} 
-   
+		postProcessTables(); 
 		serializeOpaqueAspects();
 		
      	// create the view
@@ -316,7 +322,7 @@ public final class Cx2Importer {
 		nodeIdMap.put(cxNodeId, cyNode.getSUID());
 		return cyNode;
     }
-    
+        
     private void createEdge(CxEdge edge) throws NdexException {
 
     	Map<String,DeclarationEntry> attributeDeclarations = attrDecls.getAttributesInAspect(CxEdge.ASPECT_NAME);
@@ -354,12 +360,7 @@ public final class Cx2Importer {
 				throw new NdexException("Edge attribute " + e.getKey() + " is not declared.");
 		}
 		
-		if ( attributeDeclarations!=null && (! attributeDeclarations.containsKey(CxUtil.SHARED_INTERACTION) && 
-				attributeDeclarations.containsKey(CxUtil.INTERACTION))) {
-			Object v = edge.getAttributes().get(CxUtil.INTERACTION);
-			localRow.set(CxUtil.SHARED_INTERACTION,v);			
-		}
-		
+		cxEdges.put(cyEdge.getSUID(),edge);
     }
     
     private void createNetworkAttribute(CxNetworkAttribute netAttrs) throws NdexException {
@@ -416,10 +417,64 @@ public final class Cx2Importer {
 			
 		});
 	}
+	
+	// helper function to get the node name
+	private String getNodeName(CxNode cxNode) {
+	    if (cxNode == null) {
+	        return "";
+	    }
 
+	    Map<String, Object> attributes = cxNode.getAttributes();
+	    Object name = attributes.getOrDefault(CyRootNetwork.SHARED_NAME, attributes.get(CyNetwork.NAME));
+
+	    return name != null ? name.toString() : "";
+	}
+
+    // post-process after iteration through the Cx2 file
+	private void postProcessTables() {
+		// auto-fill 'shared name' column in node table if it is empty
+		for(final CyNode cyNode : base.getNodeList()) {
+			CyRow row = baseNodeTable.getRow(cyNode.getSUID());
+			Set<String> allAttrNames = row.getAllValues().keySet();
+			Object nodeName = row.get(CyNetwork.NAME,String.class);
+			Object sharedName = row.get(CyRootNetwork.SHARED_NAME,String.class);
+			if(nodeName!= null && (!allAttrNames.contains(CyRootNetwork.SHARED_NAME) || sharedName == null)) {
+				row.set(CyRootNetwork.SHARED_NAME,nodeName);
+			}
+		}
+		// auto-fill specific columns("name", "shared name" and "shared interaction") in edge table if they are empty
+		for (final CyEdge cyEdge : base.getEdgeList()) {
+			CxEdge cxEdge = cxEdges.get(cyEdge.getSUID());
+		    CyRow row = baseEdgeTable.getRow(cyEdge.getSUID());
+			Set<String> allAttrNames = row.getAllValues().keySet();
+			Object v = row.get(CxUtil.INTERACTION,String.class);
+			if ( cxEdge != null && v != null && allAttrNames.contains(CxUtil.INTERACTION)) {
+				
+				if((!allAttrNames.contains(CxUtil.SHARED_INTERACTION)) || 
+						row.get(CxUtil.SHARED_INTERACTION,String.class) == null) {
+					row.set(CxUtil.SHARED_INTERACTION,v);			
+				}
+				
+				CxNode srcNode = cxNodes.get(nodeIdMap.get(cxEdge.getSource()));
+				CxNode tgtNode = cxNodes.get(nodeIdMap.get(cxEdge.getTarget()));
+				String defaultFormattedName = getNodeName(srcNode) + " (" + v.toString() + ") " + getNodeName(tgtNode);
+				
+				if((!allAttrNames.contains(CyNetwork.NAME)) || 
+						row.get(CyNetwork.NAME,String.class) == null) {
+					row.set(CyNetwork.NAME,defaultFormattedName);
+				}
+				if((!allAttrNames.contains(CyRootNetwork.SHARED_NAME)) || 
+						row.get(CyRootNetwork.SHARED_NAME,String.class) == null) {
+					row.set(CyRootNetwork.SHARED_NAME,defaultFormattedName);
+				}
+			}	
+		}
+	}
+	
 	public String getNetworkName() {
 		return name;
 	}
+	
     
 	public CyNetworkView createView() throws Exception {
 		if ( createView) {
