@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Cytoscape Exchange Format Specification (Version 2)"
-date:   2023-10-31 
+date:   2025-07-22 
 categories: CX2 Specification
 ---
 
@@ -37,39 +37,52 @@ The goals of this major revision of CX are
 9. [Example CX files](#example-cx-files)
  
 
-## Top Level Structure of CX
+## Top-Level Structure of CX
 
-At the top level, a CX network is represented as a JSON array of objects which has this structure 
+A complete CX2 network is contained in a single JSON array. The first element in this array must be the CX descriptor object, followed by objects containing metadata, network data (aspects), and a final status object.
+
+
+The overall structure is an array of objects, as shown below:
 
 ```
 [
-  <CX descriptor>,
-  <Optional pre-metadata>,
-  <aspect data block 1>,
-  <aspect data block 2>,
+  { "CXVersion": "2.0", ... },  // The CX descriptor object
+  { "metaData": [...] },       // An optional metadata object
   ...
-  <aspect data block N>,
-  <Optional post-metadata>,
-  <status Aspect>
+  { "nodes": [...] },          // An aspect data block object
+  { "edges": [...] },          // An aspect data block object
+  ...
+  { "status": [...] }          // The final status object
 ]
 
 ```
 
+
+
 ## CX Descriptor
 
-A CX document always starts with this object. It defines some global attributes in this object. It has these attributes in it
+As described in the top-level structure, the first element of the CX2 JSON array must be the CX descriptor object. This object defines global attributes for the entire document. It has these attributes in it
 
-{% highlight json %}
-  { 
-    "CXVersion": 	string
-    "hasFragments":	boolean
-  }
-{% endhighlight %}
 
 - **"CXVersion"** - the version number of the CX schema used in this document. Its format is "major.minor". Required
-- **"hasFragments"** - indicate if the data in any aspect are broken into multiple fragments in this CX document. The default value of this attribute is false, which means each aspect only appears once in the CX document.
+- **"hasFragments" (boolean)** - indicates whether any aspect is delivered in multiple fragments. If your file contains exactly one fragment for each aspect, set to false. The default value of this attribute is false.
     - Allowing fragmented aspects can be useful in applications that need to incrementally write out mixed types of elements when generating a CX network. One common use case is that an application needs to stream out a subnetwork from a large network when traversing the large network.
-    - Non-fragmented CX networks are more compact and will allow users to write more efficient applications. For example, if an application only needs a certain aspect when reading a non-fragmented CX network from an input stream, the application can stop the reading when it sees the end of that aspect. 
+    - Non-fragmented CX2 networks are more compact and will allow users to write more efficient applications. For example, if an application only needs a certain aspect when reading a non-fragmented CX network from an input stream, the application can stop the reading when it sees the end of that aspect. 
+
+Fragmented aspects. When the CX descriptor sets "hasFragments": true, any aspect may be split across multiple data blocks. A CX2 file may therefore contain a mixture of fragmented and non-fragmented aspects. Each fragment MUST appear somewhere after the required attributeDeclarations block (so that attribute types are already known) and before the optional post-metadata section. Within that span the producer may place fragments in any order; consumers MUST concatenate all fragments of the same aspect in the order they are encountered.
+
+The CX descriptor in a non-fragmented CX2 network looks like this:
+
+
+{% highlight json %}
+[
+  { 
+    "CXVersion": 	"2.0"
+    "hasFragments":	false
+  }
+   .... 
+]  
+{% endhighlight %}
 
 
 ## Pre and Post Metadata in CX
@@ -91,6 +104,36 @@ A metadata object has these attributes in it:
 - **"elementCount"** - the number of elements in this aspect. It is optional.
 
 
+This is an example of the metadata section in a CX2 document:
+
+{% highlight json %}
+[
+    {  
+        "CXVersion": "2.0",
+        "hasFragments": false
+    },
+    {
+        "metaData": [
+            {
+                "elementCount": 1,
+                "name": "networkAttributes"
+            },
+            {
+                "elementCount": 6,
+                "name": "nodes"
+            },
+            {
+                "elementCount": 6,
+                "name": "edges"
+            }
+        ]
+    },
+    ...    
+]
+{% endhighlight %}
+
+
+
 ## Aspect Data Blocks
 Aspect data blocks contain network data that are organized in aspects. When the aspect data blocks are completely missing, this CX document represents an empty network. 
 
@@ -101,7 +144,7 @@ Each data block is a JSON object that has a single attribute in it. The name of 
 { ASPECT_NAME: [ aspect_elements ] }
 ```
 
-# Status Aspect
+## Status Aspect
 A complete CX stream ends with a status aspect. This aspect tells the recipient if the CX is successfully generated by the source. A use case is that a source is generating a CX network incrementally and transmits the data to the recipient through a stream, when an error occurs during the creation of the CX network, the source can write out a status aspect to the CX stream with some error message in it and finish the CX network immediately. The recipient will know from this aspect that the CX is a bad object and can stop the downstream process on this network. The status aspect has this structure:
 
 {% highlight json %}
@@ -115,57 +158,108 @@ A complete CX stream ends with a status aspect. This aspect tells the recipient 
 
 The `"error"` field holds the error message when an error occurs. `"success"` fields tell if the CX document is successfully generated by the source. If the value of `"success"` is *true*, value in attribute `"error"` will be treated as a warning.
 
-
+A CX2 producer MUST terminate every stream with exactly one status aspect; consumers SHOULD treat a missing status as an I/O error. 
 
 ## CX Core Aspects
 
 Core aspects are the set of aspects that are supported by all Cytoscape Ecosystem compatible applications. These are the names and definition of core aspects in CX 
 
+
 # attributeDeclarations
 
-This aspect is for declaring the data type, default value, or alias of attributes. 
+This aspect declares the data types, default values, and aliases for attributes used in other aspects.
 
-For a given attribute in an aspect, its type has to be declared before it appears in an aspect element. All values of an attribute must have the same data type in an aspect. 
+**Key Rules:**
 
-This aspect can be fragmented, but when an attribute type is declared, it has to be declared before it is used in that aspect. 
+  * **Placement is critical**: The `attributeDeclarations` aspect **must appear before the aspects it declares attributes for**. For example, to declare attributes for `nodes` and `edges`, the `attributeDeclarations` block must be placed before the `nodes` and `edges` blocks in the top-level CX2 array.
+  * **Declarations are comprehensive**: Declarations should be made for attributes within `networkAttributes`, `nodes`, and `edges`.
+  * **All values of an attribute must have the same data type in an aspect.** 
 
-The schema of this aspect is:
 
-```
-{
-  Aspect_Name1: { attribute1: {"d": string, "a": string},
-                  attribute2: {"d": string},
-                  …
-                  attributeN: {"d": string}    } ,
-  Aspect_Name2: { attribute1: {"d": string, "v": value}, … },
-   … 
-}
-```
-- **Aspect_Name** - The name of the aspect that this attribute is in. It can be networkAttributes, nodes, edges, edgeAttributes, or nodeAttributes. edgeAttributes and nodeAttributes aspects are only for Cytoscape collections. 
-- **attributeN** - The name of the attribute in that aspect. 
-- **"d"** - Declares the data type of that attribute. CX supports these data types in attributes:
-  - string
-  - long
-  - integer
-  - double
-  - boolean
-  - list_of_string
-  - list_of_long
-  - list_of_integer
-  - list_of_double
-  - list_of_boolean
-- **"v"** - Declare a default value for that attribute. This field (and also the next field **"a"**) is **ONLY** supported in the *nodes* or *edges* aspects. If “v” is defined for an attribute in an aspect, when an element doesn’t have that attribute in it, an attribute with the default value will be created in that element. Using this declaration can reduce the size of a CX document when one attribute value is repeated many times in an aspect. Developers need to be careful when using this field. This field can only be used when there is no null value on that attribute. For the same network, different developers or applications might choose a different value as the default value for a given attribute.       
-- **"a"** - Use an alias to shorten attribute names, mainly for *nodes* and *edges* aspect. Network attribute aliases are **NOT** allowed. An alias should be unique in that aspect and should be different from any un-declared attribute in that aspect. If an alias is declared for an attribute, the full attribute name can no longer be used in that aspect.
+### Structure of attributeDeclarations
+
+The `attributeDeclarations` aspect is a JSON object where the key is `"attributeDeclarations"` and the value is an array of declaration objects. For a standard, non-fragmented network, this array contains **exactly one** declaration object.
+
+This single object then contains keys for each aspect whose attributes are being declared (e.g., `"networkAttributes"`, `"nodes"`, `"edges"`).
+
+### Example for a Single Network
+
+Here is a complete example of an `attributeDeclarations` aspect for a typical network. It demonstrates how to declare network, node, and edge attributes, including the use of aliases and default values.
+
+{% highlight json %}
+[
+   ...
+   "attributeDeclarations": [
+       {
+         "networkAttributes": {
+              "is_drug_network": { "d": "boolean" },
+              "publication_count": { "d": "integer" }
+           },
+         "nodes": {
+              "gene_name": { "d": "string", "a": "gn" },
+              "expression_level": { "d": "double", "v": "0.0" }
+           },
+         "edges": {
+              "interaction_type": { "d": "string", "a": "i", "v": "ppi" },
+              "confidence_score": { "d": "double" }
+           }
+       }
+     ]
+   ... 
+]
+{% endhighlight %}
+
+**In this example:**
+
+  * The entire block is an object with a single key, `"attributeDeclarations"`.
+  * Its value is an array with one object, as is standard for non-fragmented networks.
+  * **networkAttributes**: Declares a boolean `is_drug_network` and an integer `publication_count`.
+  * **nodes**: Declares a string `gene_name` with a shorter alias `gn` and a double `expression_level` with a default value of `0.0`.
+  * **edges**: Declares a string `interaction_type` with an alias `i` and a default value of `ppi`, and a double `confidence_score`.
+
+
+#### Declaration Properties
+
+Within each aspect block (e.g., `nodes`), every attribute you want to declare is a key. The value is an object with one or more of the following properties:
+
+  * **`"d"`** (data type): **Required.** Declares the data type of the attribute. Supported types are `string`, `long`, `integer`, `double`, `boolean`, and list counterparts (e.g., `list_of_string`, `list_of_long`, `list_of_integer`, `list_of_double`, or `list_of_boolean` ). 
+  * **`"v"`** (default value): **Optional.** Declares a default value for an attribute in the `nodes` or `edges` aspects. If an element is missing this attribute, it will be automatically assigned the default value. This can help reduce file size but should be used carefully, as it cannot represent `null` values for that attribute.
+  * **`"a"`** (alias): **Optional.** Declares a shorter alias for an attribute name in the `nodes` or `edges` aspects. If an alias is declared, the full attribute name can no longer be used in the `nodes` or `edges` data blocks; the alias must be used instead. Aliases are **not** permitted for `networkAttributes`.
+  
+  
+
+The `attributeDeclarations` aspect can be fragmented, but when an attribute type is declared, it has to be declared before it is used in that aspect. 
+
 
 # networkAttributes
 
-For a single network, the networkAttributes aspect has only one element. This element is a JSON object with these reserved attribute names:  
+For a single network, the networkAttributes aspect has only one element, and that element is itself a JSON object whose keys are the attribute names. In other words, the aspect data block looks like this:
 
-- **name** - title of the network
-- **description** - a brief description of the network 
-- **version** - version of the network
+{% highlight json %}
+{
+  "networkAttributes": [
+    {
+      "name": "Cell Cycle Map",            
+      "description": "Yeast cell cycle regulatory network", 
+      "version": "1.2"                      
+      /* any additional attributes declared in
+         networkAttributes appear here */
+    }
+  ]
+}
+
+{% endhighlight %}
+
+**Rules**
+
+* The surrounding aspect object must use the standard aspect data‑block shape: { "networkAttributes": [ … ] }.
+* The array must contain exactly one object for single‑network CX2 files.
+* Each key in that object is an attribute name.  The reserved names are name, description, and version.
+* All keys must be declared beforehand in the attributeDeclarations.networkAttributes block and obey the declared data type.
 
 # nodes
+
+Elements in the `nodes` aspect have this struture:
 
 {% highlight json %}
 {
@@ -188,7 +282,30 @@ If a node has an "x" value in it, it must also have a "y" value.
 If one node has an "x" and "y" value, all nodes in this CX network must have x and y values. 
 - **“z”** -  z coordinate or z-order, depending on how the renderer interprets it. This property is optional. If a node has a ‘z’ attribute, it must also have x, and y. If one node has a ‘z’ coordinate, all nodes should have  "z" attributes.   
 
-The coordinates in this aspect are only for single networks. Node coordinates in Cytoscape Collections are stored in the cartesianLayout aspect because they are associated with a view.
+**Where do coordinates live?**
+
+In CX2, each node element directly carries its layout coordinates through two optional numeric keys: x and y. Coordinates are rendered as CSS pixels in Cytoscape Web and Cytoscape Desktop, with (+x = right, +y = down). There is no cartesianLayout aspect in CX2 for single networks. That aspect existed only in CX (version 1) and has been removed.
+
+CX2 node example
+{% highlight json %}
+{
+  "nodes": [
+    { "id": 1, "x": 150, "y": 75, "v": {"name": "GeneA"} },
+    { "id": 2, "x": 320, "y": 210, "v": {"name": "GeneB"} }
+  ]
+}
+{% endhighlight %}
+
+Rules
+
+1. x and y are optional – omit them if no fixed layout is intended. However, If any node specifies x/y, then all nodes MUST specify both x and y. Likewise, if any node specifies z, then all nodes MUST specify x, y and z.
+2. Units are arbitrary but generally pixel coordinates suitable for Cytoscape.js and Desktop.
+3. Additional layout attributes (e.g., width, height) may be stored as node attributes if declared in attributeDeclarations.nodes.
+4. If you ingest an old CX file, your conversion tooling should:
+   -  parse its cartesianLayout entries,
+   -  bwrite their coordinates onto nodes,
+   -  then drop the obsolete aspect.
+
 
 # edges
 
