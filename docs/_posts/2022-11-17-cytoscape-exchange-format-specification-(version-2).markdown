@@ -306,6 +306,9 @@ Rules
    -  bwrite their coordinates onto nodes,
    -  then drop the obsolete aspect.
 
+⚠️ IMPORTANT: Do not use both coordinate storage methods simultaneously. 
+Use nodes aspect coordinates for single networks OR cartesianLayout 
+aspect for Collections - never both.
 
 # edges
 
