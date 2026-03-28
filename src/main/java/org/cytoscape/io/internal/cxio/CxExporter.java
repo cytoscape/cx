@@ -612,8 +612,7 @@ public final class CxExporter {
 		}	
 	
 	}
-	
-	
+		
 	private void writeTableVisualStyles(CXWriter cx2Writer) throws IOException, NdexException {
 		var appManager = CyServiceModule.getService(CyApplicationManager.class);
         var tableViewManager = CyServiceModule.getService(CyTableViewManager.class);
@@ -1046,7 +1045,7 @@ public final class CxExporter {
 				for (Map.Entry<String,Object>e: row.getAllValues().entrySet()) {
 					String name = e.getKey();
 					Object value = e.getValue();
-					if (isNotNullandFinite(value) && !Settings.isIgnore(name, Settings.IGNORE_NODE_ATTRIBUTES, value) &&
+					if (isNotNullandFinite(value) && !Settings.isIgnore(name, Settings.IGNORE_EDGE_ATTRIBUTES, value) &&
 						   	(edgeColumns == null || edgeColumns.contains(name)) && 
 						   	!name.startsWith( CxUtil.sourceNodeMappingPrefix) && !name.startsWith(CxUtil.targetNodeMappingPrefix)) {
 							edgeAttrs.put(name, value);	
@@ -1852,7 +1851,113 @@ public final class CxExporter {
 			return result;
 		
 	}
-			
+	
+	// Helper method to get the node (shared) name
+	private String getNodeName(CyRow nodeRow) {
+	    if (nodeRow == null) {
+	        return "";
+	    }
+	    
+	    String nodeName = nodeRow.get(CyRootNetwork.SHARED_NAME, String.class);
+	    if (nodeName == null || nodeName.equals("")) {
+	        nodeName = nodeRow.get(CyNetwork.NAME, String.class);
+	    }
+	    return nodeName != null ? nodeName : "";
+	}
+	
+	// Helper method to construct expected default edge (shared)name
+	private final String getDefaultName(CyEdge edge, String interactionVal, CySubNetwork subnet) {
+	    String sourceNodeName = getNodeName(subnet.getRow(edge.getSource(), CyNetwork.DEFAULT_ATTRS));
+	    String targetNodeName = getNodeName(subnet.getRow(edge.getTarget(), CyNetwork.DEFAULT_ATTRS));
+
+	    return sourceNodeName + " (" + interactionVal + ") " + targetNodeName;
+	}
+
+	// Update edge columns based on flags
+	private void updateTableColumns(boolean interactionColsMatch, boolean nameColsMatch, boolean isDefaultSharedName, boolean isDefaultName, boolean nodeNameColsMatch) {
+	    if (interactionColsMatch) {
+	        edgeColumns.remove(CyRootNetwork.SHARED_INTERACTION);
+	    }
+	    if (nameColsMatch || isDefaultSharedName) {
+	        edgeColumns.remove(CyRootNetwork.SHARED_NAME);
+	    }
+	    if (isDefaultName) {
+	        edgeColumns.remove(CyNetwork.NAME);
+	    }
+	    if (nodeNameColsMatch) {
+	    	nodeColumns.remove(CyRootNetwork.SHARED_NAME);
+	    }
+	}
+	
+	// Handler function to determine the export of the following 3 columns in the edge table:
+	// "interaction", "name", and "shared name" 
+	private void ignoreTableColumnsInCX2() throws NdexException{	    
+		
+	    boolean interactionColsMatch = true;
+	    boolean nameColsMatch = true;
+	    boolean isDefaultSharedName = true;
+	    boolean isDefaultName = true;
+	    boolean nodeNameColsMatch = true;
+		VisualMappingManager vmm = CyServiceModule.getService(VisualMappingManager.class);
+		VisualStyle current_visual_style = vmm.getVisualStyle(view);
+		CyTable table = view.getModel().getTable(CyEdge.class, CyNetwork.DEFAULT_ATTRS);
+		
+		// Check if any mappings exist on the "interaction", "name", or "shared name" columns
+		for(final VisualProperty<?> visual_property : CxUtil.getLexicon(view).getAllVisualProperties()) {
+			VisualPropertyMapping cx2Mapping = VisualPropertiesGatherer.getCX2Mapping(current_visual_style, visual_property, table, taskMonitor);
+			if(cx2Mapping!=null && ATTRIBUTE_DATA_TYPE.STRING == cx2Mapping.getMappingDef().getAttributeType()) {
+				String attName = cx2Mapping.getMappingDef().getAttributeName();
+				if (visual_property.getTargetDataType() == CyEdge.class) {
+	                switch (attName) {
+	                case CyRootNetwork.SHARED_INTERACTION:
+	                    interactionColsMatch = false;
+	                    break;
+	                case CyRootNetwork.SHARED_NAME:
+	                    nameColsMatch = false;
+	                    isDefaultSharedName = false;
+	                    break;
+	                case CyNetwork.NAME:
+	                    isDefaultName = false;
+	                    break;
+	                default:
+	                    // No action needed for other columns
+	                    break;
+	                }					
+					
+				}else if(visual_property.getTargetDataType() == CyNode.class && CyRootNetwork.SHARED_NAME.equals(attName)) {
+					nodeNameColsMatch = false;
+				}
+			}
+		}
+
+	    // Iterate through each subnetwork to determine whether to export "interaction", "name", or "shared name" columns
+	    for (final CySubNetwork subnet : subnetworks) {
+	        for (final CyEdge cyEdge : subnet.getEdgeList()) {
+	            CyRow row = subnet.getRow(cyEdge, CyNetwork.DEFAULT_ATTRS);
+	            String interactionVal = row.get(CxUtil.INTERACTION, String.class);
+	            String sharedInteractionVal = row.get(CyRootNetwork.SHARED_INTERACTION, String.class);
+	            String nameVal = row.get(CyNetwork.NAME, String.class);
+	            String sharedNameVal = row.get(CyRootNetwork.SHARED_NAME, String.class);
+	            String defaultFormattedName = getDefaultName(cyEdge, interactionVal,subnet);
+	            // Update column match flags
+	            interactionColsMatch &= (interactionVal == null ? sharedInteractionVal == null : interactionVal.equals(sharedInteractionVal));
+	            nameColsMatch &= (nameVal == null ? sharedNameVal == null : nameVal.equals(sharedNameVal));
+	            isDefaultSharedName &= (sharedNameVal != null && sharedNameVal.equals(defaultFormattedName));
+	            isDefaultName &= (nameVal != null && nameVal.equals(defaultFormattedName));
+	        }
+	        
+	        for (final CyNode cyNode:subnet.getNodeList()) {
+	        	CyRow row = subnet.getRow(cyNode,CyNetwork.DEFAULT_ATTRS);
+	        	String nameVal = row.get(CyNetwork.NAME, String.class);
+	        	String sharedNameVal = row.get(CyRootNetwork.SHARED_NAME, String.class);
+	        	nodeNameColsMatch &= (nameVal == null ? sharedNameVal == null : nameVal.equals(sharedNameVal));
+	        }
+	    }
+	
+	    // Remove columns based on match flags
+	    updateTableColumns(interactionColsMatch, nameColsMatch, isDefaultSharedName, isDefaultName, nodeNameColsMatch);
+	}
+	
 	public final void writeNetworkInCX2(Collection<String> aspects, final OutputStream out) throws IOException, NdexException {
 		
 		
@@ -1921,6 +2026,7 @@ public final class CxExporter {
 		collapsed_groups = expandGroups();
 		
 		try {
+			//
 			
 			//Write attribute declarations first
 			if ( !attrDecls.getDeclarations().isEmpty())
@@ -1931,9 +2037,9 @@ public final class CxExporter {
 				writeCx2NetworkAttributes(cx2Writer);
 			}
 			
+			ignoreTableColumnsInCX2();
 			//write nodes. TODO: Handles CyGroups and internal nodes/edges
 			writeCx2Nodes(cx2Writer, subNet);		
-			
 			writeCx2Edges(cx2Writer);
 			writeCX2VisualProperties (cx2Writer);	
 			writeTableVisualStyles(cx2Writer);
@@ -1958,4 +2064,3 @@ public final class CxExporter {
 	} 
 
 }
-
