@@ -514,7 +514,7 @@ public final class CxExporter {
 			break;
 		case "edge_table":
 			table = network.getTable(CyEdge.class, namespace);
-			additional_ignore = Settings.IGNORE_EDGE_ATTRIBUTES;
+			additional_ignore = Settings.CX2_IGNORE_EDGE_ATTRIBUTES;
 			break;
 		case "network_table":
 			table = network.getTable(CyNetwork.class, namespace);
@@ -989,7 +989,7 @@ public final class CxExporter {
 			for ( Map.Entry<String, Object> e: row.getAllValues().entrySet()) {
 				Object value = e.getValue();
 				String name = e.getKey();
-				if (isNotNullandFinite(value) && !Settings.isIgnore(name, Settings.IGNORE_NODE_ATTRIBUTES, value) &&
+				if (isNotNullandFinite(value) && !Settings.isIgnore(name, Settings.CX2_IGNORE_NODE_ATTRIBUTES, value) &&
 					   (nodeColumns == null || nodeColumns.contains(name))) {
 					nodeAttrs.put(name, value);	
 				}
@@ -1033,7 +1033,7 @@ public final class CxExporter {
 	private void writeCx2Edges(CXWriter cx2Writer) throws IOException, NdexException {
 		for (final CySubNetwork subnet : subnetworks) {
 			if ( subnet.getEdgeCount()==0)
-				return;
+				continue;
 			cx2Writer.startAspectFragment(CxEdge.ASPECT_NAME);
 			for (CyEdge cyEdge : subnet.getEdgeList()) {
 
@@ -1046,7 +1046,7 @@ public final class CxExporter {
 				for (Map.Entry<String,Object>e: row.getAllValues().entrySet()) {
 					String name = e.getKey();
 					Object value = e.getValue();
-					if (isNotNullandFinite(value) && !Settings.isIgnore(name, Settings.IGNORE_NODE_ATTRIBUTES, value) &&
+					if (isNotNullandFinite(value) && !Settings.isIgnore(name, Settings.CX2_IGNORE_EDGE_ATTRIBUTES, value) &&
 						   	(edgeColumns == null || edgeColumns.contains(name)) && 
 						   	!name.startsWith( CxUtil.sourceNodeMappingPrefix) && !name.startsWith(CxUtil.targetNodeMappingPrefix)) {
 							edgeAttrs.put(name, value);	
